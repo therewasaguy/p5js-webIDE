@@ -8,7 +8,7 @@ Priorities:
 - connect with reference / autocomplete
 
 and then...
-- save image --> save gif (inspiration: http://tributary.io/inlet/6479360/ )
+- save image --> save gif (inspiration: http://tributary.io/inlet/6479360/ / [resize in offscreen canvas?](https://github.com/Khan/live-editor/blob/c6ba1e4e1294b67322a04ab842d138c1edd93ea3/js/output/pjs/pjs-output.js#L374))
 - user accounts ( login w/ github ?)
 - fork/remix
 - easy embed code for sketch*
