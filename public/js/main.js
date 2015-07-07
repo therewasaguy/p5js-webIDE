@@ -149,6 +149,12 @@ var appConfig = {
 
 		toggleSidebar: function() {
 			this.settings.showSidebar = !this.settings.showSidebar;
+		},
+
+		toggleRun: function() {
+			console.log('run');
+			var sketchFrame = document.getElementById('sketchFrame');
+			sketchFrame.src = sketchFrame.src;
 		}
 
 	}
@@ -282,8 +288,37 @@ module.exports = '<div id="sidebar-container" class = "{{className}}"  v-on="con
 module.exports = {
 	template: require('./template.html'),
 
-};
+	ready: function() {
+		this.initSketchFrame();
+	},
 
+	methods: {
+		initSketchFrame: function() {
+			var sketchFrame = document.getElementById('sketchFrame');
+
+			sketchFrame.onload = function() {
+				var code = window.ace.getValue();
+				code += '\n new p5();\n'
+
+				if (settings.fullScreen) {
+					// to do: check to see if setup exists,
+					// and if createCanvas exists,
+					// if not make it windowWidth, windowHeight
+					code += '\n  function windowResized() {\n' +
+									'resizeCanvas(windowWidth, windowHeight);\n'+
+									'}';
+				}
+
+				var userScript = sketchFrame.contentWindow.document.createElement('script');
+				userScript.type = 'text/javascript';
+				userScript.text = code;
+				userScript.async = false;
+				sketchFrame.contentWindow.document.body.appendChild(userScript);
+			}
+		}
+	}
+
+};
 },{"./template.html":10}],10:[function(require,module,exports){
 module.exports = '<div id="sketchPane">\n	<iframe id="sketchFrame"\nsrc="sketch/output.html" width="100%" height="1000">\n	</iframe>\n</div>';
 },{}],11:[function(require,module,exports){

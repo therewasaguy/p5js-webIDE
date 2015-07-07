@@ -49,6 +49,12 @@ var appConfig = {
 
 		toggleSidebar: function() {
 			this.settings.showSidebar = !this.settings.showSidebar;
+		},
+
+		toggleRun: function() {
+			console.log('run');
+			var sketchFrame = document.getElementById('sketchFrame');
+			sketchFrame.src = sketchFrame.src;
 		}
 
 	}
