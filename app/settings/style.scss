@@ -1,0 +1,284 @@
+#settingsContainer {
+  position: absolute;
+  background-color: #959595;
+  top: 10px;
+  right: 10px;
+  z-index: 999;
+  box-shadow: 0px 0px 6px #999;
+  color: #fff;
+}
+
+#settingsPane {
+  // width: 178px;
+  width: 100%;
+  font-family: Karla;
+  // -webkit-box-shadow: 0px 8px 17px -2px #58585b;
+
+  #titleBar {
+    background-color: #58585b;
+    padding: 5px 12px 1px;
+  }
+
+  #optionsZone {
+    padding: 0px 12px;
+
+    div {
+      clear: both;
+      padding-bottom: 14px;
+    }
+  }
+
+  .hiddenRadio {
+    overflow: auto;
+
+    input[type="radio"] {
+      display:none;
+    }
+
+    input[type="radio"]:checked + label svg {
+      fill: #e1dedc;
+
+      &:hover {
+        fill: #fff;
+      }
+    }
+
+    label {
+      display: block;
+    }
+
+    label.left {
+      float: left;
+    }
+
+    label.right {
+      float: right;
+    }
+  }
+
+  #selectable {
+    &:hover {
+      fill: #fff;
+    }
+  }
+
+  #consoleText {
+    position: relative;
+    top: 5px;
+    margin: 4px 0 6px;
+  }
+
+  .console {
+    height: 40px;
+    width: 70px;
+    fill: #828384;
+    transition: all 0.3s ease;
+
+
+    &:hover {
+      fill: #fff;
+    }
+  }
+
+  #close {
+    width: 19px;
+    height: 19px;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+  }
+
+  #x {
+    fill: #2F2F30;
+    transition: all 0.1s ease;
+
+    &:hover {
+      fill: #fff;
+      fill-opacity: 1;
+    }
+  }
+
+  #consoleHorizontal {
+    float: right;
+  }
+
+  #libraryIcon {
+    width: 30px;
+    float: left;
+    position: relative;
+  }
+
+  #textAdjust {
+    width: 30px;
+    float: left;
+    position: relative;
+    top: 5px;
+    left: 3px;
+  }
+
+  #textAdjustInput {
+    width: 105px;
+  }
+
+  #indentation {
+    padding-top: 14px;
+  }
+
+  #libs {
+    margin-bottom: 28px;
+    margin-top: 4px;
+  }
+
+  #ww {
+    overflow:auto;
+  }
+
+  #runInBrowserContainer {
+    margin-bottom: 30px;
+  }
+
+  #wordWrapIcon {
+    width: 23px;
+    float: left;
+    position: relative;
+    top: 10px;
+    left: 5px;
+  }
+
+  #browserIcon {
+    width: 23px;
+    float: left;
+    position: relative;
+    top: 8px;
+    left: 5px;
+  }
+
+  .fade {
+    transition: all 0.3s ease;
+  }
+
+  .hiddenCheckbox {
+    input[type="checkbox"] {
+      display: none;
+    }
+
+    input[type="checkbox"] + label {
+      background-color: #adacac;
+      color: #828384;
+        
+        &:hover {
+        background-color: #cdcccc;
+      }
+    }
+
+    input[type="checkbox"]:checked + label {
+      background-color: #e1dedc;
+      color: #58585b;
+        
+        &:hover {
+        background-color: #fefefc;
+      }
+    }
+  }
+
+  #tab {
+    height: 10px;
+    width: 15px;
+    position: relative;
+    top: 1px;
+    left: -4px;
+    fill: #828384;
+    transition: all 0.3s ease;
+  }
+
+  #space {
+    height: 10px;
+    width: 15px;
+    float: left;
+    position: relative;
+    top: 5px;
+    left: 3px;
+    fill: #828384;
+    transition: all 0.3s ease;
+  }
+
+  #tabBox {
+    float: right;
+  }
+
+  #spaceBox {
+    float: left;
+  }
+
+  #indentOptions {
+    position: relative;
+    /* margin-bottom: 12px; */
+
+    input[type="radio"]:checked + label {
+      background-color: #e1dedc;
+    }
+
+    input[type="radio"] + label:hover {
+      background-color: #fff;
+    }
+  }
+
+  .indentSelection {
+    color: #828384;
+    background-color: #adacac;
+    display: inline-block;
+    border-radius: 4px;
+    padding: 4px;
+    // float: right;
+    text-align: center;
+    // width: 67px;
+    width: 44%;
+    transition: all 0.3s ease;
+  }
+
+  .highlight{
+    background-color: #e1dedc;
+    display: inline-block;
+    border-radius: 4px;
+    padding: 4px;
+    float: right;
+    width: 105px;
+    text-align: center;
+  }
+
+  h2 {
+    font-size: 16px;
+    margin-top: 0;
+    font-weight: normal;
+    -webkit-margin-after: 2px;
+  }
+
+  p {
+    font-size: 13px;
+    color: #58585b;
+  }
+
+  label {
+    color: #58585b;
+    font-size: 13px;
+    position: relative;
+    top: 5px;
+  }
+
+  input[type="text"] {
+    width: 25px;
+    float: right;
+    border-radius: 5px;
+    border: none;
+    background-color: #e1dedc;
+    padding: 4px;
+    outline: none;
+    color: #58585b;
+    font-family: Karla;
+    font-size: 13px;
+  }
+
+  input#tabSize {
+    margin-left: 0.3em;
+  }
+}

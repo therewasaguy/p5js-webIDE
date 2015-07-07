@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" id="app">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>{{title}}</title>
+		<link rel="stylesheet" href="css/main.css">
+	</head>
+
+	<body class="{{orientation}}">
+
+	<div v-component="sketchframe" v-ref="sketchframe" id="sketchframe-container"></div>
+	<div v-component="sidebar" v-with="files : files" id="side-container"></div>
+
+		<div id="main-container">
+			<div v-component="tabs" v-ref="tabs" id="header-container"></div>
+
+			<div id="editor-container">
+				<div v-component="editor" v-ref="editor" id="main"></div>
+			</div>
+
+			<!-- <div v-component="debug" id="debug-container"></div> -->
+		</div>
+
+		<div v-component="settings" v-with="settings" v-show="showSettings" id="settingsContainer"></div>
+
+		<script src="js/main.js"></script>
+	</body>
+
+</html>
