@@ -1,14 +1,30 @@
-# p5.js web ide brainstorm
+# p5.js web ide prototype
+
+A prototype adapting the [p5.js Desktop IDE](https://github.com/processing/p5.js-editor) for the web.
+
+## Goal:
+There will be two repos. One for the client-side code. One for the server-side code. Client-side will be a submodule of the server-side repo. This way, the Desktop editor can easily share the same client-side module if we make the switch to Electron.
+
+## >> [Web IDE Brainstorm on Hackpad](https://p5jscon.hackpad.com/Web-IDE-Brainstorm-d74TxVTnU4H)
+
+## Run it:
+- fork the repo
+- In the console:
+  - ``git clone <your fork>``
+  - Install all dependencies: ``npm install``
+  - Install gulp globally: ``npm install --global gulp``
+  - Run ``gulp`` to compile all of the modules from /app into /public
+  - Run the server: ``node server.js``
 
 
 Priorities:
-- get design wheels in motion
+- ux / design
 - figure out how to handle multiple files
-- figure out how to handle console / errors
+- print to virtual console
 - connect with reference / autocomplete
 
 and then...
-- save image --> save gif (inspiration: http://tributary.io/inlet/6479360/ / [resize in offscreen canvas?](https://github.com/Khan/live-editor/blob/c6ba1e4e1294b67322a04ab842d138c1edd93ea3/js/output/pjs/pjs-output.js#L374))
+- save image --> save gif (inspiration: http://tributary.io/inlet/6479360/ / [resize in offscreen canvas?](https://github.com/Khan/live-editor/blob/c6ba1e4e1294b67322a04ab842d138c1edd93ea3/js/output/pjs/pjs-output.js#L374)) [on server with phantom.js?](https://blog.animatron.com/2014/01/22/how-we-render-animated-content-from-html5-canvas/)
 - user accounts ( login w/ github ?)
 - fork/remix
 - easy embed code for sketch*
