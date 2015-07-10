@@ -17,7 +17,7 @@ There will be two repos. One for the client-side code. One for the server-side c
   - Run the server: ``node server.js``
 
 
-Priorities:
+## Priorities:
 - ux / design
 - figure out how to handle multiple files
 - print to virtual console
