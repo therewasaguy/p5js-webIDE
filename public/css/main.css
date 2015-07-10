@@ -1,3 +1,10 @@
+#debugText {
+  z-index: 100;
+  position: absolute;
+  bottom: 20px;
+  left: 10px;
+  background: white; }
+
 #main-container {
   margin-top: 10px;
   margin-bottom: 10px;

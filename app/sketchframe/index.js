@@ -11,13 +11,15 @@ module.exports = {
 
 	methods: {
 		initSketchFrame: function() {
+			var self = this;
 			var sketchFrame = document.getElementById('sketchFrame');
 
 			sketchFrame.onload = function() {
 				var code = window.ace.getValue();
 				code += '\n new p5();\n'
 
-				if (settings.fullScreen) {
+				if (self.$root.settings.fullScreen) {
+					console.log('full screen');
 					// to do: check to see if setup exists,
 					// and if createCanvas exists,
 					// if not make it windowWidth, windowHeight
@@ -31,6 +33,8 @@ module.exports = {
 				userScript.text = code;
 				userScript.async = false;
 				sketchFrame.contentWindow.document.body.appendChild(userScript);
+
+				self.$root.running = true;
 			}
 		}
 	}

@@ -9,7 +9,7 @@ var sass = require('gulp-sass');
 
 var cssPath = './app/**/*.scss';
 var jsPath = ['./app/*.js', './app/**/*.js', './app/**/*.html', './public/index.html'];
-
+var debugClientPath = './app/debug/debug-console.js';
 
 // concat all JS files into main.js
 gulp.task('browserify', function() {
@@ -26,6 +26,11 @@ gulp.task('browserify', function() {
     .pipe(gulp.dest('./public/js/'));
 });
 
+gulp.task('injected-js', function(){
+  return gulp.src([debugClientPath])
+    .pipe(concat('debug-console.js'))
+    .pipe(gulp.dest('./public/js/'));
+});
 
 // concat all CSS files into main.css
 gulp.task('css', function() {
@@ -44,7 +49,7 @@ gulp.task('css', function() {
 gulp.task('watch', function() {
   gulp.watch(jsPath, ['browserify']);
   gulp.watch(cssPath, ['css']);
-  // gulp.watch(debugClientPath, ['injected-js']);
+  gulp.watch(debugClientPath, ['injected-js']);
 });
 
 gulp.task('default', ['css', 'browserify', 'watch']);

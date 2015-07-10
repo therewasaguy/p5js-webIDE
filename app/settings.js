@@ -6,7 +6,8 @@ var defaults = {
   consoleOrientation: 'horizontal',
   showSidebar: true,
   wordWrap: false,
-  runInBrowser: false
+  runInBrowser: false,
+  fullScreen: true
 };
 
 var userSettings = {};

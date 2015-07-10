@@ -4,6 +4,9 @@
 
 var _ = require('underscore');
 var beautify = require('js-beautify').js_beautify;
+var beautify_css = require('js-beautify').css;
+var beautify_html = require('js-beautify').html;
+var ace = require('brace');
 
 require('brace/mode/html');
 require('brace/mode/javascript');
@@ -29,16 +32,35 @@ module.exports = {
 
 		this.customizeCommands();
 
+		this.$on('open-file', this.openFile);
+
+		// to do: initialize differently
 		this.openFile();
 	},
 
 	methods: {
-		openFile: function(fileObject) {
 
-			var session = this.ace.getSession();
+		openFile: function(fileObject) {
+			var self = this;
+			var session;
+
+			if (fileObject) {
+				session = _.findWhere(this.sessions, {name: fileObject.name});
+				if (!session) {
+					session = ace.createEditSession( fileObject.contents, 'ace/mode/javascript');
+					console.log(session);
+					this.ace.setSession(session);
+				}
+			} else {
+				session = this.ace.getSession();
+			}
 
 			session.on('change', function() {
-				// console.log('text changed');
+				localStorage.latestCode = JSON.stringify(session.getValue());
+
+				// var file = Files.find(self.$root.files, fileObject.path);
+				// if (file) file.contents = doc.getValue();
+
 			});
 
 			session.setMode('ace/mode/javascript');
@@ -50,8 +72,15 @@ module.exports = {
 			this.ace.focus();
 
 			if (this.newProject) {
+				// load recent code
+				var recentCode = localStorage.latestCode;
+				if (recentCode) {
+					session.setValue(JSON.parse(recentCode));
+				}
+
 				this.ace.gotoLine(2, 2);
 				this.newProject = false;
+
 			}
 
 		},
