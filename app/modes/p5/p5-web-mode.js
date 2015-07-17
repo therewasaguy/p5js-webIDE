@@ -25,6 +25,9 @@ module.exports = {
 
 		this.$.debug.clearErrors();
 
+		// focus to catch key and mouse events
+		// setTimeout( sketchFrame.contentWindow.focus(), 1000 );
+
 		this.running = true;
 	},
 
