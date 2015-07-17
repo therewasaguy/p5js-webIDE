@@ -1,9 +1,12 @@
+#debug {
+  background-color: #F1F1F1; }
+
 #debugText {
   z-index: 100;
   position: absolute;
   bottom: 20px;
   left: 10px;
-  background: white; }
+  background-color: #F1F1F1; }
 
 #main-container {
   margin-top: 10px;
@@ -24,20 +27,28 @@ div#editor-container {
   flex: 1; }
 
 #editor {
-  font: 14px source-code;
+  font: 14px inconsolata, source-code;
   border-radius: 7px;
   flex: 1;
   max-width: 50%;
-  background: rgba(0, 0, 0, 0.5); }
+  background: rgba(0, 200, 175, 0.5); }
 
 .ace-gutter {
   color: #58585b;
   min-width: 52px !important; }
 
+.ace_content, .ace_gutter {
+  padding-top: 5px; }
+
+.ace_gutter-active-line {
+  margin-top: 5px; }
+
 .ace_gutter-cell {
   background-image: none !important;
-  background-position: 2px center !important;
-  padding-right: 15px !important; }
+  background-position: 0 !important;
+  padding-right: 5px !important;
+  padding-left: 5px !important;
+  color: #AFAFAF; }
 
 .ace_info {
   background-color: #D7E5F5 !important; }
@@ -55,6 +66,53 @@ body.horizontal div#editor-container {
 
 .ace_scroller.ace_scroll-left {
   box-shadow: none !important; }
+
+/* property, tag, boolean,
+   number, function-name, constant,
+   symbol */
+.ace_numeric,
+.ace_tag {
+  color: #DC3787 !important;
+  /* not p5 pink, but related */ }
+
+/* atrule, attr-value, keyword,
+   class-name */
+.ace_type,
+.ace_class,
+.ace_attribute-name {
+  color: #704F21 !important;
+  /* darker brown */ }
+
+/* selector, attr-name, 
+function, builtin */
+.ace_function,
+.ace_keyword,
+.ace_support {
+  color: #00A1D3 !important;
+  /* not p5 blue, but related */ }
+
+/* comment, block-comment, prolog,
+   doctype, cdata */
+.ace_comment {
+  color: #A0A0A0 !important;
+  /* light gray */ }
+
+/* operator, entity, url,
+variable */
+.ace_string {
+  color: #a67f59 !important;
+  /* og coy a67f59 a light brown */ }
+
+.ace_operator {
+  color: #333 !important; }
+
+/* regex, important */
+.ace_regexp {
+  color: #e90 !important;
+  /* og coy e90 orange */ }
+
+.ace-twilight .ace_variable {
+  color: #EC5097 !important; }
 
 #settingsContainer {
   position: absolute;
@@ -303,7 +361,7 @@ body.horizontal div#editor-container {
         padding-left: 64px;
         margin-left: 10px;
         cursor: pointer;
-        color: #58585b;
+        color: #333333;
         min-width: 60px; }
       #filetree ul li div.selected {
         background-color: #f6f6f6;
@@ -356,6 +414,43 @@ body.horizontal div#editor-container {
   width: 100%;
   right: 0; }
 
+@font-face {
+  font-family: karla;
+  src: url("../fonts/Karla/Karla-Regular.ttf"); }
+
+@font-face {
+  font-family: karla-bold;
+  src: url("../fonts/Karla/Karla-Bold.ttf"); }
+
+@font-face {
+  font-family: source-code;
+  src: url("../fonts/Source_Code_Pro/SourceCodePro-Regular.ttf"); }
+
+@font-face {
+  font-family: inconsolata;
+  src: url("../fonts/Inconsolata/inconsolata.ttf"); }
+
+@font-face {
+  font-family: avenir-next-medium;
+  src: url("../fonts/Avenir_Next_Medium/AvenirNextLTW01-Medium.ttf"); }
+
+body, html {
+  color: #58595B;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font: 14px karla, sans-serif; }
+
+body {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: stretch;
+  overflow: hidden; }
+
+.file-handler {
+  display: none; }
+
 #header-container {
   display: flex;
   flex: 1;
@@ -378,11 +473,11 @@ body.horizontal div#editor-container {
   float: left;
   margin-top: 8px; }
   #play:hover {
-    background-image: url("../images/play-green.svg"); }
+    background-image: url("../images/play-pink.svg"); }
   #play.running {
     background-image: url("../images/stop-gray.svg"); }
     #play.running:hover {
-      background-image: url("../images/stop-red.svg"); }
+      background-image: url("../images/stop-orange.svg"); }
 
 #button_header {
   margin-left: 15px;
@@ -392,7 +487,7 @@ body.horizontal div#editor-container {
 #project-name {
   padding-left: 20px;
   font-size: 24px;
-  color: #58585b;
+  color: #ed225d;
   font-weight: bold;
   margin-top: 10px;
   margin-bottom: 10px;
@@ -466,32 +561,3 @@ body.horizontal div#editor-container {
   #add a {
     width: 100%;
     display: block; }
-
-@font-face {
-  font-family: karla;
-  src: url("../fonts/karla/Karla-Regular.ttf"); }
-
-@font-face {
-  font-family: karla-bold;
-  src: url("../fonts/karla/Karla-Bold.ttf"); }
-
-@font-face {
-  font-family: source-code;
-  src: url("../fonts/Source_Code_Pro/SourceCodePro-Regular.ttf"); }
-
-body, html {
-  color: #231f20;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  font: 14px karla, sans-serif; }
-
-body {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: stretch;
-  overflow: hidden; }
-
-.file-handler {
-  display: none; }

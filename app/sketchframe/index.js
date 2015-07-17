@@ -19,7 +19,6 @@ module.exports = {
 				code += '\n new p5();\n'
 
 				if (self.$root.settings.fullScreen) {
-					console.log('full screen');
 					// to do: check to see if setup exists,
 					// and if createCanvas exists,
 					// if not make it windowWidth, windowHeight

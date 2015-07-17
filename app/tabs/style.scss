@@ -22,14 +22,14 @@
  float: left;
  margin-top: 8px;
  &:hover {
-  background-image: url('../images/play-green.svg');
+  background-image: url('../images/play-pink.svg');
 }
 
 &.running {
   background-image: url('../images/stop-gray.svg');
 
   &:hover {
-    background-image: url('../images/stop-red.svg');
+    background-image: url('../images/stop-orange.svg');
   }
 }
 }  
@@ -45,7 +45,8 @@
 #project-name {
   padding-left: 20px;
   font-size: 24px;
-  color: #58585b;
+  // color: #58585b;
+  color: #ed225d;
   font-weight: bold;
   margin-top: 10px;
   margin-bottom: 10px;
