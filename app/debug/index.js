@@ -10,6 +10,10 @@ module.exports = {
 		console.log('loaded debug');
 		// eventListener for messages from iframe:
 		window.addEventListener('message', self.editorReceiveMsg.bind(self), false);
+
+		self.dbg = document.getElementById('debugText');
+		self.dbgArea = document.getElementById('debugContainer');
+
 	},
 
 	methods: {
@@ -17,11 +21,24 @@ module.exports = {
 			var msg = JSON.parse(e.data);
 
 			if (msg.type === 'error') {
-				this.logError(msg);
+				this.printError(msg);
 			}
+
+			else if (msg.type === 'log') {
+				this.printLog(msg);
+			}
+
 		},
 
-		logError: function(data) {
+		// print log/print to the virtual console
+		printLog: function(data) {
+			var self = this;
+			self.dbg.innerHTML += data.msg + '<br/>';
+			self.dbgArea.style.opacity = 1.0;
+		},
+
+		// print an error to the virtual console
+		printError: function(data) {
 
 			// only log error if the sketch is running
 			if (!this.$root.running) {
@@ -33,16 +50,14 @@ module.exports = {
 				this.$root.running = false;
 			}
 
-			var dbg = document.getElementById('debugText');
-			dbg.innerText = 'Error on line ' + data.num + ': ' + data.msg;
-
-			var dbgArea = document.getElementById('debugContainer');
-			dbgArea.style.opacity = 1.0;
+			self.dbg.innerHTML += 'Error on line ' + data.num + ': ' + data.msg + '<br/>';
+			self.dbgArea.style.opacity = 1.0;
 		},
 
 		clearErrors: function() {
-			var dbgArea = document.getElementById('debugContainer');
-			dbgArea.style.opacity = 0.0;
+			var self = this;
+			self.dbgArea.style.opacity = 0.0;
+			self.dbg.innerHTML = '';
 		}
 	}
 
