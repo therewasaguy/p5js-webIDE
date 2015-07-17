@@ -23,8 +23,9 @@ module.exports = {
 					// and if createCanvas exists,
 					// if not make it windowWidth, windowHeight
 					code += '\n  function windowResized() {\n' +
-									'resizeCanvas(windowWidth, windowHeight);\n'+
-									'}';
+									'resizeCanvas(windowWidth, windowHeight);setup();\n'+
+									'}\n'+
+									'resizeCanvas(windowWidth, windowHeight); setup();';
 				}
 
 				var userScript = sketchFrame.contentWindow.document.createElement('script');

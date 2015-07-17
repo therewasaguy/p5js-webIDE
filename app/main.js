@@ -87,19 +87,9 @@ var appConfig = {
 		toggleRun: function() {
 			if (this.running) {
 				this.modeFunction('stop');
-				// this.stopCode();
-				// this.running = false;
 			} else {
 				this.modeFunction('run');
-				// this.run();
 			}
-		},
-
-		pauseCode: function() {
-			sketchIsPlaying = false;
-			var frameSrc = window.location.origin +'/'+ $('#sketchFrame').attr('src');
-			var data = {'msg':'pause'};
-			window.postMessage( JSON.stringify(data), frameSrc);
 		},
 
 		// HANDLE FILES
