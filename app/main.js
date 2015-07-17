@@ -4,12 +4,17 @@ var settings = require('./settings');
 var debugView = require('./debug');
 var $ = require('jquery');
 var Files = require('./files');
+var modes = {
+  p5web: require('./modes/p5/p5-web-mode')
+};
 
 Vue.config.debug = true;
 Vue.config.silent = true;
 
 var appConfig = {
 	el: '#app',
+
+	mode: modes.p5web,
 
 	components: {
 		editor: require('./editor/index'),
@@ -44,9 +49,25 @@ var appConfig = {
 
 	ready: function() {
 		this.setupSettings();
+
+		this.modeFunction('newProject');
 	},
 
 	methods: {
+		//runs a function named func in the mode file currently being used
+		modeFunction: function(func, args) {
+			var mode = this.$options.mode;
+			console.log('mode: ' + mode);
+			if (typeof mode[func] === 'function') {
+				// make args an array if it isn't already
+				// typeof args won't work because it returns 'object'
+				if (Object.prototype.toString.call(args) !== '[object Array]') {
+				  args = [args];
+				}
+				mode[func].apply(this, args);
+			}
+		},
+
 		setupSettings: function() {
 			this.settings = settings.load();
 			this.$watch('settings', function(value) {
@@ -63,30 +84,15 @@ var appConfig = {
 			this.settings.showSidebar = !this.settings.showSidebar;
 		},
 
-		run: function() {
-			var sketchFrame = document.getElementById('sketchFrame');
-			sketchFrame.src = sketchFrame.src;
-
-			this.$.debug.clearErrors();
-
-			this.running = true;
-		},
-
 		toggleRun: function() {
 			if (this.running) {
-				// this.modeFunction('stop');
-				this.stopCode();
-				this.running = false;
+				this.modeFunction('stop');
+				// this.stopCode();
+				// this.running = false;
 			} else {
-				// this.modeFunction('run');
-				this.run();
+				this.modeFunction('run');
+				// this.run();
 			}
-		},
-
-		stopCode:  function() {
-			var frameSrc = window.location.origin +'/'+ $('#sketchFrame').attr('src');
-			var data = {'msg':'stop'};
-			window.postMessage( JSON.stringify(data), frameSrc);
 		},
 
 		pauseCode: function() {
