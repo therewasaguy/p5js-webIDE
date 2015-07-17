@@ -2,9 +2,9 @@
 
   <button id="play" v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>
   <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>
-  <input type="button" value="save">
-  <input type="button" value="new">
-  <input type="button" value="download">
+  <input type="button" value="save as" v-on="click: $root.saveProject()">
+  <input type="button" value="new" v-on="click: $root.newProject()">
+  <input type="button" value="download" v-on="click: $root.downloadProject()">
 
   <div id="toolbar">
     <div id="actions">

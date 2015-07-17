@@ -7,7 +7,7 @@ var defaults = {
   showSidebar: true,
   wordWrap: false,
   runInBrowser: false,
-  fullScreen: true
+  fullScreen: false
 };
 
 var userSettings = {};
