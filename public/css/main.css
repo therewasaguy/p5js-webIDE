@@ -384,6 +384,15 @@ variable */
   #settingsPane input#tabSize {
     margin-left: 0.3em; }
 
+#sketchPane, #editorPane {
+  position: absolute;
+  top: 0;
+  z-index: -1; }
+
+#sketchPane {
+  width: 100%;
+  right: 0; }
+
 #side-container {
   flex-direction: column;
   display: flex; }
@@ -494,15 +503,6 @@ variable */
     height: 16px; }
   #filetree .icon.image {
     background-image: url("../images/image.svg"); }
-
-#sketchPane, #editorPane {
-  position: absolute;
-  top: 0;
-  z-index: -1; }
-
-#sketchPane {
-  width: 100%;
-  right: 0; }
 
 #tab-container {
   display: flex;
