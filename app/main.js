@@ -17,7 +17,8 @@ var appConfig = {
 		tabs: require('./tabs/index'),
 		sidebar: require('./sidebar/index'),
 		sketchframe: require('./sketchframe/index'),
-		debug: require('./debug/index')
+		debug: require('./debug/index'),
+		menu: require('./menu/index')
 	},
 
 	data: {
@@ -135,6 +136,13 @@ var appConfig = {
 
 		closeFile: function() {
 			this.$broadcast('close-file', this.currentFile);
+		},
+
+		renameProject: function() {
+			// var oldName = String(this.projectName);
+			var newName = prompt('New project name:', this.projectName);
+			this.title = newName;
+			console.log('pname: ' + this.projectName);
 		}
 	}
 

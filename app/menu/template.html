@@ -1,0 +1,17 @@
+<div id ="button_header">
+
+  <button id="play" v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>
+  <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>
+  <input type="button" value="save">
+  <input type="button" value="new">
+  <input type="button" value="download">
+
+  <div id="toolbar">
+    <div id="actions">
+      <button id="settings" title="Preferences" v-on="click: $root.toggleSettingsPane()">
+        <img src="images/options.svg">
+      </button>
+    </div>
+  </div>
+
+</div>

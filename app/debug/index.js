@@ -39,6 +39,7 @@ module.exports = {
 
 		// print an error to the virtual console
 		printError: function(data) {
+			var self = this;
 
 			// only log error if the sketch is running
 			if (!this.$root.running) {

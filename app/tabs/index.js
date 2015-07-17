@@ -60,6 +60,7 @@ module.exports = {
 		},
 
 		addTab: function(fileObject, tabs) {
+			console.log(fileObject);
 
 			if (fileObject.open) {
 				var tabObject = {
@@ -72,7 +73,6 @@ module.exports = {
 				};
 
 				tabs.push(tabObject);
-				console.log(tabs);
 			}
 		}
 	},
