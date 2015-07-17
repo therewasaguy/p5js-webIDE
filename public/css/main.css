@@ -27,7 +27,8 @@ div#editor-container {
   font: 14px source-code;
   border-radius: 7px;
   flex: 1;
-  max-width: 50%; }
+  max-width: 50%;
+  background: rgba(0, 0, 0, 0.5); }
 
 .ace-gutter {
   color: #58585b;
@@ -58,7 +59,7 @@ body.horizontal div#editor-container {
 #settingsContainer {
   position: absolute;
   background-color: #959595;
-  top: 10px;
+  bottom: 10px;
   right: 10px;
   z-index: 999;
   box-shadow: 0px 0px 6px #999;
@@ -352,7 +353,8 @@ body.horizontal div#editor-container {
   z-index: -1; }
 
 #sketchPane {
-  width: 100%; }
+  width: 100%;
+  right: 0; }
 
 #header-container {
   display: flex;
@@ -421,7 +423,10 @@ body.horizontal div#editor-container {
 
 #actions #settings {
   float: right;
-  margin-top: 10px; }
+  margin-top: 10px;
+  right: 2px;
+  bottom: 2px;
+  position: absolute; }
 
 #tabs {
   margin-left: 53px;
