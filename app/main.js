@@ -57,7 +57,6 @@ var appConfig = {
 		//runs a function named func in the mode file currently being used
 		modeFunction: function(func, args) {
 			var mode = this.$options.mode;
-			console.log('mode: ' + mode);
 			if (typeof mode[func] === 'function') {
 				// make args an array if it isn't already
 				// typeof args won't work because it returns 'object'
@@ -137,8 +136,21 @@ var appConfig = {
 		renameProject: function() {
 			// var oldName = String(this.projectName);
 			var newName = prompt('New project name:', this.projectName);
-			this.title = newName;
-			console.log('pname: ' + this.projectName);
+			if (newName) {
+				this.title = newName;
+			}
+		},
+
+		saveProject: function() {
+			this.modeFunction('saveAs');
+		},
+
+		newProject: function() {
+			this.modeFunction('newProject');
+		},
+
+		downloadProject: function() {
+			this.modeFunction('downloadProject');
 		}
 	}
 

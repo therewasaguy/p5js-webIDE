@@ -2,10 +2,21 @@ module.exports = {
 
 	newProject: function() {
 		console.log('new proj!!!');
+		this.tabs = [];
+		// this.$editor.sessions = [];
+		// this.openFile();
 	},
 
 	saveAs: function() {
 		console.log('save as!!!');
+		var saveName = prompt('Save as ', this.projectName);
+		if (saveName) {
+			this.title = saveName;
+		}
+	},
+
+	downloadProject: function() {
+		console.log('downloadProject!!!');
 	},
 
 	run: function() {

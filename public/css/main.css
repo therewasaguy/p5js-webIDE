@@ -510,7 +510,8 @@ variable */
   flex-direction: column;
   max-height: 35px;
   -webkit-touch-callout: none;
-  -webkit-user-select: none; }
+  -webkit-user-select: none;
+  z-index: 2; }
 
 #tabs {
   margin-left: 53px;

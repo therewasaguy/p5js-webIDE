@@ -332,7 +332,6 @@ var appConfig = {
 		//runs a function named func in the mode file currently being used
 		modeFunction: function(func, args) {
 			var mode = this.$options.mode;
-			console.log('mode: ' + mode);
 			if (typeof mode[func] === 'function') {
 				// make args an array if it isn't already
 				// typeof args won't work because it returns 'object'
@@ -412,8 +411,21 @@ var appConfig = {
 		renameProject: function() {
 			// var oldName = String(this.projectName);
 			var newName = prompt('New project name:', this.projectName);
-			this.title = newName;
-			console.log('pname: ' + this.projectName);
+			if (newName) {
+				this.title = newName;
+			}
+		},
+
+		saveProject: function() {
+			this.modeFunction('saveAs');
+		},
+
+		newProject: function() {
+			this.modeFunction('newProject');
+		},
+
+		downloadProject: function() {
+			this.modeFunction('downloadProject');
 		}
 	}
 
@@ -428,16 +440,27 @@ module.exports = {
 	template: require('./template.html'),
 }
 },{"./template.html":8}],8:[function(require,module,exports){
-module.exports = '<div id ="button_header">\n\n  <button id="play" v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>\n  <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>\n  <input type="button" value="save">\n  <input type="button" value="new">\n  <input type="button" value="download">\n\n  <div id="toolbar">\n    <div id="actions">\n      <button id="settings" title="Preferences" v-on="click: $root.toggleSettingsPane()">\n        <img src="images/options.svg">\n      </button>\n    </div>\n  </div>\n\n</div>';
+module.exports = '<div id ="button_header">\n\n  <button id="play" v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>\n  <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>\n  <input type="button" value="save as" v-on="click: $root.saveProject()">\n  <input type="button" value="new" v-on="click: $root.newProject()">\n  <input type="button" value="download" v-on="click: $root.downloadProject()">\n\n  <div id="toolbar">\n    <div id="actions">\n      <button id="settings" title="Preferences" v-on="click: $root.toggleSettingsPane()">\n        <img src="images/options.svg">\n      </button>\n    </div>\n  </div>\n\n</div>';
 },{}],9:[function(require,module,exports){
 module.exports = {
 
 	newProject: function() {
 		console.log('new proj!!!');
+		this.tabs = [];
+		// this.$editor.sessions = [];
+		// this.openFile();
 	},
 
 	saveAs: function() {
 		console.log('save as!!!');
+		var saveName = prompt('Save as ', this.projectName);
+		if (saveName) {
+			this.title = saveName;
+		}
+	},
+
+	downloadProject: function() {
+		console.log('downloadProject!!!');
 	},
 
 	run: function() {
@@ -611,9 +634,9 @@ module.exports = {
 					// and if createCanvas exists,
 					// if not make it windowWidth, windowHeight
 					code += '\n  function windowResized() {\n' +
-									'resizeCanvas(windowWidth, windowHeight);setup();\n'+
+									'resizeCanvas(windowWidth, windowHeight);if(typeof(setup) !== "undefined") {setup();}\n'+
 									'}\n'+
-									'resizeCanvas(windowWidth, windowHeight); setup();';
+									'resizeCanvas(windowWidth, windowHeight); if(typeof(setup) !== "undefined") {setup();}';
 				}
 
 				var userScript = sketchFrame.contentWindow.document.createElement('script');
