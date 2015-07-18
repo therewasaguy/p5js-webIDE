@@ -6,8 +6,6 @@ var _ = require('underscore');
 var Path = require('path');
 
 
-console.log(Path);
-
 var Files = {
 
 	/**

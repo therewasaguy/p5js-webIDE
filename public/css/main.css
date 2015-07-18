@@ -497,14 +497,27 @@ variable */
   #filetree .icon.image {
     background-image: url("../images/image.svg"); }
 
-#sketchPane, #editorPane {
+#sketchframe-container {
+  width: 100%;
+  height: 100%;
   position: absolute;
   top: 0;
   z-index: -1; }
 
+#sketchPane, #editorPane {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%; }
+
 #sketchPane {
   width: 100%;
+  height: 100%;
   right: 0; }
+
+#sketchFrame {
+  width: 100%;
+  height: 100%; }
 
 #tab-container {
   display: flex;

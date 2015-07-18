@@ -10,12 +10,13 @@ module.exports = {
 	},
 
 	ready: function() {
-		if (parseInt(this.tabSize) < 1) {
-			this.tabSize = 1;
-		}
-		this.tabSizeDisplay = this.tabSize;
+		var self = this;
 
-		this.presentationMode = false;
+		if (parseInt(self.tabSize) < 1) {
+			self.tabSize = 1;
+		}
+		self.tabSizeDisplay = self.tabSize;
+
 	},
 
 	methods: {
@@ -26,9 +27,10 @@ module.exports = {
 		},
 
 		goFullScreen: function(e) {
-			console.log(this.presentationMode);
-			console.log('go full screen');
+			var div = document.getElementById('sketchframe-container');
+			div.requestFullscreen();
 		}
+
 	}
 
 };

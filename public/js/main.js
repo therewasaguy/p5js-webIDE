@@ -203,8 +203,6 @@ var _ = require('underscore');
 var Path = require('path');
 
 
-console.log(Path);
-
 var Files = {
 
 	/**
@@ -505,7 +503,7 @@ var defaults = {
   showSidebar: true,
   wordWrap: false,
   runInBrowser: false,
-  fullScreen: false
+  fullCanvas: false // automatically make canvas full width/height of screen
 };
 
 var userSettings = {};
@@ -550,10 +548,13 @@ module.exports = {
 	},
 
 	ready: function() {
-		if (parseInt(this.tabSize) < 1) {
-			this.tabSize = 1;
+		var self = this;
+
+		if (parseInt(self.tabSize) < 1) {
+			self.tabSize = 1;
 		}
-		this.tabSizeDisplay = this.tabSize;
+		self.tabSizeDisplay = self.tabSize;
+
 	},
 
 	methods: {
@@ -561,13 +562,18 @@ module.exports = {
 			var parsed = parseInt(e.target.value);
 			this.tabSize = parsed >= 1 ? parsed : 1;
 			this.tabSizeDisplay = this.tabSize;
+		},
+
+		goFullScreen: function(e) {
+			var div = document.getElementById('sketchframe-container');
+			div.requestFullscreen();
 		}
+
 	}
 
 };
-
 },{"./template.html":12}],12:[function(require,module,exports){
-module.exports = '<div id="settingsPane">\n  <div id="titleBar">\n    <h2>Preferences</h2><div id="close" v-on="click: $root.toggleSettingsPane()">\n\n    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="x" x="0" y="0" viewBox="111.98 169.64 388.04 407.06" enable-background="new 111.982048 169.6423035 388.0419922 407.0557861" xml:space="preserve"><path d="M326.08 360.51L392.7 293.88c6.42-6.42 6.42-16.81 0-23.23 -6.42-6.42-16.81-6.42-23.23 0l-66.63 66.63 -66.63-66.63c-6.42-6.42-16.81-6.42-23.23 0s-6.42 16.81 0 23.23l66.63 66.63 -66.63 66.63c-6.42 6.42-6.42 16.81 0 23.23 3.21 3.21 7.41 4.81 11.61 4.81 4.2 0 8.41-1.6 11.61-4.81l66.63-66.63 66.63 66.63c3.21 3.21 7.41 4.81 11.61 4.81 4.2 0 8.41-1.6 11.61-4.81 6.42-6.42 6.42-16.81 0-23.23L326.08 360.51z" ></svg></div>\n\n  </div>\n  <div id="optionsZone">\n\n<!--     <div class="hiddenRadio">\n      <p id="consoleText">Console Orientation</p>\n\n      <input type="radio" name="consoleOrientation" id="consoleH" v-model="consoleOrientation" value="horizontal" >\n      <label for="consoleH" class="left">\n        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="console" id="consoleHorizontal" x="0px" y="0px" viewBox="111.982048 169.6423035 388.0419922 220.7826385" xml:space="preserve"><g><path d="M487.5209656 339.6809998H124.4851151c-6.9052582 0-2312.5030746-5.5978394-12.5030746-12.5030823V182.145401 c0-6.9052582 5.5978165-12.5030823 12.5030746-12.5030823h363.0358582c6.9052429 0 12.5 5.6 12.5 12.5 v145.0325165C500.0240173 334.1 494.4 339.7 487.5 339.6809998z"/><path d="M111.9820404 377.9217529v-18.2110291c0-6.9052429 5.5978165-12.5030518 12.5030746-12.5030518h363.0358582 c6.9052429 0 12.5 5.6 12.5 12.5030518v18.2110291c0 6.9052734-5.5978088 12.5030823-12.5030518 12.5 H124.4851151C117.5798569 390.4 112 384.8 112 377.9217529z"/></g></svg>\n      </label>\n\n      <input type="radio" name="consoleOrientation" id="consoleV" v-model="consoleOrientation" value="vertical" >\n      <label for="consoleV" class="right">\n        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="console" id="consoleVertical" x="0" y="0" viewBox="111.98 169.64 388.04 220.78" enable-background="new 111.982048 169.6423035 388.0419922 220.7826385" xml:space="preserve"><path d="M400.55 390.42H124.49c-6.91 0-12.5-5.6-12.5-12.5V182.15c0-6.91 5.6-12.5 12.5-12.5H400.55c6.91 0 12.5 5.6 12.5 12.5V377.92C413.05 384.83 407.45 390.42 400.55 390.42z"/><path d="M487.52 390.42h-54.44c-6.91 0-12.5-5.6-12.5-12.5V182.15c0-6.91 5.6-12.5 12.5-12.5h54.44c6.91 0 12.5 5.6 12.5 12.5V377.92C500.02 384.83 494.43 390.42 487.52 390.42z"/></svg>\n      </label>\n    </div> -->\n\n    <div class="hiddenCheckbox" id="libs">\n      <img id="libraryIcon" src="images/sidebar.svg">\n      <input id="showSidebar" type="checkbox" v-model="showSidebar">\n      <label class="highlight fade" for="showSidebar">Show Sidebar</label>\n    </div>\n\n    <div>\n      <img id="textAdjust" src="images/textAdjust.svg">\n      <input id="textAdjustInput" class="highlight" type="text" v-model="fontSize" size=3>\n    </div>\n\n    <div id="indentation">\n      <label for="tabSize">Indentation Amount</label><input id="tabSize" class="highlight" type="text"  v-model="tabSizeDisplay" size=3 v-on="change: updateTabSize">\n    </div>\n\n    <div id="indentOptions" class="hiddenRadio">\n      <input type="radio" name="tabType" value="spaces" id="tabTypeS" v-model="tabType">\n      <label class="indentSelection" id="spaceBox" for="tabTypeS">\n        <span>\n          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="space" x="0" y="0" viewBox="111.98 169.64 394.28 116.59" enable-background="new 111.982048 169.6423035 394.276123 116.5872803" xml:space="preserve"><path d="M495.71 169.64h-50.1c-5.85 0-10.58 4.74-10.58 10.58v34.74H183.25v-34.74c0-5.84-4.74-10.58-10.58-10.58h-50.1c-5.84 0-10.58 4.74-10.58 10.58v45.32 50.1c0 5.84 4.74 10.58 10.58 10.58h50.1 272.95 36.41 13.69c5.85 0 10.58-4.74 10.58-10.58v-95.42C506.3 174.38 501.56 169.64 495.71 169.64z"/></svg>\n        </span>\n        spaces\n      </label>\n      <input type="radio" name="tabType" value="tabs" id="tabTypeT" v-model="tabType">\n      <label class="indentSelection" id="tabBox" for="tabTypeT">\n        <span>\n          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="tab" x="0" y="0" viewBox="111.98 169.64 394.28 196.29" enable-background="new 111.982048 169.6423035 394.276123 196.2901306" xml:space="preserve"><path d="M292.69 348.7v-47.75H123.92c-6.53 0-11.94-5.41-11.94-11.94v-47.75c0-6.53 5.41-11.94 11.94-11.94h168.77v-47.75c0-4.85 2.98-9.14 7.46-11 4.29-1.87 9.51-0.94 12.86 2.61l83.56 83.56c2.43 2.23 3.55 5.41 3.55 8.39 0 2.98-1.12 6.16-3.55 8.39l-83.56 83.56c-3.35 3.55-8.58 4.48-12.86 2.61C295.67 357.84 292.69 353.55 292.69 348.7z"/><path d="M435 355.35v-175.13c0-5.84 4.74-10.58 10.58-10.58h50.09c5.84 0 10.58 4.74 10.58 10.58v175.13c0 5.84-4.74 10.58-10.58 10.58h-50.09C439.74 365.93 435 361.19 435 355.35z"/></svg>\n        </span>\n        tabs\n      </label>\n\n    </div>\n\n    <div class="hiddenCheckbox" id="setFullScreen">\n      <img id="browserIcon" src="images/browser.svg">\n      <input id="fullScreen" type="checkbox" v-model="fullScreen">\n      <label class="highlight fade" for="fullScreen">Full Screen</label>\n    </div>\n\n    <div class="hiddenCheckbox" id="ww">\n      <img id="wordWrapIcon" src="images/wordWrap.svg">\n      <input id="wordWrap" type="checkbox" v-model="wordWrap">\n      <label class="highlight fade" for="wordWrap">Word Wrap</label>\n    </div>\n\n    <div class="hiddenCheckbox" id="runInBrowserContainer">\n      <img id="browserIcon" src="images/browser.svg">\n      <input type="checkbox" id="runInBrowser" v-model="runInBrowser">\n      <label class="highlight fade" for="runInBrowser">Run In-Page</label>\n    </div>\n  </div>\n</div>';
+module.exports = '<div id="settingsPane">\n  <div id="titleBar">\n    <h2>Preferences</h2><div id="close" v-on="click: $root.toggleSettingsPane()">\n\n    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="x" x="0" y="0" viewBox="111.98 169.64 388.04 407.06" enable-background="new 111.982048 169.6423035 388.0419922 407.0557861" xml:space="preserve"><path d="M326.08 360.51L392.7 293.88c6.42-6.42 6.42-16.81 0-23.23 -6.42-6.42-16.81-6.42-23.23 0l-66.63 66.63 -66.63-66.63c-6.42-6.42-16.81-6.42-23.23 0s-6.42 16.81 0 23.23l66.63 66.63 -66.63 66.63c-6.42 6.42-6.42 16.81 0 23.23 3.21 3.21 7.41 4.81 11.61 4.81 4.2 0 8.41-1.6 11.61-4.81l66.63-66.63 66.63 66.63c3.21 3.21 7.41 4.81 11.61 4.81 4.2 0 8.41-1.6 11.61-4.81 6.42-6.42 6.42-16.81 0-23.23L326.08 360.51z" ></svg></div>\n\n  </div>\n  <div id="optionsZone">\n\n<!--     <div class="hiddenRadio">\n      <p id="consoleText">Console Orientation</p>\n\n      <input type="radio" name="consoleOrientation" id="consoleH" v-model="consoleOrientation" value="horizontal" >\n      <label for="consoleH" class="left">\n        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="console" id="consoleHorizontal" x="0px" y="0px" viewBox="111.982048 169.6423035 388.0419922 220.7826385" xml:space="preserve"><g><path d="M487.5209656 339.6809998H124.4851151c-6.9052582 0-2312.5030746-5.5978394-12.5030746-12.5030823V182.145401 c0-6.9052582 5.5978165-12.5030823 12.5030746-12.5030823h363.0358582c6.9052429 0 12.5 5.6 12.5 12.5 v145.0325165C500.0240173 334.1 494.4 339.7 487.5 339.6809998z"/><path d="M111.9820404 377.9217529v-18.2110291c0-6.9052429 5.5978165-12.5030518 12.5030746-12.5030518h363.0358582 c6.9052429 0 12.5 5.6 12.5 12.5030518v18.2110291c0 6.9052734-5.5978088 12.5030823-12.5030518 12.5 H124.4851151C117.5798569 390.4 112 384.8 112 377.9217529z"/></g></svg>\n      </label>\n\n      <input type="radio" name="consoleOrientation" id="consoleV" v-model="consoleOrientation" value="vertical" >\n      <label for="consoleV" class="right">\n        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="console" id="consoleVertical" x="0" y="0" viewBox="111.98 169.64 388.04 220.78" enable-background="new 111.982048 169.6423035 388.0419922 220.7826385" xml:space="preserve"><path d="M400.55 390.42H124.49c-6.91 0-12.5-5.6-12.5-12.5V182.15c0-6.91 5.6-12.5 12.5-12.5H400.55c6.91 0 12.5 5.6 12.5 12.5V377.92C413.05 384.83 407.45 390.42 400.55 390.42z"/><path d="M487.52 390.42h-54.44c-6.91 0-12.5-5.6-12.5-12.5V182.15c0-6.91 5.6-12.5 12.5-12.5h54.44c6.91 0 12.5 5.6 12.5 12.5V377.92C500.02 384.83 494.43 390.42 487.52 390.42z"/></svg>\n      </label>\n    </div> -->\n\n    <div class="hiddenCheckbox" id="libs">\n      <img id="libraryIcon" src="images/sidebar.svg">\n      <input id="showSidebar" type="checkbox" v-model="showSidebar">\n      <label class="highlight fade" for="showSidebar">Show Sidebar</label>\n    </div>\n\n    <div>\n      <img id="textAdjust" src="images/textAdjust.svg">\n      <input id="textAdjustInput" class="highlight" type="text" v-model="fontSize" size=3>\n    </div>\n\n    <div id="indentation">\n      <label for="tabSize">Indentation Amount</label><input id="tabSize" class="highlight" type="text"  v-model="tabSizeDisplay" size=3 v-on="change: updateTabSize">\n    </div>\n\n    <div id="indentOptions" class="hiddenRadio">\n      <input type="radio" name="tabType" value="spaces" id="tabTypeS" v-model="tabType">\n      <label class="indentSelection" id="spaceBox" for="tabTypeS">\n        <span>\n          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="space" x="0" y="0" viewBox="111.98 169.64 394.28 116.59" enable-background="new 111.982048 169.6423035 394.276123 116.5872803" xml:space="preserve"><path d="M495.71 169.64h-50.1c-5.85 0-10.58 4.74-10.58 10.58v34.74H183.25v-34.74c0-5.84-4.74-10.58-10.58-10.58h-50.1c-5.84 0-10.58 4.74-10.58 10.58v45.32 50.1c0 5.84 4.74 10.58 10.58 10.58h50.1 272.95 36.41 13.69c5.85 0 10.58-4.74 10.58-10.58v-95.42C506.3 174.38 501.56 169.64 495.71 169.64z"/></svg>\n        </span>\n        spaces\n      </label>\n      <input type="radio" name="tabType" value="tabs" id="tabTypeT" v-model="tabType">\n      <label class="indentSelection" id="tabBox" for="tabTypeT">\n        <span>\n          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="tab" x="0" y="0" viewBox="111.98 169.64 394.28 196.29" enable-background="new 111.982048 169.6423035 394.276123 196.2901306" xml:space="preserve"><path d="M292.69 348.7v-47.75H123.92c-6.53 0-11.94-5.41-11.94-11.94v-47.75c0-6.53 5.41-11.94 11.94-11.94h168.77v-47.75c0-4.85 2.98-9.14 7.46-11 4.29-1.87 9.51-0.94 12.86 2.61l83.56 83.56c2.43 2.23 3.55 5.41 3.55 8.39 0 2.98-1.12 6.16-3.55 8.39l-83.56 83.56c-3.35 3.55-8.58 4.48-12.86 2.61C295.67 357.84 292.69 353.55 292.69 348.7z"/><path d="M435 355.35v-175.13c0-5.84 4.74-10.58 10.58-10.58h50.09c5.84 0 10.58 4.74 10.58 10.58v175.13c0 5.84-4.74 10.58-10.58 10.58h-50.09C439.74 365.93 435 361.19 435 355.35z"/></svg>\n        </span>\n        tabs\n      </label>\n\n    </div>\n\n    <div class="hiddenCheckbox" id="setPresentationMode">\n      <img id="browserIcon" src="images/browser.svg">\n      <input id="presentationMode" type="checkbox" >\n      <label class="highlight fade" v-on="click: goFullScreen">Presentation</label>\n    </div>\n\n    <div class="hiddenCheckbox" id="setfullCanvas">\n      <img id="browserIcon" src="images/browser.svg">\n      <input id="fullCanvas" type="checkbox" v-model="fullCanvas">\n      <label class="highlight fade" for="fullCanvas">Full Canvas</label>\n    </div>\n\n    <div class="hiddenCheckbox" id="ww">\n      <img id="wordWrapIcon" src="images/wordWrap.svg">\n      <input id="wordWrap" type="checkbox" v-model="wordWrap">\n      <label class="highlight fade" for="wordWrap">Word Wrap</label>\n    </div>\n\n    <div class="hiddenCheckbox" id="runInBrowserContainer">\n      <img id="browserIcon" src="images/browser.svg">\n      <input type="checkbox" id="runInBrowser" v-model="runInBrowser">\n      <label class="highlight fade" for="runInBrowser">Run In-Page</label>\n    </div>\n  </div>\n</div>';
 },{}],13:[function(require,module,exports){
 /**
  *  sidebar
@@ -616,23 +622,47 @@ module.exports = '<div id="sidebar-container" class = "{{className}}"  v-on="con
  *  sketchframe holds the iframe that loads the sketch folder
  */
 
+// full screen polyfill by TRowbotham https://github.com/TRowbotham/FullscreenAPI-Polyfill/
+(function(g,h){function c(a){27===a.keyCode&&(document.exitFullscreen(),a.stopPropagation(),a.preventDefault())}var f=function(a,b){var e=["webkit","moz","ms"],c=e.length;a=a.charAt(0).toUpperCase()+a.slice(1);for(var d=0;d<c;d++)if(e[d]+a in b)return e[d];return!1},b=f("exitFullscreen",document)||f("cancelFullScreen",document);"exitFullscreen"in document||!b||(Element.prototype.requestFullscreen=function(a){if(b+"RequestFullscreen"in this)this[b+"RequestFullscreen"](a);else this[b+"RequestFullScreen"](a)},
+document.exitFullscreen=document[b+"ExitFullscreen"]||document[b+"CancelFullScreen"],Object.defineProperties(document,{fullscreenEnabled:{get:function(){return!!document[b+"FullScreenEnabled"]||!!document[b+"FullScreenEnabled"]},enumerable:!0},fullscreenElement:{get:function(){return document[b+"FullscreenElement"]||document[b+"FullScreenElement"]||document.webkitCurrentFullScreenElement||null},enumerable:!0}}),document.addEventListener(b+"fullscreenchange",function(){var a=document.createEvent("Event");
+a.initEvent("fullscreenchange",!0,!1);document.dispatchEvent(a);document.fullscreenElement?document.addEventListener("keydown",c,!1):document.removeEventListener("keydown",c,!1)}),document.addEventListener(b+"fullscreenerror",function(){var a=document.createEvent("Event");a.initEvent("fullscreenerror",!0,!1);document.dispatchEvent(a)}),"allowfullscreen"in HTMLIFrameElement.prototype||Object.defineProperty(HTMLIFrameElement.prototype,"allowfullscreen",{get:function(){return this.hasAttribute("allowfullscreen")||
+this.hasAttribute(b+"allowfullscreen")},set:function(a){var c=b+"AllowFullscreen";a?(this.setAttribute("allowfullscreen",""),this.setAttribute(c.toLowerCase(),"")):(this.removeAttribute("allowfullscreen"),this.removeAttribute(c.toLowerCase()))},enumerable:!0}))})(window);
+
+
 module.exports = {
 	template: require('./template.html'),
 
 	ready: function() {
-		this.initSketchFrame();
+		var self = this;
+		self.presentationMode = false;
+		self.sketchFrame = document.getElementById('sketchFrame');
+
+		self.initSketchFrame();
+
+		document.addEventListener('fullscreenchange', function(e) {
+			self.presentationMode = !self.presentationMode;
+			// if( window.innerHeight == screen.height) {
+
+			// 	// browser is fullscreen
+			// 	self.presentationMode = true;
+			// } else {
+			// 	self.presentationMode = false;
+			// }
+			console.log('full screen: ' + self.presentationMode);
+		});
+
 	},
 
 	methods: {
 		initSketchFrame: function() {
 			var self = this;
-			var sketchFrame = document.getElementById('sketchFrame');
+			var sketchFrame = this.sketchFrame;
 
 			sketchFrame.onload = function() {
 				var code = window.ace.getValue();
 				code += '\n new p5();\n'
 
-				if (self.$root.settings.fullScreen) {
+				if (self.$root.settings.fullCanvas) {
 					// to do: check to see if setup exists,
 					// and if createCanvas exists,
 					// if not make it windowWidth, windowHeight
@@ -651,11 +681,12 @@ module.exports = {
 				self.$root.running = true;
 			}
 		}
+
 	}
 
 };
 },{"./template.html":16}],16:[function(require,module,exports){
-module.exports = '<div id="sketchPane">\n	<iframe id="sketchFrame"\nsrc="sketch/output.html" width="100%" height="1000">\n	</iframe>\n</div>';
+module.exports = '<div id="sketchPane">\n	<iframe id="sketchFrame"\nsrc="sketch/output.html"\nallowfullscreen="" webkitallowfullscreen="" mozallowfullscreen="" oallowfullscreen="" msallowfullscreen="">\n	</iframe>\n</div>';
 },{}],17:[function(require,module,exports){
 /**
  *  tabs
