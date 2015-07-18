@@ -6,19 +6,21 @@ module.exports = {
 	template: require('./template.html'),
 
 	ready: function() {
+		this.sketchFrame = document.getElementById('sketchFrame');
+
 		this.initSketchFrame();
 	},
 
 	methods: {
 		initSketchFrame: function() {
 			var self = this;
-			var sketchFrame = document.getElementById('sketchFrame');
+			var sketchFrame = this.sketchFrame;
 
 			sketchFrame.onload = function() {
 				var code = window.ace.getValue();
 				code += '\n new p5();\n'
 
-				if (self.$root.settings.fullScreen) {
+				if (self.$root.settings.fullCanvas) {
 					// to do: check to see if setup exists,
 					// and if createCanvas exists,
 					// if not make it windowWidth, windowHeight
@@ -36,7 +38,21 @@ module.exports = {
 
 				self.$root.running = true;
 			}
+		},
+
+		toggleFullScreen: function() {
+			var elem = this.sketchFrame;
+			if (elem.requestFullscreen) {
+			  elem.requestFullscreen();
+			} else if (elem.msRequestFullscreen) {
+			  elem.msRequestFullscreen();
+			} else if (elem.mozRequestFullScreen) {
+			  elem.mozRequestFullScreen();
+			} else if (elem.webkitRequestFullscreen) {
+			  elem.webkitRequestFullscreen();
+			}
 		}
+
 	}
 
 };

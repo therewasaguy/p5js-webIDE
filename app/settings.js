@@ -7,7 +7,8 @@ var defaults = {
   showSidebar: true,
   wordWrap: false,
   runInBrowser: false,
-  fullScreen: false
+  fullCanvas: false, // automatically make canvas full width/height of screen
+  presentationMode: false // present in full screen mode without bars
 };
 
 var userSettings = {};

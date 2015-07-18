@@ -14,6 +14,8 @@ module.exports = {
 			this.tabSize = 1;
 		}
 		this.tabSizeDisplay = this.tabSize;
+
+		this.presentationMode = false;
 	},
 
 	methods: {
@@ -21,6 +23,11 @@ module.exports = {
 			var parsed = parseInt(e.target.value);
 			this.tabSize = parsed >= 1 ? parsed : 1;
 			this.tabSizeDisplay = this.tabSize;
+		},
+
+		goFullScreen: function(e) {
+			console.log(this.presentationMode);
+			console.log('go full screen');
 		}
 	}
 

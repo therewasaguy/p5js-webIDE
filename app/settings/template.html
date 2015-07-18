@@ -54,10 +54,16 @@
 
     </div>
 
-    <div class="hiddenCheckbox" id="setFullScreen">
+    <div class="hiddenCheckbox" id="setPresentationMode">
       <img id="browserIcon" src="images/browser.svg">
-      <input id="fullScreen" type="checkbox" v-model="fullScreen">
-      <label class="highlight fade" for="fullScreen">Full Screen</label>
+      <input id="presentationMode" type="checkbox" v-model="presentationMode" >
+      <label class="highlight fade" for="presentationMode" v-on="click: goFullScreen">Presentation</label>
+    </div>
+
+    <div class="hiddenCheckbox" id="setfullCanvas">
+      <img id="browserIcon" src="images/browser.svg">
+      <input id="fullCanvas" type="checkbox" v-model="fullCanvas">
+      <label class="highlight fade" for="fullCanvas">Full Canvas</label>
     </div>
 
     <div class="hiddenCheckbox" id="ww">
