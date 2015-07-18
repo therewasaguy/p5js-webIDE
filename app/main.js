@@ -4,6 +4,8 @@ var settings = require('./settings');
 var debugView = require('./debug');
 var $ = require('jquery');
 var Files = require('./files');
+var Project = require('./models/project');
+
 var modes = {
   p5web: require('./modes/p5/p5-web-mode')
 };
