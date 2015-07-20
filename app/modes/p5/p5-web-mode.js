@@ -1,10 +1,24 @@
+var Project = require('../../models/project');
+
 module.exports = {
 
 	newProject: function() {
-		console.log('new proj!!!');
-		this.tabs = [];
-		// this.$editor.sessions = [];
-		// this.openFile();
+		var proj = new Project();
+
+		// load current file
+		this.currentFile = proj.findFile(proj.openFile);
+		console.log('Contents: ' + this.currentFile.contents);
+		// this.$broadcast('open-file', this.currentFile);
+
+		// set up tabs
+		for (var i = 0; i < proj.openTabs.length; i++) {
+			var fileName = proj.openTabs[i];
+			// if (fileName === currentFile.name) return; // dont duplicate tabs
+
+			var fileObj = proj.findFile(fileName);
+			this.$broadcast('add-tab', fileObj, this.tabs);
+		}
+
 	},
 
 	saveAs: function() {

@@ -25,6 +25,7 @@ module.exports = {
 	},
 
 	ready: function() {
+		var self = this;
 		this.sessions = [];
 		this.ace = window.ace = ace.edit('editor');
 		this.ace.setTheme('ace/theme/twilight');
@@ -34,6 +35,12 @@ module.exports = {
 
 		this.$on('open-file', this.openFile);
 
+		// load and run the code that loaded is the file is the open file in the project
+		document.addEventListener('loaded-file', function(e) {
+			self.openFile(e.file);
+			self.$parent.modeFunction('run');
+		});
+
 		// to do: initialize differently
 		this.openFile();
 	},
@@ -41,17 +48,28 @@ module.exports = {
 	methods: {
 
 		openFile: function(fileObject) {
+			console.log('opening file' + fileObject);
 			var self = this;
 			var session;
 
 			if (fileObject) {
+				this.newProject = false;
+				console.log('file object');
+				console.log(fileObject);
+				console.log(fileObject.name);
+				console.log(fileObject.contents);
 				session = _.findWhere(this.sessions, {name: fileObject.name});
 				if (!session) {
 					session = ace.createEditSession( fileObject.contents, 'ace/mode/javascript');
+					console.log('loading existing code');
 					console.log(session);
 					this.ace.setSession(session);
+					console.log('setting contents');
+					console.log(fileObject.contents);
+					this.ace.setValue(fileObject.contents);
 				}
 			} else {
+				console.log('loading whatever code is already there');
 				session = this.ace.getSession();
 			}
 
@@ -72,6 +90,7 @@ module.exports = {
 			this.ace.focus();
 
 			if (this.newProject) {
+				console.log('loading recent code');
 				// load recent code
 				var recentCode = localStorage.latestCode;
 				if (recentCode) {
@@ -80,7 +99,6 @@ module.exports = {
 
 				this.ace.gotoLine(2, 2);
 				this.newProject = false;
-
 			}
 
 		},

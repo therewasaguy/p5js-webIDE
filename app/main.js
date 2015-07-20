@@ -118,9 +118,9 @@ var appConfig = {
 			// var self = this;
 			// var re = /(?:\.([^.]+))?$/;
 			// var ext = re.exec(path)[1];
-			console.log('path: ' + file.path);
+			console.log('path: ' + file.name);
 
-			var file = Files.find(this.files, file.path);
+			// var file = Files.find(this.files, file.name);
 			if (!file) return false;
 
 			this.currentFile = file;

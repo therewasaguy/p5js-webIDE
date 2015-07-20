@@ -94,6 +94,7 @@ module.exports = {
 	},
 
 	ready: function() {
+		var self = this;
 		this.sessions = [];
 		this.ace = window.ace = ace.edit('editor');
 		this.ace.setTheme('ace/theme/twilight');
@@ -103,6 +104,12 @@ module.exports = {
 
 		this.$on('open-file', this.openFile);
 
+		// load and run the code that loaded is the file is the open file in the project
+		document.addEventListener('loaded-file', function(e) {
+			self.openFile(e.file);
+			self.$parent.modeFunction('run');
+		});
+
 		// to do: initialize differently
 		this.openFile();
 	},
@@ -110,17 +117,28 @@ module.exports = {
 	methods: {
 
 		openFile: function(fileObject) {
+			console.log('opening file' + fileObject);
 			var self = this;
 			var session;
 
 			if (fileObject) {
+				this.newProject = false;
+				console.log('file object');
+				console.log(fileObject);
+				console.log(fileObject.name);
+				console.log(fileObject.contents);
 				session = _.findWhere(this.sessions, {name: fileObject.name});
 				if (!session) {
 					session = ace.createEditSession( fileObject.contents, 'ace/mode/javascript');
+					console.log('loading existing code');
 					console.log(session);
 					this.ace.setSession(session);
+					console.log('setting contents');
+					console.log(fileObject.contents);
+					this.ace.setValue(fileObject.contents);
 				}
 			} else {
+				console.log('loading whatever code is already there');
 				session = this.ace.getSession();
 			}
 
@@ -141,6 +159,7 @@ module.exports = {
 			this.ace.focus();
 
 			if (this.newProject) {
+				console.log('loading recent code');
 				// load recent code
 				var recentCode = localStorage.latestCode;
 				if (recentCode) {
@@ -149,7 +168,6 @@ module.exports = {
 
 				this.ace.gotoLine(2, 2);
 				this.newProject = false;
-
 			}
 
 		},
@@ -391,9 +409,9 @@ var appConfig = {
 			// var self = this;
 			// var re = /(?:\.([^.]+))?$/;
 			// var ext = re.exec(path)[1];
-			console.log('path: ' + file.path);
+			console.log('path: ' + file.name);
 
-			var file = Files.find(this.files, file.path);
+			// var file = Files.find(this.files, file.name);
 			if (!file) return false;
 
 			this.currentFile = file;
@@ -442,37 +460,119 @@ module.exports = {
 },{"./template.html":8}],8:[function(require,module,exports){
 module.exports = '<div id ="button_header">\n\n  <button id="play" v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>\n  <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>\n  <input type="button" value="save as" v-on="click: $root.saveProject()">\n  <input type="button" value="new" v-on="click: $root.newProject()">\n  <input type="button" value="download" v-on="click: $root.downloadProject()">\n\n  <div id="toolbar">\n    <div id="actions">\n      <button id="settings" title="Preferences" v-on="click: $root.toggleSettingsPane()">\n        <img src="images/options.svg">\n      </button>\n    </div>\n  </div>\n\n</div>';
 },{}],9:[function(require,module,exports){
-var File = {
-	// id: null,
-	// files: ['p5.js', 'sketch.js', 'index.html'],
-	// name: 'new project',
-	// openFile: 'sketch.js',
-	// openTabs: ['sketch.js'],
+var $ = require('jquery');
+var Vue = require('vue');
+
+var File = function(name, isCurrentlyOpen) {
+	this.id = null;
+
+	// TO DO: either a string, or a function that returns file content
+	this.contents = ''; 
+
+	this.open = true;
+	this.currentFile = isCurrentlyOpen || false;
+	this.ext = '';
+	this.name = name || 'untitled';
+
+	var defaultFiles = ['index.html', 'p5.js', 'sketch.js'];
+
+	if (defaultFiles.indexOf(name) > -1) {
+		this.setDefaultContents(name);
+	}
 
 };
 
+
+File.prototype.setDefaultContents = function(fileName) {
+	var self = this;
+	var contents = $.ajax({
+		// type: 'GET',
+		dataType: 'text',
+		url: '../sketch/template/' + fileName,
+		success: function(filedata) {
+			self.contents = String(contents.responseText);
+
+			if (self.currentFile) {
+				var e = new Event('loaded-file');
+				e.file = self;
+				document.dispatchEvent(e);
+			}
+
+		},
+		error: function(e) {
+			console.log('error ');
+			console.log(e);
+		}
+	});
+
+	// var contents = $.get('../sketch/template/' + fileName, function(data) {
+	// 	self.contents = contents.responseText;
+	// });
+};
+
+// File.prototype.setContentsFromLatestP5 = function(fileName) {
+// 	$.getJSON('https://api.github.com/repos/processing/p5.js/releases/latest', function(data) {
+// 		data.assets.forEach(function(asset) {
+// 			if (fileName === asset.name) {
+// 				var url = asset.browser_download_url;
+// 				$.get(url, function(contents) {
+// 					this.contents = contents;
+// 					console.log('got it');
+// 					console.log(this);
+// 				});
+// 			}
+// 		});
+// 	});
+// };
+
 module.exports = File;
-},{}],10:[function(require,module,exports){
+},{"jquery":38,"vue":64}],10:[function(require,module,exports){
 var File = require('./file');
 
-var Project = {
-	id: null,
-	files: ['p5.js', 'sketch.js', 'index.html'],
-	name: 'new project',
-	openFile: 'sketch.js',
-	openTabs: ['sketch.js'],
+var Project = function(files) {
+	this.id = null;
 
+	// if no files are provided, set default files
+	if (!files) {
+		this.files = [ new File('p5.js'), new File('sketch.js', true), new File('index.html')];
+	}
+
+	this.name = 'new project';
+	this.openFile ='sketch.js';
+	this.openTabs = ['sketch.js'];
+};
+
+Project.prototype.findFile = function(name) {
+	for (var i = 0; i < this.files.length; i++) {
+		if (this.files[i].name === name) {
+			return this.files[i];
+		}
+	}
 };
 
 module.exports = Project;
 },{"./file":9}],11:[function(require,module,exports){
+var Project = require('../../models/project');
+
 module.exports = {
 
 	newProject: function() {
-		console.log('new proj!!!');
-		this.tabs = [];
-		// this.$editor.sessions = [];
-		// this.openFile();
+		var proj = new Project();
+
+		// load current file
+		this.currentFile = proj.findFile(proj.openFile);
+		console.log('Contents: ' + this.currentFile.contents);
+		// this.$broadcast('open-file', this.currentFile);
+
+		// set up tabs
+		for (var i = 0; i < proj.openTabs.length; i++) {
+			var fileName = proj.openTabs[i];
+			// if (fileName === currentFile.name) return; // dont duplicate tabs
+
+			var fileObj = proj.findFile(fileName);
+			this.$broadcast('add-tab', fileObj, this.tabs);
+		}
+
 	},
 
 	saveAs: function() {
@@ -519,7 +619,7 @@ module.exports = {
 	}
 
 };
-},{}],12:[function(require,module,exports){
+},{"../../models/project":10}],12:[function(require,module,exports){
 var defaults = {
   fontSize: 14,
   tabSize: 2,
@@ -665,16 +765,9 @@ module.exports = {
 
 		self.initSketchFrame();
 
+		// do something when full screen
 		document.addEventListener('fullscreenchange', function(e) {
 			self.presentationMode = !self.presentationMode;
-			// if( window.innerHeight == screen.height) {
-
-			// 	// browser is fullscreen
-			// 	self.presentationMode = true;
-			// } else {
-			// 	self.presentationMode = false;
-			// }
-			console.log('full screen: ' + self.presentationMode);
 		});
 
 	},

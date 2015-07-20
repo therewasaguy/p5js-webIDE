@@ -19,16 +19,9 @@ module.exports = {
 
 		self.initSketchFrame();
 
+		// do something when full screen
 		document.addEventListener('fullscreenchange', function(e) {
 			self.presentationMode = !self.presentationMode;
-			// if( window.innerHeight == screen.height) {
-
-			// 	// browser is fullscreen
-			// 	self.presentationMode = true;
-			// } else {
-			// 	self.presentationMode = false;
-			// }
-			console.log('full screen: ' + self.presentationMode);
 		});
 
 	},
