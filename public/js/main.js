@@ -129,33 +129,25 @@ module.exports = {
 				console.log('yo');
 				this.newProject = false;
 
-				// do we get sessions from sessions, or from the file itself?
+				// do we need to get sessions from sessions, or can we get them from the file itself?
 				session = _.findWhere(this.editSessions, {name: fileObject.name});
 
 				if ( !session ) {
 					session = ace.createEditSession( fileObject.contents, 'ace/mode/javascript');
-					// fileObject.session = session;
 				} else {
 					session = session.doc;
 				}
 
 				this.ace.setSession(session);
 
-				// this.ace.setValue(fileObject.contents);
-
 			} else {
 				console.log('ACE Editor: Error opening file. File must be initialized first as a pFile object');
 				return;
-				// this.openNewFile(fileObject);
-					// var contents = 'function setup() {} \n function draw() {}'
-					// session = ace.createEditSession( contents );
-					// this.ace.setSession(session);
-					// this.ace.setValue(contents);
-
 			}
 
 			session.on('change', function() {
-
+				fileObject.contents = session.getValue();
+				// fileObject.contents = doc.getValue();
 				// localStorage.latestCode = JSON.stringify(session.getValue());
 
 				// var file = Files.find(self.$root.files, fileObject.path);
@@ -397,10 +389,18 @@ var appConfig = {
 
 		toggleRun: function() {
 			if (this.running) {
-				this.modeFunction('stop');
+				this.stop();
 			} else {
-				this.modeFunction('run');
+				this.run();
 			}
+		},
+
+		stop: function() {
+			this.modeFunction('stop');
+		},
+
+		run: function() {
+			this.modeFunction('run');
 		},
 
 		// HANDLE FILES
@@ -813,6 +813,11 @@ module.exports = {
 		// do something when full screen
 		document.addEventListener('fullscreenchange', function(e) {
 			self.presentationMode = !self.presentationMode;
+			// restart code to resize canvas?
+
+			setTimeout( function() {
+				// self.$root.sendCode('resizeCanvas(windowWidth, windowHeight);');
+			}, 10);
 		});
 
 	},
@@ -824,17 +829,41 @@ module.exports = {
 
 			sketchFrame.onload = function() {
 				var code = window.ace.getValue();
+
+				// option 1. --> get all of the active sessions...
+				// var sessions = self.$root.$.editor.editSessions;
+				// for (var i = 0; i < sessions.length; i++) {
+				// 	var title = sessions[i].name;
+				// 	var session = sessions[i].doc.getValue();
+				// 	// var title = session.name;
+				// 	// var doc = session.doc;
+				// 	console.log('/** file: ' + title + ' **/');
+				// 	console.log(session);
+				// }
+
+				// option 2. --> get all of the files
+				var files = self.$root.currentProject.files
+				for (var i = 0; i < files.length; i++) {
+					var title = files[i].name;
+					var content = files[i].contents;
+					console.log('/** file: ' + title + ' **/');
+					console.log(content);
+				}
+
 				code += '\n new p5();\n'
 
-				if (self.$root.settings.fullCanvas) {
-					// to do: check to see if setup exists,
-					// and if createCanvas exists,
-					// if not make it windowWidth, windowHeight
+				// TO DO: full screen option
+				// if (self.$root.settings.fullCanvas) {
+				// 	// to do: check to see if setup exists,
+				// 	// and if createCanvas exists,
+				// 	// if not make it windowWidth, windowHeight
+
+				// resize when in presentation mode
 					code += '\n  function windowResized() {\n' +
-									'resizeCanvas(windowWidth, windowHeight);if(typeof(setup) !== "undefined") {setup();}\n'+
-									'}\n'+
-									'resizeCanvas(windowWidth, windowHeight); if(typeof(setup) !== "undefined") {setup();}';
-				}
+									'resizeCanvas(windowWidth, windowHeight);}\n';
+									// '}\n'+
+									// 'resizeCanvas(windowWidth, windowHeight); if(typeof(setup) !== "undefined") {setup();}';
+				// }
 
 				var userScript = sketchFrame.contentWindow.document.createElement('script');
 				userScript.type = 'text/javascript';

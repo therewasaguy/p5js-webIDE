@@ -22,6 +22,11 @@ module.exports = {
 		// do something when full screen
 		document.addEventListener('fullscreenchange', function(e) {
 			self.presentationMode = !self.presentationMode;
+			// restart code to resize canvas?
+
+			setTimeout( function() {
+				// self.$root.sendCode('resizeCanvas(windowWidth, windowHeight);');
+			}, 10);
 		});
 
 	},
@@ -33,17 +38,41 @@ module.exports = {
 
 			sketchFrame.onload = function() {
 				var code = window.ace.getValue();
+
+				// option 1. --> get all of the active sessions...
+				// var sessions = self.$root.$.editor.editSessions;
+				// for (var i = 0; i < sessions.length; i++) {
+				// 	var title = sessions[i].name;
+				// 	var session = sessions[i].doc.getValue();
+				// 	// var title = session.name;
+				// 	// var doc = session.doc;
+				// 	console.log('/** file: ' + title + ' **/');
+				// 	console.log(session);
+				// }
+
+				// option 2. --> get all of the files
+				var files = self.$root.currentProject.files
+				for (var i = 0; i < files.length; i++) {
+					var title = files[i].name;
+					var content = files[i].contents;
+					console.log('/** file: ' + title + ' **/');
+					console.log(content);
+				}
+
 				code += '\n new p5();\n'
 
-				if (self.$root.settings.fullCanvas) {
-					// to do: check to see if setup exists,
-					// and if createCanvas exists,
-					// if not make it windowWidth, windowHeight
+				// TO DO: full screen option
+				// if (self.$root.settings.fullCanvas) {
+				// 	// to do: check to see if setup exists,
+				// 	// and if createCanvas exists,
+				// 	// if not make it windowWidth, windowHeight
+
+				// resize when in presentation mode
 					code += '\n  function windowResized() {\n' +
-									'resizeCanvas(windowWidth, windowHeight);if(typeof(setup) !== "undefined") {setup();}\n'+
-									'}\n'+
-									'resizeCanvas(windowWidth, windowHeight); if(typeof(setup) !== "undefined") {setup();}';
-				}
+									'resizeCanvas(windowWidth, windowHeight);}\n';
+									// '}\n'+
+									// 'resizeCanvas(windowWidth, windowHeight); if(typeof(setup) !== "undefined") {setup();}';
+				// }
 
 				var userScript = sketchFrame.contentWindow.document.createElement('script');
 				userScript.type = 'text/javascript';

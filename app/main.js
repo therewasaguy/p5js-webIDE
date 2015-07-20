@@ -89,10 +89,18 @@ var appConfig = {
 
 		toggleRun: function() {
 			if (this.running) {
-				this.modeFunction('stop');
+				this.stop();
 			} else {
-				this.modeFunction('run');
+				this.run();
 			}
+		},
+
+		stop: function() {
+			this.modeFunction('stop');
+		},
+
+		run: function() {
+			this.modeFunction('run');
 		},
 
 		// HANDLE FILES

@@ -60,33 +60,25 @@ module.exports = {
 				console.log('yo');
 				this.newProject = false;
 
-				// do we get sessions from sessions, or from the file itself?
+				// do we need to get sessions from sessions, or can we get them from the file itself?
 				session = _.findWhere(this.editSessions, {name: fileObject.name});
 
 				if ( !session ) {
 					session = ace.createEditSession( fileObject.contents, 'ace/mode/javascript');
-					// fileObject.session = session;
 				} else {
 					session = session.doc;
 				}
 
 				this.ace.setSession(session);
 
-				// this.ace.setValue(fileObject.contents);
-
 			} else {
 				console.log('ACE Editor: Error opening file. File must be initialized first as a pFile object');
 				return;
-				// this.openNewFile(fileObject);
-					// var contents = 'function setup() {} \n function draw() {}'
-					// session = ace.createEditSession( contents );
-					// this.ace.setSession(session);
-					// this.ace.setValue(contents);
-
 			}
 
 			session.on('change', function() {
-
+				fileObject.contents = session.getValue();
+				// fileObject.contents = doc.getValue();
 				// localStorage.latestCode = JSON.stringify(session.getValue());
 
 				// var file = Files.find(self.$root.files, fileObject.path);
