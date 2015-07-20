@@ -1,11 +1,11 @@
-var File = require('./file');
+var pFile = require('./pFile');
 
 var Project = function(files) {
 	this.id = null;
 
 	// if no files are provided, set default files
 	if (!files) {
-		this.files = [ new File('p5.js'), new File('sketch.js', true), new File('index.html')];
+		this.files = [ new pFile('p5.js'), new pFile('sketch.js', true), new pFile('index.html')];
 	}
 
 	this.name = 'new project';
@@ -19,6 +19,10 @@ Project.prototype.findFile = function(name) {
 			return this.files[i];
 		}
 	}
+};
+
+Project.prototype.addFile = function(fileObj) {
+	this.files.push(fileObj);
 };
 
 module.exports = Project;

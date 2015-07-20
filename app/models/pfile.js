@@ -1,11 +1,13 @@
 var $ = require('jquery');
 var Vue = require('vue');
 
-var File = function(name, isCurrentlyOpen) {
+var pFile = function(name, isCurrentlyOpen) {
 	this.id = null;
 
 	// TO DO: either a string, or a function that returns file content
 	this.contents = ''; 
+
+	this.session = null;
 
 	this.open = true;
 	this.currentFile = isCurrentlyOpen || false;
@@ -21,7 +23,7 @@ var File = function(name, isCurrentlyOpen) {
 };
 
 
-File.prototype.setDefaultContents = function(fileName) {
+pFile.prototype.setDefaultContents = function(fileName) {
 	var self = this;
 	var contents = $.ajax({
 		// type: 'GET',
@@ -63,4 +65,4 @@ File.prototype.setDefaultContents = function(fileName) {
 // 	});
 // };
 
-module.exports = File;
+module.exports = pFile;

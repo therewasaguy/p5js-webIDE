@@ -22,7 +22,9 @@
 div#editor-container {
   display: flex;
   flex: 1;
-  flex-direction: row; }
+  flex-direction: column;
+  max-width: 50%;
+  overflow: scroll; }
 
 #main {
   display: flex;
@@ -32,7 +34,6 @@ div#editor-container {
   font: 14px inconsolata, source-code;
   border-radius: 7px;
   flex: 1;
-  max-width: 50%;
   background: rgba(0, 200, 175, 0.5); }
 
 .ace-gutter {
@@ -530,7 +531,7 @@ variable */
 
 #tabs {
   margin-left: 53px;
-  overflow: hidden; }
+  overflow: scroll; }
   #tabs ul {
     list-style: none;
     padding: 0;

@@ -18,15 +18,15 @@
 			<div v-component="menu" v-ref="menu" id="menu-container"></div>
 			<div v-component="settings" v-with="settings" v-show="showSettings" id="settingsContainer"></div>
 
-			<div v-component="tabs" v-ref="tabs" id="tab-container"></div>
+
 			<div id="editor-container">
+				<div v-component="tabs" v-ref="tabs" id="tab-container"></div>
 				<div v-component="editor" v-ref="editor" id="main"></div>
 			</div>
 
-			<!-- <div v-component="debug" id="debug-container"></div> -->
+			<div v-component="debug" v-ref="debug" id="debugContainer"></div>
 		</div>
 
-		<div v-component="debug" v-ref="debug" id="debugContainer"></div>
 
 		<script src="js/main.js"></script>
 	</body>

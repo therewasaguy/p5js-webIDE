@@ -26,8 +26,9 @@ module.exports = {
 
 	ready: function() {
 		var self = this;
-		this.sessions = [];
+		this.editSessions = [];
 		this.ace = window.ace = ace.edit('editor');
+		this.ace.$blockScrolling = Infinity;
 		this.ace.setTheme('ace/theme/twilight');
 		this.ace.setReadOnly(true);
 
@@ -42,39 +43,51 @@ module.exports = {
 		});
 
 		// to do: initialize differently
-		this.openFile();
+		// this.openFile();
 	},
 
 	methods: {
 
+		/**
+		 *  Open file in the editor
+		 *  @param  {pFile} fileObject a pFile object
+		 */
 		openFile: function(fileObject) {
-			console.log('opening file' + fileObject);
 			var self = this;
 			var session;
 
-			if (fileObject) {
+			if (typeof(fileObject) !== 'undefined') {
+				console.log('yo');
 				this.newProject = false;
-				console.log('file object');
-				console.log(fileObject);
-				console.log(fileObject.name);
-				console.log(fileObject.contents);
-				session = _.findWhere(this.sessions, {name: fileObject.name});
-				if (!session) {
+
+				// do we get sessions from sessions, or from the file itself?
+				session = _.findWhere(this.editSessions, {name: fileObject.name});
+
+				if ( !session ) {
 					session = ace.createEditSession( fileObject.contents, 'ace/mode/javascript');
-					console.log('loading existing code');
-					console.log(session);
-					this.ace.setSession(session);
-					console.log('setting contents');
-					console.log(fileObject.contents);
-					this.ace.setValue(fileObject.contents);
+					// fileObject.session = session;
+				} else {
+					session = session.doc;
 				}
+
+				this.ace.setSession(session);
+
+				// this.ace.setValue(fileObject.contents);
+
 			} else {
-				console.log('loading whatever code is already there');
-				session = this.ace.getSession();
+				console.log('ACE Editor: Error opening file. File must be initialized first as a pFile object');
+				return;
+				// this.openNewFile(fileObject);
+					// var contents = 'function setup() {} \n function draw() {}'
+					// session = ace.createEditSession( contents );
+					// this.ace.setSession(session);
+					// this.ace.setValue(contents);
+
 			}
 
 			session.on('change', function() {
-				localStorage.latestCode = JSON.stringify(session.getValue());
+
+				// localStorage.latestCode = JSON.stringify(session.getValue());
 
 				// var file = Files.find(self.$root.files, fileObject.path);
 				// if (file) file.contents = doc.getValue();
@@ -83,7 +96,11 @@ module.exports = {
 
 			session.setMode('ace/mode/javascript');
 
-			this.sessions.push(session);
+			// is this necessary or can it be stored from files?
+			this.editSessions.push({
+				'doc': session,
+				'name': fileObject.name
+			});
 
 			this.ace.setReadOnly(false);
 			this.updateSettings(this.$root.settings);

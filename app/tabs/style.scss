@@ -7,12 +7,13 @@
    -webkit-touch-callout: none;
     -webkit-user-select: none;
   z-index:2;
+  // overflow-x: scroll;
 }
 
 
 #tabs {
   margin-left: 53px;
-  overflow: hidden;
+  overflow: scroll;
 
 
   ul {

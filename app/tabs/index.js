@@ -55,12 +55,11 @@ module.exports = {
 				}
 
 				tabs.splice(index, 1);
-				this.$root.openFile( tabs[newTarget].path );
+				this.$root.openFile( tabs[newTarget].name );
 			}
 		},
 
 		addTab: function(fileObject, tabs) {
-			console.log(fileObject);
 
 			if (fileObject.open) {
 				var tabObject = {

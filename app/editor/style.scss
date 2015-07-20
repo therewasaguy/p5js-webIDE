@@ -11,7 +11,10 @@
 div#editor-container {
   display: flex;
   flex: 1;
-  flex-direction: row;
+  // flex-direction: row;
+  flex-direction: column;
+  max-width: 50%;
+  overflow:scroll;
 }
 
 #main {
@@ -23,7 +26,6 @@ div#editor-container {
   font: 14px inconsolata, source-code ;
   border-radius: 7px;
   flex: 1;
-  max-width: 50%;
   background: rgba(0, 200, 175, 0.5);
 }
 

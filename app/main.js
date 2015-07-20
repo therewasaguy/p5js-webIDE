@@ -4,6 +4,8 @@ var settings = require('./settings');
 var debugView = require('./debug');
 var $ = require('jquery');
 var Files = require('./files');
+
+var pFile = require('./models/pfile');
 var Project = require('./models/project');
 
 var modes = {
@@ -52,7 +54,7 @@ var appConfig = {
 	ready: function() {
 		this.setupSettings();
 
-		this.modeFunction('newProject');
+		this.newProject();
 	},
 
 	methods: {
@@ -109,25 +111,42 @@ var appConfig = {
 
 			var filename = title;
 
-			var f = Files.setup(filename);
-			Files.addToTree(f, this.files, this.projectPath);
-			this.openFile(f);
+			// var f = Files.setup(filename);
+			// Files.addToTree(f, this.files, this.projectPath);
+			var f = new pFile(filename);
+			this.currentProject.addFile(f);
+			this.openFile(f.name);
+			console.log('new file 4');
+
 		},
 
-		openFile: function(file, callback) {
+		/**
+		 *  open file by filename
+		 */
+		openFile: function(fileName, callback) {
 			// var self = this;
 			// var re = /(?:\.([^.]+))?$/;
-			// var ext = re.exec(path)[1];
-			console.log('path: ' + file.name);
+			// var ext = re.exec(fileName)[1];
 
-			// var file = Files.find(this.files, file.name);
-			if (!file) return false;
+			var file = this.currentProject.findFile(fileName);
+
+			if (!file) {
+				console.log('error opening file, it must first be added to project (maybe?)')
+				return false;
+			}
 
 			this.currentFile = file;
 			this.currentFile.open = true;
-
 			this.$broadcast('open-file', this.currentFile);
-			this.$broadcast('add-tab', this.currentFile, this.tabs);
+
+			// find if there is a matching tab, only add if tab isnt already there
+			var tabAlreadyExists = this.tabs.filter( function(tab) {
+				return tab.name === file.name;
+			});
+
+			if (tabAlreadyExists.length === 0) {
+				this.$broadcast('add-tab', this.currentFile, this.tabs);
+			}
 
 		},
 

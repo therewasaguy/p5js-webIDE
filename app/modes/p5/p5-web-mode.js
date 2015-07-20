@@ -7,7 +7,7 @@ module.exports = {
 
 		// load current file
 		this.currentFile = proj.findFile(proj.openFile);
-		console.log('Contents: ' + this.currentFile.contents);
+
 		// this.$broadcast('open-file', this.currentFile);
 
 		// set up tabs
@@ -19,6 +19,7 @@ module.exports = {
 			this.$broadcast('add-tab', fileObj, this.tabs);
 		}
 
+		this.currentProject = proj;
 	},
 
 	saveAs: function() {
