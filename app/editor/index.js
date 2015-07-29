@@ -17,6 +17,15 @@ require('brace/theme/twilight');
 require('brace/theme/tomorrow');
 require('brace/ext/searchbox');
 
+var modes = {
+  ".html": "html",
+  ".htm": "html",
+  ".js": "javascript",
+  ".css": "css",
+  ".json": "json",
+  ".txt": "text"
+};
+
 module.exports = {
 	template: require('./template.html'),
 
@@ -57,19 +66,19 @@ module.exports = {
 			var session;
 
 			if (typeof(fileObject) !== 'undefined') {
-				console.log('yo');
 				this.newProject = false;
 
 				// do we need to get sessions from sessions, or can we get them from the file itself?
 				session = _.findWhere(this.editSessions, {name: fileObject.name});
 
 				if ( !session ) {
-					session = ace.createEditSession( fileObject.contents, 'ace/mode/javascript');
+					// figure out file extension
+					session = ace.createEditSession( fileObject.contents, 'ace/mode/' + modes[fileObject.ext]);
 				} else {
 					session = session.doc;
 				}
 
-				this.ace.setSession(session);
+				self.ace.setSession(session);
 
 			} else {
 				console.log('ACE Editor: Error opening file. File must be initialized first as a pFile object');
@@ -78,15 +87,11 @@ module.exports = {
 
 			session.on('change', function() {
 				fileObject.contents = session.getValue();
-				// fileObject.contents = doc.getValue();
-				// localStorage.latestCode = JSON.stringify(session.getValue());
 
-				// var file = Files.find(self.$root.files, fileObject.path);
-				// if (file) file.contents = doc.getValue();
+				// save project
+				localStorage.latestProject = JSON.stringify(self.$root.currentProject);
 
 			});
-
-			session.setMode('ace/mode/javascript');
 
 			// is this necessary or can it be stored from files?
 			this.editSessions.push({

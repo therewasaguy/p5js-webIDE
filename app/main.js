@@ -7,6 +7,8 @@ var Files = require('./files');
 
 var pFile = require('./models/pfile');
 var Project = require('./models/project');
+var User = require('./models/user');
+
 
 var modes = {
   p5web: require('./modes/p5/p5-web-mode')
@@ -38,7 +40,8 @@ var appConfig = {
 		files: [],
 		running: false,
 		fileTypes: ['txt', 'html', 'css', 'js', 'json', 'scss', 'xml', 'csv', 'less'],
-		currentFile: null
+		currentFile: null,
+		currentProject: null
 	},
 
 	computed: {
@@ -53,6 +56,8 @@ var appConfig = {
 
 	ready: function() {
 		this.setupSettings();
+
+		this.setupUser();
 
 		this.newProject();
 	},
@@ -103,6 +108,17 @@ var appConfig = {
 			this.modeFunction('run');
 		},
 
+		// handle users
+		setupUser: function() {
+			if (localStorage.user) {
+				this.currentUser = JSON.parse( localStorage.getItem('user') );
+			} else {
+				// current user is annonymous
+				this.currentUser = new User();
+				localStorage.setItem('user', JSON.stringify(this.currentUser));
+			}
+		},
+
 		// HANDLE FILES
 
 		newFile: function() {
@@ -135,7 +151,7 @@ var appConfig = {
 			// var self = this;
 			// var re = /(?:\.([^.]+))?$/;
 			// var ext = re.exec(fileName)[1];
-
+			console.log(this.currentProject);
 			var file = this.currentProject.findFile(fileName);
 
 			if (!file) {
@@ -170,6 +186,11 @@ var appConfig = {
 			}
 		},
 
+		// show recent user projects
+		recentProjects: function() {
+			this.modeFunction('getUserProjects');
+		},
+
 		saveProject: function() {
 			this.modeFunction('saveAs');
 		},
@@ -180,7 +201,12 @@ var appConfig = {
 
 		downloadProject: function() {
 			this.modeFunction('downloadProject');
+		},
+
+		postGist: function() {
+			this.modeFunction('postGist');
 		}
+
 	}
 
 };

@@ -1,4 +1,6 @@
 var Project = require('../../models/project');
+var $ = require('jquery');
+var AUTH = require('../../auth');
 
 module.exports = {
 
@@ -19,15 +21,95 @@ module.exports = {
 			this.$broadcast('add-tab', fileObj, this.tabs);
 		}
 
+		// set current project
 		this.currentProject = proj;
 	},
 
+	getUserProjects: function() {
+		var projects = JSON.parse(localStorage.getItem('p5projects'));
+
+		var projectKeys = Object.keys(projects);
+		for (var i in projects) {
+			var proj = projects[i];
+			console.log('project name: ' + proj.name + ', date modified: ' + proj.dateModified);
+		}
+	},
+
+	postGist: function(message) {
+		var self = this;
+		var theFiles = {};
+		var gistID = '89cf6f57a379a907b071';
+		// var gistID = this.currentProject.gistID ? this.currentProject.gistID : false;
+		var url = 'https://api.github.com/gists';
+		var reqType = 'POST';
+		var oa = this.currentUser.gh_oa || AUTH.GH;
+		var commitMessage = message || 'update';
+
+		// if the project exists, patch an update
+		if (gistID) {
+			url += '/' + gistID;
+			reqType = 'PATCH';
+		}
+
+		for (var i = 0; i < this.currentProject.files.length; i++) {
+			var f = this.currentProject.files[i];
+			theFiles[f.name] = {"content": f.contents};
+			console.log(theFiles);
+		}
+
+		var data = {
+			"description": commitMessage,
+			"public": true,
+			"files": theFiles
+		};
+
+		$.ajax({
+			url: url,
+			type: reqType,
+			beforeSend: function(xhr) {
+				xhr.setRequestHeader("Authorization", "token " + oa); 
+			},
+			dataType: 'json',
+			data: JSON.stringify(data)})
+		.success( function(res) {
+			self.currentProject.gistID = res.id;
+			console.log(res);
+		})
+		.error( function(e) {
+			console.warn('gist save error', e);
+		});
+
+	},
+
 	saveAs: function() {
-		console.log('save as!!!');
 		var saveName = prompt('Save as ', this.projectName);
 		if (saveName) {
 			this.title = saveName;
+			this.currentProject.name = saveName;
+
+			// set date modified
+			var dateModified = new Date();
+			this.currentProject.dateModified = dateModified;
+
+			var projects = JSON.parse(localStorage.getItem('p5projects'));
+
+			if (!projects) {
+				projects = {};
+			}
+
+			projects[this.title] = this.currentProject;
+
+			// TO DO: dont overwrite project names
+
+			// save to user's project list
+			this.currentUser.projects[this.title]
+
+			localStorage.setItem('p5projects', JSON.stringify(projects));
 		}
+	},
+
+	autoSave: function() {
+		// save latest version of files to local storage
 	},
 
 	downloadProject: function() {

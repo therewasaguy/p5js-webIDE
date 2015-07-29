@@ -37,7 +37,12 @@ module.exports = {
 			var sketchFrame = this.sketchFrame;
 
 			sketchFrame.onload = function() {
-				var code = window.ace.getValue();
+				// get only the current code
+				// var code = window.ace.getValue();
+
+
+				// get all the active code
+				var code = '';
 
 				// option 1. --> get all of the active sessions...
 				// var sessions = self.$root.$.editor.editSessions;
@@ -51,12 +56,35 @@ module.exports = {
 				// }
 
 				// option 2. --> get all of the files
-				var files = self.$root.currentProject.files
+				var files = self.$root.currentProject.files;
+
 				for (var i = 0; i < files.length; i++) {
 					var title = files[i].name;
 					var content = files[i].contents;
-					console.log('/** file: ' + title + ' **/');
-					console.log(content);
+					var ext = files[i].ext;
+
+					// handle js files
+					if (ext.indexOf('js') > -1) {
+						// add content to the code
+						code += content;
+					}
+
+					// handle html
+					else if (ext.indexOf('html') > -1) {
+						var userHTML = sketchFrame.contentWindow.document.createElement('div');
+						userHTML.className = 'userHTML';
+						userHTML.innerHTML = content;
+						sketchFrame.contentWindow.document.body.appendChild(userHTML);
+					}
+
+					// handle css files
+					else if (ext.indexOf('css') > -1) {
+						var userStyle = sketchFrame.contentWindow.document.createElement('style');
+						userStyle.type = 'text/css';
+						userStyle.innerText = content;
+						sketchFrame.contentWindow.document.body.appendChild(userStyle);
+					}
+
 				}
 
 				code += '\n new p5();\n'

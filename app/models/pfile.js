@@ -1,5 +1,6 @@
 var $ = require('jquery');
 var Vue = require('vue');
+var Path = require('path');
 
 var pFile = function(name, isCurrentlyOpen) {
 	this.id = null;
@@ -11,20 +12,23 @@ var pFile = function(name, isCurrentlyOpen) {
 
 	this.open = true;
 	this.currentFile = isCurrentlyOpen || false;
-	this.ext = '';
+	this.ext = Path.extname(name);
+
 	this.name = name || 'untitled';
 
-	var defaultFiles = ['index.html', 'p5.js', 'sketch.js'];
+	var defaultFiles = ['index.html', 'p5.js', 'sketch.js', 'style.css'];
 
 	if (defaultFiles.indexOf(name) > -1) {
 		this.setDefaultContents(name);
 	}
+
 
 };
 
 
 pFile.prototype.setDefaultContents = function(fileName) {
 	var self = this;
+
 	var contents = $.ajax({
 		// type: 'GET',
 		dataType: 'text',
