@@ -23,8 +23,7 @@ div#editor-container {
   display: flex;
   flex: 1;
   flex-direction: column;
-  max-width: 50%;
-  overflow: scroll; }
+  max-width: 50%; }
 
 #main {
   display: flex;
@@ -530,8 +529,7 @@ variable */
   z-index: 2; }
 
 #tabs {
-  margin-left: 53px;
-  overflow: scroll; }
+  margin-left: 53px; }
   #tabs ul {
     list-style: none;
     padding: 0;
