@@ -40,7 +40,9 @@ var appConfig = {
 		running: false,
 		fileTypes: ['txt', 'html', 'css', 'js', 'json', 'scss', 'xml', 'csv', 'less'],
 		currentFile: null,
-		currentProject: null
+		currentProject: null,
+		currentUser: null,
+		recentProjects: []
 	},
 
 	computed: {
@@ -58,7 +60,7 @@ var appConfig = {
 
 		this.setupUser();
 
-		this.newProject();
+		this.newProject('Hello p5');
 	},
 
 	methods: {
@@ -109,6 +111,7 @@ var appConfig = {
 
 		// handle users
 		setupUser: function() {
+
 			if (localStorage.user) {
 				this.currentUser = JSON.parse( localStorage.getItem('user') );
 			} else {
@@ -116,7 +119,26 @@ var appConfig = {
 				this.currentUser = new User();
 				localStorage.setItem('user', JSON.stringify(this.currentUser));
 			}
+
+			this.recentProjects = this.findRecentUserProjects(this.currentUser);
 		},
+
+		findRecentUserProjects: function(user) {
+			var recentUserProjects = [];
+
+			// fetch projects from database / localStorage
+			var projects = JSON.parse( localStorage.getItem('p5projects') );
+			if (!projects) projects = {};
+
+
+			user.projects.forEach(function(projID) {
+				recentUserProjects.push( projects[projID] );
+			});
+
+			console.log(recentUserProjects);
+			return recentUserProjects;
+		},
+
 
 		// HANDLE FILES
 
@@ -185,25 +207,40 @@ var appConfig = {
 			}
 		},
 
+		// load project by our ID, not by the gistID
+		loadProjectByOurID: function(projID) {
+			var ourID = projID;
+
+			// find project in the database
+			var projects = JSON.parse( localStorage.getItem('p5projects') );
+			var projObj = projects[ourID];
+
+			var gistID = projObj.gistID;
+
+			// TO DO... finish this!
+
+			// loadProjectByGistID(gistID);
+		},
+
 		// show recent user projects
 		recentProjects: function() {
 			this.modeFunction('getUserProjects');
 		},
 
-		saveProject: function() {
-			this.modeFunction('saveAs');
+		forkProject: function() {
+			this.modeFunction('forkProject');
 		},
 
-		newProject: function() {
-			this.modeFunction('newProject');
+		newProject: function(title) {
+			this.modeFunction('newProject', title);
 		},
 
 		downloadProject: function() {
 			this.modeFunction('downloadProject');
 		},
 
-		postGist: function() {
-			this.modeFunction('postGist');
+		commitGist: function() {
+			this.modeFunction('commitGist');
 		}
 
 	}

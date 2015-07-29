@@ -32,6 +32,7 @@ module.exports = {
 		// closeFile
 		closeTab: function(fileObject) {
 			var tabs = this.$root.tabs;
+			console.log('closing the tab', fileObject.name);
 
 			// find if there is a matching tab
 			var target_tabs = tabs.filter( function(tab) {
@@ -78,6 +79,7 @@ module.exports = {
 
 	ready: function() {
 		this.$on('add-tab', this.addTab);
+		this.$on('close-tab', this.closeTab);
 		this.$on('close-file', this.closeTab);
 	}
 };

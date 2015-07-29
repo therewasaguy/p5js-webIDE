@@ -1,5 +1,7 @@
 var User = function(name) {
-	this.id = 0;
+
+	// generate random unique id, thank you https://gist.github.com/gordonbrander/2230317
+	this.id = '_' + Math.random().toString(36).substr(2, 9);
 
 	// no github auth yet
 	this.gh_oa = null;
@@ -10,7 +12,7 @@ var User = function(name) {
 		this.username = '_anon'
 	}
 
-	this.projects = {};
+	this.projects = [];
 	this.settings = {};
 };
 

@@ -5,8 +5,10 @@ var Path = require('path');
 var pFile = function(name, isCurrentlyOpen) {
 	this.id = null;
 
-	// TO DO: either a string, or a function that returns file content
-	this.contents = ''; 
+	// contents is the version of the file with any modifications
+	this.contents = '';
+
+	// original contents is the last committed version of the file
 	this.originalContents = '';
 
 	this.session = null;
@@ -54,6 +56,12 @@ pFile.prototype.setDefaultContents = function(fileName) {
 	// var contents = $.get('../sketch/template/' + fileName, function(data) {
 	// 	self.contents = contents.responseText;
 	// });
+};
+
+
+// when a commit is made, update the "original contents"
+pFile.prototype.commitContents = function() {
+	this.originalContents = this.contents;
 };
 
 // File.prototype.setContentsFromLatestP5 = function(fileName) {

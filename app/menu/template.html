@@ -1,12 +1,47 @@
 <div id ="button_header">
 
-  <button id="play" v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>
-  <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>
-  <input type="button" value="save as" v-on="click: $root.saveProject()">
-  <input type="button" value="new" v-on="click: $root.newProject()">
-  <input type="button" value="download" v-on="click: $root.downloadProject()">
-  <input type="button" value="recentProjects" v-on="click: $root.recentProjects()">
-  <input type="button" value="postGist" v-on="click: $root.postGist()">
+  <div class="pure-menu pure-menu-horizontal">
+    <ul class="pure-menu-list">
+
+      <li class="pure-menu-item">
+        <button id="play" v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>
+      </li>
+
+      <li class="pure-menu-item">
+        <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>
+      </li>
+
+<!--       <li class="pure-menu-item">
+        <span v-on="click: $root.forkProject()">Save: Fork</span>
+      </li> -->
+
+      <li class="pure-menu-item">
+        <span v-on="click: $root.newProject()">New</span>
+      </li>
+
+      <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+        <!-- <span v-on="click: $root.recentProjects()">Recent Projects</span> -->
+        <span>Recent Projects</span>
+
+        <ul class="pure-menu-children" id="recentProjects">
+          <li v-repeat="$root.recentProjects" class="pure-menu-item">
+            <span data-projectid="{{id}}" class="pure-menu-link" v-on="click: selectRecentProject(this)">
+              <b data-projectid="{{id}}">{{name}}</b>, <em data-projectid="{{id}}"> Last Modified on {{dateModified}}</em>
+            </span>
+          </li>
+        </ul>
+
+
+
+      </li>
+
+      <li class="pure-menu-item">
+        <span v-on="click: $root.commitGist()">Save: Commit</span>
+      </li>
+
+    </ul>
+  </div> <!-- end pure-menu-->
+
 
   <div id="toolbar">
     <div id="actions">

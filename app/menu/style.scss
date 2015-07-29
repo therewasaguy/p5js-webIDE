@@ -7,7 +7,7 @@ $transitiontime: .25s;
   max-height: 35px;
 */   -webkit-touch-callout: none;
     -webkit-user-select: none;
-    opacity: 0;
+    opacity: 0.5;
     /*position: absolute;*/
     left: 0px;
     top: 0px;
@@ -103,4 +103,19 @@ $transitiontime: .25s;
     bottom: 2px;
     position:absolute;
   }
+}
+
+.pure-menu-item span {
+  background: white;
+  padding:5px;
+}
+
+.pure-menu-item span:hover {
+  background: black;
+  color:white;
+}
+
+.pure-menu-item span:active {
+  background: yellow;
+  color:pink;
 }

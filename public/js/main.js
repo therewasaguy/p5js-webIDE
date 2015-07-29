@@ -349,7 +349,9 @@ var appConfig = {
 		running: false,
 		fileTypes: ['txt', 'html', 'css', 'js', 'json', 'scss', 'xml', 'csv', 'less'],
 		currentFile: null,
-		currentProject: null
+		currentProject: null,
+		currentUser: null,
+		recentProjects: []
 	},
 
 	computed: {
@@ -367,7 +369,7 @@ var appConfig = {
 
 		this.setupUser();
 
-		this.newProject();
+		this.newProject('Hello p5');
 	},
 
 	methods: {
@@ -418,6 +420,7 @@ var appConfig = {
 
 		// handle users
 		setupUser: function() {
+
 			if (localStorage.user) {
 				this.currentUser = JSON.parse( localStorage.getItem('user') );
 			} else {
@@ -425,7 +428,26 @@ var appConfig = {
 				this.currentUser = new User();
 				localStorage.setItem('user', JSON.stringify(this.currentUser));
 			}
+
+			this.recentProjects = this.findRecentUserProjects(this.currentUser);
 		},
+
+		findRecentUserProjects: function(user) {
+			var recentUserProjects = [];
+
+			// fetch projects from database / localStorage
+			var projects = JSON.parse( localStorage.getItem('p5projects') );
+			if (!projects) projects = {};
+
+
+			user.projects.forEach(function(projID) {
+				recentUserProjects.push( projects[projID] );
+			});
+
+			console.log(recentUserProjects);
+			return recentUserProjects;
+		},
+
 
 		// HANDLE FILES
 
@@ -494,25 +516,40 @@ var appConfig = {
 			}
 		},
 
+		// load project by our ID, not by the gistID
+		loadProjectByOurID: function(projID) {
+			var ourID = projID;
+
+			// find project in the database
+			var projects = JSON.parse( localStorage.getItem('p5projects') );
+			var projObj = projects[ourID];
+
+			var gistID = projObj.gistID;
+
+			// TO DO... finish this!
+
+			// loadProjectByGistID(gistID);
+		},
+
 		// show recent user projects
 		recentProjects: function() {
 			this.modeFunction('getUserProjects');
 		},
 
-		saveProject: function() {
-			this.modeFunction('saveAs');
+		forkProject: function() {
+			this.modeFunction('forkProject');
 		},
 
-		newProject: function() {
-			this.modeFunction('newProject');
+		newProject: function(title) {
+			this.modeFunction('newProject', title);
 		},
 
 		downloadProject: function() {
 			this.modeFunction('downloadProject');
 		},
 
-		postGist: function() {
-			this.modeFunction('postGist');
+		commitGist: function() {
+			this.modeFunction('commitGist');
 		}
 
 	}
@@ -526,9 +563,17 @@ window.onload = function() {
 },{"./debug":2,"./debug/index":2,"./editor/index":4,"./files":6,"./menu/index":8,"./models/pfile":11,"./models/project":12,"./models/user":13,"./modes/p5/p5-web-mode":14,"./settings":15,"./settings/index":16,"./sidebar/index":18,"./sketchframe/index":20,"./tabs/index":22,"brace":26,"jquery":41,"vue":67}],8:[function(require,module,exports){
 module.exports = {
 	template: require('./template.html'),
-}
+
+	methods: {
+		selectRecentProject: function(e) {
+			var projectID = e.$event.target.getAttribute('data-projectid');
+			this.$root.loadProjectByOurID(projectID);
+		}
+	}
+
+};
 },{"./template.html":9}],9:[function(require,module,exports){
-module.exports = '<div id ="button_header">\n\n  <button id="play" v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>\n  <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>\n  <input type="button" value="save as" v-on="click: $root.saveProject()">\n  <input type="button" value="new" v-on="click: $root.newProject()">\n  <input type="button" value="download" v-on="click: $root.downloadProject()">\n  <input type="button" value="recentProjects" v-on="click: $root.recentProjects()">\n  <input type="button" value="postGist" v-on="click: $root.postGist()">\n\n  <div id="toolbar">\n    <div id="actions">\n      <button id="settings" title="Preferences" v-on="click: $root.toggleSettingsPane()">\n        <img src="images/options.svg">\n      </button>\n    </div>\n  </div>\n\n</div>';
+module.exports = '<div id ="button_header">\n\n  <div class="pure-menu pure-menu-horizontal">\n    <ul class="pure-menu-list">\n\n      <li class="pure-menu-item">\n        <button id="play" v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>\n      </li>\n\n      <li class="pure-menu-item">\n        <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>\n      </li>\n\n<!--       <li class="pure-menu-item">\n        <span v-on="click: $root.forkProject()">Save: Fork</span>\n      </li> -->\n\n      <li class="pure-menu-item">\n        <span v-on="click: $root.newProject()">New</span>\n      </li>\n\n      <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">\n        <!-- <span v-on="click: $root.recentProjects()">Recent Projects</span> -->\n        <span>Recent Projects</span>\n\n        <ul class="pure-menu-children" id="recentProjects">\n          <li v-repeat="$root.recentProjects" class="pure-menu-item">\n            <span data-projectid="{{id}}" class="pure-menu-link" v-on="click: selectRecentProject(this)">\n              <b data-projectid="{{id}}">{{name}}</b>, <em data-projectid="{{id}}"> Last Modified on {{dateModified}}</em>\n            </span>\n          </li>\n        </ul>\n\n\n\n      </li>\n\n      <li class="pure-menu-item">\n        <span v-on="click: $root.commitGist()">Save: Commit</span>\n      </li>\n\n    </ul>\n  </div> <!-- end pure-menu-->\n\n\n  <div id="toolbar">\n    <div id="actions">\n      <button id="settings" title="Preferences" v-on="click: $root.toggleSettingsPane()">\n        <img src="images/options.svg">\n      </button>\n    </div>\n  </div>\n\n</div>';
 },{}],10:[function(require,module,exports){
 var $ = require('jquery');
 var Vue = require('vue');
@@ -537,8 +582,11 @@ var Path = require('path');
 var pFile = function(name, isCurrentlyOpen) {
 	this.id = null;
 
-	// TO DO: either a string, or a function that returns file content
-	this.contents = ''; 
+	// contents is the version of the file with any modifications
+	this.contents = '';
+
+	// original contents is the last committed version of the file
+	this.originalContents = '';
 
 	this.session = null;
 
@@ -567,6 +615,7 @@ pFile.prototype.setDefaultContents = function(fileName) {
 		url: '../sketch/template/' + fileName,
 		success: function(filedata) {
 			self.contents = String(contents.responseText);
+			self.originalContents = self.contents;
 
 			if (self.currentFile) {
 				var e = new Event('loaded-file');
@@ -584,6 +633,12 @@ pFile.prototype.setDefaultContents = function(fileName) {
 	// var contents = $.get('../sketch/template/' + fileName, function(data) {
 	// 	self.contents = contents.responseText;
 	// });
+};
+
+
+// when a commit is made, update the "original contents"
+pFile.prototype.commitContents = function() {
+	this.originalContents = this.contents;
 };
 
 // File.prototype.setContentsFromLatestP5 = function(fileName) {
@@ -609,7 +664,7 @@ var pFile = require('./pFile');
 
 var Project = function(files) {
 
-	// generate random unique id:
+	// generate random unique id, thank you https://gist.github.com/gordonbrander/2230317
 	this.id = '_' + Math.random().toString(36).substr(2, 9);
 	this.gistID = null;
 
@@ -642,7 +697,9 @@ var Project = function(files) {
 module.exports = Project;
 },{"./pFile":10}],13:[function(require,module,exports){
 var User = function(name) {
-	this.id = 0;
+
+	// generate random unique id, thank you https://gist.github.com/gordonbrander/2230317
+	this.id = '_' + Math.random().toString(36).substr(2, 9);
 
 	// no github auth yet
 	this.gh_oa = null;
@@ -653,7 +710,7 @@ var User = function(name) {
 		this.username = '_anon'
 	}
 
-	this.projects = {};
+	this.projects = [];
 	this.settings = {};
 };
 
@@ -665,13 +722,23 @@ var AUTH = require('../../auth');
 
 module.exports = {
 
-	newProject: function() {
+	newProject: function(title) {
+		var name = title ? title : prompt('Project Name', 'Cool Sketch');
 		var proj = new Project();
+		proj.name = name;
 
 		// load current file
 		this.currentFile = proj.findFile(proj.openFile);
 
 		// this.$broadcast('open-file', this.currentFile);
+
+		// close existing tabs
+		for (var i = 0; i < this.tabs.length; i++) {
+			var fileName = this.tabs[i].name;
+			console.log(fileName);
+			var fileObj = this.currentProject.findFile(fileName);
+			this.$broadcast('close-tab', fileObj);
+		}
 
 		// set up tabs
 		for (var i = 0; i < proj.openTabs.length; i++) {
@@ -688,19 +755,39 @@ module.exports = {
 
 	getUserProjects: function() {
 		var projects = JSON.parse(localStorage.getItem('p5projects'));
+		var projectsToReturn = [];
 
-		var projectKeys = Object.keys(projects);
-		for (var i in projects) {
-			var proj = projects[i];
-			console.log('project name: ' + proj.name + ', date modified: ' + proj.dateModified);
+		if (projects) {
+			var projectKeys = Object.keys(projects);
+			for (var i in projects) {
+				var proj = projects[i];
+				var projID = projects[i].id;
+
+				// if the user owns this project, list it:
+				if (this.currentUser.projects.indexOf(projID) > -1) {
+					projectsToReturn.push(proj);
+					console.log('project name: ' + proj.name + ', date modified: ' + proj.dateModified + 'gistID: ' + proj.gistID);
+				}
+			}
+		} else {
+			console.log('no recent projects');
 		}
+		return projectsToReturn;
 	},
 
-	postGist: function() {
+
+	// commit as a gist
+	commitGist: function() {
 		var self = this;
+
+		var projectID = this.currentProject.id;
+		var gistID = this.currentProject.gistID;
+
 		var theFiles = {};
 		var url = 'https://api.github.com/gists';
 		var reqType = 'POST';
+
+		// authenticate the user. If user is anonymous, use our default account.
 		var oa = this.currentUser.gh_oa || AUTH.GH;
 
 		var commitMessage = prompt('Describe what you changed', 'update');
@@ -731,45 +818,76 @@ module.exports = {
 			},
 			dataType: 'json',
 			data: JSON.stringify(data)})
+
 		.success( function(res) {
+
+			// save project gistID (only necessary if reqType === 'POST')
 			self.currentProject.gistID = res.id;
+
+			//   and update date modified
+			var dateModified = JSON.stringify(new Date());
+			self.currentProject.dateModified = dateModified;
+
+			// update file original contents to reflect the most recently committed version
+			for (var i = 0; i < self.currentProject.files.length; i++) {
+				var f = self.currentProject.files[i];
+				f.originalContents = f.contents;
+			}
+
+			// add or update the project listing
+			var projects = JSON.parse( localStorage.getItem('p5projects') );
+			if (!projects) projects = {};
+			projects[projectID] = self.currentProject;
+			localStorage.setItem('p5projects', JSON.stringify(projects));
+
+			// add projectID to the user's table if it doesn't exist
+			if (self.currentUser.projects.indexOf(projectID) === -1) {
+				self.currentUser.projects.push(projectID);
+				localStorage.setItem('user', JSON.stringify(self.currentUser));
+			}
+
+
 			console.log(res);
 		})
+
 		.error( function(e) {
 			console.warn('gist save error', e);
 		});
 
 	},
 
-	saveAs: function() {
-		var saveName = prompt('Save as ', this.projectName);
-		if (saveName) {
-			this.title = saveName;
-			this.currentProject.name = saveName;
+	// fork!
+	forkProject: function() {
+		// TO DO
 
-			// set date modified
-			var dateModified = new Date();
-			this.currentProject.dateModified = dateModified;
+		// var saveName = prompt('Save as ', this.projectName);
 
-			var projects = JSON.parse(localStorage.getItem('p5projects'));
+		// if (saveName) {
+		// 	this.title = saveName;
+		// 	this.currentProject.name = saveName;
 
-			if (!projects) {
-				projects = {};
-			}
+		// 	// set date modified
+		// 	var dateModified = new Date();
+		// 	this.currentProject.dateModified = dateModified;
 
-			projects[this.title] = this.currentProject;
+		// 	var projects = JSON.parse(localStorage.getItem('p5projects'));
 
-			// TO DO: dont overwrite project names
+		// 	if (!projects) {
+		// 		projects = {};
+		// 	}
 
-			// save to user's project list
-			this.currentUser.projects[this.title]
+		// 	//NO
+		// 	// projects[this.title] = this.currentProject;
 
-			localStorage.setItem('p5projects', JSON.stringify(projects));
-		}
+		// 	// TO DO: dont overwrite project names
+
+
+		// 	localStorage.setItem('p5projects', JSON.stringify(projects));
+		// }
 	},
 
+	// save latest version of files to local storage
 	autoSave: function() {
-		// save latest version of files to local storage
 	},
 
 	downloadProject: function() {
@@ -1087,6 +1205,7 @@ module.exports = {
 		// closeFile
 		closeTab: function(fileObject) {
 			var tabs = this.$root.tabs;
+			console.log('closing the tab', fileObject.name);
 
 			// find if there is a matching tab
 			var target_tabs = tabs.filter( function(tab) {
@@ -1133,6 +1252,7 @@ module.exports = {
 
 	ready: function() {
 		this.$on('add-tab', this.addTab);
+		this.$on('close-tab', this.closeTab);
 		this.$on('close-file', this.closeTab);
 	}
 };

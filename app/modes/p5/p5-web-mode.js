@@ -4,13 +4,23 @@ var AUTH = require('../../auth');
 
 module.exports = {
 
-	newProject: function() {
+	newProject: function(title) {
+		var name = title ? title : prompt('Project Name', 'Cool Sketch');
 		var proj = new Project();
+		proj.name = name;
 
 		// load current file
 		this.currentFile = proj.findFile(proj.openFile);
 
 		// this.$broadcast('open-file', this.currentFile);
+
+		// close existing tabs
+		for (var i = 0; i < this.tabs.length; i++) {
+			var fileName = this.tabs[i].name;
+			console.log(fileName);
+			var fileObj = this.currentProject.findFile(fileName);
+			this.$broadcast('close-tab', fileObj);
+		}
 
 		// set up tabs
 		for (var i = 0; i < proj.openTabs.length; i++) {
@@ -27,19 +37,39 @@ module.exports = {
 
 	getUserProjects: function() {
 		var projects = JSON.parse(localStorage.getItem('p5projects'));
+		var projectsToReturn = [];
 
-		var projectKeys = Object.keys(projects);
-		for (var i in projects) {
-			var proj = projects[i];
-			console.log('project name: ' + proj.name + ', date modified: ' + proj.dateModified);
+		if (projects) {
+			var projectKeys = Object.keys(projects);
+			for (var i in projects) {
+				var proj = projects[i];
+				var projID = projects[i].id;
+
+				// if the user owns this project, list it:
+				if (this.currentUser.projects.indexOf(projID) > -1) {
+					projectsToReturn.push(proj);
+					console.log('project name: ' + proj.name + ', date modified: ' + proj.dateModified + 'gistID: ' + proj.gistID);
+				}
+			}
+		} else {
+			console.log('no recent projects');
 		}
+		return projectsToReturn;
 	},
 
-	postGist: function() {
+
+	// commit as a gist
+	commitGist: function() {
 		var self = this;
+
+		var projectID = this.currentProject.id;
+		var gistID = this.currentProject.gistID;
+
 		var theFiles = {};
 		var url = 'https://api.github.com/gists';
 		var reqType = 'POST';
+
+		// authenticate the user. If user is anonymous, use our default account.
 		var oa = this.currentUser.gh_oa || AUTH.GH;
 
 		var commitMessage = prompt('Describe what you changed', 'update');
@@ -70,45 +100,76 @@ module.exports = {
 			},
 			dataType: 'json',
 			data: JSON.stringify(data)})
+
 		.success( function(res) {
+
+			// save project gistID (only necessary if reqType === 'POST')
 			self.currentProject.gistID = res.id;
+
+			//   and update date modified
+			var dateModified = JSON.stringify(new Date());
+			self.currentProject.dateModified = dateModified;
+
+			// update file original contents to reflect the most recently committed version
+			for (var i = 0; i < self.currentProject.files.length; i++) {
+				var f = self.currentProject.files[i];
+				f.originalContents = f.contents;
+			}
+
+			// add or update the project listing
+			var projects = JSON.parse( localStorage.getItem('p5projects') );
+			if (!projects) projects = {};
+			projects[projectID] = self.currentProject;
+			localStorage.setItem('p5projects', JSON.stringify(projects));
+
+			// add projectID to the user's table if it doesn't exist
+			if (self.currentUser.projects.indexOf(projectID) === -1) {
+				self.currentUser.projects.push(projectID);
+				localStorage.setItem('user', JSON.stringify(self.currentUser));
+			}
+
+
 			console.log(res);
 		})
+
 		.error( function(e) {
 			console.warn('gist save error', e);
 		});
 
 	},
 
-	saveAs: function() {
-		var saveName = prompt('Save as ', this.projectName);
-		if (saveName) {
-			this.title = saveName;
-			this.currentProject.name = saveName;
+	// fork!
+	forkProject: function() {
+		// TO DO
 
-			// set date modified
-			var dateModified = new Date();
-			this.currentProject.dateModified = dateModified;
+		// var saveName = prompt('Save as ', this.projectName);
 
-			var projects = JSON.parse(localStorage.getItem('p5projects'));
+		// if (saveName) {
+		// 	this.title = saveName;
+		// 	this.currentProject.name = saveName;
 
-			if (!projects) {
-				projects = {};
-			}
+		// 	// set date modified
+		// 	var dateModified = new Date();
+		// 	this.currentProject.dateModified = dateModified;
 
-			projects[this.title] = this.currentProject;
+		// 	var projects = JSON.parse(localStorage.getItem('p5projects'));
 
-			// TO DO: dont overwrite project names
+		// 	if (!projects) {
+		// 		projects = {};
+		// 	}
 
-			// save to user's project list
-			this.currentUser.projects[this.title]
+		// 	//NO
+		// 	// projects[this.title] = this.currentProject;
 
-			localStorage.setItem('p5projects', JSON.stringify(projects));
-		}
+		// 	// TO DO: dont overwrite project names
+
+
+		// 	localStorage.setItem('p5projects', JSON.stringify(projects));
+		// }
 	},
 
+	// save latest version of files to local storage
 	autoSave: function() {
-		// save latest version of files to local storage
 	},
 
 	downloadProject: function() {
