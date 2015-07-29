@@ -33,7 +33,6 @@ var appConfig = {
 	},
 
 	data: {
-		title: 'my cool sketch',
 		settings: {},
 		showSettings: false,
 		tabs: [],
@@ -46,7 +45,7 @@ var appConfig = {
 
 	computed: {
 		projectName: function() {
-			return this.title;
+			return this.currentProject.name;
 		},
 
 		orientation: function() {
@@ -182,7 +181,7 @@ var appConfig = {
 			// var oldName = String(this.projectName);
 			var newName = prompt('New project name:', this.projectName);
 			if (newName) {
-				this.title = newName;
+				this.currentProject.name = newName;
 			}
 		},
 

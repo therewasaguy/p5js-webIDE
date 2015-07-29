@@ -342,7 +342,6 @@ var appConfig = {
 	},
 
 	data: {
-		title: 'my cool sketch',
 		settings: {},
 		showSettings: false,
 		tabs: [],
@@ -355,7 +354,7 @@ var appConfig = {
 
 	computed: {
 		projectName: function() {
-			return this.title;
+			return this.currentProject.name;
 		},
 
 		orientation: function() {
@@ -491,7 +490,7 @@ var appConfig = {
 			// var oldName = String(this.projectName);
 			var newName = prompt('New project name:', this.projectName);
 			if (newName) {
-				this.title = newName;
+				this.currentProject.name = newName;
 			}
 		},
 
@@ -697,15 +696,15 @@ module.exports = {
 		}
 	},
 
-	postGist: function(message) {
+	postGist: function() {
 		var self = this;
 		var theFiles = {};
-		var gistID = '89cf6f57a379a907b071';
-		// var gistID = this.currentProject.gistID ? this.currentProject.gistID : false;
 		var url = 'https://api.github.com/gists';
 		var reqType = 'POST';
 		var oa = this.currentUser.gh_oa || AUTH.GH;
-		var commitMessage = message || 'update';
+
+		var commitMessage = prompt('Describe what you changed', 'update');
+
 
 		// if the project exists, patch an update
 		if (gistID) {
@@ -716,7 +715,6 @@ module.exports = {
 		for (var i = 0; i < this.currentProject.files.length; i++) {
 			var f = this.currentProject.files[i];
 			theFiles[f.name] = {"content": f.contents};
-			console.log(theFiles);
 		}
 
 		var data = {
