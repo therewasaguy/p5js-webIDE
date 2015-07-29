@@ -7,6 +7,7 @@ var pFile = function(name, isCurrentlyOpen) {
 
 	// TO DO: either a string, or a function that returns file content
 	this.contents = ''; 
+	this.originalContents = '';
 
 	this.session = null;
 
@@ -35,6 +36,7 @@ pFile.prototype.setDefaultContents = function(fileName) {
 		url: '../sketch/template/' + fileName,
 		success: function(filedata) {
 			self.contents = String(contents.responseText);
+			self.originalContents = self.contents;
 
 			if (self.currentFile) {
 				var e = new Event('loaded-file');
