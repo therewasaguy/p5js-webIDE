@@ -2,7 +2,7 @@
 	<div id="sidebar">
 		<div id="filetree">
 			<ul>
-				<li v-repeat="files | orderBy 'name'" v-component="{{type}}"></li>
+				<li v-repeat="currentProject.fileObjects | orderBy 'name'" v-component="file"></li>
 			</ul>
 		</div>
 	</div>
