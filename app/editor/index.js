@@ -44,6 +44,7 @@ module.exports = {
 		this.customizeCommands();
 
 		this.$on('open-file', this.openFile);
+		this.$on('clear-editor', this.clearEditor);
 
 		// load and run the code that loaded is the file is the open file in the project
 		document.addEventListener('loaded-file', function(e) {
@@ -150,6 +151,12 @@ module.exports = {
 			this.ace.getSession().setTabSize(settings.tabSize);
 			this.ace.getSession().setUseSoftTabs(settings.tabType === 'spaces');
 			this.ace.getSession().setUseWrapMode(settings.wordWrap === true);
+		},
+
+		clearEditor: function() {
+			var session = this.ace.getSession();
+			session.setValue('');
+			console.log('clear');
 		}
 	}
 

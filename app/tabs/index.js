@@ -57,6 +57,7 @@ module.exports = {
 					this.$root.openFile( tabs[newTarget].name );
 				} catch(e) {
 					console.log('no file to open');
+					this.$root.clearEditor();
 				}
 				// try {
 				// } catch(e) {

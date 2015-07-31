@@ -310,6 +310,10 @@ var appConfig = {
 
 		commitGist: function() {
 			this.modeFunction('commitGist');
+		},
+
+		clearEditor: function() {
+			this.$.editor.clearEditor();
 		}
 
 	}
