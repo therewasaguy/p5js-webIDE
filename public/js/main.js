@@ -1201,18 +1201,7 @@ module.exports = {
 				// get all the active code
 				var code = '';
 
-				// option 1. --> get all of the active sessions...
-				// var sessions = self.$root.$.editor.editSessions;
-				// for (var i = 0; i < sessions.length; i++) {
-				// 	var title = sessions[i].name;
-				// 	var session = sessions[i].doc.getValue();
-				// 	// var title = session.name;
-				// 	// var doc = session.doc;
-				// 	console.log('/** file: ' + title + ' **/');
-				// 	console.log(session);
-				// }
-
-				// option 2. --> get all of the files
+				// get all of the project files
 				var files = self.$root.currentProject.fileObjects;
 
 				for (var i = 0; i < files.length; i++) {
