@@ -56,7 +56,11 @@ module.exports = {
 				}
 
 				tabs.splice(index, 1);
-				this.$root.openFile( tabs[newTarget].name );
+				try {
+					this.$root.openFile( tabs[newTarget].name );
+				} catch(e) {
+					console.log(e);
+				}
 			}
 		},
 

@@ -123,6 +123,7 @@ var appConfig = {
 			this.recentProjects = this.findRecentUserProjects(this.currentUser);
 		},
 
+		// returns an array of recent user projects by ID
 		findRecentUserProjects: function(user) {
 			var recentUserProjects = [];
 
@@ -207,24 +208,74 @@ var appConfig = {
 			}
 		},
 
-		// load project by our ID, not by the gistID
-		loadProjectByOurID: function(projID) {
-			var ourID = projID;
+		closeProject: function() {
+			var proj = this.currentProject;
+			var self = this;
+			var filesToClose = [];
 
-			// find project in the database
-			var projects = JSON.parse( localStorage.getItem('p5projects') );
-			var projObj = projects[ourID];
+			// close existing tabs
+			self.tabs.forEach(function(tab) {
+				var fileName = tab.name;
+				console.log('file exists: ' + fileName);
+				var fileObj = proj.findFile(fileName);
+				filesToClose.push(fileObj);
+			});
 
-			var gistID = projObj.gistID;
+			console.log(filesToClose);
 
-			// TO DO... finish this!
+			filesToClose.forEach(function(fileObj) {
+				self.$broadcast('close-tab', fileObj);
+				console.log('close!');
+			});
 
-			// loadProjectByGistID(gistID);
+			// for (var i = 0; i < this.tabs.length; i++) {
+			// 	var fileName = this.tabs[i].name;
+			// 	console.log('file exists: ' + fileName);
+			// 	var fileObj = this.currentProject.findFile(fileName);
+			// 	this.$broadcast('close-tab', fileObj);
+			// }
 		},
 
-		// show recent user projects
-		recentProjects: function() {
-			this.modeFunction('getUserProjects');
+		openProject: function(projObj, gistData) {
+			var self = this;
+			self.closeProject();
+			self.currentProject = projObj;
+		},
+
+		// load project by our ID, not by the gistID
+		loadProjectByOurID: function(projID) {
+			var self = this;
+			var ourID = projID;
+
+			// find project in the database (localStorage if offline...)
+			var projects = JSON.parse( localStorage.getItem('p5projects') );
+			var projObj = projects[ourID];
+			var gistID = projObj.gistID;
+
+			// open the project now
+			self.openProject(projObj)
+
+			// meanwhile, tell the server to fetch the gist data
+			$.ajax({
+				url: '/loadprojectbygistid',
+				type: 'get',
+				dataType: 'json',
+				data: {
+						'gistID': gistID,
+						'gh_oa': this.currentUser.gh_oa
+					}
+				})
+				.success(function(res) {
+					var gistData = res;
+					self.gotGistData(gistData);
+				})
+				.fail(function(res) {
+					console.log('error loading project' + res);
+				});
+		},
+
+		gotGistData: function(gistData) {
+			console.log('got gist data!');
 		},
 
 		forkProject: function() {
