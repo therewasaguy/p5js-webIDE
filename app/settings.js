@@ -4,7 +4,7 @@ var defaults = {
   tabType: "spaces",
   theme: 'tomorrow',
   consoleOrientation: 'horizontal',
-  showSidebar: true,
+  showSidebar: false,
   wordWrap: false,
   runInBrowser: false,
   fullCanvas: false // automatically make canvas full width/height of screen

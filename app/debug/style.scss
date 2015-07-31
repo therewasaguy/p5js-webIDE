@@ -1,13 +1,43 @@
 #debug {
 	background-color: #F1F1F1;
+	width:100%;
+	display:block;
+	height:100px;
+	z-index:100;
+	position:absolute;
+	bottom:0px;
+	left:0px;
+	max-height:250px;
+	overflow:scroll;
+	text-align:bottom;
+	flex: 1;
+	flex-direction: column;
+	display:flex;
 }
 
 #debugText {
-	z-index:100;
+	// position:absolute;
+	// bottom:20px;
+	// left:10px;
+	// background-color: #F1F1F1;
+	// max-height:200px;
+	bottom: 0px;
+	left: 10px;
 	position:absolute;
-	bottom:20px;
-	left:10px;
-	background-color: #F1F1F1;
-	max-height:200px;
-	overflow:scroll;
+}
+
+#debugheader {
+	position:fixed;
+	width:100%;
+}
+
+#cleardebug {
+	float:right;
+	margin-right:5px;
+	border-width: 2px;
+	border-color:black;
+}
+
+#cleardebug:hover{
+	background-color:yellow;
 }

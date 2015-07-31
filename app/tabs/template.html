@@ -1,11 +1,20 @@
   <div id="tabs"> 
     <ul id="tab-list"> 
       <li v-repeat="tabs | orderBy 'name'" v-component="tab"></li>
+
       <li id = "add">
         <div>
-        <a href="#" v-on="click: $root.newFile()">+</a>
-      </div>
-        </li>
+          <a href="#" v-on="click: $root.newFile()">+</a>
+        </div>
+      </li>
+
+      <li id="minimize">
+        <div>
+          <a href="#" v-on="click: $root.hideEditor()"> < </a>
+        </div>
+      </li>
+
+
     </ul>
 
   </div>

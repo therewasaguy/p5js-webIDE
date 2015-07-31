@@ -57,8 +57,9 @@ module.exports = {
 
 		clearErrors: function() {
 			var self = this;
-			self.dbgArea.style.opacity = 0.0;
+			self.dbgArea.style.opacity = 1.0;
 			self.dbg.innerHTML = '';
+			// to do: reset size
 		}
 	}
 

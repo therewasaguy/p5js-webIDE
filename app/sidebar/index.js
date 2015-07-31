@@ -29,6 +29,11 @@ module.exports = {
 					var c = 'item';
 					if (this.$root.currentFile.name == this.name) c += ' selected';
 					return c;
+				},
+				showEditorClass: function() {
+					if (!this.$root.$.editor.isVisible) {
+						return 'hiddenclass';
+					}
 				}
 			},
 
@@ -44,10 +49,11 @@ module.exports = {
 		className: function() {
 			var container = this.container || $('#sidebar-container');
 
-			if (!this.$root.settings.showSidebar) {
+			if (this.$root.settings.showSidebar) {
 				container.css({
-					width: this.sidebarWidth
+					width: 160 //this.sidebarWidth
 				});
+				console.log(this.sidebarWidth);
 				ace.resize();
 				return 'expanded'
 			} else {

@@ -63,3 +63,17 @@
     display:block;
   }
 }
+
+#minimize {
+  width:30px;
+  height: 30px;
+  float: right;
+  a {
+    width:100%;
+    display: block;
+  }
+}
+
+#minimize a:hover {
+  color:yellow;
+}

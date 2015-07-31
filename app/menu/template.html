@@ -10,36 +10,45 @@
       <li class="pure-menu-item">
         <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>
       </li>
+    </ul>
 
 <!--       <li class="pure-menu-item">
         <span v-on="click: $root.forkProject()">Save: Fork</span>
       </li> -->
+      <div id="custom-dropdown-menus">
+        <ul class="pure-menu-list">
 
-      <li class="pure-menu-item">
-        <span v-on="click: $root.newProject()">New</span>
-      </li>
-
-      <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
-        <!-- <span v-on="click: $root.recentProjects()">Recent Projects</span> -->
-        <span>Recent Projects</span>
-
-        <ul class="pure-menu-children" id="recentProjects">
-          <li v-repeat="$root.recentProjects" class="pure-menu-item">
-            <span data-projectid="{{id}}" class="pure-menu-link" v-on="click: selectRecentProject(this)">
-              <b data-projectid="{{id}}">{{name}}</b>, <em data-projectid="{{id}}"> Last Modified on {{dateModified}}</em>
-            </span>
+          <li class="pure-menu-item">
+            <span v-on="click: $root.newProject()">New</span>
           </li>
-        </ul>
+
+          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+            <!-- <span v-on="click: $root.recentProjects()">Recent Projects</span> -->
+            <span>Recent Projects</span>
+
+            <ul class="pure-menu-children" id="recentProjects">
+              <li v-repeat="$root.recentProjects" class="pure-menu-item">
+                <span data-projectid="{{id}}" class="pure-menu-link" v-on="click: selectRecentProject(this)">
+                  <b data-projectid="{{id}}">{{name}}</b>, <em data-projectid="{{id}}"> Last Modified on {{dateModified}}</em>
+                </span>
+              </li>
+            </ul>
 
 
 
-      </li>
+          </li>
 
-      <li class="pure-menu-item">
-        <span v-on="click: $root.commitGist()">Save: Commit</span>
-      </li>
+          <li class="pure-menu-item">
+            <span v-on="click: $root.commitGist()">Save: Commit</span>
+          </li>
+      </ul>
 
-    </ul>
+      <div id="profile-div">
+        <img src="images/temp/profile.png" id="profile-image">
+      </div>
+
+    </div>
+
   </div> <!-- end pure-menu-->
 
 

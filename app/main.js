@@ -317,7 +317,15 @@ var appConfig = {
 
 		clearEditor: function() {
 			this.$.editor.clearEditor();
-		}
+		},
+
+		hideEditor: function() {
+
+		},
+
+		showEditor: function() {
+
+		},
 
 	}
 

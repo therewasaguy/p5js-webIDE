@@ -30,7 +30,8 @@ module.exports = {
 	template: require('./template.html'),
 
 	data: {
-		newProject: true
+		newProject: true,
+		isVisible: true
 	},
 
 	ready: function() {

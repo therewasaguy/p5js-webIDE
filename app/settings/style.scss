@@ -3,12 +3,12 @@ $transitiontime: .25s;
 #settingsContainer {
   position: absolute;
   background-color: #959595;
-  bottom: 10px;
+  top: 10px;
   right: 10px;
   z-index: 999;
   box-shadow: 0px 0px 6px #999;
   color: #fff;
-  opacity: 0.1;
+  opacity: 0.7;
   transition: opacity $transitiontime ease-in-out;
    -moz-transition: opacity $transitiontime ease-in-out;
    -webkit-transition: opacity $transitiontime ease-in-out;
