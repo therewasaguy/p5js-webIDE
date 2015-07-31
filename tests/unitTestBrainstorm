@@ -1,0 +1,47 @@
+TO DO:
+- set up Unit Tests
+- write these tests (and more)...
+
+
+Tab
+- click x on a tab closes the currentFile
+- click x on a tab closes a tab that is not the currentFile
+- click + adds a new tab to the project
+
+
+Project
+- When a new project is created without any options, it loads the default project files
+- a new project can be created with existing options:
+	- loads the existing files
+	- opens the tabs that were open
+	- opens the file that was open
+	- has the proper name
+	- has a date modified
+	- has a gistID (if one existed)
+	- has an ID
+
+Saving
+- files have contents
+- files have originalContents
+- when a file's contents are modified from the most recently committed version ("pFile.originalContents"), the tab gets an asterisk
+- project file's contents are updated in localStorage with every change
+- projects can be committed (saved to server).
+	- when projects are committed (saved to server),
+		- originalContents are reset and no more asterisk next to file names
+		- new dateModified
+		- project name is added to recentProjects array, and the dropdown menu of recent projects
+
+Loading
+- recentProjects can load
+
+Sketches
+- can run
+- can stop
+- can be modified and run again
+- can receive mouse position, key events, and touch events (not sure how to test for this)
+- run multiple files (test with HTML, CSS, JS)
+
+Settings
+- fontSize can be changed
+- settings are saved to localStorage
+- settings change if a user logs in, based on the user's settings
