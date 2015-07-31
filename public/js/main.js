@@ -117,6 +117,8 @@ module.exports = {
 		this.customizeCommands();
 
 		this.$on('open-file', this.openFile);
+		this.$on('close-file', this.closeFile);
+
 		this.$on('clear-editor', this.clearEditor);
 
 		// load and run the code that loaded is the file is the open file in the project
@@ -227,10 +229,16 @@ module.exports = {
 		},
 
 		clearEditor: function() {
-			var session = this.ace.getSession();
-			session.setValue('');
-			console.log('clear');
+			session = ace.createEditSession( '', 'ace/mode/javascript');
+			this.ace.setSession(session);
+		},
+
+		closeFile: function(fileName) {
+			var session = _.findWhere(this.editSessions, {name: fileName});
+			var index = this.editSessions.indexOf(session);
+			this.editSessions.splice(index, 1);
 		}
+
 	}
 
 };
@@ -512,6 +520,12 @@ var appConfig = {
 
 		},
 
+		closeFile: function(fileName) {
+			this.$broadcast('close-file', fileName);
+			this.closeTab(fileName);
+			// self.removeFileFromProject(fileObj);
+		},
+
 		closeTab: function(fileName) {
 			if (!fileName) {console.log('closeFile without fileName!')};
 			var fileToClose = fileName || this.currentFile.name;
@@ -536,18 +550,16 @@ var appConfig = {
 			var self = this;
 			var filesToClose = [];
 
-			// close existing tabs
+			// populate the array of filesToClose
 			self.tabs.forEach(function(tab) {
 				var fileName = tab.name;
-				console.log('file exists: ' + fileName);
 				var fileObj = proj.findFile(fileName);
 				filesToClose.push(fileObj);
 			});
 
-			console.log(filesToClose);
-
+			// close the files' tabs
 			filesToClose.forEach(function(fileObj) {
-				self.$broadcast('close-tab', fileObj.name, self.tabs);
+				self.closeFile(fileObj.name);
 			});
 
 		},
@@ -561,8 +573,7 @@ var appConfig = {
 
 			var curFileName = self.currentProject.openFileName;
 			self.currentFile = self.currentProject.findFile(curFileName);
-
-			console.log('currently open file: ' + self.currentFile.name);
+			self.openFile(self.currentFile.name);
 
 			// self.$broadcast('open-file', self.currentProject.openFile);
 			var tabNames = self.currentProject.openTabNames;
@@ -1350,6 +1361,12 @@ module.exports = {
 
 
 		addTab: function(fileObject, tabs) {
+			// make sure tab is not already open
+			var tabExists = _.findWhere(tabs, {name: fileObject.name});
+			if (tabExists) {
+				console.log('tab exists');
+				return;
+			}
 
 			if (fileObject.open) {
 				var tabObject = {

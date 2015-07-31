@@ -44,6 +44,8 @@ module.exports = {
 		this.customizeCommands();
 
 		this.$on('open-file', this.openFile);
+		this.$on('close-file', this.closeFile);
+
 		this.$on('clear-editor', this.clearEditor);
 
 		// load and run the code that loaded is the file is the open file in the project
@@ -154,10 +156,16 @@ module.exports = {
 		},
 
 		clearEditor: function() {
-			var session = this.ace.getSession();
-			session.setValue('');
-			console.log('clear');
+			session = ace.createEditSession( '', 'ace/mode/javascript');
+			this.ace.setSession(session);
+		},
+
+		closeFile: function(fileName) {
+			var session = _.findWhere(this.editSessions, {name: fileName});
+			var index = this.editSessions.indexOf(session);
+			this.editSessions.splice(index, 1);
 		}
+
 	}
 
 };

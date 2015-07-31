@@ -70,6 +70,12 @@ module.exports = {
 
 
 		addTab: function(fileObject, tabs) {
+			// make sure tab is not already open
+			var tabExists = _.findWhere(tabs, {name: fileObject.name});
+			if (tabExists) {
+				console.log('tab exists');
+				return;
+			}
 
 			if (fileObject.open) {
 				var tabObject = {
