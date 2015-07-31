@@ -9,18 +9,12 @@ module.exports = {
 		var proj = new Project();
 		proj.name = name;
 
+		// close existing project
+		this.closeProject();
+
 		// load current file
 		this.currentFile = proj.findFile(proj.openFile);
-
 		// this.$broadcast('open-file', this.currentFile);
-
-		// close existing tabs
-		for (var i = 0; i < this.tabs.length; i++) {
-			var fileName = this.tabs[i].name;
-			console.log(fileName);
-			var fileObj = this.currentProject.findFile(fileName);
-			this.$broadcast('close-tab', fileObj);
-		}
 
 		// set up tabs
 		for (var i = 0; i < proj.openTabs.length; i++) {
@@ -58,7 +52,7 @@ module.exports = {
 	},
 
 
-	// commit as a gist
+	// commit as a gist --> TO DO: move this to server side
 	commitGist: function() {
 		var self = this;
 
@@ -128,7 +122,7 @@ module.exports = {
 				localStorage.setItem('user', JSON.stringify(self.currentUser));
 			}
 
-
+			self.findRecentUserProjects(self.currentUser);
 			console.log(res);
 		})
 

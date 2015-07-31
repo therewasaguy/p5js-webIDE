@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 module.exports = {
-	GH: '91fad8950547f2f67646967b5ebfb1710d67fc63'
+	GH: 'b2ace9d824c302038ca4fecffa3d28a9f9eb795f'
 }
 },{}],2:[function(require,module,exports){
 /**
@@ -432,6 +432,7 @@ var appConfig = {
 			this.recentProjects = this.findRecentUserProjects(this.currentUser);
 		},
 
+		// returns an array of recent user projects by ID
 		findRecentUserProjects: function(user) {
 			var recentUserProjects = [];
 
@@ -516,24 +517,74 @@ var appConfig = {
 			}
 		},
 
-		// load project by our ID, not by the gistID
-		loadProjectByOurID: function(projID) {
-			var ourID = projID;
+		closeProject: function() {
+			var proj = this.currentProject;
+			var self = this;
+			var filesToClose = [];
 
-			// find project in the database
-			var projects = JSON.parse( localStorage.getItem('p5projects') );
-			var projObj = projects[ourID];
+			// close existing tabs
+			self.tabs.forEach(function(tab) {
+				var fileName = tab.name;
+				console.log('file exists: ' + fileName);
+				var fileObj = proj.findFile(fileName);
+				filesToClose.push(fileObj);
+			});
 
-			var gistID = projObj.gistID;
+			console.log(filesToClose);
 
-			// TO DO... finish this!
+			filesToClose.forEach(function(fileObj) {
+				self.$broadcast('close-tab', fileObj);
+				console.log('close!');
+			});
 
-			// loadProjectByGistID(gistID);
+			// for (var i = 0; i < this.tabs.length; i++) {
+			// 	var fileName = this.tabs[i].name;
+			// 	console.log('file exists: ' + fileName);
+			// 	var fileObj = this.currentProject.findFile(fileName);
+			// 	this.$broadcast('close-tab', fileObj);
+			// }
 		},
 
-		// show recent user projects
-		recentProjects: function() {
-			this.modeFunction('getUserProjects');
+		openProject: function(projObj, gistData) {
+			var self = this;
+			self.closeProject();
+			self.currentProject = projObj;
+		},
+
+		// load project by our ID, not by the gistID
+		loadProjectByOurID: function(projID) {
+			var self = this;
+			var ourID = projID;
+
+			// find project in the database (localStorage if offline...)
+			var projects = JSON.parse( localStorage.getItem('p5projects') );
+			var projObj = projects[ourID];
+			var gistID = projObj.gistID;
+
+			// open the project now
+			self.openProject(projObj)
+
+			// meanwhile, tell the server to fetch the gist data
+			$.ajax({
+				url: '/loadprojectbygistid',
+				type: 'get',
+				dataType: 'json',
+				data: {
+						'gistID': gistID,
+						'gh_oa': this.currentUser.gh_oa
+					}
+				})
+				.success(function(res) {
+					var gistData = res;
+					self.gotGistData(gistData);
+				})
+				.fail(function(res) {
+					console.log('error loading project' + res);
+				});
+		},
+
+		gotGistData: function(gistData) {
+			console.log('got gist data!');
 		},
 
 		forkProject: function() {
@@ -727,18 +778,12 @@ module.exports = {
 		var proj = new Project();
 		proj.name = name;
 
+		// close existing project
+		this.closeProject();
+
 		// load current file
 		this.currentFile = proj.findFile(proj.openFile);
-
 		// this.$broadcast('open-file', this.currentFile);
-
-		// close existing tabs
-		for (var i = 0; i < this.tabs.length; i++) {
-			var fileName = this.tabs[i].name;
-			console.log(fileName);
-			var fileObj = this.currentProject.findFile(fileName);
-			this.$broadcast('close-tab', fileObj);
-		}
 
 		// set up tabs
 		for (var i = 0; i < proj.openTabs.length; i++) {
@@ -776,7 +821,7 @@ module.exports = {
 	},
 
 
-	// commit as a gist
+	// commit as a gist --> TO DO: move this to server side
 	commitGist: function() {
 		var self = this;
 
@@ -846,7 +891,7 @@ module.exports = {
 				localStorage.setItem('user', JSON.stringify(self.currentUser));
 			}
 
-
+			self.findRecentUserProjects(self.currentUser);
 			console.log(res);
 		})
 
@@ -1229,7 +1274,11 @@ module.exports = {
 				}
 
 				tabs.splice(index, 1);
-				this.$root.openFile( tabs[newTarget].name );
+				try {
+					this.$root.openFile( tabs[newTarget].name );
+				} catch(e) {
+					console.log(e);
+				}
 			}
 		},
 

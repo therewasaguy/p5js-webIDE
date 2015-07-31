@@ -13,22 +13,48 @@ module.exports = function(app, passport) {
 
 		// github oauth
 		var gh_oa = query.gh_oa ? gh_oa : auth.GH;
-
 		console.log('github oauth: ' + gh_oa)
 
 		var gistID = query.gistID;
 		var ret = [];
 
 		var options = {
-		  url: 'https://api.github.com/gists/' + gistID,
-		  headers: {
-		    'User-Agent': 'request'
-		  }
+			url: 'https://api.github.com/gists/' + gistID,
+			headers: {
+				'User-Agent': 'request',
+				'Authorization': 'token ' + gh_oa
+			}
 		};
 
 		request(options, function(error, response, body) {
 			if (!error && response.statusCode == 200) {
 			  res.send(body)
+			}
+		});
+	});
+
+
+	app.post('/savegist', function(req, res) {
+		var query = req.query;
+
+		// github oauth
+		var gh_oa = query.gh_oa ? gh_oa : auth.GH;
+		console.log('github oauth: ' + gh_oa)
+
+		var gistID = query.gistID;
+		var ret = [];
+
+		var options = {
+			url: 'https://api.github.com/gists/' + gistID,
+			headers: {
+				'User-Agent': 'request',
+				'Authorization': 'token ' + gh_oa
+			}
+		};
+
+		request(options, function(error, response, body) {
+			if (!error && response.statusCode == 200) {
+				res.send(body)
 			}
 		});
 	});
