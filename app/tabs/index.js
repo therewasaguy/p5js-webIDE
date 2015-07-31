@@ -29,20 +29,17 @@ module.exports = {
 	},
 
 	methods: {
-		// closeFile
-		closeTab: function(fileObject) {
-			var tabs = this.$root.tabs;
-			console.log('closing the tab', fileObject.name);
 
+		// closeFile
+		closeTab: function(fileName, tabs) {
 			// find if there is a matching tab
 			var target_tabs = tabs.filter( function(tab) {
-				return tab.name === fileObject.name;
+				return tab.name === fileName;
 			});
 
 			if (target_tabs[0]) {
 				var newTarget;
 				var index = _.indexOf(tabs, target_tabs[0]);
-
 				switch(index) {
 					case 0:
 						newTarget = 0;
@@ -56,13 +53,20 @@ module.exports = {
 				}
 
 				tabs.splice(index, 1);
-				try {
+				if (newTarget > -1) {
 					this.$root.openFile( tabs[newTarget].name );
-				} catch(e) {
-					console.log(e);
+				} else {
+					console.log('no file top open');
 				}
+				// try {
+				// } catch(e) {
+				// 	console.log('error');
+					// this.
+					// this.$root.newFile();
+				// }
 			}
 		},
+
 
 		addTab: function(fileObject, tabs) {
 
@@ -84,6 +88,5 @@ module.exports = {
 	ready: function() {
 		this.$on('add-tab', this.addTab);
 		this.$on('close-tab', this.closeTab);
-		this.$on('close-file', this.closeTab);
 	}
 };
