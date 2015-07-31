@@ -17,8 +17,8 @@ module.exports = {
 		// this.$broadcast('open-file', this.currentFile);
 
 		// set up tabs
-		for (var i = 0; i < proj.openTabs.length; i++) {
-			var fileName = proj.openTabs[i];
+		for (var i = 0; i < proj.openTabNames.length; i++) {
+			var fileName = proj.openTabNames[i];
 			// if (fileName === currentFile.name) return; // dont duplicate tabs
 
 			var fileObj = proj.findFile(fileName);
@@ -75,8 +75,8 @@ module.exports = {
 			reqType = 'PATCH';
 		}
 
-		for (var i = 0; i < this.currentProject.files.length; i++) {
-			var f = this.currentProject.files[i];
+		for (var i = 0; i < this.currentProject.fileObjects.length; i++) {
+			var f = this.currentProject.fileObjects[i];
 			theFiles[f.name] = {"content": f.contents};
 		}
 
@@ -105,8 +105,8 @@ module.exports = {
 			self.currentProject.dateModified = dateModified;
 
 			// update file original contents to reflect the most recently committed version
-			for (var i = 0; i < self.currentProject.files.length; i++) {
-				var f = self.currentProject.files[i];
+			for (var i = 0; i < self.currentProject.fileObjects.length; i++) {
+				var f = self.currentProject.fileObjects[i];
 				f.originalContents = f.contents;
 			}
 

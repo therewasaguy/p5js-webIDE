@@ -56,7 +56,7 @@ module.exports = {
 				// }
 
 				// option 2. --> get all of the files
-				var files = self.$root.currentProject.files;
+				var files = self.$root.currentProject.fileObjects;
 
 				for (var i = 0; i < files.length; i++) {
 					var title = files[i].name;

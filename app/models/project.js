@@ -6,9 +6,9 @@ var Project = function(options) {
 	// if no options are provided, set default files
 	if (!options) {
 		/**
-		 *  @property {Array} files Array of pFile objects
+		 *  @property {Array} fileObjects Array of pFile objects
 		 */
-		this.files = [ new pFile('p5.js'), new pFile('sketch.js', true), new pFile('index.html'), new pFile('style.css')];
+		this.fileObjects = [ new pFile('p5.js'), new pFile('sketch.js', true), new pFile('index.html'), new pFile('style.css')];
 
 		/**
 		 *  [name description]
@@ -17,14 +17,14 @@ var Project = function(options) {
 		this.name = 'new project';
 
 		/**
-		 *  @property {String} openFile name of the file that is open
+		 *  @property {String} openFileName name of the file that is open
 		 */
-		this.openFile ='sketch.js';
+		this.openFileName ='sketch.js';
 
 		/**
-		 *  @property {Array} openTabs 	Name of the openTabs, as array of strings
+		 *  @property {Array} openTabNames 	Name of the openTabNames, as array of strings
 		 */
-		this.openTabs = ['sketch.js', 'style.css'];
+		this.openTabNames = ['sketch.js', 'style.css'];
 
 		/**
 		 *  @property {String} id 	a unique ID for our application
@@ -39,27 +39,36 @@ var Project = function(options) {
 
 
 	else {
-		this.files = options.files;
+		this.fileObjects = options.fileObjects || options.files;
 		this.name = options.name;
-		this.openFile = options.openFile;
-		this.openTabs = options.openTabs;
+		this.openFileName = options.openFileName || options.openFile;
+		this.openTabNames = options.openTabNames || options.openTabs;
 		this.dateModified = options.dateModified;
 		this.id = options.id;
 		this.gistID = options.gistID;
 	}
 
 	this.findFile = function(name) {
-		for (var i = 0; i < this.files.length; i++) {
-			if (this.files[i].name === name) {
-				return this.files[i];
+		for (var i = 0; i < this.fileObjects.length; i++) {
+			if (this.fileObjects[i].name === name) {
+				return this.fileObjects[i];
 			}
 		}
 	};
 
 	this.addFile = function(fileObj) {
-		this.files.push(fileObj);
+		this.fileObjects.push(fileObj);
 	};
 
+	this.removeFile = function(fileName) {
+
+		for (var i = 0; i < this.fileObjects.length; i++) {
+			if (this.fileObjects[i].name === name) {
+				delete this.fileObjects[i];
+			}
+		}
+
+	};
 };
 
 

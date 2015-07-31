@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 module.exports = {
-	GH: 'b2ace9d824c302038ca4fecffa3d28a9f9eb795f'
+	GH: 'dea5774bba03f8eef638d3ae05f4936d298338c6'
 }
 },{}],2:[function(require,module,exports){
 /**
@@ -505,8 +505,15 @@ var appConfig = {
 
 		},
 
-		closeFile: function() {
-			this.$broadcast('close-file', this.currentFile);
+		closeTab: function(fileName) {
+			if (!fileName) {console.log('closeFile without fileName!')};
+			var fileToClose = fileName || this.currentFile.name;
+			this.$broadcast('close-tab', fileToClose, this.tabs);
+		},
+
+		removeFileFromProject: function(fileName) {
+			this.currentProject.removeFile(filename);
+			this.closeTab(fileName);
 		},
 
 		renameProject: function() {
@@ -533,22 +540,33 @@ var appConfig = {
 			console.log(filesToClose);
 
 			filesToClose.forEach(function(fileObj) {
-				self.$broadcast('close-tab', fileObj);
-				console.log('close!');
+				self.$broadcast('close-tab', fileObj.name, self.tabs);
 			});
 
-			// for (var i = 0; i < this.tabs.length; i++) {
-			// 	var fileName = this.tabs[i].name;
-			// 	console.log('file exists: ' + fileName);
-			// 	var fileObj = this.currentProject.findFile(fileName);
-			// 	this.$broadcast('close-tab', fileObj);
-			// }
 		},
 
 		openProject: function(projObj, gistData) {
 			var self = this;
+
 			self.closeProject();
-			self.currentProject = projObj;
+
+			self.currentProject = new Project(projObj);
+
+			var curFileName = self.currentProject.openFileName;
+			self.currentFile = self.currentProject.findFile(curFileName);
+
+			console.log('currently open file: ' + self.currentFile.name);
+
+			// self.$broadcast('open-file', self.currentProject.openFile);
+			var tabNames = self.currentProject.openTabNames;
+
+			for (var i = 0; i < tabNames.length; i++) {
+				var tabName = tabNames[i];
+				console.log('loading a tab named ' + tabName);
+				var fileObj = self.currentProject.findFile(tabName);
+				self.$broadcast('add-tab', fileObj, self.tabs);
+			}
+
 		},
 
 		// load project by our ID, not by the gistID
@@ -713,34 +731,75 @@ module.exports=require(10)
 },{"jquery":41,"path":39,"vue":67}],12:[function(require,module,exports){
 var pFile = require('./pFile');
 
-var Project = function(files) {
+// either load default file, or load new file;
+var Project = function(options) {
 
-	// generate random unique id, thank you https://gist.github.com/gordonbrander/2230317
-	this.id = '_' + Math.random().toString(36).substr(2, 9);
-	this.gistID = null;
+	// if no options are provided, set default files
+	if (!options) {
+		/**
+		 *  @property {Array} fileObjects Array of pFile objects
+		 */
+		this.fileObjects = [ new pFile('p5.js'), new pFile('sketch.js', true), new pFile('index.html'), new pFile('style.css')];
 
-	// if no files are provided, set default files
-	if (!files) {
-		this.files = [ new pFile('p5.js'), new pFile('sketch.js', true), new pFile('index.html'), new pFile('style.css')];
+		/**
+		 *  [name description]
+		 *  @type {String}
+		 */
+		this.name = 'new project';
+
+		/**
+		 *  @property {String} openFileName name of the file that is open
+		 */
+		this.openFileName ='sketch.js';
+
+		/**
+		 *  @property {Array} openTabNames 	Name of the openTabNames, as array of strings
+		 */
+		this.openTabNames = ['sketch.js', 'style.css'];
+
+		/**
+		 *  @property {String} id 	a unique ID for our application
+		 */
+		this.id = '_' + Math.random().toString(36).substr(2, 9);
+
+		/**
+		 *  @property {String} gistID 	a unique ID for GitHub API
+		 */
+		this.gistID = null;
 	}
 
-	this.name = 'new project';
-	this.openFile ='sketch.js';
-	this.openTabs = ['sketch.js', 'style.css'];
 
+	else {
+		this.fileObjects = options.fileObjects || options.files;
+		this.name = options.name;
+		this.openFileName = options.openFileName || options.openFile;
+		this.openTabNames = options.openTabNames || options.openTabs;
+		this.dateModified = options.dateModified;
+		this.id = options.id;
+		this.gistID = options.gistID;
+	}
 
 	this.findFile = function(name) {
-		for (var i = 0; i < this.files.length; i++) {
-			if (this.files[i].name === name) {
-				return this.files[i];
+		for (var i = 0; i < this.fileObjects.length; i++) {
+			if (this.fileObjects[i].name === name) {
+				return this.fileObjects[i];
 			}
 		}
 	};
 
 	this.addFile = function(fileObj) {
-		this.files.push(fileObj);
+		this.fileObjects.push(fileObj);
 	};
 
+	this.removeFile = function(fileName) {
+
+		for (var i = 0; i < this.fileObjects.length; i++) {
+			if (this.fileObjects[i].name === name) {
+				delete this.fileObjects[i];
+			}
+		}
+
+	};
 };
 
 
@@ -786,8 +845,8 @@ module.exports = {
 		// this.$broadcast('open-file', this.currentFile);
 
 		// set up tabs
-		for (var i = 0; i < proj.openTabs.length; i++) {
-			var fileName = proj.openTabs[i];
+		for (var i = 0; i < proj.openTabNames.length; i++) {
+			var fileName = proj.openTabNames[i];
 			// if (fileName === currentFile.name) return; // dont duplicate tabs
 
 			var fileObj = proj.findFile(fileName);
@@ -844,8 +903,8 @@ module.exports = {
 			reqType = 'PATCH';
 		}
 
-		for (var i = 0; i < this.currentProject.files.length; i++) {
-			var f = this.currentProject.files[i];
+		for (var i = 0; i < this.currentProject.fileObjects.length; i++) {
+			var f = this.currentProject.fileObjects[i];
 			theFiles[f.name] = {"content": f.contents};
 		}
 
@@ -874,8 +933,8 @@ module.exports = {
 			self.currentProject.dateModified = dateModified;
 
 			// update file original contents to reflect the most recently committed version
-			for (var i = 0; i < self.currentProject.files.length; i++) {
-				var f = self.currentProject.files[i];
+			for (var i = 0; i < self.currentProject.fileObjects.length; i++) {
+				var f = self.currentProject.fileObjects[i];
 				f.originalContents = f.contents;
 			}
 
@@ -1154,7 +1213,7 @@ module.exports = {
 				// }
 
 				// option 2. --> get all of the files
-				var files = self.$root.currentProject.files;
+				var files = self.$root.currentProject.fileObjects;
 
 				for (var i = 0; i < files.length; i++) {
 					var title = files[i].name;
@@ -1247,20 +1306,17 @@ module.exports = {
 	},
 
 	methods: {
-		// closeFile
-		closeTab: function(fileObject) {
-			var tabs = this.$root.tabs;
-			console.log('closing the tab', fileObject.name);
 
+		// closeFile
+		closeTab: function(fileName, tabs) {
 			// find if there is a matching tab
 			var target_tabs = tabs.filter( function(tab) {
-				return tab.name === fileObject.name;
+				return tab.name === fileName;
 			});
 
 			if (target_tabs[0]) {
 				var newTarget;
 				var index = _.indexOf(tabs, target_tabs[0]);
-
 				switch(index) {
 					case 0:
 						newTarget = 0;
@@ -1277,10 +1333,17 @@ module.exports = {
 				try {
 					this.$root.openFile( tabs[newTarget].name );
 				} catch(e) {
-					console.log(e);
+					console.log('no file to open');
 				}
+				// try {
+				// } catch(e) {
+				// 	console.log('error');
+					// this.
+					// this.$root.newFile();
+				// }
 			}
 		},
+
 
 		addTab: function(fileObject, tabs) {
 
@@ -1302,11 +1365,10 @@ module.exports = {
 	ready: function() {
 		this.$on('add-tab', this.addTab);
 		this.$on('close-tab', this.closeTab);
-		this.$on('close-file', this.closeTab);
 	}
 };
 },{"./tab.html":23,"./template.html":24,"underscore":46}],23:[function(require,module,exports){
-module.exports = '<div class="{{className}}"><a href="#" v-show="!hidden" v-on="click: $root.openFile(this.name)">{{name}}{{file.contents !== file.originalContents ? \'*\' : \'\'}}</a>&nbsp\n	<a class="delete" href="#" v-show="!hidden" v-on="click: $root.closeFile(this.path)">x</a>\n</div>';
+module.exports = '<div class="{{className}}"><a href="#" v-show="!hidden" v-on="click: $root.openFile(this.name)">{{name}}{{file.contents !== file.originalContents ? \'*\' : \'\'}}</a>&nbsp\n	<a class="delete" href="#" v-show="!hidden" v-on="click: $root.closeTab(this.name)">x</a>\n</div>';
 },{}],24:[function(require,module,exports){
 module.exports = '  <div id="tabs"> \n    <ul id="tab-list"> \n      <li v-repeat="tabs | orderBy \'name\'" v-component="tab"></li>\n      <li id = "add">\n        <div>\n        <a href="#" v-on="click: $root.newFile()">+</a>\n      </div>\n        </li>\n    </ul>\n\n  </div>';
 },{}],25:[function(require,module,exports){

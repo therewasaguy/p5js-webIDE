@@ -196,8 +196,15 @@ var appConfig = {
 
 		},
 
-		closeFile: function() {
-			this.$broadcast('close-file', this.currentFile);
+		closeTab: function(fileName) {
+			if (!fileName) {console.log('closeFile without fileName!')};
+			var fileToClose = fileName || this.currentFile.name;
+			this.$broadcast('close-tab', fileToClose, this.tabs);
+		},
+
+		removeFileFromProject: function(fileName) {
+			this.currentProject.removeFile(filename);
+			this.closeTab(fileName);
 		},
 
 		renameProject: function() {
@@ -224,22 +231,33 @@ var appConfig = {
 			console.log(filesToClose);
 
 			filesToClose.forEach(function(fileObj) {
-				self.$broadcast('close-tab', fileObj);
-				console.log('close!');
+				self.$broadcast('close-tab', fileObj.name, self.tabs);
 			});
 
-			// for (var i = 0; i < this.tabs.length; i++) {
-			// 	var fileName = this.tabs[i].name;
-			// 	console.log('file exists: ' + fileName);
-			// 	var fileObj = this.currentProject.findFile(fileName);
-			// 	this.$broadcast('close-tab', fileObj);
-			// }
 		},
 
 		openProject: function(projObj, gistData) {
 			var self = this;
+
 			self.closeProject();
-			self.currentProject = projObj;
+
+			self.currentProject = new Project(projObj);
+
+			var curFileName = self.currentProject.openFileName;
+			self.currentFile = self.currentProject.findFile(curFileName);
+
+			console.log('currently open file: ' + self.currentFile.name);
+
+			// self.$broadcast('open-file', self.currentProject.openFile);
+			var tabNames = self.currentProject.openTabNames;
+
+			for (var i = 0; i < tabNames.length; i++) {
+				var tabName = tabNames[i];
+				console.log('loading a tab named ' + tabName);
+				var fileObj = self.currentProject.findFile(tabName);
+				self.$broadcast('add-tab', fileObj, self.tabs);
+			}
+
 		},
 
 		// load project by our ID, not by the gistID

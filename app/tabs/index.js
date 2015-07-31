@@ -53,10 +53,10 @@ module.exports = {
 				}
 
 				tabs.splice(index, 1);
-				if (newTarget > -1) {
+				try {
 					this.$root.openFile( tabs[newTarget].name );
-				} else {
-					console.log('no file top open');
+				} catch(e) {
+					console.log('no file to open');
 				}
 				// try {
 				// } catch(e) {
