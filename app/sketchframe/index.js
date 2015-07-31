@@ -1,5 +1,9 @@
 /**
- *  sketchframe holds the iframe that loads the sketch folder
+ *  sketchframe holds the iframe that runs the sketch.
+ *
+ *  Every time the user hits the "run" button, it reloads the iFrame.
+ *  
+ *  When this happens, new code is injected into the iFrame.
  */
 
 // full screen polyfill by TRowbotham https://github.com/TRowbotham/FullscreenAPI-Polyfill/
@@ -36,12 +40,11 @@ module.exports = {
 			var self = this;
 			var sketchFrame = this.sketchFrame;
 
+			/**
+			 *  Load all of the code and inject it into the iframe
+			 */
 			sketchFrame.onload = function() {
-				// get only the current code
-				// var code = window.ace.getValue();
 
-
-				// get all the active code
 				var code = '';
 
 				// get all of the project files

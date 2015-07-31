@@ -841,7 +841,7 @@ module.exports = {
 		this.closeProject();
 
 		// load current file
-		this.currentFile = proj.findFile(proj.openFile);
+		this.currentFile = proj.findFile(proj.openFileName);
 		// this.$broadcast('open-file', this.currentFile);
 
 		// set up tabs
@@ -1156,7 +1156,11 @@ module.exports = {
 module.exports = '<div id="sidebar-container" class = "{{className}}"  v-on="contextmenu: popupMenu(this, $event)">\n	<div id="sidebar">\n		<div id="filetree">\n			<ul>\n				<li v-repeat="files | orderBy \'name\'" v-component="{{type}}"></li>\n			</ul>\n		</div>\n	</div>\n	<div id="sidebar-drag" v-on="mousedown: startDrag"></div>\n</div>';
 },{}],20:[function(require,module,exports){
 /**
- *  sketchframe holds the iframe that loads the sketch folder
+ *  sketchframe holds the iframe that runs the sketch.
+ *
+ *  Every time the user hits the "run" button, it reloads the iFrame.
+ *  
+ *  When this happens, new code is injected into the iFrame.
  */
 
 // full screen polyfill by TRowbotham https://github.com/TRowbotham/FullscreenAPI-Polyfill/
@@ -1193,12 +1197,11 @@ module.exports = {
 			var self = this;
 			var sketchFrame = this.sketchFrame;
 
+			/**
+			 *  Load all of the code and inject it into the iframe
+			 */
 			sketchFrame.onload = function() {
-				// get only the current code
-				// var code = window.ace.getValue();
 
-
-				// get all the active code
 				var code = '';
 
 				// get all of the project files
@@ -1283,6 +1286,9 @@ module.exports = {
 					var c = '';
 					if (this.$root.currentFile == this.file) {
 						c += 'selected';
+					} else {
+						console.log(this.$root.currentFile);
+						console.log(this.file);
 					}
 					return c;
 				}

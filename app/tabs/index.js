@@ -17,6 +17,9 @@ module.exports = {
 					var c = '';
 					if (this.$root.currentFile == this.file) {
 						c += 'selected';
+					} else {
+						console.log(this.$root.currentFile);
+						console.log(this.file);
 					}
 					return c;
 				}

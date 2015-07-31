@@ -13,7 +13,7 @@ module.exports = {
 		this.closeProject();
 
 		// load current file
-		this.currentFile = proj.findFile(proj.openFile);
+		this.currentFile = proj.findFile(proj.openFileName);
 		// this.$broadcast('open-file', this.currentFile);
 
 		// set up tabs
