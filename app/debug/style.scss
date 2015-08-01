@@ -8,7 +8,6 @@
 	bottom:0px;
 	left:0px;
 	max-height:250px;
-	overflow:scroll;
 	text-align:bottom;
 	flex: 1;
 	flex-direction: column;
@@ -16,19 +15,20 @@
 }
 
 #debugText {
-	// position:absolute;
+	position:absolute;
 	// bottom:20px;
 	// left:10px;
 	// background-color: #F1F1F1;
 	// max-height:200px;
 	bottom: 0px;
 	left: 10px;
-	position:absolute;
+	overflow:scroll;
 }
 
 #debugheader {
 	position:fixed;
 	width:100%;
+	background-color: #F1F1F1;
 }
 
 #cleardebug {
@@ -36,8 +36,15 @@
 	margin-right:5px;
 	border-width: 2px;
 	border-color:black;
+	background-color: #F3F3F3;
 }
 
 #cleardebug:hover{
 	background-color:yellow;
+}
+
+.resizehandle {
+	position:absolute;
+	width:100%;
+	text-align:center;
 }

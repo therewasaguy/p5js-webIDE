@@ -8,29 +8,36 @@
   bottom: 0px;
   left: 0px;
   max-height: 250px;
-  overflow: scroll;
   text-align: bottom;
   flex: 1;
   flex-direction: column;
   display: flex; }
 
 #debugText {
+  position: absolute;
   bottom: 0px;
   left: 10px;
-  position: absolute; }
+  overflow: scroll; }
 
 #debugheader {
   position: fixed;
-  width: 100%; }
+  width: 100%;
+  background-color: #F1F1F1; }
 
 #cleardebug {
   float: right;
   margin-right: 5px;
   border-width: 2px;
-  border-color: black; }
+  border-color: black;
+  background-color: #F3F3F3; }
 
 #cleardebug:hover {
   background-color: yellow; }
+
+.resizehandle {
+  position: absolute;
+  width: 100%;
+  text-align: center; }
 
 #main-container {
   margin-top: 10px;

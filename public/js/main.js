@@ -66,7 +66,7 @@ module.exports = {
 
 };
 },{"./template.html":2}],2:[function(require,module,exports){
-module.exports = '<div id="debug">\n	<div id="debugheader">\n		<div class="resizehandle">\n		<span id="cleardebug">X</span>\n	</div>\n	<div id="debugText">\n</div>';
+module.exports = '<div id="debug">\n	<div id="debugheader">\n		<span class="resizehandle handle-up" style="display:none;">&#x25B2;</span>\n		<span class="resizehandle handle-down" >&#x25BC;</span>\n		<span id="cleardebug">X</span>\n	</div>\n	<div id="debugText">\n</div>';
 },{}],3:[function(require,module,exports){
 /**
  *  Editor
