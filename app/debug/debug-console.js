@@ -43,6 +43,7 @@
         window.noLoop();
         break;
       case 'stop':
+        window.background(175);
         window.remove();
         break;
     }

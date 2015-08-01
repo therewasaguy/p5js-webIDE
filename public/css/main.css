@@ -1,3 +1,44 @@
+#debug {
+  background-color: #F1F1F1;
+  width: 100%;
+  display: block;
+  height: 100px;
+  z-index: 100;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  max-height: 250px;
+  text-align: bottom;
+  flex: 1;
+  flex-direction: column;
+  display: flex; }
+
+#debugText {
+  position: absolute;
+  bottom: 0px;
+  left: 10px;
+  overflow: scroll; }
+
+#debugheader {
+  position: fixed;
+  width: 100%;
+  background-color: #F1F1F1; }
+
+#cleardebug {
+  float: right;
+  margin-right: 5px;
+  border-width: 2px;
+  border-color: black;
+  background-color: #F3F3F3; }
+
+#cleardebug:hover {
+  background-color: yellow; }
+
+.resizehandle {
+  position: absolute;
+  width: 100%;
+  text-align: center; }
+
 #main-container {
   margin-top: 10px;
   margin-bottom: 10px;
@@ -105,40 +146,6 @@ variable */
 
 .ace-twilight .ace_variable {
   color: #EC5097 !important; }
-
-#debug {
-  background-color: #F1F1F1;
-  width: 100%;
-  display: block;
-  height: 100px;
-  z-index: 100;
-  position: absolute;
-  bottom: 0px;
-  left: 0px;
-  max-height: 250px;
-  overflow: scroll;
-  text-align: bottom;
-  flex: 1;
-  flex-direction: column;
-  display: flex; }
-
-#debugText {
-  bottom: 0px;
-  left: 10px;
-  position: absolute; }
-
-#debugheader {
-  position: fixed;
-  width: 100%; }
-
-#cleardebug {
-  float: right;
-  margin-right: 5px;
-  border-width: 2px;
-  border-color: black; }
-
-#cleardebug:hover {
-  background-color: yellow; }
 
 #menu-container {
   width: 100%;
