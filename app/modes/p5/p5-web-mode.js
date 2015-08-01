@@ -75,62 +75,34 @@ module.exports = {
 		}
 
 		self.$emit('updateCurrentProject');
-
+		console.log(theFiles);
 
 		var data = {
 			"description": commitMessage,
 			"public": true,
-			"files": theFiles,
+			"theFiles": theFiles,
 			"gistID": gistID,
 		}
 
 		$.ajax({
 			url: './savegist',
 			type: 'POST',
-			data: data
+			data: data,
+			dataType: 'json'
 		})
 		.success( function(res) {
-			console.log('GH SUCCESSS');
+
+			// save gistID
+			self.currentProject.gistID = res.id;
+			self.currentProject.state = 'syncSuccess';
+			self.updateCurrentProject();
+			console.log('uploaded successfully!');
 			console.log(res);
 		})
-
-		// var data = {
-		// 	"description": commitMessage,
-		// 	"public": true,
-		// 	"files": theFiles
-		// };
-
-		// // if the project exists, patch an update
-		// if (gistID) {
-		// 	url += '/' + gistID;
-		// 	reqType = 'PATCH';
-		// }
-
-
-		// $.ajax({
-		// 	url: url,
-		// 	type: reqType,
-		// 	beforeSend: function(xhr) {
-		// 		xhr.setRequestHeader("Authorization", "token " + oa); 
-		// 	},
-		// 	dataType: 'json',
-		// 	data: JSON.stringify(data)})
-
-		// .success( function(res) {
-
-		// 	// save project gistID (only necessary if reqType === 'POST')
-		// 	self.currentProject.gistID = res.id;
-		// 	self.currentProject.state = 'syncSuccess';
-
-		// 	self.updateCurrentProject();
-
-		// 	console.log(res);
-		// })
-
 		.error( function(e) {
-			console.log('GH ERROR');
+			console.log(e);
 			self.currentProject.state = 'syncError';
-			console.warn('gist save error', e);
+			console.warn('gist save error');
 		});
 
 	},
