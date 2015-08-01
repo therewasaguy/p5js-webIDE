@@ -1,6 +1,5 @@
 var Project = require('../../models/project');
 var $ = require('jquery');
-var AUTH = require('../../auth');
 
 module.exports = {
 
@@ -56,7 +55,6 @@ module.exports = {
 	commitGist: function() {
 		var self = this;
 
-		var projectID = this.currentProject.id;
 		var gistID = this.currentProject.gistID;
 
 		var theFiles = {};
@@ -64,72 +62,107 @@ module.exports = {
 		var reqType = 'POST';
 
 		// authenticate the user. If user is anonymous, use our default account.
-		var oa = this.currentUser.gh_oa || AUTH.GH;
+		// var oa = this.currentUser.gh_oa || GHOAUTH;
 
 		var commitMessage = prompt('Describe what you changed', 'update');
 
-
-		// if the project exists, patch an update
-		if (gistID) {
-			url += '/' + gistID;
-			reqType = 'PATCH';
-		}
+		// save
+		self.currentProject.state = 'syncing';
 
 		for (var i = 0; i < this.currentProject.fileObjects.length; i++) {
 			var f = this.currentProject.fileObjects[i];
 			theFiles[f.name] = {"content": f.contents};
 		}
 
+		self.$emit('updateCurrentProject');
+
+
 		var data = {
 			"description": commitMessage,
 			"public": true,
-			"files": theFiles
-		};
+			"files": theFiles,
+			"gistID": gistID,
+		}
 
 		$.ajax({
-			url: url,
-			type: reqType,
-			beforeSend: function(xhr) {
-				xhr.setRequestHeader("Authorization", "token " + oa); 
-			},
-			dataType: 'json',
-			data: JSON.stringify(data)})
-
+			url: './savegist',
+			type: 'POST',
+			data: data
+		})
 		.success( function(res) {
-
-			// save project gistID (only necessary if reqType === 'POST')
-			self.currentProject.gistID = res.id;
-
-			//   and update date modified
-			var dateModified = JSON.stringify(new Date());
-			self.currentProject.dateModified = dateModified;
-
-			// update file original contents to reflect the most recently committed version
-			for (var i = 0; i < self.currentProject.fileObjects.length; i++) {
-				var f = self.currentProject.fileObjects[i];
-				f.originalContents = f.contents;
-			}
-
-			// add or update the project listing
-			var projects = JSON.parse( localStorage.getItem('p5projects') );
-			if (!projects) projects = {};
-			projects[projectID] = self.currentProject;
-			localStorage.setItem('p5projects', JSON.stringify(projects));
-
-			// add projectID to the user's table if it doesn't exist
-			if (self.currentUser.projects.indexOf(projectID) === -1) {
-				self.currentUser.projects.push(projectID);
-				localStorage.setItem('user', JSON.stringify(self.currentUser));
-			}
-
-			self.findRecentUserProjects(self.currentUser);
+			console.log('GH SUCCESSS');
 			console.log(res);
 		})
 
+		// var data = {
+		// 	"description": commitMessage,
+		// 	"public": true,
+		// 	"files": theFiles
+		// };
+
+		// // if the project exists, patch an update
+		// if (gistID) {
+		// 	url += '/' + gistID;
+		// 	reqType = 'PATCH';
+		// }
+
+
+		// $.ajax({
+		// 	url: url,
+		// 	type: reqType,
+		// 	beforeSend: function(xhr) {
+		// 		xhr.setRequestHeader("Authorization", "token " + oa); 
+		// 	},
+		// 	dataType: 'json',
+		// 	data: JSON.stringify(data)})
+
+		// .success( function(res) {
+
+		// 	// save project gistID (only necessary if reqType === 'POST')
+		// 	self.currentProject.gistID = res.id;
+		// 	self.currentProject.state = 'syncSuccess';
+
+		// 	self.updateCurrentProject();
+
+		// 	console.log(res);
+		// })
+
 		.error( function(e) {
+			console.log('GH ERROR');
+			self.currentProject.state = 'syncError';
 			console.warn('gist save error', e);
 		});
 
+	},
+
+	updateCurrentProject: function() {
+		var self = this;
+		var projectID = self.currentProject.id;
+
+		// update date modified
+		var dateModified = JSON.stringify(new Date());
+		self.currentProject.dateModified = dateModified;
+
+		// update file original contents to reflect the most recently committed version
+		for (var i = 0; i < self.currentProject.fileObjects.length; i++) {
+			var f = self.currentProject.fileObjects[i];
+			f.originalContents = f.contents;
+		}
+
+		// add or update the project listing
+		var projects = JSON.parse( localStorage.getItem('p5projects') );
+		if (!projects) projects = {};
+		projects[projectID] = self.currentProject;
+		localStorage.setItem('p5projects', JSON.stringify(projects));
+
+		// add projectID to the user's table if it doesn't exist
+		if (self.currentUser.projects.indexOf(projectID) === -1) {
+			self.currentUser.projects.push(projectID);
+			localStorage.setItem('user', JSON.stringify(self.currentUser));
+		}
+
+		// reload recent user projects
+		self.recentProjects = self.findRecentUserProjects(self.currentUser);
 	},
 
 	// fork!

@@ -61,6 +61,8 @@ var appConfig = {
 		this.setupUser();
 
 		this.newProject('Hello p5');
+
+		this.$on('updateCurrentProject', this.updateCurrentProject);
 	},
 
 	methods: {
@@ -326,6 +328,11 @@ var appConfig = {
 		showEditor: function() {
 
 		},
+
+		updateCurrentProject: function() {
+			console.log('update current proj');
+			this.modeFunction('updateCurrentProject');
+		}
 
 	}
 
