@@ -1,25 +1,42 @@
-$transitiontime: .25s;
+$transitiontimelong: 1.75s;
+$transitiontimeshort: 0.1s;
 
 #menu-container {
-  // display: flex;
-  // flex: 1;
-  // flex-direction: row;
+  display: flex;
+  flex: 1;
+  flex-direction: row;
   width:100%;
-  max-height: 35px;
+  // max-height: 35px;
    -webkit-touch-callout: none;
     -webkit-user-select: none;
-    opacity: 0.5;
+    opacity: 0.0;
     /*position: absolute;*/
     left: 0px;
     top: 0px;
-  transition: opacity $transitiontime ease-in-out;
-   -moz-transition: opacity $transitiontime ease-in-out;
-   -webkit-transition: opacity $transitiontime ease-in-out;
-   position:absolute;
+
+  transition: opacity $transitiontimelong 0.5s ease-out;
+   -moz-transition: opacity $transitiontimelong 0.5s ease-out;
+   -webkit-transition: opacity $transitiontimelong 0.5s ease-out;
+
+  position:absolute;
+  background-color:black;
+
+}
+
+#menu-container.sketchstopped {
+  opacity:1;
+  transition: opacity $transitiontimeshort 0s ease-in;
+   -moz-transition: opacity $transitiontimeshort 0s ease-in;
+   -webkit-transition: opacity $transitiontimeshort 0s ease-in;
 }
 
 #menu-container:hover {
   opacity: 1;
+
+  transition: opacity $transitiontimeshort 0s ease-in;
+   -moz-transition: opacity $transitiontimeshort 0s ease-in;
+   -webkit-transition: opacity $transitiontimeshort 0s ease-in;
+
 }
 
 #play {
@@ -54,7 +71,6 @@ $transitiontime: .25s;
   margin-left: 0px;
   height: 50px;
   margin-bottom: 8px;
-  background-color:black;
   padding-left:10px;
 }
 
@@ -72,12 +88,12 @@ $transitiontime: .25s;
 }
 
 
-#toolbar {
-  height: 60px;
-  width: 100%;
-  right: 0px;
-  top:0px;
-}
+// #toolbar {
+//   height: 60px;
+//   width: 100%;
+//   right: 0px;
+//   top:0px;
+// }
 
 #actions {
   button {
@@ -114,11 +130,12 @@ $transitiontime: .25s;
 
 .pure-menu-item span {
   background: white;
+  color: #ed225d;
   padding:5px;
 }
 
 .pure-menu-item span:hover {
-  background: black;
+  background: #ed225d;
   color:white;
 }
 
