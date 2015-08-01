@@ -35,18 +35,13 @@ module.exports = function(app, passport) {
 
 
 	app.post('/savegist', function(req, res) {
-		var reqType = 'post';
 
+		// default POST, but if there is a gistID, switch to PATCH
+		var reqType = 'post';
 		var gistID = req.body.gistID;
-		console.log('gist id : ' + gistID);
 
 		var commitMessage = req.body.description;
-		console.log('commit msg : ' + commitMessage);
-
 		var isPublic = req.body['public'];
-		console.log('isPublic : ' + isPublic);
-
-
 		var theFiles = req.body.theFiles;
 		var url = 'https://api.github.com/gists';
 

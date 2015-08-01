@@ -1,3 +1,6 @@
+$transitiontimelong: 1.75s;
+$transitiontimeshort: 0.25s;
+
 #debug {
 	background-color: #F1F1F1;
 	width:100%;
@@ -7,28 +10,61 @@
 	position:absolute;
 	bottom:0px;
 	left:0px;
-	max-height:250px;
 	text-align:bottom;
 	flex: 1;
 	flex-direction: column;
 	display:flex;
 }
 
+#debug.console-visible {
+	max-height:250px;
+	opacity: 1.0;
+  transition: opacity $transitiontimelong ease-out;
+   -moz-transition: opacity $transitiontimelong ease-out;
+   -webkit-transition: opacity $transitiontimelong ease-out;
+  transition: opacity $transitiontimeshort ease-in;
+   -moz-transition: opacity $transitiontimeshort ease-in;
+   -webkit-transition: opacity $transitiontimeshort ease-in;
+
+}
+
+#debug.console-hidden {
+	max-height: 18px;
+	opacity: 0.05;
+  transition: opacity $transitiontimelong ease-in-out;
+   -moz-transition: opacity $transitiontimelong ease-in-out;
+   -webkit-transition: opacity $transitiontimelong ease-in-out;
+}
+
+#debug.console-hidden:hover {
+	opacity: 1.0;
+  transition: opacity $transitiontimeshort ease-in-out;
+   -moz-transition: opacity $transitiontimeshort ease-in-out;
+   -webkit-transition: opacity $transitiontimeshort ease-in-out;
+
+}
+
 #debugText {
-	position:absolute;
+	position:relative;
 	// bottom:20px;
 	// left:10px;
 	// background-color: #F1F1F1;
-	// max-height:200px;
+	width:100%;
 	bottom: 0px;
 	left: 10px;
 	overflow:scroll;
 }
 
+#debugText.console-hidden {
+	display:none;
+}
+
 #debugheader {
-	position:fixed;
+	position:relative;
+	top:0px;
 	width:100%;
-	background-color: #F1F1F1;
+	background-color: #9C9C9C; /* #B7B7B7; */
+	// color:red;
 }
 
 #cleardebug {
@@ -36,7 +72,7 @@
 	margin-right:5px;
 	border-width: 2px;
 	border-color:black;
-	background-color: #F3F3F3;
+	// background-color: #F3F3F3;
 }
 
 #cleardebug:hover{
@@ -47,4 +83,12 @@
 	position:absolute;
 	width:100%;
 	text-align:center;
+}
+
+.handle-up.console-visible {
+	display: none;
+}
+
+.handle-down.console-hidden {
+	display: none;
 }

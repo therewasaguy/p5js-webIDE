@@ -5,6 +5,12 @@
 module.exports = {
 	template: require('./template.html'),
 
+	computed: {
+		className: function() {
+			return this.$root.editorHidden ? 'console-hidden' : 'console-visible';
+		}
+	},
+
 	ready: function() {
 		var self = this;
 		console.log('loaded debug');
@@ -35,6 +41,11 @@ module.exports = {
 			var self = this;
 			self.dbg.innerHTML += data.msg + '<br/>';
 			self.dbgArea.style.opacity = 1.0;
+
+			// self.dbg.maxHeight = self.dbgArea.style.height;
+
+			// scroll to the bottom when a new message is printed
+			self.dbg.scrollTop = self.dbg.scrollHeight;
 		},
 
 		// print an error to the virtual console
@@ -60,7 +71,16 @@ module.exports = {
 			self.dbgArea.style.opacity = 1.0;
 			self.dbg.innerHTML = '';
 			// to do: reset size
+		},
+
+		closeConsole: function() {
+			this.$root.editorHidden = true;
+		},
+
+		openConsole: function() {
+			this.$root.editorHidden = false;
 		}
+
 	}
 
 };

@@ -29,11 +29,6 @@ module.exports = {
 					var c = 'item';
 					if (this.$root.currentFile.name == this.name) c += ' selected';
 					return c;
-				},
-				showEditorClass: function() {
-					if (!this.$root.$.editor.isVisible) {
-						return 'hiddenclass';
-					}
 				}
 			},
 
@@ -49,14 +44,7 @@ module.exports = {
 		className: function() {
 			var container = this.container || $('#sidebar-container');
 
-			if (this.$root.settings.showSidebar) {
-				container.css({
-					width: 160 //this.sidebarWidth
-				});
-				console.log(this.sidebarWidth);
-				ace.resize();
-				return 'expanded'
-			} else {
+			if (this.$root.editorHidden || !this.$root.settings.showSidebar) {
 				this.sidebarWidth = container.width();
 				container.css({
 					width: 10
@@ -64,7 +52,20 @@ module.exports = {
 				ace.resize();
 				return '';
 			}
+			else {
+				container.css({
+					width: 160 //this.sidebarWidth
+				});
+				console.log(this.sidebarWidth);
+				ace.resize();
+				return 'expanded'
+			}
+		},
+
+		showEditorClass: function() {
+			return this.$root.editorHidden ? 'show' : 'hide';
 		}
+
 	},
 
 	ready: function() {

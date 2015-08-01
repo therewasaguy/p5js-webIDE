@@ -9,4 +9,4 @@
 	<div id="sidebar-drag" v-on="mousedown: startDrag"></div>
 </div>
 
-<div id="show-editor" class = "{{showEditorClass}}" v-on="click: console.log('show editor')"> <a href="#"> > </a> </div>
+<div id="show-editor-button" class = "{{showEditorClass}}" v-on="click: this.$root.showEditor()"> <a href="#"> > </a> </div>

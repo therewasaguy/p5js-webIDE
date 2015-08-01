@@ -5,6 +5,9 @@
   // $dark-gray: #58585b;
   $dark-gray: #333333;
 
+  $transitiontime: .25s;
+
+
   #side-container {
     flex-direction: column;
     display: flex;
@@ -165,12 +168,17 @@
     }
   }
 
-  #show-editor {
+  #show-editor-button {
     position:absolute;
     top:55px;
     width:30px;
     height: 30px;
-    opacity:1;
+
+    opacity:0.4;
+    transition: opacity $transitiontime ease-in-out;
+     -moz-transition: opacity $transitiontime ease-in-out;
+     -webkit-transition: opacity $transitiontime ease-in-out;
+
     // display: inline-block;
     background-color: #DCDCDC;
     border-top-left-radius: 4px;
@@ -188,16 +196,21 @@
     }
 
     a:hover {
-      color: yellow;
+      color: white;
       display: block;
       // text-decoration: none;
       line-height: 2.4;
       text-align:center;
     }
-
-    .editor-is-visible {
-      opacity: 0
-    }
-
   }
+
+  #show-editor-button.show:hover{
+    opacity:1.0;
+    background-color:black;
+  }
+
+  #show-editor-button.hide {
+      opacity: 0;
+      display:none;
+    }
 

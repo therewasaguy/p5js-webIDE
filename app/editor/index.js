@@ -30,8 +30,15 @@ module.exports = {
 	template: require('./template.html'),
 
 	data: {
-		newProject: true,
-		isVisible: true
+		newProject: true
+	},
+
+	computed: {
+
+		// this is not used...
+		// isVisible: function() {
+		// 	return this.$root.editorHidden;
+		// }
 	},
 
 	ready: function() {

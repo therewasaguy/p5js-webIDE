@@ -42,7 +42,9 @@ var appConfig = {
 		currentFile: null,
 		currentProject: null,
 		currentUser: null,
-		recentProjects: []
+		recentProjects: [],
+
+		editorHidden: false
 	},
 
 	computed: {
@@ -52,6 +54,10 @@ var appConfig = {
 
 		orientation: function() {
 			var orientation = this.settings.consoleOrientation;
+		},
+
+		editorClass: function() {
+			return this.editorHidden ? 'editor-hidden' : 'editor-visible';
 		}
 	},
 
@@ -322,11 +328,11 @@ var appConfig = {
 		},
 
 		hideEditor: function() {
-
+			this.editorHidden = true;
 		},
 
 		showEditor: function() {
-
+			this.editorHidden = false;
 		},
 
 		updateCurrentProject: function() {

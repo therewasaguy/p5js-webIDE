@@ -6,6 +6,12 @@
 module.exports = {
 	template: require('./template.html'),
 
+	computed: {
+		className: function() {
+			return this.$root.editorHidden ? 'console-hidden' : 'console-visible';
+		}
+	},
+
 	ready: function() {
 		var self = this;
 		console.log('loaded debug');
@@ -36,6 +42,11 @@ module.exports = {
 			var self = this;
 			self.dbg.innerHTML += data.msg + '<br/>';
 			self.dbgArea.style.opacity = 1.0;
+
+			// self.dbg.maxHeight = self.dbgArea.style.height;
+
+			// scroll to the bottom when a new message is printed
+			self.dbg.scrollTop = self.dbg.scrollHeight;
 		},
 
 		// print an error to the virtual console
@@ -61,12 +72,21 @@ module.exports = {
 			self.dbgArea.style.opacity = 1.0;
 			self.dbg.innerHTML = '';
 			// to do: reset size
+		},
+
+		closeConsole: function() {
+			this.$root.editorHidden = true;
+		},
+
+		openConsole: function() {
+			this.$root.editorHidden = false;
 		}
+
 	}
 
 };
 },{"./template.html":2}],2:[function(require,module,exports){
-module.exports = '<div id="debug">\n	<div id="debugheader">\n		<span class="resizehandle handle-up" style="display:none;">&#x25B2;</span>\n		<span class="resizehandle handle-down" >&#x25BC;</span>\n		<span id="cleardebug">X</span>\n	</div>\n	<div id="debugText">\n</div>';
+module.exports = '<div id="debug" class="{{className}}">\n	<div id="debugheader">\n		<span class="resizehandle handle-up {{className}}" v-on="click: openConsole()">&#x25B2;</span>\n		<span class="resizehandle handle-down {{className}}" v-on="click: closeConsole()">&#x25BC;</span>\n		<span id="consolename">Console</span>\n		<span id="cleardebug">X</span>\n	</div>\n	<div id="debugText" class="{{className}}">\n</div>';
 },{}],3:[function(require,module,exports){
 /**
  *  Editor
@@ -100,8 +120,15 @@ module.exports = {
 	template: require('./template.html'),
 
 	data: {
-		newProject: true,
-		isVisible: true
+		newProject: true
+	},
+
+	computed: {
+
+		// this is not used...
+		// isVisible: function() {
+		// 	return this.$root.editorHidden;
+		// }
 	},
 
 	ready: function() {
@@ -364,7 +391,9 @@ var appConfig = {
 		currentFile: null,
 		currentProject: null,
 		currentUser: null,
-		recentProjects: []
+		recentProjects: [],
+
+		editorHidden: false
 	},
 
 	computed: {
@@ -374,6 +403,10 @@ var appConfig = {
 
 		orientation: function() {
 			var orientation = this.settings.consoleOrientation;
+		},
+
+		editorClass: function() {
+			return this.editorHidden ? 'editor-hidden' : 'editor-visible';
 		}
 	},
 
@@ -644,11 +677,11 @@ var appConfig = {
 		},
 
 		hideEditor: function() {
-
+			this.editorHidden = true;
 		},
 
 		showEditor: function() {
-
+			this.editorHidden = false;
 		},
 
 		updateCurrentProject: function() {
@@ -668,6 +701,12 @@ window.onload = function() {
 module.exports = {
 	template: require('./template.html'),
 
+	computed: {
+		className: function() {
+			return this.$root.running ? 'sketchrunning' : 'sketchstopped';
+		}
+	},
+
 	methods: {
 		selectRecentProject: function(e) {
 			var projectID = e.$event.target.getAttribute('data-projectid');
@@ -677,7 +716,7 @@ module.exports = {
 
 };
 },{"./template.html":8}],8:[function(require,module,exports){
-module.exports = '<div id ="button_header">\n\n  <div class="pure-menu pure-menu-horizontal">\n    <ul class="pure-menu-list">\n\n      <li class="pure-menu-item">\n        <button id="play" v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>\n      </li>\n\n      <li class="pure-menu-item">\n        <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>\n      </li>\n    </ul>\n\n<!--       <li class="pure-menu-item">\n        <span v-on="click: $root.forkProject()">Save: Fork</span>\n      </li> -->\n      <div id="custom-dropdown-menus">\n        <ul class="pure-menu-list">\n\n          <li class="pure-menu-item">\n            <span v-on="click: $root.newProject()">New</span>\n          </li>\n\n          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">\n            <!-- <span v-on="click: $root.recentProjects()">Recent Projects</span> -->\n            <span>Recent Projects</span>\n\n            <ul class="pure-menu-children" id="recentProjects">\n              <li v-repeat="$root.recentProjects" class="pure-menu-item">\n                <span data-projectid="{{id}}" class="pure-menu-link" v-on="click: selectRecentProject(this)">\n                  <b data-projectid="{{id}}">{{name}}</b>, <em data-projectid="{{id}}"> Last Modified on {{dateModified}}</em>\n                </span>\n              </li>\n            </ul>\n\n\n\n          </li>\n\n          <li class="pure-menu-item">\n            <span v-on="click: $root.commitGist()">Save: Commit</span>\n          </li>\n      </ul>\n\n      <div id="profile-div">\n        <img src="images/temp/profile.png" id="profile-image">\n      </div>\n\n    </div>\n\n  </div> <!-- end pure-menu-->\n\n\n  <div id="toolbar">\n    <div id="actions">\n      <button id="settings" title="Preferences" v-on="click: $root.toggleSettingsPane()">\n        <img src="images/options.svg">\n      </button>\n    </div>\n  </div>\n\n</div>';
+module.exports = '<div id ="button_header">\n\n  <div class="pure-menu pure-menu-horizontal">\n    <ul class="pure-menu-list">\n\n      <li class="pure-menu-item">\n        <button id="play" v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>\n      </li>\n\n      <li class="pure-menu-item">\n        <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>\n      </li>\n    </ul>\n\n<!--       <li class="pure-menu-item">\n        <span v-on="click: $root.forkProject()">Save: Fork</span>\n      </li> -->\n      <div id="custom-dropdown-menus">\n        <ul class="pure-menu-list">\n\n          <li class="pure-menu-item">\n            <span v-on="click: $root.newProject()">New</span>\n          </li>\n\n          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">\n            <!-- <span v-on="click: $root.recentProjects()">Recent Projects</span> -->\n            <span>Recent Projects</span>\n\n            <ul class="pure-menu-children" id="recentProjects">\n              <li v-repeat="$root.recentProjects" class="pure-menu-item">\n                <span data-projectid="{{id}}" class="pure-menu-link" v-on="click: selectRecentProject(this)">\n                  <b data-projectid="{{id}}">{{name}}</b>, <em data-projectid="{{id}}"> Last Modified on {{dateModified}}</em>\n                </span>\n              </li>\n            </ul>\n\n\n\n          </li>\n\n          <li class="pure-menu-item">\n            <span v-on="click: $root.commitGist()">Save: Commit</span>\n          </li>\n      </ul>\n\n      <div id="profile-div">\n        <img src="images/temp/profile.png" id="profile-image">\n      </div>\n\n    </div>\n\n  </div> <!-- end pure-menu-->\n\n\n  <!-- <div id="toolbar"> -->\n    <div id="actions">\n      <button id="settings" title="Preferences" v-on="click: $root.toggleSettingsPane()">\n        <img src="images/options.svg">\n      </button>\n    </div>\n  <!-- </div> -->\n\n</div>';
 },{}],9:[function(require,module,exports){
 var $ = require('jquery');
 var Vue = require('vue');
@@ -1185,11 +1224,6 @@ module.exports = {
 					var c = 'item';
 					if (this.$root.currentFile.name == this.name) c += ' selected';
 					return c;
-				},
-				showEditorClass: function() {
-					if (!this.$root.$.editor.isVisible) {
-						return 'hiddenclass';
-					}
 				}
 			},
 
@@ -1205,14 +1239,7 @@ module.exports = {
 		className: function() {
 			var container = this.container || $('#sidebar-container');
 
-			if (this.$root.settings.showSidebar) {
-				container.css({
-					width: 160 //this.sidebarWidth
-				});
-				console.log(this.sidebarWidth);
-				ace.resize();
-				return 'expanded'
-			} else {
+			if (this.$root.editorHidden || !this.$root.settings.showSidebar) {
 				this.sidebarWidth = container.width();
 				container.css({
 					width: 10
@@ -1220,7 +1247,20 @@ module.exports = {
 				ace.resize();
 				return '';
 			}
+			else {
+				container.css({
+					width: 160 //this.sidebarWidth
+				});
+				console.log(this.sidebarWidth);
+				ace.resize();
+				return 'expanded'
+			}
+		},
+
+		showEditorClass: function() {
+			return this.$root.editorHidden ? 'show' : 'hide';
 		}
+
 	},
 
 	ready: function() {
@@ -1229,7 +1269,7 @@ module.exports = {
 
 };
 },{"./file.html":17,"./sidebar.html":19,"jquery":41}],19:[function(require,module,exports){
-module.exports = '<div id="sidebar-container" class = "{{className}}"  v-on="contextmenu: popupMenu(this, $event)">\n	<div id="sidebar">\n		<div id="filetree">\n			<ul>\n				<li v-repeat="currentProject.fileObjects | orderBy \'name\'" v-component="file"></li>\n			</ul>\n		</div>\n	</div>\n	<div id="sidebar-drag" v-on="mousedown: startDrag"></div>\n</div>\n\n<div id="show-editor" class = "{{showEditorClass}}" v-on="click: console.log(\'show editor\')"> <a href="#"> > </a> </div>';
+module.exports = '<div id="sidebar-container" class = "{{className}}"  v-on="contextmenu: popupMenu(this, $event)">\n	<div id="sidebar">\n		<div id="filetree">\n			<ul>\n				<li v-repeat="currentProject.fileObjects | orderBy \'name\'" v-component="file"></li>\n			</ul>\n		</div>\n	</div>\n	<div id="sidebar-drag" v-on="mousedown: startDrag"></div>\n</div>\n\n<div id="show-editor-button" class = "{{showEditorClass}}" v-on="click: this.$root.showEditor()"> <a href="#"> > </a> </div>';
 },{}],20:[function(require,module,exports){
 /**
  *  sketchframe holds the iframe that runs the sketch.
