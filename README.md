@@ -12,3 +12,5 @@ A prototype adapting the [p5.js Desktop IDE](https://github.com/processing/p5.js
   - Install gulp globally: ``npm install --global gulp``
   - Run ``gulp`` to compile all of the modules from /app into /public
   - Run the server: ``node server.js``
+
+## Development is taking place on the dev branch. 
