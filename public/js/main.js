@@ -1352,8 +1352,6 @@ module.exports = {
 
 				}
 
-				code += '\n new p5();\n'
-
 				// TO DO: full screen option
 				// if (self.$root.settings.fullCanvas) {
 				// 	// to do: check to see if setup exists,
@@ -1363,8 +1361,8 @@ module.exports = {
 				// resize when in presentation mode
 					code += '\n  function windowResized() {\n' +
 									'resizeCanvas(windowWidth, windowHeight);}\n';
-									// '}\n'+
-									// 'resizeCanvas(windowWidth, windowHeight); if(typeof(setup) !== "undefined") {setup();}';
+									'}\n'+
+									'resizeCanvas(windowWidth, windowHeight); if(typeof(setup) !== "undefined") {setup();}';
 				// }
 
 				var userScript = sketchFrame.contentWindow.document.createElement('script');
