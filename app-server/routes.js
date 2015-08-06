@@ -6,9 +6,21 @@ var GHOAUTH = process.env.GHOAUTH;
 module.exports = function(app, passport) {
 
 	app.get('/', function(req, res) {
-		app.locals.hello = 'world';
-		res.render('index.html');
+		// res.render('default');
+		res.redirect('/editor');
 	});
+
+	app.get('/editor', function(req, res) {
+		console.log('hello');
+		app.locals.hello = 'world';
+		// app.locals.world = {
+		// 	'hello': 'world',
+		// 	'test': '123'
+		// };
+
+		res.render('default');
+	});
+
 
 	app.get('/loadprojectbygistid', function(req, res) {
 		var query = req.query;
@@ -80,8 +92,6 @@ module.exports = function(app, passport) {
 			} else {
 				console.log(response.statusCode);
 				console.log(response.error);
-
-				// console.log(response);
 			}
 		});
 	});
@@ -92,7 +102,7 @@ module.exports = function(app, passport) {
 	});
 
 	// TO DO...
-	app.get('/gist/*', function(req, res) {
+	app.get('/gist*', function(req, res) {
 		var urlSplit = req.url.split('gist/');
 		var gistID = urlSplit[1];
 
@@ -106,7 +116,8 @@ module.exports = function(app, passport) {
 		request(options, function(error, response, body) {
 			if (!error && response.statusCode == 200 || response.statusCode == 201) {
 				var data = JSON.parse(body);
-			  res.send(data);
+				res.render('index', data);
+			  // res.send(data);
 			} else {
 				res.send(error);
 			}
