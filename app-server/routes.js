@@ -6,6 +6,7 @@ var GHOAUTH = process.env.GHOAUTH;
 module.exports = function(app, passport) {
 
 	app.get('/', function(req, res) {
+		app.locals.hello = 'world';
 		res.render('index.html');
 	});
 
@@ -17,6 +18,7 @@ module.exports = function(app, passport) {
 		console.log('github oauth: ' + gh_oa)
 
 		var gistID = query.gistID;
+		console.log(gistID);
 
 		var options = {
 			url: 'https://api.github.com/gists/' + gistID,
@@ -86,6 +88,29 @@ module.exports = function(app, passport) {
 
 
 	app.post('githubauthcallback', function(req, res) {
+
+	});
+
+	// TO DO...
+	app.get('/gist/*', function(req, res) {
+		var urlSplit = req.url.split('gist/');
+		var gistID = urlSplit[1];
+
+		var options = {
+			url: 'https://api.github.com/gists/' + gistID,
+			headers: {
+				'User-Agent': 'request'
+			}
+		};
+
+		request(options, function(error, response, body) {
+			if (!error && response.statusCode == 200 || response.statusCode == 201) {
+				var data = JSON.parse(body);
+			  res.send(data);
+			} else {
+				res.send(error);
+			}
+		});
 
 	});
 

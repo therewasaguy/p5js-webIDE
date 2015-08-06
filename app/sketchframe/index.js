@@ -348,8 +348,8 @@ function findFileNameInTag(tag, tagType) {
 
 	fileName = splits[1];
 
-	// if filename is an external file, i.e. contains ://, then do not replace its contents
-	if (fileName.indexOf('://') > -1) {
+	// if filename is an external file, i.e. contains //, then do not replace its contents
+	if (fileName.indexOf('//') > -1) {
 		console.log('load external js file: ' + fileName);
 		return null;
 	}
