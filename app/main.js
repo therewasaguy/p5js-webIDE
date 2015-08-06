@@ -9,6 +9,7 @@ var pFile = require('./models/pfile');
 var Project = require('./models/project');
 var User = require('./models/user');
 
+require('./keybindings');
 
 var modes = {
   p5web: require('./modes/p5/p5-web-mode')

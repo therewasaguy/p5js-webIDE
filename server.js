@@ -15,11 +15,17 @@ app.use(bodyParser.urlencoded({			// to support URL-encoded bodies
 }));
 
 
-app.use(favicon(__dirname + '/public/images/favicon.ico'));
+app.set('views', __dirname + '/public/views')
+app.set('view engine', 'jade');
+app.set('view options', { basedir: process.env.__dirname})
+
 app.use(express.static('public'));
+app.use(favicon(__dirname + '/public/images/favicon.ico'));
 
 // routes 
 require('./app-server/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
+
+
 
 app.listen(port);
 console.log('Running on port ' + port);
