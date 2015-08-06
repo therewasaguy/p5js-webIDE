@@ -111,6 +111,9 @@ var appConfig = {
 
 		stop: function() {
 			this.modeFunction('stop');
+
+			// show editor
+			this.editorHidden = false;
 		},
 
 		run: function() {

@@ -108,63 +108,7 @@ module.exports = {
 				// set to running --> refresh
 				self.$root.running = true;
 
-
 				return;
-
-				// add to the parent div
-
-				// add to the parent div
-
-				// ////// cut this...
-				// for (var i = 0; i < files.length; i++) {
-				// 	var title = files[i].name;
-				// 	var content = files[i].contents;
-				// 	var ext = files[i].ext;
-
-				// 	// handle js files
-				// 	if (ext.indexOf('js') > -1) {
-				// 		// add content to the code
-				// 		code += content;
-				// 	}
-
-				// 	// handle html
-				// 	else if (ext.indexOf('html') > -1) {
-				// 		var userHTML = sketchFrame.contentWindow.document.createElement('div');
-				// 		userHTML.className = 'userHTML';
-				// 		userHTML.innerHTML = content;
-				// 		sketchFrame.contentWindow.document.body.appendChild(userHTML);
-				// 	}
-
-				// 	// handle css files
-				// 	else if (ext.indexOf('css') > -1) {
-				// 		var userStyle = sketchFrame.contentWindow.document.createElement('style');
-				// 		userStyle.type = 'text/css';
-				// 		userStyle.innerText = content;
-				// 		sketchFrame.contentWindow.document.body.appendChild(userStyle);
-				// 	}
-
-				// }
-
-				// // TO DO: full screen option
-				// // if (self.$root.settings.fullCanvas) {
-				// // 	// to do: check to see if setup exists,
-				// // 	// and if createCanvas exists,
-				// // 	// if not make it windowWidth, windowHeight
-
-				// // resize when in presentation mode
-				// 	code += '\n  function windowResized() {\n' +
-				// 					'resizeCanvas(windowWidth, windowHeight);}\n';
-				// 					'}\n'+
-				// 					'resizeCanvas(windowWidth, windowHeight); if(typeof(setup) !== "undefined") {setup();}';
-				// // }
-
-				// var userScript = sketchFrame.contentWindow.document.createElement('script');
-				// userScript.type = 'text/javascript';
-				// userScript.text = code;
-				// userScript.async = false;
-				// sketchFrame.contentWindow.document.body.appendChild(userScript);
-
-				// self.$root.running = true;
 			}
 		}
 
