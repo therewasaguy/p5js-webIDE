@@ -12,10 +12,9 @@ document.exitFullscreen=document[b+"ExitFullscreen"]||document[b+"CancelFullScre
 a.initEvent("fullscreenchange",!0,!1);document.dispatchEvent(a);document.fullscreenElement?document.addEventListener("keydown",c,!1):document.removeEventListener("keydown",c,!1)}),document.addEventListener(b+"fullscreenerror",function(){var a=document.createEvent("Event");a.initEvent("fullscreenerror",!0,!1);document.dispatchEvent(a)}),"allowfullscreen"in HTMLIFrameElement.prototype||Object.defineProperty(HTMLIFrameElement.prototype,"allowfullscreen",{get:function(){return this.hasAttribute("allowfullscreen")||
 this.hasAttribute(b+"allowfullscreen")},set:function(a){var c=b+"AllowFullscreen";a?(this.setAttribute("allowfullscreen",""),this.setAttribute(c.toLowerCase(),"")):(this.removeAttribute("allowfullscreen"),this.removeAttribute(c.toLowerCase()))},enumerable:!0}))})(window);
 
-
-var code = '';
-var files = [];
-
+/*
+	 to do: throw error when index.html links to an invalid file
+ */
 
 module.exports = {
 	template: require('./template.html'),
@@ -40,6 +39,7 @@ module.exports = {
 	},
 
 	methods: {
+
 		initSketchFrame: function() {
 			var self = this;
 			var sketchFrame = this.sketchFrame;
@@ -52,85 +52,89 @@ module.exports = {
 				var indexHTMLFileObj;
 
 				// reset code
-				code = '';
+				var code = '';
 
-				// get all of the project files
-				files = self.$root.currentProject.fileObjects;
+				// get all of the project files into a dictionary
+				var fileArray = self.$root.currentProject.fileObjects;
+				var fileDict = {};
 
 				// create dictionaries to easily look up each type of file
-				var htmlFilesDict = [];
-				var cssFilesDict = [];
-				var jsFilesDict = [];
-
-				for (var i = 0; i < files.length; i++) {
-					switch(files[i].ext) {
-						case '.html':
-							htmlFilesDict[files[i].name] = files[i];
-							break;
-						case '.js':
-							jsFilesDict[files[i].name] = files[i]
-							break;
-						case '.css':
-							cssFilesDict[files[i].name] = files[i];
-							break;
-						default:
-							console.log('unrecognized files extension', files[i].ext);
-					}
+				for (var i = 0; i < fileArray.length; i++) {
+					fileDict[fileArray[i].name] = fileArray[i];
 				}
 
-				indexHTMLFileObj = htmlFilesDict['index.html'];
-				var files = parseIndexHTML(indexHTMLFileObj);
+				var elems = parseIndexHTML(fileDict);
+				var head = elems.head;
+				var body = elems.body;
+				console.log(head);
+				console.log(body);
 
+				// var newHTML = sketchFrame.contentWindow.document.createElement('html');
+				// newHTML.outerHTML = newHTML;
+				// console.log(newHTML);
 				return;
 
-				////// cut this...
-				for (var i = 0; i < files.length; i++) {
-					var title = files[i].name;
-					var content = files[i].contents;
-					var ext = files[i].ext;
+				// add to the parent div
 
-					// handle js files
-					if (ext.indexOf('js') > -1) {
-						// add content to the code
-						code += content;
-					}
+				// add to the parent div
 
-					// handle html
-					else if (ext.indexOf('html') > -1) {
-						var userHTML = sketchFrame.contentWindow.document.createElement('div');
-						userHTML.className = 'userHTML';
-						userHTML.innerHTML = content;
-						sketchFrame.contentWindow.document.body.appendChild(userHTML);
-					}
 
-					// handle css files
-					else if (ext.indexOf('css') > -1) {
-						var userStyle = sketchFrame.contentWindow.document.createElement('style');
-						userStyle.type = 'text/css';
-						userStyle.innerText = content;
-						sketchFrame.contentWindow.document.body.appendChild(userStyle);
-					}
+				// reset the content window's html
+				// var frameDoc = sketchFrame.contentWindow.document;
+				// frameDoc.innerHTML = '';
+				// frameDiv = frameDoc.createElement('div');
+				// frameDiv.innerHTML = newHTML;
 
-				}
+				// return;
 
-				// TO DO: full screen option
-				// if (self.$root.settings.fullCanvas) {
-				// 	// to do: check to see if setup exists,
-				// 	// and if createCanvas exists,
-				// 	// if not make it windowWidth, windowHeight
+				// ////// cut this...
+				// for (var i = 0; i < files.length; i++) {
+				// 	var title = files[i].name;
+				// 	var content = files[i].contents;
+				// 	var ext = files[i].ext;
 
-				// resize when in presentation mode
-					code += '\n  function windowResized() {\n' +
-									'resizeCanvas(windowWidth, windowHeight);}\n';
-									'}\n'+
-									'resizeCanvas(windowWidth, windowHeight); if(typeof(setup) !== "undefined") {setup();}';
+				// 	// handle js files
+				// 	if (ext.indexOf('js') > -1) {
+				// 		// add content to the code
+				// 		code += content;
+				// 	}
+
+				// 	// handle html
+				// 	else if (ext.indexOf('html') > -1) {
+				// 		var userHTML = sketchFrame.contentWindow.document.createElement('div');
+				// 		userHTML.className = 'userHTML';
+				// 		userHTML.innerHTML = content;
+				// 		sketchFrame.contentWindow.document.body.appendChild(userHTML);
+				// 	}
+
+				// 	// handle css files
+				// 	else if (ext.indexOf('css') > -1) {
+				// 		var userStyle = sketchFrame.contentWindow.document.createElement('style');
+				// 		userStyle.type = 'text/css';
+				// 		userStyle.innerText = content;
+				// 		sketchFrame.contentWindow.document.body.appendChild(userStyle);
+				// 	}
+
 				// }
 
-				var userScript = sketchFrame.contentWindow.document.createElement('script');
-				userScript.type = 'text/javascript';
-				userScript.text = code;
-				userScript.async = false;
-				sketchFrame.contentWindow.document.body.appendChild(userScript);
+				// // TO DO: full screen option
+				// // if (self.$root.settings.fullCanvas) {
+				// // 	// to do: check to see if setup exists,
+				// // 	// and if createCanvas exists,
+				// // 	// if not make it windowWidth, windowHeight
+
+				// // resize when in presentation mode
+				// 	code += '\n  function windowResized() {\n' +
+				// 					'resizeCanvas(windowWidth, windowHeight);}\n';
+				// 					'}\n'+
+				// 					'resizeCanvas(windowWidth, windowHeight); if(typeof(setup) !== "undefined") {setup();}';
+				// // }
+
+				// var userScript = sketchFrame.contentWindow.document.createElement('script');
+				// userScript.type = 'text/javascript';
+				// userScript.text = code;
+				// userScript.async = false;
+				// sketchFrame.contentWindow.document.body.appendChild(userScript);
 
 				self.$root.running = true;
 			}
@@ -140,86 +144,209 @@ module.exports = {
 
 };
 
-function parseIndexHTML(fileObj) {
-	// files to return - the relative paths to files mentioned in the index
-	var files = [];
-	var contents = fileObj.contents;
 
-	// var headTag = contents.match(/<head.*?>([\s\S]*?)<\/head>/gmi);
-	var scriptTags = contents.match(/<script.*?>([\s\S]*?)<\/script>/gmi);
-	var styleTags = contents.match(/<link.*?([\s\S]*?)>/gmi);
+/**
+ *  Find relative paths mentioned in the index.html file
+ *  and replace those script/link tags with the actual code.
+ *  
+ *  @param  {Object} fileDict a dictionary of the Project's files
+ *  @return {String}          Returns new contents as a string
+ */
+function parseIndexHTML(fileDict) {
+	var indexHTMLFileObj = fileDict['index.html'];
+	var contents = indexHTMLFileObj.contents;
+	var newContents = contents;
 
-	if (scriptTags) {
-		var splits, fileName;
+	// append elements to these elements
+	var body = sketchFrame.contentWindow.document.createElement('body');
+	var head = sketchFrame.contentWindow.document.createElement('head');
 
-		scriptTags.forEach( function(tag) {
+	// find if content belongs in the HEAD or the BODY, and append it there
+	var headTag = contents.match(/<head.*?>([\s\S]*?)<\/head>/gmi);
+	var bodyTag = contents.match(/<body.*?>([\s\S]*?)<\/body>/gmi);
 
-			// split at capital or lowercase
-			var tagSplit = tag.split(/src/i);
+	// figure out contents of the Head and Body and add them to the new head and body
+	var regex = new RegExp('head', 'i');
+	var headContents = headTag[0].split(regex)[1];
+	headContents = headContents.slice(1, headContents.length-2); // remove extra junk
+	head.innerHTML = headContents;
 
-			if (tagSplit.length === 1) {
-				// no src tag
-				return;
+	var regex = new RegExp('body', 'i');
+	var bodyContents = bodyTag[0].split(regex)[1]; //.split('>')[1].split('</')[0];
+	bodyContents = bodyContents.slice(1, bodyContents.length-2);
+	body.innerHTML = bodyContents;
+
+
+	var scriptTagsInHead = headContents.match(/<script.*?>([\s\S]*?)<\/script>/gmi);
+	var styleTagsInHead = headContents.match(/<link.*?([\s\S]*?)>/gmi);
+
+	var scriptTagsInBody = bodyContents.match(/<script.*?>([\s\S]*?)<\/script>/gmi);
+	var styleTagsInBody = bodyContents.match(/<link.*?([\s\S]*?)>/gmi);
+
+	// script tags in head
+	if (scriptTagsInHead) {
+		scriptTagsInHead.forEach( function(tag) {
+
+			var fileName = findFileNameInTag(tag, 'src');
+
+			if (fileName) {
+
+				try {
+					var fileContents = fileDict[fileName].contents;
+
+					// replace index.html tag with the actual contents
+					var htmlTag = injectJS(fileContents);
+					var elem = htmlTag.outerHTML;
+					head.innerHTML = head.innerHTML.replace(tag, elem);
+
+				} catch(e) {
+					console.log('ERROR: Could not find a file named ' + fileName);
+					return;
+				}
 			}
-
-			var srcTag = tagSplit[1];
-
-			// match single or double quotes, possibly with spaces
-			var src = srcTag.match(/"[^\\"\n]*(\\["\\][^\\"\n]*)*"|'[^\\'\n]*(\\['\\][^\\'\n]*)*'|\/[^\\\/\n]*(\\[\/\\][^\\\/\n]*)*\//);
-			src = src[0];
-
-			if (src.indexOf("\'") > -1) {
-				// single quotes
-				splits = src.split("\'");
-			} else {
-				// double quotes
-				splits = src.split("\"");
-			}
-
-			// TO DO: remove this from the index.html
-			// ...
-
-			fileName = splits[1];
-			files.push(fileName);
-		});
-	}
-
-	if (styleTags) {
-		var splits, fileName;
-		styleTags.forEach( function(tag) {
-
-			// split at capital or lowercase
-			var tagSplit = tag.split(/href/i);
-
-			if (tagSplit.length === 1) {
-				// no href
-				return;
-			}
-
-			var srcTag = tagSplit[1];
-
-			// match single or double quotes, possibly with spaces
-			var src = srcTag.match(/"[^\\"\n]*(\\["\\][^\\"\n]*)*"|'[^\\'\n]*(\\['\\][^\\'\n]*)*'|\/[^\\\/\n]*(\\[\/\\][^\\\/\n]*)*\//);
-			src = src[0];
-
-			if (src.indexOf("\'") > -1) {
-				// single quotes
-				splits = src.split("\'");
-			} else {
-				// double quotes
-				splits = src.split("\"");
-			}
-
-			// TO DO: remove this from the index.html
-			// ...
-
-			fileName = splits[1];
-			files.push(fileName);
 
 		});
 	}
 
-	console.log(files);
-	return files;
+	// style tags in head
+	if (styleTagsInHead) {
+		styleTagsInHead.forEach( function(tag) {
+			var fileName = findFileNameInTag(tag, 'href');
 
+			if (fileName) {
+
+				try {
+					var fileContents = fileDict[fileName].contents;
+
+					// replace index.html tag with the actual contents
+					var htmlTag = injectCSS(fileContents);
+					var elem = htmlTag.outerHTML;
+					head.innerHTML = head.innerHTML.replace(tag, elem);
+
+				} catch(e) {
+					console.log('ERROR: Could not find a file named ' + fileName);
+					// TO DO: throw error
+					return;
+				}
+
+			}
+
+		});
+	}
+
+	// script tags in BODY
+	if (scriptTagsInBody) {
+		scriptTagsInBody.forEach( function(tag) {
+
+			var fileName = findFileNameInTag(tag, 'src');
+
+			if (fileName) {
+
+				try {
+					var fileContents = fileDict[fileName].contents;
+
+					// replace index.html tag with the actual contents
+					var htmlTag = injectJS(fileContents);
+					var elem = htmlTag.outerHTML;
+					body.innerHTML = body.innerHTML.replace(tag, elem);
+
+				} catch(e) {
+					console.log('ERROR: Could not find a file named ' + fileName);
+					return;
+				}
+			}
+
+		});
+	}
+
+	// style tags in body
+	if (styleTagsInBody) {
+		styleTagsInBody.forEach( function(tag) {
+			var fileName = findFileNameInTag(tag, 'href');
+
+			if (fileName) {
+
+				try {
+					var fileContents = fileDict[fileName].contents;
+
+					// replace index.html tag with the actual contents
+					var htmlTag = injectCSS(fileContents);
+					var elem = htmlTag.outerHTML;
+					body.innerHTML = body.innerHTML.replace(tag, elem);
+
+				} catch(e) {
+					console.log('ERROR: Could not find a file named ' + fileName);
+					// TO DO: throw error
+					return;
+				}
+
+			}
+
+		});
+	}
+
+	return {'head': head, 'body': body};
+}
+
+
+
+/**
+ *  Helper function to parse file names from script/link tags in index.html file
+ *  
+ *  @param  {String} tag     tag from an index.html
+ *  @param  {String} tagType 'src' or 'href'
+ *  @return {[type]}         [description]
+ */
+function findFileNameInTag(tag, tagType) {
+	var splits, fileName;
+	var regex = new RegExp(tagType, 'i');
+	var tagSplit = tag.split(regex);
+
+	if (tagSplit.length === 1) {
+		// no src tag
+		return null;
+	}
+
+	var srcTag = tagSplit[1];
+
+	// match single or double quotes, possibly with spaces
+	var src = srcTag.match(/"[^\\"\n]*(\\["\\][^\\"\n]*)*"|'[^\\'\n]*(\\['\\][^\\'\n]*)*'|\/[^\\\/\n]*(\\[\/\\][^\\\/\n]*)*\//);
+	src = src[0];
+
+	// split at either single or double quotes
+	splits = src.indexOf("\'") > -1 ? src.split("\'") : splits = src.split("\"");
+
+	fileName = splits[1];
+	return fileName;
+}
+
+
+
+function injectJS(someCode) {
+	var userScript = sketchFrame.contentWindow.document.createElement('script');
+	userScript.type = 'text/javascript';
+	userScript.text = someCode;
+	userScript.async = false;
+	return userScript;
+}
+
+
+function injectCSS(someCode) {
+	var userStyle = sketchFrame.contentWindow.document.createElement('style');
+	userStyle.type = 'text/css';
+	userStyle.innerText = someCode;
+	return userStyle;
+}
+
+/**
+ *  add input as innerhtml of a div
+ *  
+ *  @param  {String} someCode [description]
+ *  @return {[type]}          [description]
+ */
+function injectDIV(someCode) {
+	var userHTML = sketchFrame.contentWindow.document.createElement('div');
+	userHTML.className = 'userHTML';
+	userHTML.innerHTML = someCode;
+	return userHTML;
 }
