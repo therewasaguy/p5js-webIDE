@@ -12,6 +12,9 @@ document.exitFullscreen=document[b+"ExitFullscreen"]||document[b+"CancelFullScre
 a.initEvent("fullscreenchange",!0,!1);document.dispatchEvent(a);document.fullscreenElement?document.addEventListener("keydown",c,!1):document.removeEventListener("keydown",c,!1)}),document.addEventListener(b+"fullscreenerror",function(){var a=document.createEvent("Event");a.initEvent("fullscreenerror",!0,!1);document.dispatchEvent(a)}),"allowfullscreen"in HTMLIFrameElement.prototype||Object.defineProperty(HTMLIFrameElement.prototype,"allowfullscreen",{get:function(){return this.hasAttribute("allowfullscreen")||
 this.hasAttribute(b+"allowfullscreen")},set:function(a){var c=b+"AllowFullscreen";a?(this.setAttribute("allowfullscreen",""),this.setAttribute(c.toLowerCase(),"")):(this.removeAttribute("allowfullscreen"),this.removeAttribute(c.toLowerCase()))},enumerable:!0}))})(window);
 
+/*
+	 to do: throw error when index.html links to an invalid file
+ */
 
 module.exports = {
 	template: require('./template.html'),
@@ -36,6 +39,7 @@ module.exports = {
 	},
 
 	methods: {
+
 		initSketchFrame: function() {
 			var self = this;
 			var sketchFrame = this.sketchFrame;
@@ -45,65 +49,331 @@ module.exports = {
 			 */
 			sketchFrame.onload = function() {
 
+				var indexHTMLFileObj;
+
+				// reset code
 				var code = '';
 
-				// get all of the project files
-				var files = self.$root.currentProject.fileObjects;
+				// get all of the project files into a dictionary
+				var fileArray = self.$root.currentProject.fileObjects;
+				var fileDict = {};
 
-				for (var i = 0; i < files.length; i++) {
-					var title = files[i].name;
-					var content = files[i].contents;
-					var ext = files[i].ext;
-
-					// handle js files
-					if (ext.indexOf('js') > -1) {
-						// add content to the code
-						code += content;
-					}
-
-					// handle html
-					else if (ext.indexOf('html') > -1) {
-						var userHTML = sketchFrame.contentWindow.document.createElement('div');
-						userHTML.className = 'userHTML';
-						userHTML.innerHTML = content;
-						sketchFrame.contentWindow.document.body.appendChild(userHTML);
-					}
-
-					// handle css files
-					else if (ext.indexOf('css') > -1) {
-						var userStyle = sketchFrame.contentWindow.document.createElement('style');
-						userStyle.type = 'text/css';
-						userStyle.innerText = content;
-						sketchFrame.contentWindow.document.body.appendChild(userStyle);
-					}
-
+				// create dictionaries to easily look up each type of file
+				for (var i = 0; i < fileArray.length; i++) {
+					fileDict[fileArray[i].name] = fileArray[i];
 				}
 
-				code += '\n new p5();\n'
+				// parse html elements from body and the head of index.html
+				var elems = parseIndexHTML(fileDict);
+				var userHead = elems.head;
+				var userBody = elems.body;
 
-				// TO DO: full screen option
-				// if (self.$root.settings.fullCanvas) {
-				// 	// to do: check to see if setup exists,
-				// 	// and if createCanvas exists,
-				// 	// if not make it windowWidth, windowHeight
+				// add elems from user code to frameHead and frameBody
+				var frameHead = sketchFrame.contentWindow.document.getElementsByTagName('head')[0];
+				var frameBody = sketchFrame.contentWindow.document.getElementsByTagName('body')[0];
+
+				var userHeadChildren = [].slice.call(userHead.children);
+				for (var i = 0; i < userHeadChildren.length; i++) {
+					var elem = userHeadChildren[i];
+					frameHead.appendChild(elem);
+				}
+
+				var userBodyChildren = [].slice.call(userBody.children);
+				for (var i = 0; i < userBodyChildren.length; i++) {
+					var elem = userBodyChildren[i];
+					frameBody.appendChild(elem);
+				}
+
+
+
+				// add some more code to the body
+				var ideCode = '';
 
 				// resize when in presentation mode
-					code += '\n  function windowResized() {\n' +
-									'resizeCanvas(windowWidth, windowHeight);}\n';
-									// '}\n'+
-									// 'resizeCanvas(windowWidth, windowHeight); if(typeof(setup) !== "undefined") {setup();}';
+				ideCode += '\n  function windowResized() {\n' +
+								'resizeCanvas(windowWidth, windowHeight);}\n';
+								'}\n'+
+								'resizeCanvas(windowWidth, windowHeight); if(typeof(setup) !== "undefined") {setup();}';
+
+				// create a new p5 otherwise p5 wont be instantiated
+				ideCode += '\n new p5();';
+
+				var elem = injectJS(ideCode);
+				frameBody.appendChild(elem);
+
+				// set to running --> refresh
+				self.$root.running = true;
+
+
+				return;
+
+				// add to the parent div
+
+				// add to the parent div
+
+				// ////// cut this...
+				// for (var i = 0; i < files.length; i++) {
+				// 	var title = files[i].name;
+				// 	var content = files[i].contents;
+				// 	var ext = files[i].ext;
+
+				// 	// handle js files
+				// 	if (ext.indexOf('js') > -1) {
+				// 		// add content to the code
+				// 		code += content;
+				// 	}
+
+				// 	// handle html
+				// 	else if (ext.indexOf('html') > -1) {
+				// 		var userHTML = sketchFrame.contentWindow.document.createElement('div');
+				// 		userHTML.className = 'userHTML';
+				// 		userHTML.innerHTML = content;
+				// 		sketchFrame.contentWindow.document.body.appendChild(userHTML);
+				// 	}
+
+				// 	// handle css files
+				// 	else if (ext.indexOf('css') > -1) {
+				// 		var userStyle = sketchFrame.contentWindow.document.createElement('style');
+				// 		userStyle.type = 'text/css';
+				// 		userStyle.innerText = content;
+				// 		sketchFrame.contentWindow.document.body.appendChild(userStyle);
+				// 	}
+
 				// }
 
-				var userScript = sketchFrame.contentWindow.document.createElement('script');
-				userScript.type = 'text/javascript';
-				userScript.text = code;
-				userScript.async = false;
-				sketchFrame.contentWindow.document.body.appendChild(userScript);
+				// // TO DO: full screen option
+				// // if (self.$root.settings.fullCanvas) {
+				// // 	// to do: check to see if setup exists,
+				// // 	// and if createCanvas exists,
+				// // 	// if not make it windowWidth, windowHeight
 
-				self.$root.running = true;
+				// // resize when in presentation mode
+				// 	code += '\n  function windowResized() {\n' +
+				// 					'resizeCanvas(windowWidth, windowHeight);}\n';
+				// 					'}\n'+
+				// 					'resizeCanvas(windowWidth, windowHeight); if(typeof(setup) !== "undefined") {setup();}';
+				// // }
+
+				// var userScript = sketchFrame.contentWindow.document.createElement('script');
+				// userScript.type = 'text/javascript';
+				// userScript.text = code;
+				// userScript.async = false;
+				// sketchFrame.contentWindow.document.body.appendChild(userScript);
+
+				// self.$root.running = true;
 			}
 		}
 
 	}
 
 };
+
+
+/**
+ *  Find relative paths mentioned in the index.html file
+ *  and replace those script/link tags with the actual code.
+ *  
+ *  @param  {Object} fileDict a dictionary of the Project's files
+ *  @return {String}          Returns new contents as a string
+ */
+function parseIndexHTML(fileDict) {
+	var indexHTMLFileObj = fileDict['index.html'];
+	var contents = indexHTMLFileObj.contents;
+	var newContents = contents;
+
+	// append elements to these elements
+	var body = sketchFrame.contentWindow.document.createElement('body');
+	var head = sketchFrame.contentWindow.document.createElement('head');
+
+	// find if content belongs in the HEAD or the BODY, and append it there
+	var headTag = contents.match(/<head.*?>([\s\S]*?)<\/head>/gmi);
+	var bodyTag = contents.match(/<body.*?>([\s\S]*?)<\/body>/gmi);
+
+	// figure out contents of the Head and Body and add them to the new head and body
+	var regex = new RegExp('head', 'i');
+	var headContents = headTag[0].split(regex)[1];
+	headContents = headContents.slice(1, headContents.length-2); // remove extra junk
+	head.innerHTML = headContents;
+
+	var regex = new RegExp('body', 'i');
+	var bodyContents = bodyTag[0].split(regex)[1]; //.split('>')[1].split('</')[0];
+	bodyContents = bodyContents.slice(1, bodyContents.length-2);
+	body.innerHTML = bodyContents;
+
+
+	var scriptTagsInHead = headContents.match(/<script.*?>([\s\S]*?)<\/script>/gmi);
+	var styleTagsInHead = headContents.match(/<link.*?([\s\S]*?)>/gmi);
+
+	var scriptTagsInBody = bodyContents.match(/<script.*?>([\s\S]*?)<\/script>/gmi);
+	var styleTagsInBody = bodyContents.match(/<link.*?([\s\S]*?)>/gmi);
+
+	// script tags in head
+	if (scriptTagsInHead) {
+		scriptTagsInHead.forEach( function(tag) {
+
+			var fileName = findFileNameInTag(tag, 'src');
+
+			if (fileName) {
+
+				try {
+					var fileContents = fileDict[fileName].contents;
+
+					// replace index.html tag with the actual contents
+					var htmlTag = injectJS(fileContents);
+					head.innerHTML = head.innerHTML.replace(tag, '');
+
+					// add to body, if we add to head it wont load (why?)
+					body.appendChild(htmlTag);
+
+				} catch(e) {
+					console.log(e);
+					console.log('ERROR: Could not find a file named ' + fileName);
+					return;
+				}
+			}
+
+		});
+	}
+
+	// style tags in head
+	if (styleTagsInHead) {
+		styleTagsInHead.forEach( function(tag) {
+			var fileName = findFileNameInTag(tag, 'href');
+
+			if (fileName) {
+
+				try {
+					var fileContents = fileDict[fileName].contents;
+
+					// replace index.html tag with the actual contents
+					var htmlTag = injectCSS(fileContents);
+					head.innerHTML = head.innerHTML.replace(tag, '');
+					head.appendChild(htmlTag);
+
+				} catch(e) {
+					console.log('ERROR: Could not find a file named ' + fileName);
+					// TO DO: throw error
+					return;
+				}
+
+			}
+
+		});
+	}
+
+	// script tags in BODY
+	if (scriptTagsInBody) {
+		scriptTagsInBody.forEach( function(tag) {
+
+			var fileName = findFileNameInTag(tag, 'src');
+
+			if (fileName) {
+
+				try {
+					var fileContents = fileDict[fileName].contents;
+
+					// replace index.html tag with the actual contents
+					var htmlTag = injectJS(fileContents);
+					body.innerHTML = body.innerHTML.replace(tag, '');
+					body.appendChild(htmlTag);
+
+				} catch(e) {
+					console.log('ERROR: Could not find a file named ' + fileName);
+					return;
+				}
+			}
+
+		});
+	}
+
+	// style tags in body
+	if (styleTagsInBody) {
+		styleTagsInBody.forEach( function(tag) {
+			var fileName = findFileNameInTag(tag, 'href');
+
+			if (fileName) {
+
+				try {
+					var fileContents = fileDict[fileName].contents;
+
+					// replace index.html tag with the actual contents
+					var htmlTag = injectCSS(fileContents);
+					body.innerHTML = body.innerHTML.replace(tag, '');
+					body.appendChild(htmlTag);
+
+				} catch(e) {
+					console.log('ERROR: Could not find a file named ' + fileName);
+					// TO DO: throw error
+					return;
+				}
+
+			}
+
+		});
+	}
+
+	return {'head': head, 'body': body};
+}
+
+
+
+/**
+ *  Helper function to parse file names from script/link tags in index.html file
+ *  
+ *  @param  {String} tag     tag from an index.html
+ *  @param  {String} tagType 'src' or 'href'
+ *  @return {[type]}         [description]
+ */
+function findFileNameInTag(tag, tagType) {
+	var splits, fileName;
+	var regex = new RegExp(tagType, 'i');
+	var tagSplit = tag.split(regex);
+
+	if (tagSplit.length === 1) {
+		// no src tag
+		return null;
+	}
+
+	var srcTag = tagSplit[1];
+
+	// match single or double quotes, possibly with spaces
+	var src = srcTag.match(/"[^\\"\n]*(\\["\\][^\\"\n]*)*"|'[^\\'\n]*(\\['\\][^\\'\n]*)*'|\/[^\\\/\n]*(\\[\/\\][^\\\/\n]*)*\//);
+	src = src[0];
+
+	// split at either single or double quotes
+	splits = src.indexOf("\'") > -1 ? src.split("\'") : splits = src.split("\"");
+
+	fileName = splits[1];
+	return fileName;
+}
+
+
+
+function injectJS(someCode) {
+	var userScript = sketchFrame.contentWindow.document.createElement('script');
+	userScript.type = 'text/javascript';
+	userScript.text = someCode;
+	userScript.async = false;
+	return userScript;
+}
+
+
+function injectCSS(someCode) {
+	var userStyle = sketchFrame.contentWindow.document.createElement('style');
+	userStyle.type = 'text/css';
+	userStyle.innerText = someCode;
+	return userStyle;
+}
+
+/**
+ *  add input as innerhtml of a div
+ *  
+ *  @param  {String} someCode [description]
+ *  @return {[type]}          [description]
+ */
+function injectDIV(someCode) {
+	var userHTML = sketchFrame.contentWindow.document.createElement('div');
+	userHTML.className = 'userHTML';
+	userHTML.innerHTML = someCode;
+	return userHTML;
+}
