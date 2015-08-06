@@ -13,7 +13,11 @@ a.initEvent("fullscreenchange",!0,!1);document.dispatchEvent(a);document.fullscr
 this.hasAttribute(b+"allowfullscreen")},set:function(a){var c=b+"AllowFullscreen";a?(this.setAttribute("allowfullscreen",""),this.setAttribute(c.toLowerCase(),"")):(this.removeAttribute("allowfullscreen"),this.removeAttribute(c.toLowerCase()))},enumerable:!0}))})(window);
 
 /*
-	 to do: throw error when index.html links to an invalid file
+	 to do:
+	 	- throw error when index.html links to an invalid file
+	 	- figure out how to deal with hosted / cdn code
+	 	- why wont script tags from html run?
+	 	- clean up this code!
  */
 
 module.exports = {
@@ -96,7 +100,7 @@ module.exports = {
 								'resizeCanvas(windowWidth, windowHeight); if(typeof(setup) !== "undefined") {setup();}';
 
 				// create a new p5 otherwise p5 wont be instantiated
-				ideCode += '\n new p5();';
+				ideCode += '\n try { new p5();} catch(e){console.log("no p5");} ';
 
 				var elem = injectJS(ideCode);
 				frameBody.appendChild(elem);
@@ -231,7 +235,6 @@ function parseIndexHTML(fileDict) {
 					return;
 				}
 			}
-
 		});
 	}
 
@@ -344,6 +347,14 @@ function findFileNameInTag(tag, tagType) {
 	splits = src.indexOf("\'") > -1 ? src.split("\'") : splits = src.split("\"");
 
 	fileName = splits[1];
+
+	// if filename is an external file, i.e. contains ://, then do not replace its contents
+	if (fileName.indexOf('://') > -1) {
+		console.log('load external js file: ' + fileName);
+		return null;
+	}
+
+	// otherwise return the filename
 	return fileName;
 }
 
