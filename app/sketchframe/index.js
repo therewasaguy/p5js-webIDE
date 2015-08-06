@@ -63,29 +63,53 @@ module.exports = {
 					fileDict[fileArray[i].name] = fileArray[i];
 				}
 
+				// parse html elements from body and the head of index.html
 				var elems = parseIndexHTML(fileDict);
-				var head = elems.head;
-				var body = elems.body;
-				console.log(head);
-				console.log(body);
+				var userHead = elems.head;
+				var userBody = elems.body;
 
-				// var newHTML = sketchFrame.contentWindow.document.createElement('html');
-				// newHTML.outerHTML = newHTML;
-				// console.log(newHTML);
+				// add elems from user code to frameHead and frameBody
+				var frameHead = sketchFrame.contentWindow.document.getElementsByTagName('head')[0];
+				var frameBody = sketchFrame.contentWindow.document.getElementsByTagName('body')[0];
+
+				var userHeadChildren = [].slice.call(userHead.children);
+				for (var i = 0; i < userHeadChildren.length; i++) {
+					var elem = userHeadChildren[i];
+					frameHead.appendChild(elem);
+				}
+
+				var userBodyChildren = [].slice.call(userBody.children);
+				for (var i = 0; i < userBodyChildren.length; i++) {
+					var elem = userBodyChildren[i];
+					frameBody.appendChild(elem);
+				}
+
+
+
+				// add some more code to the body
+				var ideCode = '';
+
+				// resize when in presentation mode
+				ideCode += '\n  function windowResized() {\n' +
+								'resizeCanvas(windowWidth, windowHeight);}\n';
+								'}\n'+
+								'resizeCanvas(windowWidth, windowHeight); if(typeof(setup) !== "undefined") {setup();}';
+
+				// create a new p5 otherwise p5 wont be instantiated
+				ideCode += '\n new p5();';
+
+				var elem = injectJS(ideCode);
+				frameBody.appendChild(elem);
+
+				// set to running --> refresh
+				self.$root.running = true;
+
+
 				return;
 
 				// add to the parent div
 
 				// add to the parent div
-
-
-				// reset the content window's html
-				// var frameDoc = sketchFrame.contentWindow.document;
-				// frameDoc.innerHTML = '';
-				// frameDiv = frameDoc.createElement('div');
-				// frameDiv.innerHTML = newHTML;
-
-				// return;
 
 				// ////// cut this...
 				// for (var i = 0; i < files.length; i++) {
@@ -136,7 +160,7 @@ module.exports = {
 				// userScript.async = false;
 				// sketchFrame.contentWindow.document.body.appendChild(userScript);
 
-				self.$root.running = true;
+				// self.$root.running = true;
 			}
 		}
 
@@ -196,10 +220,13 @@ function parseIndexHTML(fileDict) {
 
 					// replace index.html tag with the actual contents
 					var htmlTag = injectJS(fileContents);
-					var elem = htmlTag.outerHTML;
-					head.innerHTML = head.innerHTML.replace(tag, elem);
+					head.innerHTML = head.innerHTML.replace(tag, '');
+
+					// add to body, if we add to head it wont load (why?)
+					body.appendChild(htmlTag);
 
 				} catch(e) {
+					console.log(e);
 					console.log('ERROR: Could not find a file named ' + fileName);
 					return;
 				}
@@ -220,8 +247,8 @@ function parseIndexHTML(fileDict) {
 
 					// replace index.html tag with the actual contents
 					var htmlTag = injectCSS(fileContents);
-					var elem = htmlTag.outerHTML;
-					head.innerHTML = head.innerHTML.replace(tag, elem);
+					head.innerHTML = head.innerHTML.replace(tag, '');
+					head.appendChild(htmlTag);
 
 				} catch(e) {
 					console.log('ERROR: Could not find a file named ' + fileName);
@@ -247,8 +274,8 @@ function parseIndexHTML(fileDict) {
 
 					// replace index.html tag with the actual contents
 					var htmlTag = injectJS(fileContents);
-					var elem = htmlTag.outerHTML;
-					body.innerHTML = body.innerHTML.replace(tag, elem);
+					body.innerHTML = body.innerHTML.replace(tag, '');
+					body.appendChild(htmlTag);
 
 				} catch(e) {
 					console.log('ERROR: Could not find a file named ' + fileName);
@@ -271,8 +298,8 @@ function parseIndexHTML(fileDict) {
 
 					// replace index.html tag with the actual contents
 					var htmlTag = injectCSS(fileContents);
-					var elem = htmlTag.outerHTML;
-					body.innerHTML = body.innerHTML.replace(tag, elem);
+					body.innerHTML = body.innerHTML.replace(tag, '');
+					body.appendChild(htmlTag);
 
 				} catch(e) {
 					console.log('ERROR: Could not find a file named ' + fileName);
