@@ -30,7 +30,7 @@ module.exports = function(app, passport) {
 		console.log('github oauth: ' + gh_oa)
 
 		var gistID = query.gistID;
-		console.log(gistID);
+		console.log('looking for gist id ' + gistID);
 
 		var options = {
 			url: 'https://api.github.com/gists/' + gistID,
@@ -43,6 +43,8 @@ module.exports = function(app, passport) {
 		request(options, function(error, response, body) {
 			if (!error && response.statusCode == 200) {
 			  res.send(body)
+			} else if (error) {
+				res.send({ error: 'Something blew up!' });
 			}
 		});
 	});
@@ -126,7 +128,8 @@ module.exports = function(app, passport) {
 	});
 
 	app.get('/*', function(req, res) {
-		res.send('404 error');
+		res.render('default');
+				// res.send('404 error');
 	});
 
 };
