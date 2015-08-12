@@ -1459,7 +1459,7 @@ module.exports = {
 function parseIndexHTML(fileDict) {
 	var indexHTMLFileObj = fileDict['index.html'];
 	var contents = indexHTMLFileObj.contents;
-	var newContents = contents;
+	var newContents = removeComments(contents);
 
 	// append elements to these elements
 	var body = sketchFrame.contentWindow.document.createElement('body');
@@ -1663,6 +1663,17 @@ function injectDIV(someCode) {
 	userHTML.className = 'userHTML';
 	userHTML.innerHTML = someCode;
 	return userHTML;
+}
+
+function removeComments(contents) {
+	// remove comments
+	var htmlComments = contents.match(/<!--(.*)-->/);
+	if (htmlComments) {
+		htmlComments.forEach( function(comment) {
+			contents = contents.replace(comment, '');
+		});
+	}
+	return contents;
 }
 },{"./template.html":22}],22:[function(require,module,exports){
 module.exports = '<div id="sketchPane">\n	<iframe id="sketchFrame"\nsrc="sketch/output.html"\nallowfullscreen="" webkitallowfullscreen="" mozallowfullscreen="" oallowfullscreen="" msallowfullscreen="">\n	</iframe>\n</div>';
