@@ -9,7 +9,7 @@ A prototype adapting the [p5.js Desktop IDE](https://github.com/processing/p5.js
 - In the console:
   - ``git clone <your fork>``
   - Install all dependencies: ``npm install``
-  - Install gulp globally: ``npm install --global gulp``
+  - Install gulp globally: ``sudo npm install --global gulp``
   - Run ``gulp`` to compile all of the modules from /app into /public
   - Run the server: ``node server.js``
 
