@@ -95,7 +95,7 @@ div#editor-container.editor-hidden {
   border-radius: 7px;
   flex: 1;
   background: #141400;
-  height: 400px; }
+  height: 200px; } 
 
 .ace-gutter {
   color: #58585b;
