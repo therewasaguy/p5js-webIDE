@@ -13,6 +13,10 @@ a.initEvent("fullscreenchange",!0,!1);document.dispatchEvent(a);document.fullscr
 this.hasAttribute(b+"allowfullscreen")},set:function(a){var c=b+"AllowFullscreen";a?(this.setAttribute("allowfullscreen",""),this.setAttribute(c.toLowerCase(),"")):(this.removeAttribute("allowfullscreen"),this.removeAttribute(c.toLowerCase()))},enumerable:!0}))})(window);
 
 
+var code = '';
+var files = [];
+
+
 module.exports = {
 	template: require('./template.html'),
 
@@ -45,11 +49,41 @@ module.exports = {
 			 */
 			sketchFrame.onload = function() {
 
-				var code = '';
+				var indexHTMLFileObj;
+
+				// reset code
+				code = '';
 
 				// get all of the project files
-				var files = self.$root.currentProject.fileObjects;
+				files = self.$root.currentProject.fileObjects;
 
+				// create dictionaries to easily look up each type of file
+				var htmlFilesDict = [];
+				var cssFilesDict = [];
+				var jsFilesDict = [];
+
+				for (var i = 0; i < files.length; i++) {
+					switch(files[i].ext) {
+						case '.html':
+							htmlFilesDict[files[i].name] = files[i];
+							break;
+						case '.js':
+							jsFilesDict[files[i].name] = files[i]
+							break;
+						case '.css':
+							cssFilesDict[files[i].name] = files[i];
+							break;
+						default:
+							console.log('unrecognized files extension', files[i].ext);
+					}
+				}
+
+				indexHTMLFileObj = htmlFilesDict['index.html'];
+				var files = parseIndexHTML(indexHTMLFileObj);
+
+				return;
+
+				////// cut this...
 				for (var i = 0; i < files.length; i++) {
 					var title = files[i].name;
 					var content = files[i].contents;
@@ -105,3 +139,96 @@ module.exports = {
 	}
 
 };
+
+function parseIndexHTML(fileObj) {
+	// files to return - the relative paths to files mentioned in the index
+	var files = [];
+	var contents = fileObj.contents;
+
+	// remove comments
+	var htmlComments = contents.match(/<!--(.*)-->/);
+	if (htmlComments) {
+		htmlComments.forEach( function(comment) {
+			contents = contents.replace(comment, '');
+		});
+		console.log(contents);
+	}
+
+	// var headTag = contents.match(/<head.*?>([\s\S]*?)<\/head>/gmi);
+	var scriptTags = contents.match(/<script.*?>([\s\S]*?)<\/script>/gmi);
+	var styleTags = contents.match(/<link.*?([\s\S]*?)>/gmi);
+
+	if (scriptTags) {
+		var splits, fileName;
+
+		scriptTags.forEach( function(tag) {
+
+			// split at capital or lowercase
+			var tagSplit = tag.split(/src/i);
+
+			if (tagSplit.length === 1) {
+				// no src tag
+				return;
+			}
+
+			var srcTag = tagSplit[1];
+
+			// match single or double quotes, possibly with spaces
+			var src = srcTag.match(/"[^\\"\n]*(\\["\\][^\\"\n]*)*"|'[^\\'\n]*(\\['\\][^\\'\n]*)*'|\/[^\\\/\n]*(\\[\/\\][^\\\/\n]*)*\//);
+			src = src[0];
+
+			if (src.indexOf("\'") > -1) {
+				// single quotes
+				splits = src.split("\'");
+			} else {
+				// double quotes
+				splits = src.split("\"");
+			}
+
+			// TO DO: remove this from the index.html
+			// ...
+
+			fileName = splits[1];
+			files.push(fileName);
+		});
+	}
+
+	if (styleTags) {
+		var splits, fileName;
+		styleTags.forEach( function(tag) {
+
+			// split at capital or lowercase
+			var tagSplit = tag.split(/href/i);
+
+			if (tagSplit.length === 1) {
+				// no href
+				return;
+			}
+
+			var srcTag = tagSplit[1];
+
+			// match single or double quotes, possibly with spaces
+			var src = srcTag.match(/"[^\\"\n]*(\\["\\][^\\"\n]*)*"|'[^\\'\n]*(\\['\\][^\\'\n]*)*'|\/[^\\\/\n]*(\\[\/\\][^\\\/\n]*)*\//);
+			src = src[0];
+
+			if (src.indexOf("\'") > -1) {
+				// single quotes
+				splits = src.split("\'");
+			} else {
+				// double quotes
+				splits = src.split("\"");
+			}
+
+			// TO DO: remove this from the index.html
+			// ...
+
+			fileName = splits[1];
+			files.push(fileName);
+
+		});
+	}
+
+	console.log(files);
+	return files;
+
+}
