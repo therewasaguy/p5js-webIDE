@@ -1,5 +1,7 @@
 var Project = require('../../models/project');
 var $ = require('jquery');
+var JSZip = require('jszip');
+var FileSaver = require('../../libs/FileSaver.js');
 
 module.exports = {
 
@@ -105,6 +107,21 @@ module.exports = {
 			console.warn('gist save error');
 		});
 
+	},
+
+	downloadZip: function() {
+		var zip = new JSZip();
+		var currentProjectFileNames = Object.keys(this.currentProject.fileObjects);
+
+		for (var i = 0; i < currentProjectFileNames.length; i++) {
+			var f = this.currentProject.fileObjects[ currentProjectFileNames[i] ];
+			zip.file(f.name, f.contents);
+		}
+
+		zip.name = this.currentProject.name;
+		var content = zip.generate({type:"blob"});
+
+		FileSaver.saveAs(content);
 	},
 
 	updateCurrentProject: function() {

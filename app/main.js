@@ -406,6 +406,10 @@ var appConfig = {
 			this.modeFunction('commitGist');
 		},
 
+		downloadZip: function() {
+			this.modeFunction('downloadZip');
+		},
+
 		clearEditor: function() {
 			this.$.editor.clearEditor();
 		},
