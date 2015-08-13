@@ -1,7 +1,7 @@
 var http = require('http');
 var request = require('request');
-// var auth = require('./auth');
-var GHOAUTH = process.env.GHOAUTH;
+
+var auth = require('./auth')
 
 module.exports = function(app, passport) {
 
@@ -11,7 +11,16 @@ module.exports = function(app, passport) {
 	});
 
 	app.get('/editor', function(req, res) {
-		res.render('default');
+		var username = 'anonymous';
+
+		try {
+			var username = req.session.passport.user.profile.username;
+		} catch(e) {
+			console.log('not logged in');
+		}
+
+		console.log('username: ' + username);
+		res.render('default', {'username': username});
 	});
 
 
@@ -19,7 +28,7 @@ module.exports = function(app, passport) {
 		var query = req.query;
 
 		// github oauth
-		var gh_oa = query.gh_oa ? gh_oa : GHOAUTH;
+		var gh_oa = query.gh_oa ? gh_oa : app.GHOAUTH;
 		console.log('github oauth: ' + gh_oa)
 
 		var gistID = query.gistID;
@@ -61,7 +70,7 @@ module.exports = function(app, passport) {
 		}
 
 		// github oauth
-		var gh_oa = GHOAUTH;
+		var gh_oa = app.GHOAUTH;
 
 		// if the project exists, patch an update
 		if (gistID) {
@@ -92,10 +101,6 @@ module.exports = function(app, passport) {
 	});
 
 
-	app.post('githubauthcallback', function(req, res) {
-
-	});
-
 	// TO DO...
 	app.get('/gist/*', function(req, res) {
 		var urlSplit = req.url.split('gist/');
@@ -120,8 +125,28 @@ module.exports = function(app, passport) {
 
 	});
 
-	app.get('/*', function(req, res) {
-		res.redirect('/editor');
-	});
+
+	// auth
+
+	// github
+	app.get('/auth-gh', passport.authenticate('github'));
+	app.get('/auth-gh/error', auth.error);
+	app.get('/auth-gh/callback',
+	  passport.authenticate('github', {failureRedirect: '/auth-gh/error'}),
+	  auth.callback
+	);
+
+	app.get('/authenticate', function(req, res) {
+		try {
+			var username = req.session.passport.user.profile.username;
+		} catch(e) {
+			console.log('not logged in');
+		}
+		res.send(username);
+	})
+
+	// app.get('/*', function(req, res) {
+	// 	res.redirect('/editor');
+	// });
 
 };

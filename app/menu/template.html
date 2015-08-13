@@ -45,8 +45,14 @@
             </li>
         </ul>
 
-      <div id="profile-div">
+      <div id="profile-div" v-on="click: $root.authenticate()">
         <img src="images/temp/profile.png" id="profile-image">
+        <br/>
+
+        <!-- <template v-if="currentUser.username"> -->
+          <span style="position:absolute; right:5px; top:60px;"><span>hello </span><span>{{currentUser.username}}</span>!</span>
+        <!-- </template> -->
+
       </div>
 
     </div>

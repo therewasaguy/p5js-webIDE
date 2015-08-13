@@ -850,16 +850,48 @@ var appConfig = {
 
 		// handle users
 		setupUser: function() {
+			var self = this;
 
+			// get current user from local storage
 			if (localStorage.user) {
-				this.currentUser = JSON.parse( localStorage.getItem('user') );
-			} else {
-				// current user is annonymous
-				this.currentUser = new User();
-				localStorage.setItem('user', JSON.stringify(this.currentUser));
+				self.currentUser = JSON.parse( localStorage.getItem('user') );
 			}
 
-			this.recentProjects = this.findRecentUserProjects(this.currentUser);
+			$.ajax({
+				url: '/authenticate',
+				type: 'get'
+				})
+				.success(function(res) {
+
+					username = res;
+					console.log('success! username: ' + username);
+					self.currentUser.username = username;
+
+					self.currentUser.authenticated = true;
+					// load user recent projects
+					self.recentProjects = self.findRecentUserProjects(self.currentUser);
+
+				})
+				.fail(function(res) {
+					// create a new user if there was not one in local storage
+					if (!this.currentUser) {
+						// current user is annonymous
+						self.currentUser = new User();
+						localStorage.setItem('user', JSON.stringify(self.currentUser));
+					}
+
+					// load user recent projects
+					self.recentProjects = self.findRecentUserProjects(self.currentUser);
+
+				});
+		},
+
+		authenticate: function() {
+			var self = this;
+			var username = self.currentUser.username;
+
+			window.open('/auth-gh', '_self');
+
 		},
 
 		// returns an array of recent user projects by ID
@@ -1101,7 +1133,7 @@ module.exports = {
 
 };
 },{"./template.html":10}],10:[function(require,module,exports){
-module.exports = '<div id ="button_header">\n\n  <div class="pure-menu pure-menu-horizontal">\n    <ul class="pure-menu-list">\n\n      <li class="pure-menu-item">\n        <button id="play" v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>\n      </li>\n\n      <li class="pure-menu-item">\n        <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>\n      </li>\n    </ul>\n\n<!--       <li class="pure-menu-item">\n        <span v-on="click: $root.forkProject()">Save: Fork</span>\n      </li> -->\n      <div id="custom-dropdown-menus">\n        <ul class="pure-menu-list">\n\n          <li class="pure-menu-item">\n            <span v-on="click: $root.newProject()">New</span>\n          </li>\n\n          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">\n            <!-- <span v-on="click: $root.recentProjects()">Recent Projects</span> -->\n            <span>Recent Projects</span>\n\n            <ul class="pure-menu-children" id="recentProjects">\n              <li v-repeat="$root.recentProjects" class="pure-menu-item">\n                <span data-projectid="{{id}}" class="pure-menu-link" v-on="click: selectRecentProject(this)">\n                  <b data-projectid="{{id}}">{{name}}</b>, <em data-projectid="{{id}}"> Last Modified on {{dateModified}}</em>\n                </span>\n              </li>\n            </ul>\n          </li>\n\n          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">\n            <span v-on="click: $root.commitGist()">Save to Cloud</span>\n              <ul class="pure-menu-children" id="recentProjects">\n                <li class="pure-menu-item">\n                  <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>\n                </li>\n              </ul>\n            </li>\n        </ul>\n\n      <div id="profile-div">\n        <img src="images/temp/profile.png" id="profile-image">\n      </div>\n\n    </div>\n\n  </div> <!-- end pure-menu-->\n\n\n  <!-- <div id="toolbar"> -->\n    <div id="actions">\n      <button id="settings" title="Preferences" v-on="click: $root.toggleSettingsPane()">\n        <img src="images/options.svg">\n      </button>\n    </div>\n  <!-- </div> -->\n\n</div>';
+module.exports = '<div id ="button_header">\n\n  <div class="pure-menu pure-menu-horizontal">\n    <ul class="pure-menu-list">\n\n      <li class="pure-menu-item">\n        <button id="play" v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>\n      </li>\n\n      <li class="pure-menu-item">\n        <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>\n      </li>\n    </ul>\n\n<!--       <li class="pure-menu-item">\n        <span v-on="click: $root.forkProject()">Save: Fork</span>\n      </li> -->\n      <div id="custom-dropdown-menus">\n        <ul class="pure-menu-list">\n\n          <li class="pure-menu-item">\n            <span v-on="click: $root.newProject()">New</span>\n          </li>\n\n          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">\n            <!-- <span v-on="click: $root.recentProjects()">Recent Projects</span> -->\n            <span>Recent Projects</span>\n\n            <ul class="pure-menu-children" id="recentProjects">\n              <li v-repeat="$root.recentProjects" class="pure-menu-item">\n                <span data-projectid="{{id}}" class="pure-menu-link" v-on="click: selectRecentProject(this)">\n                  <b data-projectid="{{id}}">{{name}}</b>, <em data-projectid="{{id}}"> Last Modified on {{dateModified}}</em>\n                </span>\n              </li>\n            </ul>\n          </li>\n\n          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">\n            <span v-on="click: $root.commitGist()">Save to Cloud</span>\n              <ul class="pure-menu-children" id="recentProjects">\n                <li class="pure-menu-item">\n                  <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>\n                </li>\n              </ul>\n            </li>\n        </ul>\n\n      <div id="profile-div" v-on="click: $root.authenticate()">\n        <img src="images/temp/profile.png" id="profile-image">\n        <br/>\n\n        <!-- <template v-if="currentUser.username"> -->\n          <span style="position:absolute; right:5px; top:60px;"><span>hello </span><span>{{currentUser.username}}</span>!</span>\n        <!-- </template> -->\n\n      </div>\n\n    </div>\n\n  </div> <!-- end pure-menu-->\n\n\n  <!-- <div id="toolbar"> -->\n    <div id="actions">\n      <button id="settings" title="Preferences" v-on="click: $root.toggleSettingsPane()">\n        <img src="images/options.svg">\n      </button>\n    </div>\n  <!-- </div> -->\n\n</div>';
 },{}],11:[function(require,module,exports){
 var $ = require('jquery');
 var Vue = require('vue');
