@@ -11,13 +11,6 @@ module.exports = function(app, passport) {
 	});
 
 	app.get('/editor', function(req, res) {
-		console.log('hello');
-		app.locals.hello = 'world';
-		// app.locals.world = {
-		// 	'hello': 'world',
-		// 	'test': '123'
-		// };
-
 		res.render('default');
 	});
 
@@ -128,8 +121,7 @@ module.exports = function(app, passport) {
 	});
 
 	app.get('/*', function(req, res) {
-		res.render('default');
-				// res.send('404 error');
+		res.redirect('/editor');
 	});
 
 };
