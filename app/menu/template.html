@@ -33,15 +33,17 @@
                 </span>
               </li>
             </ul>
-
-
-
           </li>
 
-          <li class="pure-menu-item">
-            <span v-on="click: $root.commitGist()">Save: Commit</span>
-          </li>
-      </ul>
+          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+            <span v-on="click: $root.commitGist()">Save to Cloud</span>
+              <ul class="pure-menu-children" id="recentProjects">
+                <li class="pure-menu-item">
+                  <span v-on="click: $root.commitGist()" class="pure-menu-link">Download Zip</span>
+                </li>
+              </ul>
+            </li>
+        </ul>
 
       <div id="profile-div">
         <img src="images/temp/profile.png" id="profile-image">
