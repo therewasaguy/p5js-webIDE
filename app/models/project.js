@@ -5,10 +5,15 @@ var Project = function(options) {
 
 	// if no options are provided, set default files
 	if (!options) {
+
+		// is it necessary for the file to know if it is the current file?
+		var sketchFile = new pFile('sketch.js');
+		sketchFile.currentFile = true;
+
 		/**
 		 *  @property {Array} fileObjects Array of pFile objects
 		 */
-		this.fileObjects = [ new pFile('p5.js'), new pFile('sketch.js', true), new pFile('index.html'), new pFile('style.css')];
+		this.fileObjects = [ new pFile('p5.js'), sketchFile, new pFile('index.html'), new pFile('style.css')];
 
 		/**
 		 *  [name description]

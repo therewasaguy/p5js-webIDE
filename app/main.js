@@ -9,6 +9,7 @@ var pFile = require('./models/pfile');
 var Project = require('./models/project');
 var User = require('./models/user');
 
+require('./keybindings');
 
 var modes = {
   p5web: require('./modes/p5/p5-web-mode')
@@ -61,14 +62,79 @@ var appConfig = {
 		}
 	},
 
+	created: function() {
+		var self = this;
+		var sketchID = window.location.pathname.split('/').pop();
+
+		if (sketchID.length > 12) {
+			// get sketch from server
+			$.ajax({
+			  url: '/loadprojectbygistid',
+			  data: {'gistID': sketchID},
+			  success: gotsketchdata,
+				timeout: 8000,
+			  error: sketchdataerror
+			});
+		}
+
+		// on success, load sketch
+		function gotsketchdata(data) {
+
+			newProjectFromGist( JSON.parse(data) );
+
+		}
+
+		// on fail, go to blank editor
+		function sketchdataerror(e) {
+			console.log('error with sketch data');
+			console.log(e)
+		}
+
+		function newProjectFromGist(data) {
+			var fileArray = [];
+			var opentabnames = [];
+			var openfile = '';
+
+			var fileNames = Object.keys(data.files);
+
+			for (var i = 0; i < fileNames.length; i++) {
+				var key = fileNames[i];
+				var f = data.files[key];
+				console.log(f);
+
+				fileArray.push(new pFile(f.filename, f.content) );
+				opentabnames.push(f.filename);
+				openfile = f.filename;
+			}
+
+			console.log(fileArray[0]);
+
+			var options = {
+				'fileObjects': fileArray,
+				'name': data.id,
+				'gistID': data.gistID,
+				'openFileName': openfile,
+				'openTabNames': opentabnames
+			}
+
+			console.log(options);
+
+			var projObj = new Project(options);
+			self.openProject(projObj)
+
+		}
+
+	},
+
 	ready: function() {
 		this.setupSettings();
 
 		this.setupUser();
 
-		this.newProject('Hello p5');
+		this.initProject();
 
 		this.$on('updateCurrentProject', this.updateCurrentProject);
+
 	},
 
 	methods: {
@@ -111,10 +177,28 @@ var appConfig = {
 
 		stop: function() {
 			this.modeFunction('stop');
+
+			// show editor
+			this.editorHidden = false;
 		},
 
 		run: function() {
 			this.modeFunction('run');
+		},
+
+
+		initProject: function() {
+
+			// if there is a recent project in local storage, load it.
+			var latestProj = JSON.parse( localStorage.getItem('latestProject') );
+			if (latestProj) {
+				this.openProject(latestProj);
+			}
+
+			// Otherwise, load default
+			else {
+				this.newProject('Hello p5');
+			}
 		},
 
 		// handle users
@@ -264,7 +348,6 @@ var appConfig = {
 
 			for (var i = 0; i < tabNames.length; i++) {
 				var tabName = tabNames[i];
-				console.log('loading a tab named ' + tabName);
 				var fileObj = self.currentProject.findFile(tabName);
 				self.$broadcast('add-tab', fileObj, self.tabs);
 			}

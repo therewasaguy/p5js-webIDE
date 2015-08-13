@@ -6,8 +6,14 @@ var GHOAUTH = process.env.GHOAUTH;
 module.exports = function(app, passport) {
 
 	app.get('/', function(req, res) {
-		res.render('index.html');
+		// res.render('default');
+		res.redirect('/editor');
 	});
+
+	app.get('/editor', function(req, res) {
+		res.render('default');
+	});
+
 
 	app.get('/loadprojectbygistid', function(req, res) {
 		var query = req.query;
@@ -17,6 +23,7 @@ module.exports = function(app, passport) {
 		console.log('github oauth: ' + gh_oa)
 
 		var gistID = query.gistID;
+		console.log('looking for gist id ' + gistID);
 
 		var options = {
 			url: 'https://api.github.com/gists/' + gistID,
@@ -29,6 +36,8 @@ module.exports = function(app, passport) {
 		request(options, function(error, response, body) {
 			if (!error && response.statusCode == 200) {
 			  res.send(body)
+			} else if (error) {
+				res.send({ error: 'Something blew up!' });
 			}
 		});
 	});
@@ -78,8 +87,6 @@ module.exports = function(app, passport) {
 			} else {
 				console.log(response.statusCode);
 				console.log(response.error);
-
-				// console.log(response);
 			}
 		});
 	});
@@ -89,8 +96,32 @@ module.exports = function(app, passport) {
 
 	});
 
+	// TO DO...
+	app.get('/gist/*', function(req, res) {
+		var urlSplit = req.url.split('gist/');
+		var gistID = urlSplit[1];
+
+		var options = {
+			url: 'https://api.github.com/gists/' + gistID,
+			headers: {
+				'User-Agent': 'request'
+			}
+		};
+
+		request(options, function(error, response, body) {
+			if (!error && response.statusCode == 200 || response.statusCode == 201) {
+				var data = JSON.parse(body);
+				res.render('default');
+			  // res.send(data);
+			} else {
+				res.send(error);
+			}
+		});
+
+	});
+
 	app.get('/*', function(req, res) {
-		res.send('404 error');
+		res.redirect('/editor');
 	});
 
 };

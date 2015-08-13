@@ -2,11 +2,11 @@ var $ = require('jquery');
 var Vue = require('vue');
 var Path = require('path');
 
-var pFile = function(name, isCurrentlyOpen) {
+var pFile = function(name, contents) {
 	this.id = null;
 
 	// contents is the version of the file with any modifications
-	this.contents = '';
+	this.contents = contents || '';
 
 	// original contents is the last committed version of the file
 	this.originalContents = '';
@@ -14,7 +14,7 @@ var pFile = function(name, isCurrentlyOpen) {
 	this.session = null;
 
 	this.open = true;
-	this.currentFile = isCurrentlyOpen || false;
+	this.currentFile = false;
 	this.ext = Path.extname(name);
 
 	this.name = name || 'untitled';
