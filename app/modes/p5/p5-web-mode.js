@@ -118,10 +118,9 @@ module.exports = {
 			zip.file(f.name, f.contents);
 		}
 
-		zip.name = this.currentProject.name;
 		var content = zip.generate({type:"blob"});
 
-		FileSaver.saveAs(content);
+		FileSaver.saveAs(content, this.currentProject.name);
 	},
 
 	updateCurrentProject: function() {
