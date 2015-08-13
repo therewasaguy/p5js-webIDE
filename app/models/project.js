@@ -1,5 +1,4 @@
 var pFile = require('./pFile');
-var jszip = require('jszip');
 
 // either load default file, or load new file;
 var Project = function(options) {
@@ -76,9 +75,7 @@ var Project = function(options) {
 
 	};
 
-	this.downloadzip = function() {
-		console.log(jszip);
-	}
+
 };
 
 
