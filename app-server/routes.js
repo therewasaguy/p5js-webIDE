@@ -136,6 +136,15 @@ module.exports = function(app, passport) {
 	  auth.callback
 	);
 
+	app.get('/auth-logout', function(req, res) {
+		console.log('source: ' + req.headers.referer);
+
+		req.session.destroy();
+		req.logout();
+
+		res.redirect(req.headers.referer);
+	});
+
 	app.get('/authenticate', function(req, res) {
 		try {
 			var username = req.session.passport.user.profile.username;

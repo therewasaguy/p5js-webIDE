@@ -58,7 +58,7 @@
               <span class="username"> hello <b>{{currentUser.username}}</b> </span>!
             </li>
 
-            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.authenticate()">
+            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.logOut()">
               <span>Log Out</span>
             </li>
 

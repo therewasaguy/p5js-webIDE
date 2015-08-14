@@ -208,6 +208,8 @@ var appConfig = {
 			// get current user from local storage
 			if (localStorage.user) {
 				self.currentUser = JSON.parse( localStorage.getItem('user') );
+			} else {
+				self.currentUser = new User();
 			}
 
 			$.ajax({
@@ -217,10 +219,11 @@ var appConfig = {
 				.success(function(res) {
 
 					username = res;
-					console.log('success! username: ' + username);
 					self.currentUser.username = username;
 
-					self.currentUser.authenticated = true;
+					self.currentUser.authenticated = username.length > 0 ? true : false;
+					console.log('user authenticated? ' + self.currentUser.authenticated);
+
 					// load user recent projects
 					self.recentProjects = self.findRecentUserProjects(self.currentUser);
 
@@ -228,8 +231,9 @@ var appConfig = {
 				.fail(function(res) {
 					// create a new user if there was not one in local storage
 					if (!this.currentUser) {
-						// current user is annonymous
-						self.currentUser = new User();
+
+						// current user remains annonymous
+						// self.currentUser = new User();
 						localStorage.setItem('user', JSON.stringify(self.currentUser));
 					}
 
@@ -240,11 +244,12 @@ var appConfig = {
 		},
 
 		authenticate: function() {
-			var self = this;
-			var username = self.currentUser.username;
-
 			window.open('/auth-gh', '_self');
+		},
 
+		logOut: function() {
+			this.currentUser = new User();
+			window.open('/auth-logout', '_self');
 		},
 
 		// returns an array of recent user projects by ID
