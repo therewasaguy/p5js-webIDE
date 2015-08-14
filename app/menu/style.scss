@@ -72,11 +72,13 @@ $transitiontimeshort: 0.1s;
   height: 50px;
   margin-bottom: 8px;
   padding-left:10px;
+  width:100%;
 }
 
 #project-name {
   padding-left: 20px;
-  padding-right: 500px;
+  padding-right: 20px;
+  margin-right: 20px;
   font-size: 24px;
   // color: #58585b;
   color: #ed225d;
@@ -147,17 +149,23 @@ $transitiontimeshort: 0.1s;
 
 #custom-dropdown-menus {
   float:right;
-  margin-right: 120px;
   margin-top: 15px;
+  margin-right: 5px;
 }
 
-#profile-div {
-  position:absolute;
+#profile-span {
+  margin-top:0px;
   right: 0px;
-  top: 0px;
-}
-
-#profile-image {
+  margin-top:-20px;
+  display:block;
+  background:url('../images/temp/profile.png') no-repeat top left;
+  background-size:100%;
   width:50px;
   height:50px;
+}
+
+.username {
+  position: fixed;
+  right:5px;
+  margin-top:-15px;
 }

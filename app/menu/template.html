@@ -37,25 +37,44 @@
 
           <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
             <span v-on="click: $root.commitGist()">Save to Cloud</span>
-              <ul class="pure-menu-children" id="recentProjects">
-                <li class="pure-menu-item">
-                  <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>
-                </li>
-              </ul>
+            <ul class="pure-menu-children" id="recentProjects">
+              <li class="pure-menu-item">
+                <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>
+              </li>
+            </ul>
+          </li>
+
+        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+          <span id="profile-span" v-on="click: $root.authenticate()">
+            <!-- <img src="images/temp/profile.png" id="profile-image"> -->
+          </span>
+          <ul class="pure-menu-children">
+
+            <li class="pure-menu-item" v-if="!loggedIn" v-on="click: $root.authenticate()">
+              <span>Log in</span>
             </li>
-        </ul>
 
-      <div id="profile-div" v-on="click: $root.authenticate()">
-        <img src="images/temp/profile.png" id="profile-image">
-        <br/>
+            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.authenticate()">
+              <span class="username"> hello <b>{{currentUser.username}}</b> </span>!
+            </li>
 
-        <!-- <template v-if="currentUser.username"> -->
-          <span style="position:absolute; right:5px; top:60px;"><span>hello </span><span>{{currentUser.username}}</span>!</span>
-        <!-- </template> -->
+            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.authenticate()">
+              <span>Log Out</span>
+            </li>
 
-      </div>
 
+
+<!--             <ul class="pure-menu-children" id="recentProjects">
+              <li class="pure-menu-item">
+                <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>
+              </li>
+            </ul> -->
+          </ul>
+        </li>
+
+      </ul>
     </div>
+
 
   </div> <!-- end pure-menu-->
 

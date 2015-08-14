@@ -4,7 +4,11 @@ module.exports = {
 	computed: {
 		className: function() {
 			return this.$root.running ? 'sketchrunning' : 'sketchstopped';
+		},
+		loggedIn: function() {
+			return this.$root.currentUser && this.$root.currentUser.authenticated;
 		}
+
 	},
 
 	methods: {
