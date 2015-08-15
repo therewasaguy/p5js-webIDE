@@ -37,19 +37,43 @@
 
           <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
             <span v-on="click: $root.commitGist()">Save to Cloud</span>
-              <ul class="pure-menu-children" id="recentProjects">
-                <li class="pure-menu-item">
-                  <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>
-                </li>
-              </ul>
+            <ul class="pure-menu-children" id="recentProjects">
+              <li class="pure-menu-item">
+                <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>
+              </li>
+            </ul>
+          </li>
+
+        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+          <span id="profile-span" v-on="click: profileClicked()"></span>
+
+          <ul class="pure-menu-children">
+
+            <li class="pure-menu-item" v-if="!loggedIn" v-on="click: $root.authenticate()">
+              <span>Log in</span>
             </li>
-        </ul>
 
-      <div id="profile-div">
-        <img src="images/temp/profile.png" id="profile-image">
-      </div>
+            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.authenticate()">
+              <span class="username"> hello <b>{{currentUser.username}}</b> </span>!
+            </li>
 
+            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.logOut()">
+              <span>Log Out</span>
+            </li>
+
+
+
+<!--             <ul class="pure-menu-children" id="recentProjects">
+              <li class="pure-menu-item">
+                <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>
+              </li>
+            </ul> -->
+          </ul>
+        </li>
+
+      </ul>
     </div>
+
 
   </div> <!-- end pure-menu-->
 

@@ -4,13 +4,21 @@ module.exports = {
 	computed: {
 		className: function() {
 			return this.$root.running ? 'sketchrunning' : 'sketchstopped';
+		},
+		loggedIn: function() {
+			return this.$root.currentUser && this.$root.currentUser.authenticated;
 		}
+
 	},
 
 	methods: {
 		selectRecentProject: function(e) {
 			var projectID = e.$event.target.getAttribute('data-projectid');
 			this.$root.loadProjectByOurID(projectID);
+		},
+
+		profileClicked: function() {
+			this.loggedIn ? window.open('/profile', '_self') : this.$root.authenticate();
 		}
 	}
 
