@@ -1,75 +1,21 @@
-<html>
+<div id="filemenu" class="pure-menu">
 
-  <head>
-    <style>
-      body{margin: 0px; padding: 0px; font: 14px karla,sans-serif;}
-      ul.a {list-style-type: circle;}
-      p{font: 16px; color:#5D75C5; line-height: 100%; width:180px; padding-left: 20px;}
-
-      #filemenu {
-        background-color: #202020;
-        width: 220px;
-        height: 100%;
-        box-shadow: 0px 0px 6px #999;
-        color: #B3B3B3;
-        padding-top: 48px;
-      }
-
-      #newProject {
-        background-color: #2D2D2D;
-        padding: 1px;
-      }
-
-      #examples {
-        padding-left: 10px;
-        line-height: 150%;
-      }
-
-      #myProjects {
-        padding-left: 10px;
-        line-height: 150%;
-      }
-
-      .buttonIcon {
-        position: relative;
-        clear: none;
-        float: right;
-        width: 15px;
-        margin-right: 20px;
-        margin-top: -1px;
-      }
-
-    </style>
-  </head>
-
-<body>
-<div id="filemenu">
-  <div id="newProject">
-    <p>NEW PROJECT<input type="image" class="buttonIcon" src="plus.svg" width="50 px" border="0"></p>
-  </div>
+  <span id="newProject" class="pure-menu-heading">
+    <p class="filemenu">NEW PROJECT<input type="image" class="buttonIcon" src="images/plus-thin.svg" width="50 px" border="0"></p>
+  </span>
 
   
-  <p>EXAMPLES<input type="image" class="buttonIcon" src="arrow-down.svg" width="50 px" border="0"></p>
-  <div id="examples">
-    <ul class="a">
-      <li>example 1</li>
-      <li>example 2</li>
-      <li>example 3</li>
+  <p class="filemenu pure-menu-heading">EXAMPLES<input type="image" class="buttonIcon" src="images/arrow-down.svg" width="50 px" border="0"></p>
+    <ul id="examples" class="a pure-menu-list">
+      <li class="pure-menu-item">example 1</li>
+      <li class="pure-menu-item">example 2</li>
+      <li class="pure-menu-item">example 3</li>
     </ul>
-  </div>
-
   
-  <p>MY PROJECTS<input type="image" class="buttonIcon" src="arrow-up.svg" width="50 px" border="0"></p>
-  <div id="myProjects">
-    <ul class="a">
-      <li>project 1</li>
-      <li>project 2</li>
-      <li>project 3</li>
+  <p class="filemenu pure-menu-heading">MY PROJECTS<input type="image" class="buttonIcon" src="images/arrow-up.svg" width="50 px" border="0"></p>
+    <ul id="myProjects" class="a pure-menu-list">
+      <li class="pure-menu-item">project 1</li>
+      <li class="pure-menu-item">project 2</li>
+      <li class="pure-menu-item">project 3</li>
     </ul>
-  </div>
-
 </div>
-
-
-  </body>
-</html>

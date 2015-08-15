@@ -3,8 +3,8 @@
   <div class="pure-menu pure-menu-horizontal">
     <ul class="pure-menu-list">
 
-      <li class="pure-menu-item">
-        <button id="filemenu"><img src="images/filemenu-gray.svg" style="width: 100%"></button>
+      <li class="pure-menu-item" v-on="click: $root.toggleFilemenu()">
+        <button id="filemenu-burger"></button>
       </li>
 
       <li class="pure-menu-item">

@@ -66,22 +66,24 @@ $transitiontimeshort: 0.1s;
 }
 }
 
-#filemenu {
- background: none;
- //image: url('../images/filemenu-gray.svg');
- border: 0;
- width: 28px;
- //height: 34px;
- padding: 0px;
- font-size: 25px;
- display: inline;
- cursor: pointer;
- outline: 0; 
- float: left;
- //margin-top: 0px;
- &:hover {
-  //background-image: url('../images/filemenu-white.svg');
- }
+#filemenu-burger {
+  background: none;
+  background-image: url('../images/filemenu-gray.svg');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  border: 0;
+  width: 28px;
+  height: 34px;
+  padding: 0px;
+  font-size: 25px;
+  display: inline;
+  cursor: pointer;
+  outline: 0; 
+  float: left;
+  //margin-top: 0px;
+  &:hover {
+   background-image: url('../images/filemenu-white.svg');
+  }
 }
 
 #button_header {
