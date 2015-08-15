@@ -45,3 +45,6 @@ Settings
 - fontSize can be changed
 - settings are saved to localStorage
 - settings change if a user logs in, based on the user's settings
+
+SketchFrame Runner
+- can find javascript and css files linked from index.html, whether using single quotes, double quotes, spaces, or no spaces

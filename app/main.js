@@ -9,6 +9,7 @@ var pFile = require('./models/pfile');
 var Project = require('./models/project');
 var User = require('./models/user');
 
+require('./keybindings');
 
 var modes = {
   p5web: require('./modes/p5/p5-web-mode')
@@ -29,12 +30,14 @@ var appConfig = {
 		sidebar: require('./sidebar/index'),
 		sketchframe: require('./sketchframe/index'),
 		debug: require('./debug/index'),
-		menu: require('./menu/index')
+		menu: require('./menu/index'),
+		filemenu: require('./filemenu/index')
 	},
 
 	data: {
 		settings: {},
 		showSettings: false,
+		showFilemenu: false,
 		tabs: [],
 		files: [],
 		running: false,
@@ -66,7 +69,7 @@ var appConfig = {
 
 		this.setupUser();
 
-		this.newProject('Hello p5');
+		this.initProject();
 
 		this.$on('updateCurrentProject', this.updateCurrentProject);
 	},
@@ -97,6 +100,10 @@ var appConfig = {
 			this.showSettings = !this.showSettings;
 		},
 
+		toggleFilemenu: function() {
+			this.showFilemenu = !this.showFilemenu;
+		},
+
 		toggleSidebar: function() {
 			this.settings.showSidebar = !this.settings.showSidebar;
 		},
@@ -111,10 +118,28 @@ var appConfig = {
 
 		stop: function() {
 			this.modeFunction('stop');
+
+			// show editor
+			this.editorHidden = false;
 		},
 
 		run: function() {
 			this.modeFunction('run');
+		},
+
+
+		initProject: function() {
+
+			// if there is a recent project in local storage, load it.
+			var latestProj = JSON.parse( localStorage.getItem('latestProject') );
+			if (latestProj) {
+				this.openProject(latestProj);
+			}
+
+			// Otherwise, load default
+			else {
+				this.newProject('Hello p5');
+			}
 		},
 
 		// handle users
@@ -264,7 +289,6 @@ var appConfig = {
 
 			for (var i = 0; i < tabNames.length; i++) {
 				var tabName = tabNames[i];
-				console.log('loading a tab named ' + tabName);
 				var fileObj = self.currentProject.findFile(tabName);
 				self.$broadcast('add-tab', fileObj, self.tabs);
 			}

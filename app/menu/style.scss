@@ -6,7 +6,7 @@ $transitiontimeshort: 0.1s;
   flex: 1;
   flex-direction: row;
   width:100%;
-  // max-height: 35px;
+  height: 48px;
    -webkit-touch-callout: none;
     -webkit-user-select: none;
     opacity: 0.0;
@@ -39,6 +39,7 @@ $transitiontimeshort: 0.1s;
 
 }
 
+
 #play {
  background: none;
  background-image: url('../images/play-gray.svg');
@@ -65,7 +66,25 @@ $transitiontimeshort: 0.1s;
 }
 }
 
-
+#filemenu-burger {
+  background: none;
+  background-image: url('../images/filemenu-gray.svg');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  border: 0;
+  width: 28px;
+  height: 34px;
+  padding: 0px;
+  font-size: 25px;
+  display: inline;
+  cursor: pointer;
+  outline: 0; 
+  float: left;
+  //margin-top: 0px;
+  &:hover {
+   background-image: url('../images/filemenu-white.svg');
+  }
+}
 
 #button_header {
   margin-left: 0px;
@@ -76,7 +95,7 @@ $transitiontimeshort: 0.1s;
 
 #project-name {
   padding-left: 20px;
-  padding-right: 500px;
+  padding-right: 20px;
   font-size: 24px;
   // color: #58585b;
   color: #ed225d;
@@ -95,38 +114,6 @@ $transitiontimeshort: 0.1s;
 //   top:0px;
 // }
 
-#actions {
-  button {
-    border: 0;
-    cursor: pointer;
-    background: none;
-    margin: 0;
-    padding: 0;
-    margin-right: 15px;
-    outline: 0;
-  }
-
-  button, button img {
-    width: 32px;
-  }
-
-  
-  button img:hover {
-    opacity: 0.6;
-  }
-
-  #add, #export {
-    float: left;
-  }
-
-  #settings {
-    float: right;
-    top: 8px;
-    right: 55px;
-    // bottom: 2px;
-    position:absolute;
-  }
-}
 
 .pure-menu-item span {
   background: white;

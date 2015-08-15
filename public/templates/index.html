@@ -8,8 +8,8 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
 		<title>{{currentProject.name}}</title>
-		<link rel="stylesheet" href="css/main.css">
-		<link rel="stylesheet" href="css/pure/menus.css">
+		<link rel="stylesheet" href="../css/main.css">
+		<link rel="stylesheet" href="../css/pure/menus.css">
 	</head>
 
 	<body class="{{orientation}}">
@@ -21,6 +21,9 @@
 			<div v-component="settings" v-with="settings" v-show="showSettings" id="settingsContainer"></div>
 
 			<div id="body-row-container" style="display:flex; flex-direction:row;">
+
+				<div v-component="filemenu" v-show="showFilemenu" id="filemenu-container"></div>
+
 				<div v-component="sidebar" v-with="files : files" id="side-container"></div>
 				<div id="editor-container" class="{{editorClass}}">
 					<div v-component="tabs" v-ref="tabs" id="tab-container"></div>
@@ -34,7 +37,7 @@
 		</div>
 
 
-		<script src="js/main.js"></script>
+		<script src="../js/main.js"></script>
 	</body>
 
 </html>

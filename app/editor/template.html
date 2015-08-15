@@ -1,1 +1,7 @@
 <div id="editor" style="font-size:{{$root.settings.fontSize}}px"></div>
+
+<div id="actions">
+  <button id="#settings-button" title="Preferences" v-on="click: $root.toggleSettingsPane()">
+    <img src="images/options.svg">
+  </button>
+</div>

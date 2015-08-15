@@ -3,13 +3,18 @@
   <div class="pure-menu pure-menu-horizontal">
     <ul class="pure-menu-list">
 
-      <li class="pure-menu-item">
-        <button id="play" v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>
+      <li class="pure-menu-item" v-on="click: $root.toggleFilemenu()">
+        <button id="filemenu-burger"></button>
       </li>
 
       <li class="pure-menu-item">
         <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>
       </li>
+
+      <li class="pure-menu-item">
+        <button id="play" v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>
+      </li>
+
     </ul>
 
 <!--       <li class="pure-menu-item">
@@ -53,11 +58,7 @@
 
 
   <!-- <div id="toolbar"> -->
-    <div id="actions">
-      <button id="settings" title="Preferences" v-on="click: $root.toggleSettingsPane()">
-        <img src="images/options.svg">
-      </button>
-    </div>
+
   <!-- </div> -->
 
 </div>
