@@ -45,9 +45,8 @@
           </li>
 
         <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
-          <span id="profile-span" v-on="click: $root.authenticate()">
-            <!-- <img src="images/temp/profile.png" id="profile-image"> -->
-          </span>
+          <span id="profile-span" v-on="click: profileClicked()"></span>
+
           <ul class="pure-menu-children">
 
             <li class="pure-menu-item" v-if="!loggedIn" v-on="click: $root.authenticate()">

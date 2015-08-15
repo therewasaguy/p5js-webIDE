@@ -7,9 +7,18 @@ var favicon = require('serve-favicon');
 var port = process.env.PORT || 3000;
 var gh_clientID = process.env.GHCLIENT;
 var gh_secret = process.env.GHSECRET;
+var databaseURL = process.env.DBURI || 'mongodb://localhost:27017/p5test1';
 
 var passport = require('passport');
 var GithubStrategy = require('passport-github').Strategy;
+
+var MongoClient = require('mongodb').MongoClient;
+
+MongoClient.connect(databaseURL, function(err, db) {
+	// assert.equal(null, err);
+	console.log('database connected');
+	db.close();
+});
 
 var app = express();
 app.GHOAUTH = process.env.GHOAUTH;
@@ -25,10 +34,12 @@ app.use(bodyParser.urlencoded({			// to support URL-encoded bodies
 	extended: true
 }));
 
+// view engine setup
 app.set('views', __dirname + '/public/views')
 app.set('view engine', 'jade');
 app.set('view options', { basedir: process.env.__dirname})
 
+// public static
 app.use(express.static('public'));
 app.use(favicon(__dirname + '/public/images/favicon.ico'));
 
