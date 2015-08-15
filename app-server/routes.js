@@ -55,10 +55,9 @@ module.exports = function(app, passport) {
 	app.post('/savegist', function(req, res) {
 		var token = app.GHOAUTH;
 
-		console.log(req.user.githubToken);
-
 		// does the user have an access token? If so, upload to their account.
 		if (req.user && req.user.githubToken) {
+			console.log('user has a token');
 			token = req.user.githubToken;
 		}
 
