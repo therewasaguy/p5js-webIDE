@@ -855,6 +855,8 @@ var appConfig = {
 			// get current user from local storage
 			if (localStorage.user) {
 				self.currentUser = JSON.parse( localStorage.getItem('user') );
+			} else {
+				self.currentUser = new User();
 			}
 
 			$.ajax({
@@ -864,10 +866,11 @@ var appConfig = {
 				.success(function(res) {
 
 					username = res;
-					console.log('success! username: ' + username);
 					self.currentUser.username = username;
 
-					self.currentUser.authenticated = true;
+					self.currentUser.authenticated = username.length > 0 ? true : false;
+					console.log('user authenticated? ' + self.currentUser.authenticated);
+
 					// load user recent projects
 					self.recentProjects = self.findRecentUserProjects(self.currentUser);
 
@@ -875,8 +878,9 @@ var appConfig = {
 				.fail(function(res) {
 					// create a new user if there was not one in local storage
 					if (!this.currentUser) {
-						// current user is annonymous
-						self.currentUser = new User();
+
+						// current user remains annonymous
+						// self.currentUser = new User();
 						localStorage.setItem('user', JSON.stringify(self.currentUser));
 					}
 
@@ -887,11 +891,12 @@ var appConfig = {
 		},
 
 		authenticate: function() {
-			var self = this;
-			var username = self.currentUser.username;
-
 			window.open('/auth-gh', '_self');
+		},
 
+		logOut: function() {
+			this.currentUser = new User();
+			window.open('/auth-logout', '_self');
 		},
 
 		// returns an array of recent user projects by ID
@@ -1121,19 +1126,27 @@ module.exports = {
 	computed: {
 		className: function() {
 			return this.$root.running ? 'sketchrunning' : 'sketchstopped';
+		},
+		loggedIn: function() {
+			return this.$root.currentUser && this.$root.currentUser.authenticated;
 		}
+
 	},
 
 	methods: {
 		selectRecentProject: function(e) {
 			var projectID = e.$event.target.getAttribute('data-projectid');
 			this.$root.loadProjectByOurID(projectID);
+		},
+
+		profileClicked: function() {
+			this.loggedIn ? window.open('/profile', '_self') : this.$root.authenticate();
 		}
 	}
 
 };
 },{"./template.html":10}],10:[function(require,module,exports){
-module.exports = '<div id ="button_header">\n\n  <div class="pure-menu pure-menu-horizontal">\n    <ul class="pure-menu-list">\n\n      <li class="pure-menu-item">\n        <button id="play" v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>\n      </li>\n\n      <li class="pure-menu-item">\n        <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>\n      </li>\n    </ul>\n\n<!--       <li class="pure-menu-item">\n        <span v-on="click: $root.forkProject()">Save: Fork</span>\n      </li> -->\n      <div id="custom-dropdown-menus">\n        <ul class="pure-menu-list">\n\n          <li class="pure-menu-item">\n            <span v-on="click: $root.newProject()">New</span>\n          </li>\n\n          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">\n            <!-- <span v-on="click: $root.recentProjects()">Recent Projects</span> -->\n            <span>Recent Projects</span>\n\n            <ul class="pure-menu-children" id="recentProjects">\n              <li v-repeat="$root.recentProjects" class="pure-menu-item">\n                <span data-projectid="{{id}}" class="pure-menu-link" v-on="click: selectRecentProject(this)">\n                  <b data-projectid="{{id}}">{{name}}</b>, <em data-projectid="{{id}}"> Last Modified on {{dateModified}}</em>\n                </span>\n              </li>\n            </ul>\n          </li>\n\n          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">\n            <span v-on="click: $root.commitGist()">Save to Cloud</span>\n              <ul class="pure-menu-children" id="recentProjects">\n                <li class="pure-menu-item">\n                  <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>\n                </li>\n              </ul>\n            </li>\n        </ul>\n\n      <div id="profile-div" v-on="click: $root.authenticate()">\n        <img src="images/temp/profile.png" id="profile-image">\n        <br/>\n\n        <!-- <template v-if="currentUser.username"> -->\n          <span style="position:absolute; right:5px; top:60px;"><span>hello </span><span>{{currentUser.username}}</span>!</span>\n        <!-- </template> -->\n\n      </div>\n\n    </div>\n\n  </div> <!-- end pure-menu-->\n\n\n  <!-- <div id="toolbar"> -->\n    <div id="actions">\n      <button id="settings" title="Preferences" v-on="click: $root.toggleSettingsPane()">\n        <img src="images/options.svg">\n      </button>\n    </div>\n  <!-- </div> -->\n\n</div>';
+module.exports = '<div id ="button_header">\n\n  <div class="pure-menu pure-menu-horizontal">\n    <ul class="pure-menu-list">\n\n      <li class="pure-menu-item">\n        <button id="play" v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>\n      </li>\n\n      <li class="pure-menu-item">\n        <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>\n      </li>\n    </ul>\n\n<!--       <li class="pure-menu-item">\n        <span v-on="click: $root.forkProject()">Save: Fork</span>\n      </li> -->\n      <div id="custom-dropdown-menus">\n        <ul class="pure-menu-list">\n\n          <li class="pure-menu-item">\n            <span v-on="click: $root.newProject()">New</span>\n          </li>\n\n          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">\n            <!-- <span v-on="click: $root.recentProjects()">Recent Projects</span> -->\n            <span>Recent Projects</span>\n\n            <ul class="pure-menu-children" id="recentProjects">\n              <li v-repeat="$root.recentProjects" class="pure-menu-item">\n                <span data-projectid="{{id}}" class="pure-menu-link" v-on="click: selectRecentProject(this)">\n                  <b data-projectid="{{id}}">{{name}}</b>, <em data-projectid="{{id}}"> Last Modified on {{dateModified}}</em>\n                </span>\n              </li>\n            </ul>\n          </li>\n\n          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">\n            <span v-on="click: $root.commitGist()">Save to Cloud</span>\n            <ul class="pure-menu-children" id="recentProjects">\n              <li class="pure-menu-item">\n                <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>\n              </li>\n            </ul>\n          </li>\n\n        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">\n          <span id="profile-span" v-on="click: profileClicked()"></span>\n\n          <ul class="pure-menu-children">\n\n            <li class="pure-menu-item" v-if="!loggedIn" v-on="click: $root.authenticate()">\n              <span>Log in</span>\n            </li>\n\n            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.authenticate()">\n              <span class="username"> hello <b>{{currentUser.username}}</b> </span>!\n            </li>\n\n            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.logOut()">\n              <span>Log Out</span>\n            </li>\n\n\n\n<!--             <ul class="pure-menu-children" id="recentProjects">\n              <li class="pure-menu-item">\n                <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>\n              </li>\n            </ul> -->\n          </ul>\n        </li>\n\n      </ul>\n    </div>\n\n\n  </div> <!-- end pure-menu-->\n\n\n  <!-- <div id="toolbar"> -->\n    <div id="actions">\n      <button id="settings" title="Preferences" v-on="click: $root.toggleSettingsPane()">\n        <img src="images/options.svg">\n      </button>\n    </div>\n  <!-- </div> -->\n\n</div>';
 },{}],11:[function(require,module,exports){
 var $ = require('jquery');
 var Vue = require('vue');
@@ -1309,8 +1322,15 @@ var User = function(name) {
 	// generate random unique id, thank you https://gist.github.com/gordonbrander/2230317
 	this.id = '_' + Math.random().toString(36).substr(2, 9);
 
-	// no github auth yet
+	this.projects = [];
+	this.username = '';
+	this.email = '';
+	this.settings = ''; // string of JSON data
+
+	// authenticated stuff
+	this.githubAccount = '';
 	this.gh_oa = null;
+
 
 	if (name) {
 		this.username = name;
@@ -1318,8 +1338,6 @@ var User = function(name) {
 		this.username = '_anon'
 	}
 
-	this.projects = [];
-	this.settings = {};
 };
 
 module.exports = User;
