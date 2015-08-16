@@ -178,11 +178,83 @@ variable */
 .ace-twilight .ace_variable {
   color: #EC5097 !important; }
 
+#actions button {
+  border: 0;
+  cursor: pointer;
+  background: none;
+  margin: 7px;
+  padding: 0;
+  margin-left: -27px;
+  outline: 0;
+  z-index: 3;
+  position: absolute; }
+
+#actions button, #actions button img {
+  width: 20px;
+  opacity: 0.5;
+  transition: opacity 0.25s ease-in-out 0s; }
+
+#actions button:hover {
+  opacity: 1; }
+
+#actions #add, #actions #export {
+  float: left; }
+
+#settings-button {
+  float: right; }
+
+#filemenu-container {
+  margin: 0px;
+  padding-right: 15px;
+  padding-top: 5px;
+  font: 14px karla,sans-serif;
+  display: inline-block;
+  width: 200px; }
+
+ul.a {
+  list-style-type: circle; }
+
+p.filemenu {
+  font: 16px;
+  color: #5D75C5;
+  line-height: 100%;
+  width: 180px;
+  padding-left: 20px; }
+
+#filemenu {
+  background-color: #202020;
+  width: 220px;
+  height: 100%;
+  box-shadow: 0px 0px 6px #999;
+  color: #B3B3B3;
+  margin-top: 48px; }
+
+#newProject {
+  background-color: #2D2D2D;
+  padding: 1px; }
+
+#examples {
+  padding-left: 10px;
+  line-height: 150%; }
+
+#myProjects {
+  padding-left: 10px;
+  line-height: 150%; }
+
+.buttonIcon {
+  position: relative;
+  clear: none;
+  float: right;
+  width: 15px;
+  margin-right: 20px;
+  margin-top: -1px; }
+
 #menu-container {
   display: flex;
   flex: 1;
   flex-direction: row;
   width: 100%;
+  height: 48px;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   opacity: 0.0;
@@ -227,6 +299,23 @@ variable */
     #play.running:hover {
       background-image: url("../images/stop-orange.svg"); }
 
+#filemenu-burger {
+  background: none;
+  background-image: url("../images/filemenu-gray.svg");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  border: 0;
+  width: 28px;
+  height: 34px;
+  padding: 0px;
+  font-size: 25px;
+  display: inline;
+  cursor: pointer;
+  outline: 0;
+  float: left; }
+  #filemenu-burger:hover {
+    background-image: url("../images/filemenu-white.svg"); }
+
 #button_header {
   margin-left: 0px;
   height: 50px;
@@ -237,7 +326,10 @@ variable */
 #project-name {
   padding-left: 20px;
   padding-right: 20px;
+<<<<<<< HEAD
   margin-right: 20px;
+=======
+>>>>>>> master
   font-size: 24px;
   color: #ed225d;
   font-weight: bold;
@@ -245,30 +337,6 @@ variable */
   margin-bottom: 10px;
   cursor: default;
   float: left; }
-
-#actions button {
-  border: 0;
-  cursor: pointer;
-  background: none;
-  margin: 0;
-  padding: 0;
-  margin-right: 15px;
-  outline: 0; }
-
-#actions button, #actions button img {
-  width: 32px; }
-
-#actions button img:hover {
-  opacity: 0.6; }
-
-#actions #add, #actions #export {
-  float: left; }
-
-#actions #settings {
-  float: right;
-  top: 8px;
-  right: 55px;
-  position: absolute; }
 
 .pure-menu-item span {
   background: white;
@@ -658,6 +726,50 @@ variable */
   width: 100%;
   height: 100%; }
 
+@font-face {
+  font-family: karla;
+  src: url("../fonts/Karla/Karla-Regular.ttf"); }
+
+@font-face {
+  font-family: karla-bold;
+  src: url("../fonts/Karla/Karla-Bold.ttf"); }
+
+@font-face {
+  font-family: source-code;
+  src: url("../fonts/Source_Code_Pro/SourceCodePro-Regular.ttf"); }
+
+@font-face {
+  font-family: inconsolata;
+  src: url("../fonts/Inconsolata/inconsolata.ttf"); }
+
+@font-face {
+  font-family: avenir-next-medium;
+  src: url("../fonts/Avenir_Next_Medium/AvenirNextLTW01-Medium.ttf"); }
+
+body, html {
+  color: #58595B;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font: 14px karla, sans-serif; }
+
+body {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: stretch;
+  overflow: hidden; }
+
+.file-handler {
+  display: none; }
+
+#main-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 100px;
+  height: 100%; }
+
 #tab-container {
   display: flex;
   flex: 1;
@@ -708,54 +820,10 @@ variable */
 #minimize {
   width: 30px;
   height: 30px;
-  float: right; }
+  float: left; }
   #minimize a {
     width: 100%;
     display: block; }
 
 #minimize a:hover {
   color: yellow; }
-
-@font-face {
-  font-family: karla;
-  src: url("../fonts/Karla/Karla-Regular.ttf"); }
-
-@font-face {
-  font-family: karla-bold;
-  src: url("../fonts/Karla/Karla-Bold.ttf"); }
-
-@font-face {
-  font-family: source-code;
-  src: url("../fonts/Source_Code_Pro/SourceCodePro-Regular.ttf"); }
-
-@font-face {
-  font-family: inconsolata;
-  src: url("../fonts/Inconsolata/inconsolata.ttf"); }
-
-@font-face {
-  font-family: avenir-next-medium;
-  src: url("../fonts/Avenir_Next_Medium/AvenirNextLTW01-Medium.ttf"); }
-
-body, html {
-  color: #58595B;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  font: 14px karla, sans-serif; }
-
-body {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: stretch;
-  overflow: hidden; }
-
-.file-handler {
-  display: none; }
-
-#main-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-width: 100px;
-  height: 100%; }

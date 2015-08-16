@@ -30,12 +30,14 @@ var appConfig = {
 		sidebar: require('./sidebar/index'),
 		sketchframe: require('./sketchframe/index'),
 		debug: require('./debug/index'),
-		menu: require('./menu/index')
+		menu: require('./menu/index'),
+		filemenu: require('./filemenu/index')
 	},
 
 	data: {
 		settings: {},
 		showSettings: false,
+		showFilemenu: false,
 		tabs: [],
 		files: [],
 		running: false,
@@ -161,6 +163,10 @@ var appConfig = {
 
 		toggleSettingsPane: function() {
 			this.showSettings = !this.showSettings;
+		},
+
+		toggleFilemenu: function() {
+			this.showFilemenu = !this.showFilemenu;
 		},
 
 		toggleSidebar: function() {
