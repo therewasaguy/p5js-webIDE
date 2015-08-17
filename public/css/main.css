@@ -72,6 +72,52 @@
 .handle-down.console-hidden {
   display: none; }
 
+#filemenu-container {
+  margin: 0px;
+  padding-right: 15px;
+  padding-top: 5px;
+  font: 14px karla,sans-serif;
+  display: inline-block;
+  width: 200px; }
+
+ul.a {
+  list-style-type: circle; }
+
+p.filemenu {
+  font: 16px;
+  color: #5D75C5;
+  line-height: 100%;
+  width: 180px;
+  padding-left: 20px; }
+
+#filemenu {
+  background-color: #202020;
+  width: 220px;
+  height: 100%;
+  box-shadow: 0px 0px 6px #999;
+  color: #B3B3B3;
+  margin-top: 48px; }
+
+#newProject {
+  background-color: #2D2D2D;
+  padding: 1px; }
+
+#examples {
+  padding-left: 10px;
+  line-height: 150%; }
+
+#myProjects {
+  padding-left: 10px;
+  line-height: 150%; }
+
+.buttonIcon {
+  position: relative;
+  clear: none;
+  float: right;
+  width: 15px;
+  margin-right: 20px;
+  margin-top: -1px; }
+
 #body-row-container {
   margin-top: 50px;
   padding: 5px; }
@@ -202,52 +248,6 @@ variable */
 
 #settings-button {
   float: right; }
-
-#filemenu-container {
-  margin: 0px;
-  padding-right: 15px;
-  padding-top: 5px;
-  font: 14px karla,sans-serif;
-  display: inline-block;
-  width: 200px; }
-
-ul.a {
-  list-style-type: circle; }
-
-p.filemenu {
-  font: 16px;
-  color: #5D75C5;
-  line-height: 100%;
-  width: 180px;
-  padding-left: 20px; }
-
-#filemenu {
-  background-color: #202020;
-  width: 220px;
-  height: 100%;
-  box-shadow: 0px 0px 6px #999;
-  color: #B3B3B3;
-  margin-top: 48px; }
-
-#newProject {
-  background-color: #2D2D2D;
-  padding: 1px; }
-
-#examples {
-  padding-left: 10px;
-  line-height: 150%; }
-
-#myProjects {
-  padding-left: 10px;
-  line-height: 150%; }
-
-.buttonIcon {
-  position: relative;
-  clear: none;
-  float: right;
-  width: 15px;
-  margin-right: 20px;
-  margin-top: -1px; }
 
 #menu-container {
   display: flex;

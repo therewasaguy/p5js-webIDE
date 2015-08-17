@@ -16,8 +16,14 @@ var MongoClient = require('mongodb').MongoClient;
 
 MongoClient.connect(databaseURL, function(err, db) {
 	// assert.equal(null, err);
-	console.log('database connected');
-	db.close();
+	console.log('trying to connect to database...');
+	try {
+		db.close();
+		console.log('database connected!');
+	} catch(e) {
+		console.log('unable to connect to database');
+		return null;
+	}
 });
 
 var app = express();
