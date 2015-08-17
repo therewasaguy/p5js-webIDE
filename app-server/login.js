@@ -3,7 +3,7 @@ module.exports = function(app, passport, GithubStrategy, gh_clientID, gh_secret)
   // config Passport
 
   // via http://blog.revathskumar.com/2014/06/express-github-authentication-with-passport.html
-  passport.use(new GithubStrategy({
+  passport.use('github', new GithubStrategy({
     clientID: gh_clientID,
     clientSecret: gh_secret,
     callbackURL: 'http://localhost:3000/auth-gh/callback'
