@@ -429,6 +429,10 @@ var appConfig = {
 				});
 		},
 
+		saveProjectToDatabase: function(proj) {
+			this.modeFunction('saveProjectToDatabase', proj);
+		},
+
 		gotGistData: function(gistData) {
 			console.log('got gist data!');
 		},

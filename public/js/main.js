@@ -1087,6 +1087,10 @@ var appConfig = {
 				});
 		},
 
+		saveProjectToDatabase: function(proj) {
+			this.modeFunction('saveProjectToDatabase', proj);
+		},
+
 		gotGistData: function(gistData) {
 			console.log('got gist data!');
 		},
@@ -1438,7 +1442,6 @@ module.exports = {
 		}
 
 		self.$emit('updateCurrentProject');
-		console.log(theFiles);
 
 		var data = {
 			"description": commitMessage,
@@ -1461,6 +1464,8 @@ module.exports = {
 			self.updateCurrentProject();
 			console.log('uploaded successfully!');
 			console.log(res);
+
+			self.saveProjectToDatabase(self.currentProject);
 		})
 		.error( function(e) {
 			console.log(e);
@@ -1468,6 +1473,33 @@ module.exports = {
 			console.warn('gist save error');
 		});
 
+	},
+
+	saveProjectToDatabase: function(proj) {
+		var data = {
+			owner: this.currentUser.username,
+			gistID: proj.gistID,
+			name: proj.name,
+			_id: proj._id,
+			fileObjects: proj.fileObjects,
+			openFileName: proj.openFileName,
+			openTabNames: proj.openTabNames
+		};
+
+		console.log(data);
+
+		$.ajax({
+			url: './saveproject',
+			type: 'POST',
+			data: data,
+			dataType: 'json'
+		})
+		.success( function(res) {
+			console.log(res);
+		})
+		.error( function(res) {
+			console.log(res);
+		})
 	},
 
 	downloadZip: function() {

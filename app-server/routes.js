@@ -56,11 +56,12 @@ module.exports = function(app, passport) {
 
 	app.post('/savegist', function(req, res) {
 		var token = settings.GHOAUTH;
+		console.log('token: ' + token);
 
 		// does the user have an access token? If so, upload to their account.
-		if (req.user && req.user.githubToken) {
+		if (req.user && req.user.tokens.github) {
 			console.log('user has a token');
-			token = req.user.githubToken;
+			token = req.user.tokens.github;
 		}
 
 		// default POST, but if there is a gistID, switch to PATCH
@@ -103,6 +104,7 @@ module.exports = function(app, passport) {
 				res.send(body)
 			} else {
 				console.log(response.statusCode);
+				res.send(response);
 				console.log('response');
 			}
 		});

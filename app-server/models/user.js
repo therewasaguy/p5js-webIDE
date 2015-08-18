@@ -39,12 +39,13 @@ var userSchema = new Schema({
     type: Date,
     default: Date.now
   },
+
   projects: [{
     type: Schema.Types.ObjectId,
     ref: 'Project'
   }],
 
-
+  user_settings: String
 
 });
 

@@ -7,6 +7,7 @@ var projectSchema = new Schema({
   name: String,
   owner: String,
   gistid: Number,
+
   created_at: {
     type: Date,
     default: Date.now
@@ -15,10 +16,19 @@ var projectSchema = new Schema({
     type: Date,
     default: Date.now
   },
+
+  // files: [{
+  //   type: Schema.Types.ObjectId,
+  //   ref: 'Project'
+  // }],
+
   files: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Project'
-  }]
+    name: String,
+    contents: String
+  }],
+
+  openFileName: String,
+  openTabTames: String
 });
 
 // on every save, add the date
