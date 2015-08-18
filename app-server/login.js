@@ -1,3 +1,5 @@
+var User = require('./models/user.js');
+
 module.exports = function(app, passport, GithubStrategy, gh_clientID, gh_secret) {
 
   // config Passport
@@ -9,41 +11,31 @@ module.exports = function(app, passport, GithubStrategy, gh_clientID, gh_secret)
     callbackURL: 'http://localhost:3000/auth-gh/callback'
   }, function(accessToken, refreshToken, profile, done){
 
-      // // if account already exists...
-      // Users.findOne({ domain: 'github.com', uid: profile.id }, function(err, account) {
-      //   if (err) { return done(err); }
-      //   if (account) { return done(null, account); }
+      var email = profile.email ? profile.email : 'no email provided';
 
-      //   var account = new User();
-      //   account.domain = 'github.com';
-      //   account.uid = profile.id;
+      User.findOne( {$or: [ {github_id: profile.id}, {email: email} ] }, function(err, account) {
+        if (err) { console.log('could not find user ' + account); return done(err); }
+        if (account) { console.log('found user'); return done(err, account); }
 
-      //   var t = { kind: 'oauth', accessToken: accessToken, attributes: { refreshToken: refreshToken } };
-      //   account.tokens.push(t);
-      //   return done(null, account);
-      // });
 
-        var account = {};
-        account.domain = 'github.com';
-        account.uid = profile.id;
-        account.tokens = [];
-        account.username = profile.username;
-        account.profile = profile;
-        account.githubToken = accessToken;
+        var user = new User({});
+        user.avatar_url = profile._json.avatar_url;
+        user.github_profile_url = profile.profileUrl;
+        user.github_id = profile.id;
+        user.email = profile.email;
+        user.location = profile.location;
+        user.username = profile.username;
 
-        console.log('refresh token: ' + refreshToken);
+        user.github_oa = accessToken;
 
-        var t = { kind: 'oauth', accessToken: accessToken, attributes: { 'refreshToken': refreshToken } };
-        account.tokens.push(t);
-        return done(null, account);
+        user.save(function(err) {
+          if (err) throw err;
 
-    // console.log(profile.username);
-    // // app.GHOATH = accessToken;
+          console.log('User saved successfully!');
+          return done(null, user);
+        });
 
-    // done(null, {
-    //   accessToken: accessToken,
-    //   profile: profile
-    // });
+      });
   }));
 
   passport.serializeUser(function(user, done) {

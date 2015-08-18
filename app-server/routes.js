@@ -1,7 +1,9 @@
 var http = require('http');
 var request = require('request');
 
-var auth = require('./auth')
+var auth = require('./auth');
+var settings = require('./settings');
+
 
 module.exports = function(app, passport) {
 
@@ -29,7 +31,7 @@ module.exports = function(app, passport) {
 
 		// github oauth
 		// var gh_oa = query.gh_oa ? gh_oa : app.GHOAUTH;
-		console.log('github oauth: ' + app.GHOAUTH);
+		console.log('github oauth: ' + settings.GHOAUTH);
 
 		var gistID = query.gistID;
 		console.log('looking for gist id ' + gistID);
@@ -53,7 +55,7 @@ module.exports = function(app, passport) {
 
 
 	app.post('/savegist', function(req, res) {
-		var token = app.GHOAUTH;
+		var token = settings.GHOAUTH;
 
 		// does the user have an access token? If so, upload to their account.
 		if (req.user && req.user.githubToken) {

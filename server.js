@@ -4,30 +4,16 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var favicon = require('serve-favicon');
 
-var port = process.env.PORT || 3000;
-var gh_clientID = process.env.GHCLIENT;
-var gh_secret = process.env.GHSECRET;
-var databaseURL = process.env.DBURI || 'mongodb://localhost:27017/p5test1';
+var settings = require('./app-server/settings.js');
+var port = settings.port;
+var gh_clientID = settings.GHCLIENT;
+var gh_secret = settings.GHSECRET;
+var databaseURL = settings.dbURL;
 
 var passport = require('passport');
 var GithubStrategy = require('passport-github').Strategy;
 
-var MongoClient = require('mongodb').MongoClient;
-
-MongoClient.connect(databaseURL, function(err, db) {
-	// assert.equal(null, err);
-	console.log('trying to connect to database...');
-	try {
-		db.close();
-		console.log('database connected!');
-	} catch(e) {
-		console.log('unable to connect to database');
-		return null;
-	}
-});
-
 var app = express();
-app.GHOAUTH = process.env.GHOAUTH;
 
 app.use(cookieParser());
 app.use(session({secret: 'mysecret'}));
@@ -50,6 +36,11 @@ app.use(express.static('public'));
 app.use(favicon(__dirname + '/public/images/favicon.ico'));
 
 // routes 
+app.db = require('./app-server/dbcontroller.js'); // load our routes and pass in our app and fully configured passport
+app.db.init(app, function() {
+	console.log('db initted');
+});
+
 require('./app-server/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
 require('./app-server/login.js')(app, passport, GithubStrategy, gh_clientID, gh_secret);
