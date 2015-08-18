@@ -93,21 +93,22 @@ p.filemenu {
 #filemenu {
   background-color: #202020;
   width: 220px;
-  height: 100%;
+  height: 100vh;
   box-shadow: 0px 0px 6px #999;
   color: #B3B3B3;
-  margin-top: 48px; }
+  cursor: default;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden; }
 
 #newProject {
   background-color: #2D2D2D;
   padding: 1px; }
 
 #examples {
-  padding-left: 10px;
   line-height: 150%; }
 
 #myProjects {
-  padding-left: 10px;
   line-height: 150%; }
 
 .buttonIcon {
@@ -115,8 +116,23 @@ p.filemenu {
   clear: none;
   float: right;
   width: 15px;
-  margin-right: 20px;
-  margin-top: -1px; }
+  margin-right: 20px; }
+
+.projectList {
+  margin-left: 10px;
+  line-height: 150%; }
+
+.accordion {
+  margin-bottom: 20px; }
+
+.timeago {
+  font-size: 10px;
+  color: #646464; }
+
+li.filemenu {
+  list-style-type: none;
+  padding-left: 2em;
+  line-height: 150%; }
 
 #body-row-container {
   margin-top: 50px;
