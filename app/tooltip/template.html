@@ -1,0 +1,55 @@
+<html>
+
+  <head>
+    <style>
+
+      span.tooltip
+		{
+			position: relative;
+			width: 100px;
+			text-align: center;
+			/*line-height: 25px;*/
+			background-color: #F4F4F4;
+			border: 1px solid #CBDBE7;
+			padding: 4px;
+			font-size: 12px;
+			-webkit-border-radius: 30px;
+			-moz-border-radius: 30px;
+			border-radius: 1px;
+			box-shadow: 2px 2px 20px #C8C8C8;
+		}
+
+	span.tooltip:before
+		{
+			content: ' ';
+			position: absolute;
+			width: 0;
+			height: 0;
+			left: calc(50% - 9px);
+			top: 21px;
+			border: 8px solid;
+			border-color: #CBDBE7 transparent transparent ;
+		}
+    span.tooltip:after
+		{
+			content: ' ';
+			position: absolute;
+			width: 0;
+			height: 0;
+			left: calc(50% - 7px);
+			top: 21px;
+			border: 6px solid;
+			border-color: #F4F4F4 transparent transparent;
+		}
+
+    </style>
+  </head>
+
+<body>
+
+	<span class="tooltip">message goes here</span>
+
+
+
+  </body>
+</html>

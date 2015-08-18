@@ -1,21 +1,34 @@
 <div id="filemenu" class="pure-menu">
 
   <span id="newProject" class="pure-menu-heading">
-    <p class="filemenu">NEW PROJECT<input type="image" class="buttonIcon" src="images/plus-thin.svg" width="50 px" border="0"></p>
+    <p class="filemenu" v-on="click: $root.newProject()">NEW PROJECT <input type="image" class="buttonIcon" src="images/plus-thin.svg" width="50 px" border="0"></p>
   </span>
 
+  <div id="examples" class="accordion">
+  <p id="exampleButton" class="filemenu">EXAMPLES<img id="exampleIcon" class="buttonIcon" src="images/arrow-down.svg" width="50 px" border="0"></p>
+  <div class="projectList">
+
+    <li class="filemenu">example 1</li>
+    <li class="filemenu">example 2</li>
+    <li class="filemenu">example 3</li>
+    <li class="filemenu">example 4</li>
+    <li class="filemenu">example 5</li>
+
+  </div>
+</div>
+<div id="myProjects" class="accordion">
+  <p id="projectsButton" class="filemenu">MY PROJECTS<img id="projectIcon" class="buttonIcon" src="images/arrow-up.svg" width="50 px" border="0"></p>
+  <div class="projectList">
+
+<!-- class="pure-menu-link" -->
+    <li v-repeat="$root.recentProjects" class="filemenu">
+      <span data-projectid="{{id}}"  v-on="click: selectRecentProject(this)">
+        <span data-projectid="{{id}}">{{name}}</span> &nbsp;<span class="timeago" data-projectid="{{id}}"> {{timeago}}</span>
+      </span>
+    </li>
   
-  <p class="filemenu pure-menu-heading">EXAMPLES<input type="image" class="buttonIcon" src="images/arrow-down.svg" width="50 px" border="0"></p>
-    <ul id="examples" class="a pure-menu-list">
-      <li class="pure-menu-item">example 1</li>
-      <li class="pure-menu-item">example 2</li>
-      <li class="pure-menu-item">example 3</li>
-    </ul>
-  
-  <p class="filemenu pure-menu-heading">MY PROJECTS<input type="image" class="buttonIcon" src="images/arrow-up.svg" width="50 px" border="0"></p>
-    <ul id="myProjects" class="a pure-menu-list">
-      <li class="pure-menu-item">project 1</li>
-      <li class="pure-menu-item">project 2</li>
-      <li class="pure-menu-item">project 3</li>
-    </ul>
+  </div>
+</div>
+
+
 </div>
