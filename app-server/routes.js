@@ -158,12 +158,13 @@ module.exports = function(app, passport) {
 	});
 
 	app.get('/authenticate', function(req, res) {
-		try {
+		var username;
 
+		try {
 			// set github oauth to upload gists to the user's account
 			// app.GHOAUTH = req.session.passport.user.accessToken;
 
-			var username = req.session.passport.user.profile.username;
+			username = req.user.username; 	// req.session.passport.user.profile.username;
 		} catch(e) {
 			console.log('not logged in');
 		}

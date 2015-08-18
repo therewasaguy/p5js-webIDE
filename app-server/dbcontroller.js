@@ -25,9 +25,19 @@ module.exports = db = {
 		mongoose.connect(dbURL);
 
 		app.get('/users', function(req, res) {
-			var x = User.find();
-			console.log(x);
-		})
+
+			User.find({}, function(err, users) {
+				res.send(users);
+			});
+		});
+
+		app.get('/projects', function(req, res) {
+
+			User.find({}, function(err, users) {
+				res.send(users);
+			});
+		});
+
 	}
 
 };

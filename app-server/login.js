@@ -13,27 +13,35 @@ module.exports = function(app, passport, GithubStrategy, gh_clientID, gh_secret)
 
       var email = profile.email ? profile.email : 'no email provided';
 
-      User.findOne( {$or: [ {github_id: profile.id}, {email: email} ] }, function(err, account) {
+      User.findOne( {$or: [ {github_uid: profile.id}, {email: email} ] }, function(err, account) {
+
         if (err) { console.log('could not find user ' + account); return done(err); }
-        if (account) { console.log('found user'); return done(err, account); }
+        if (account) { console.log('found user: ' + account.username); return done(err, account); }
+        else {
+          console.log('creating new user: ' + profile.username);
+          console.log(profile);
 
+          var user = new User({});
+          user.username = profile.username;
 
-        var user = new User({});
-        user.avatar_url = profile._json.avatar_url;
-        user.github_profile_url = profile.profileUrl;
-        user.github_id = profile.id;
-        user.email = profile.email;
-        user.location = profile.location;
-        user.username = profile.username;
+          user.github_profile_url = profile.profileUrl;
+          user.avatar_url = profile._json.avatar_url;
+          user.github_uid = profile.id;
+          user.email = profile._json.email;
+          user.name = profile._json.name;
+          user.meta.bio = profile._json.bio;
+          user.meta.website = profile._json.website;
+          user.meta.location = profile._json.location;
 
-        user.github_oa = accessToken;
+          user.tokens['github'] = accessToken;
 
-        user.save(function(err) {
-          if (err) throw err;
+          user.save(function(err) {
+            if (err) throw err;
 
-          console.log('User saved successfully!');
-          return done(null, user);
-        });
+            console.log('User saved successfully!');
+            return done(null, user);
+          });
+        }
 
       });
   }));

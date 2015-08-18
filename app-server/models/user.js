@@ -14,7 +14,6 @@ var userSchema = new Schema({
     default: false
   },
 
-  location: String,
   github_uid: Number,
   github_profile_url: String,
   github_oa: String,
@@ -22,11 +21,14 @@ var userSchema = new Schema({
   email: String,
   avatar_url: String,
 
-  tokens: Array,
+  tokens: {
+    github: String
+  },
 
   meta: {
     bio: String,
-    website: String
+    website: String,
+    location: String
   },
 
   created_at:  {
