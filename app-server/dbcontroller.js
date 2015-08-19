@@ -60,10 +60,27 @@ module.exports = db = {
 				return;
 			}
 			if (proj) {
+				console.log('found existing project: ' + proj.name);
 
 				// to do: update
 
-				console.log('found project: ' + proj.name);
+				var projFiles = [];
+				var fileNames = Object.keys(data.fileObjects);
+				for (var i = 0; i < fileNames.length; i++) {
+					var f = data.fileObjects[fileNames[i]];
+					projFiles.push({
+						name: f.name,
+						contents: f.contents
+					});
+				}
+
+				// overwrite the files
+				Project.update({_id: proj._id}, {files: projFiles}, function(err) {
+					if (err) throw err;
+
+					console.log('updated files for project ' + proj._id);
+				});
+
 				return callback(null, proj);
 
 			}
@@ -82,7 +99,7 @@ module.exports = db = {
 
 				var project = new Project({
 					owner: data.owner,
-					gistID : data.gistID,
+					gist_id : data.gistID,
 					name : data.name,
 					files : projFiles,
 					openFileName : data.openFileName,

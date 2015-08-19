@@ -121,7 +121,7 @@ module.exports = {
 			openTabNames: proj.openTabNames
 		};
 
-		console.log(data);
+		console.log(typeof(data.gistID));
 
 		$.ajax({
 			url: './saveproject',
@@ -151,6 +151,7 @@ module.exports = {
 		FileSaver.saveAs(content, this.currentProject.name);
 	},
 
+	// called when user hits 'save to cloud'
 	updateCurrentProject: function() {
 		var self = this;
 		var projectID = self.currentProject.id;

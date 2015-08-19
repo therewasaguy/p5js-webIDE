@@ -6,7 +6,7 @@ var Schema = mongoose.Schema;
 var projectSchema = new Schema({
   name: String,
   owner: String,
-  gistid: Number,
+  gist_id: String,
 
   created_at: {
     type: Date,
