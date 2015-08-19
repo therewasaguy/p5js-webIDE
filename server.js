@@ -20,6 +20,11 @@ app.use(session({secret: 'mysecret'}));
 app.use(passport.initialize());
 app.use(passport.session());
 
+// find hostname
+app.use(function(req, res, next) {
+	settings.hostname = req.headers.host;
+});
+
 app.use( bodyParser.json() );				// to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({			// to support URL-encoded bodies
 	limit: '50mb',
@@ -45,6 +50,6 @@ require('./app-server/routes.js')(app, passport); // load our routes and pass in
 
 require('./app-server/login.js')(app, passport, GithubStrategy, gh_clientID, gh_secret);
 
-
-app.listen(port);
-console.log('Running on port ' + port);
+app.listen(port, function(err) {
+	console.log('Running on port ' + port);
+});

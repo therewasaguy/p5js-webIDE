@@ -1,5 +1,6 @@
 var User = require('./models/user.js');
 var db = require('./dbcontroller.js');
+var settings = require('./settings.js');
 
 module.exports = function(app, passport, GithubStrategy, gh_clientID, gh_secret) {
 
@@ -9,7 +10,7 @@ module.exports = function(app, passport, GithubStrategy, gh_clientID, gh_secret)
   passport.use('github', new GithubStrategy({
     clientID: gh_clientID,
     clientSecret: gh_secret,
-    callbackURL: 'http://localhost:3000/auth-gh/callback'
+    callbackURL: settings.hostname + '/auth-gh/callback'
   }, function(accessToken, refreshToken, profile, done){
 
       db.createOrFindUser(accessToken, refreshToken, profile, done)
