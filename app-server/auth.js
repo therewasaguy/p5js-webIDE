@@ -9,5 +9,5 @@ exports.callback = function(req, res){
 };
 
 exports.error = function(req, res){
-  res.send('Login Failed');
+  res.send(res);
 };
