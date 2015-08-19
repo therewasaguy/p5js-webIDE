@@ -12,11 +12,6 @@ module.exports = {
 	},
 
 	methods: {
-		selectRecentProject: function(e) {
-			var projectID = e.$event.target.getAttribute('data-projectid');
-			this.$root.loadProjectByOurID(projectID);
-		},
-
 		profileClicked: function() {
 			this.loggedIn ? window.open('/profile', '_self') : this.$root.authenticate();
 		}

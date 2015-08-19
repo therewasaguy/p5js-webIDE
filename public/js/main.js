@@ -268,7 +268,7 @@ module.exports = {
 
 };
 
-},{"./template.html":4,"brace":31,"brace/ext/searchbox":30,"brace/mode/css":32,"brace/mode/html":33,"brace/mode/javascript":34,"brace/mode/json":35,"brace/mode/text":36,"brace/theme/tomorrow":38,"brace/theme/twilight":39,"js-beautify":50,"underscore":93}],4:[function(require,module,exports){
+},{"./template.html":4,"brace":31,"brace/ext/searchbox":30,"brace/mode/css":32,"brace/mode/html":33,"brace/mode/javascript":34,"brace/mode/json":35,"brace/mode/text":36,"brace/theme/tomorrow":38,"brace/theme/twilight":39,"js-beautify":50,"underscore":94}],4:[function(require,module,exports){
 module.exports = '<div id="editor" style="font-size:{{$root.settings.fontSize}}px"></div>\n\n<div id="actions">\n  <button id="#settings-button" title="Preferences" v-on="click: $root.toggleSettingsPane()">\n    <img src="images/options.svg">\n  </button>\n</div>';
 },{}],5:[function(require,module,exports){
 module.exports = {
@@ -276,11 +276,62 @@ module.exports = {
 
 	ready: function() {
 		console.log('filemenu ready');
+
+		this.setupUI();
+	},
+
+	methods: {
+		selectRecentProject: function(e) {
+			var projectID = e.$event.target.getAttribute('data-projectid');
+			this.$root.loadProjectByOurID(projectID);
+		},
+
+		setupUI: function() {
+			$( ".accordion" ).accordion({
+			      heightStyle: "content"
+			    });
+
+			$( ".accordion" ).accordion({
+			    collapsible: true
+			    });
+
+			$( "#examples" ).accordion({
+			  active: 2
+			});
+
+			$( ".accordion" ).accordion({
+			  icons: { "header": "src", "activeHeader": "data-altsrc" }
+			});
+
+			$(function(){ 
+			    $("#exampleButton").click(function(){ 
+			   $("#exampleIcon").attr('src',  
+			                ($("#exampleIcon").attr('src') == 'images/arrow-down.svg'  
+			                    ? 'images/arrow-up.svg'  
+			                    : 'images/arrow-down.svg' 
+			                     ) 
+			                )  
+			    }); 
+			}); 
+
+			$(function(){ 
+			    $("#projectsButton").click(function(){ 
+			   $("#projectIcon").attr('src',  
+			                ($("#projectIcon").attr('src') == 'images/arrow-up.svg'  
+			                    ? 'images/arrow-down.svg'  
+			                    : 'images/arrow-up.svg' 
+			                     ) 
+			                )
+			    }); 
+			}); 
+		}
 	}
+
+
 
 };
 },{"./template.html":6}],6:[function(require,module,exports){
-module.exports = '<div id="filemenu" class="pure-menu">\n\n  <span id="newProject" class="pure-menu-heading">\n    <p class="filemenu">NEW PROJECT<input type="image" class="buttonIcon" src="images/plus-thin.svg" width="50 px" border="0"></p>\n  </span>\n\n  \n  <p class="filemenu pure-menu-heading">EXAMPLES<input type="image" class="buttonIcon" src="images/arrow-down.svg" width="50 px" border="0"></p>\n    <ul id="examples" class="a pure-menu-list">\n      <li class="pure-menu-item">example 1</li>\n      <li class="pure-menu-item">example 2</li>\n      <li class="pure-menu-item">example 3</li>\n    </ul>\n  \n  <p class="filemenu pure-menu-heading">MY PROJECTS<input type="image" class="buttonIcon" src="images/arrow-up.svg" width="50 px" border="0"></p>\n    <ul id="myProjects" class="a pure-menu-list">\n      <li class="pure-menu-item">project 1</li>\n      <li class="pure-menu-item">project 2</li>\n      <li class="pure-menu-item">project 3</li>\n    </ul>\n</div>';
+module.exports = '<div id="filemenu" class="pure-menu">\n\n  <span id="newProject" class="pure-menu-heading">\n    <p class="filemenu" v-on="click: $root.newProject()">NEW PROJECT <input type="image" class="buttonIcon" src="images/plus-thin.svg" width="50 px" border="0"></p>\n  </span>\n\n  <div id="examples" class="accordion">\n  <p id="exampleButton" class="filemenu">EXAMPLES<img id="exampleIcon" class="buttonIcon" src="images/arrow-down.svg" width="50 px" border="0"></p>\n  <div class="projectList">\n\n    <li class="filemenu">example 1</li>\n    <li class="filemenu">example 2</li>\n    <li class="filemenu">example 3</li>\n    <li class="filemenu">example 4</li>\n    <li class="filemenu">example 5</li>\n\n  </div>\n</div>\n<div id="myProjects" class="accordion">\n  <p id="projectsButton" class="filemenu">MY PROJECTS<img id="projectIcon" class="buttonIcon" src="images/arrow-up.svg" width="50 px" border="0"></p>\n  <div class="projectList">\n\n<!-- class="pure-menu-link" -->\n    <li v-repeat="$root.recentProjects" class="filemenu">\n      <span data-projectid="{{id}}"  v-on="click: selectRecentProject(this)">\n        <span data-projectid="{{id}}">{{name}}</span> &nbsp;<span class="timeago" data-projectid="{{id}}"> {{timeago}}</span>\n      </span>\n    </li>\n  \n  </div>\n</div>\n\n\n</div>';
 },{}],7:[function(require,module,exports){
 /**
  *  Files module to handle the file tree
@@ -357,7 +408,7 @@ var Files = {
 };
 
 module.exports = Files;
-},{"path":47,"underscore":93}],8:[function(require,module,exports){
+},{"path":47,"underscore":94}],8:[function(require,module,exports){
 var $ = require('jquery');
 
 // mousetrap ~ https://craig.is/killing/mice
@@ -667,6 +718,8 @@ var pFile = require('./models/pfile');
 var Project = require('./models/project');
 var User = require('./models/user');
 
+var timeago = require('timeago');
+
 require('./keybindings');
 
 var modes = {
@@ -926,6 +979,9 @@ var appConfig = {
 
 
 			user.projects.forEach(function(projID) {
+				var dateModified = projects[projID].dateModified;
+				console.log(dateModified);
+				projects[projID].timeago = timeago(dateModified);
 				recentUserProjects.push( projects[projID] );
 			});
 
@@ -1140,7 +1196,7 @@ var appConfig = {
 window.onload = function() {
 	var app = new Vue(appConfig);
 };
-},{"./debug":1,"./debug/index":1,"./editor/index":3,"./filemenu/index":5,"./files":7,"./keybindings":8,"./menu/index":11,"./models/pfile":14,"./models/project":15,"./models/user":16,"./modes/p5/p5-web-mode":17,"./settings":18,"./settings/index":19,"./sidebar/index":22,"./sketchframe/index":24,"./tabs/index":26,"brace":31,"jquery":49,"vue":114}],11:[function(require,module,exports){
+},{"./debug":1,"./debug/index":1,"./editor/index":3,"./filemenu/index":5,"./files":7,"./keybindings":8,"./menu/index":11,"./models/pfile":14,"./models/project":15,"./models/user":16,"./modes/p5/p5-web-mode":17,"./settings":18,"./settings/index":19,"./sidebar/index":22,"./sketchframe/index":24,"./tabs/index":26,"brace":31,"jquery":49,"timeago":93,"vue":115}],11:[function(require,module,exports){
 module.exports = {
 	template: require('./template.html'),
 
@@ -1155,11 +1211,6 @@ module.exports = {
 	},
 
 	methods: {
-		selectRecentProject: function(e) {
-			var projectID = e.$event.target.getAttribute('data-projectid');
-			this.$root.loadProjectByOurID(projectID);
-		},
-
 		profileClicked: function() {
 			this.loggedIn ? window.open('/profile', '_self') : this.$root.authenticate();
 		}
@@ -1167,7 +1218,7 @@ module.exports = {
 
 };
 },{"./template.html":12}],12:[function(require,module,exports){
-module.exports = '<div id ="button_header">\n\n  <div class="pure-menu pure-menu-horizontal">\n    <ul class="pure-menu-list">\n\n      <li class="pure-menu-item" v-on="click: $root.toggleFilemenu()">\n        <button id="filemenu-burger"></button>\n      </li>\n\n      <li class="pure-menu-item">\n        <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>\n      </li>\n\n      <li class="pure-menu-item">\n        <button id="play" v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>\n      </li>\n\n    </ul>\n\n<!--       <li class="pure-menu-item">\n        <span v-on="click: $root.forkProject()">Save: Fork</span>\n      </li> -->\n      <div id="custom-dropdown-menus">\n        <ul class="pure-menu-list">\n\n          <li class="pure-menu-item">\n            <span v-on="click: $root.newProject()">New</span>\n          </li>\n\n          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">\n            <!-- <span v-on="click: $root.recentProjects()">Recent Projects</span> -->\n            <span>Recent Projects</span>\n\n            <ul class="pure-menu-children" id="recentProjects">\n              <li v-repeat="$root.recentProjects" class="pure-menu-item">\n                <span data-projectid="{{id}}" class="pure-menu-link" v-on="click: selectRecentProject(this)">\n                  <b data-projectid="{{id}}">{{name}}</b>, <em data-projectid="{{id}}"> Last Modified on {{dateModified}}</em>\n                </span>\n              </li>\n            </ul>\n          </li>\n\n          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">\n            <span v-on="click: $root.commitGist()">Save to Cloud</span>\n            <ul class="pure-menu-children" id="recentProjects">\n              <li class="pure-menu-item">\n                <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>\n              </li>\n            </ul>\n          </li>\n\n        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">\n          <span id="profile-span" v-on="click: profileClicked()"></span>\n\n          <ul class="pure-menu-children">\n\n            <li class="pure-menu-item" v-if="!loggedIn" v-on="click: $root.authenticate()">\n              <span>Log in</span>\n            </li>\n\n            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.authenticate()">\n              <span class="username"> hello <b>{{currentUser.username}}</b> </span>!\n            </li>\n\n            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.logOut()">\n              <span>Log Out</span>\n            </li>\n\n\n\n<!--             <ul class="pure-menu-children" id="recentProjects">\n              <li class="pure-menu-item">\n                <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>\n              </li>\n            </ul> -->\n          </ul>\n        </li>\n\n      </ul>\n    </div>\n\n\n  </div> <!-- end pure-menu-->\n\n\n  <!-- <div id="toolbar"> -->\n\n  <!-- </div> -->\n\n</div>';
+module.exports = '<div id ="button_header">\n\n  <div class="pure-menu pure-menu-horizontal">\n    <ul class="pure-menu-list">\n\n      <li class="pure-menu-item" v-on="click: $root.toggleFilemenu()">\n        <button id="filemenu-burger"></button>\n      </li>\n\n      <li class="pure-menu-item">\n        <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>\n      </li>\n\n      <li class="pure-menu-item">\n        <button id="play" v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>\n      </li>\n\n    </ul>\n\n<!--       <li class="pure-menu-item">\n        <span v-on="click: $root.forkProject()">Save: Fork</span>\n      </li> -->\n      <div id="custom-dropdown-menus">\n        <ul class="pure-menu-list">\n\n\n          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">\n            <span v-on="click: $root.commitGist()">Save to Cloud</span>\n            <ul class="pure-menu-children" id="recentProjects">\n              <li class="pure-menu-item">\n                <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>\n              </li>\n            </ul>\n          </li>\n\n        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">\n          <span id="profile-span" v-on="click: profileClicked()"></span>\n\n          <ul class="pure-menu-children">\n\n            <li class="pure-menu-item" v-if="!loggedIn" v-on="click: $root.authenticate()">\n              <span>Log in</span>\n            </li>\n\n            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.authenticate()">\n              <span class="username"> hello <b>{{currentUser.username}}</b> </span>!\n            </li>\n\n            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.logOut()">\n              <span>Log Out</span>\n            </li>\n\n\n\n<!--             <ul class="pure-menu-children" id="recentProjects">\n              <li class="pure-menu-item">\n                <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>\n              </li>\n            </ul> -->\n          </ul>\n        </li>\n\n      </ul>\n    </div>\n\n\n  </div> <!-- end pure-menu-->\n\n\n  <!-- <div id="toolbar"> -->\n\n  <!-- </div> -->\n\n</div>';
 },{}],13:[function(require,module,exports){
 var $ = require('jquery');
 var Vue = require('vue');
@@ -1251,9 +1302,9 @@ pFile.prototype.commitContents = function() {
 // };
 
 module.exports = pFile;
-},{"jquery":49,"path":47,"vue":114}],14:[function(require,module,exports){
+},{"jquery":49,"path":47,"vue":115}],14:[function(require,module,exports){
 module.exports=require(13)
-},{"jquery":49,"path":47,"vue":114}],15:[function(require,module,exports){
+},{"jquery":49,"path":47,"vue":115}],15:[function(require,module,exports){
 var pFile = require('./pFile');
 
 // either load default file, or load new file;
@@ -2225,7 +2276,7 @@ module.exports = {
 		this.$on('close-tab', this.closeTab);
 	}
 };
-},{"./tab.html":27,"./template.html":28,"underscore":93}],27:[function(require,module,exports){
+},{"./tab.html":27,"./template.html":28,"underscore":94}],27:[function(require,module,exports){
 module.exports = '<div class="{{className}}"><a href="#" v-show="!hidden" v-on="click: $root.openFile(this.name)">{{name}}{{file.contents !== file.originalContents ? \'*\' : \'\'}}</a>&nbsp\n	<a class="delete" href="#" v-show="!hidden" v-on="click: $root.closeTab(this.name)">x</a>\n</div>';
 },{}],28:[function(require,module,exports){
 module.exports = '  <div id="tabs"> \n    <ul id="tab-list"> \n      <li v-repeat="tabs | orderBy \'name\'" v-component="tab"></li>\n\n      <li id = "add">\n        <div>\n          <a href="#" v-on="click: $root.newFile()">+</a>\n        </div>\n      </li>\n\n      <li id="minimize">\n        <div>\n          <a href="#" v-on="click: $root.hideEditor()"> < </a>\n        </div>\n      </li>\n\n\n    </ul>\n\n  </div>';
@@ -50600,6 +50651,119 @@ function ZStream() {
 module.exports = ZStream;
 
 },{}],93:[function(require,module,exports){
+/*
+ * node-timeago
+ * Cam Pedersen
+ * <diffference@gmail.com>
+ * Oct 6, 2011
+ * Timeago is a jQuery plugin that makes it easy to support automatically
+ * updating fuzzy timestamps (e.g. "4 minutes ago" or "about 1 day ago").
+ *
+ * @name timeago
+ * @version 0.10.0
+ * @requires jQuery v1.2.3+
+ * @author Ryan McGeary
+ * @license MIT License - http://www.opensource.org/licenses/mit-license.php
+ *
+ * For usage and examples, visit:
+ * http://timeago.yarp.com/
+ *
+ * Copyright (c) 2008-2011, Ryan McGeary (ryanonjavascript -[at]- mcgeary [*dot*] org)
+ */
+module.exports = function (timestamp) {
+  if (timestamp instanceof Date) {
+    return inWords(timestamp);
+  } else if (typeof timestamp === "string") {
+    return inWords(parse(timestamp));
+  } else if (typeof timestamp === "number") {
+    return inWords(new Date(timestamp))
+  }
+};
+
+var settings = {
+  allowFuture: false,
+  strings: {
+    prefixAgo: null,
+    prefixFromNow: null,
+    suffixAgo: "ago",
+    suffixFromNow: "from now",
+    seconds: "less than a minute",
+    minute: "about a minute",
+    minutes: "%d minutes",
+    hour: "about an hour",
+    hours: "about %d hours",
+    day: "a day",
+    days: "%d days",
+    month: "about a month",
+    months: "%d months",
+    year: "about a year",
+    years: "%d years",
+    numbers: []
+  }
+};
+
+var $l = settings.strings;
+
+module.exports.settings = settings;
+
+$l.inWords = function (distanceMillis) {
+  var prefix = $l.prefixAgo;
+  var suffix = $l.suffixAgo;
+  if (settings.allowFuture) {
+    if (distanceMillis < 0) {
+      prefix = $l.prefixFromNow;
+      suffix = $l.suffixFromNow;
+    }
+  }
+
+  var seconds = Math.abs(distanceMillis) / 1000;
+  var minutes = seconds / 60;
+  var hours = minutes / 60;
+  var days = hours / 24;
+  var years = days / 365;
+
+  function substitute (stringOrFunction, number) {
+    var string = typeof stringOrFunction === 'function' ? stringOrFunction(number, distanceMillis) : stringOrFunction;
+    var value = ($l.numbers && $l.numbers[number]) || number;
+    return string.replace(/%d/i, value);
+  }
+
+  var words = seconds < 45 && substitute($l.seconds, Math.round(seconds)) ||
+    seconds < 90 && substitute($l.minute, 1) ||
+    minutes < 45 && substitute($l.minutes, Math.round(minutes)) ||
+    minutes < 90 && substitute($l.hour, 1) ||
+    hours < 24 && substitute($l.hours, Math.round(hours)) ||
+    hours < 48 && substitute($l.day, 1) ||
+    days < 30 && substitute($l.days, Math.floor(days)) ||
+    days < 60 && substitute($l.month, 1) ||
+    days < 365 && substitute($l.months, Math.floor(days / 30)) ||
+    years < 2 && substitute($l.year, 1) ||
+    substitute($l.years, Math.floor(years));
+
+  return [prefix, words, suffix].join(" ").toString().trim();
+};
+
+function parse (iso8601) {
+  if (!iso8601) return;
+  var s = iso8601.trim();
+  s = s.replace(/\.\d\d\d+/,""); // remove milliseconds
+  s = s.replace(/-/,"/").replace(/-/,"/");
+  s = s.replace(/T/," ").replace(/Z/," UTC");
+  s = s.replace(/([\+\-]\d\d)\:?(\d\d)/," $1$2"); // -04:00 -> -0400
+  return new Date(s);
+}
+
+$l.parse = parse;
+
+function inWords (date) {
+  return $l.inWords(distance(date));
+}
+
+function distance (date) {
+  return (new Date().getTime() - date.getTime());
+}
+
+},{}],94:[function(require,module,exports){
 //     Underscore.js 1.8.3
 //     http://underscorejs.org
 //     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -52149,7 +52313,7 @@ module.exports = ZStream;
   }
 }.call(this));
 
-},{}],94:[function(require,module,exports){
+},{}],95:[function(require,module,exports){
 var utils = require('./utils')
 
 function Batcher () {
@@ -52195,7 +52359,7 @@ BatcherProto.reset = function () {
 }
 
 module.exports = Batcher
-},{"./utils":119}],95:[function(require,module,exports){
+},{"./utils":120}],96:[function(require,module,exports){
 var Batcher        = require('./batcher'),
     bindingBatcher = new Batcher(),
     bindingId      = 1
@@ -52299,7 +52463,7 @@ BindingProto.unbind = function () {
 }
 
 module.exports = Binding
-},{"./batcher":94}],96:[function(require,module,exports){
+},{"./batcher":95}],97:[function(require,module,exports){
 var Emitter     = require('./emitter'),
     Observer    = require('./observer'),
     config      = require('./config'),
@@ -53337,7 +53501,7 @@ function getRoot (compiler) {
 }
 
 module.exports = Compiler
-},{"./binding":95,"./config":97,"./deps-parser":98,"./directive":99,"./emitter":110,"./exp-parser":111,"./observer":115,"./text-parser":117,"./utils":119,"./viewmodel":120}],97:[function(require,module,exports){
+},{"./binding":96,"./config":98,"./deps-parser":99,"./directive":100,"./emitter":111,"./exp-parser":112,"./observer":116,"./text-parser":118,"./utils":120,"./viewmodel":121}],98:[function(require,module,exports){
 var TextParser = require('./text-parser')
 
 module.exports = {
@@ -53357,7 +53521,7 @@ Object.defineProperty(module.exports, 'delimiters', {
         TextParser.setDelimiters(delimiters)
     }
 })
-},{"./text-parser":117}],98:[function(require,module,exports){
+},{"./text-parser":118}],99:[function(require,module,exports){
 var Emitter  = require('./emitter'),
     utils    = require('./utils'),
     Observer = require('./observer'),
@@ -53423,7 +53587,7 @@ module.exports = {
     }
     
 }
-},{"./emitter":110,"./observer":115,"./utils":119}],99:[function(require,module,exports){
+},{"./emitter":111,"./observer":116,"./utils":120}],100:[function(require,module,exports){
 var dirId           = 1,
     ARG_RE          = /^[\w\$-]+$/,
     FILTER_TOKEN_RE = /[^\s'"]+|'[^']+'|"[^"]+"/g,
@@ -53682,7 +53846,7 @@ function escapeQuote (v) {
 }
 
 module.exports = Directive
-},{"./text-parser":117}],100:[function(require,module,exports){
+},{"./text-parser":118}],101:[function(require,module,exports){
 var utils = require('../utils'),
     slice = [].slice
 
@@ -53724,7 +53888,7 @@ module.exports = {
         parent.insertBefore(frag, this.el)
     }
 }
-},{"../utils":119}],101:[function(require,module,exports){
+},{"../utils":120}],102:[function(require,module,exports){
 var utils    = require('../utils')
 
 /**
@@ -53781,7 +53945,7 @@ module.exports = {
         }
     }
 }
-},{"../utils":119}],102:[function(require,module,exports){
+},{"../utils":120}],103:[function(require,module,exports){
 var utils      = require('../utils'),
     config     = require('../config'),
     transition = require('../transition'),
@@ -53911,7 +54075,7 @@ directives.html    = require('./html')
 directives.style   = require('./style')
 directives.partial = require('./partial')
 directives.view    = require('./view')
-},{"../config":97,"../transition":118,"../utils":119,"./html":100,"./if":101,"./model":103,"./on":104,"./partial":105,"./repeat":106,"./style":107,"./view":108,"./with":109}],103:[function(require,module,exports){
+},{"../config":98,"../transition":119,"../utils":120,"./html":101,"./if":102,"./model":104,"./on":105,"./partial":106,"./repeat":107,"./style":108,"./view":109,"./with":110}],104:[function(require,module,exports){
 var utils = require('../utils'),
     isIE9 = navigator.userAgent.indexOf('MSIE 9.0') > 0,
     filter = [].filter
@@ -54086,7 +54250,7 @@ module.exports = {
         }
     }
 }
-},{"../utils":119}],104:[function(require,module,exports){
+},{"../utils":120}],105:[function(require,module,exports){
 var utils    = require('../utils')
 
 /**
@@ -54145,7 +54309,7 @@ module.exports = {
         this.el.removeEventListener('load', this.iframeBind)
     }
 }
-},{"../utils":119}],105:[function(require,module,exports){
+},{"../utils":120}],106:[function(require,module,exports){
 var utils = require('../utils')
 
 /**
@@ -54196,7 +54360,7 @@ module.exports = {
     }
 
 }
-},{"../utils":119}],106:[function(require,module,exports){
+},{"../utils":120}],107:[function(require,module,exports){
 var utils      = require('../utils'),
     config     = require('../config')
 
@@ -54443,7 +54607,7 @@ function indexOf (vms, obj) {
     }
     return -1
 }
-},{"../config":97,"../utils":119}],107:[function(require,module,exports){
+},{"../config":98,"../utils":120}],108:[function(require,module,exports){
 var prefixes = ['-webkit-', '-moz-', '-ms-']
 
 /**
@@ -54490,7 +54654,7 @@ module.exports = {
     }
 
 }
-},{}],108:[function(require,module,exports){
+},{}],109:[function(require,module,exports){
 /**
  *  Manages a conditional child VM using the
  *  binding's value as the component ID.
@@ -54547,7 +54711,7 @@ module.exports = {
     }
 
 }
-},{}],109:[function(require,module,exports){
+},{}],110:[function(require,module,exports){
 var utils = require('../utils')
 
 /**
@@ -54598,7 +54762,7 @@ module.exports = {
     }
 
 }
-},{"../utils":119}],110:[function(require,module,exports){
+},{"../utils":120}],111:[function(require,module,exports){
 var slice = [].slice
 
 function Emitter (ctx) {
@@ -54696,7 +54860,7 @@ EmitterProto.applyEmit = function (event) {
 }
 
 module.exports = Emitter
-},{}],111:[function(require,module,exports){
+},{}],112:[function(require,module,exports){
 var utils           = require('./utils'),
     STR_SAVE_RE     = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'/g,
     STR_RESTORE_RE  = /"(\d+)"/g,
@@ -54887,7 +55051,7 @@ exports.eval = function (exp, compiler, data) {
     }
     return res
 }
-},{"./utils":119}],112:[function(require,module,exports){
+},{"./utils":120}],113:[function(require,module,exports){
 var utils    = require('./utils'),
     get      = utils.get,
     slice    = [].slice,
@@ -55079,7 +55243,7 @@ function stripQuotes (str) {
         return str.slice(1, -1)
     }
 }
-},{"./utils":119}],113:[function(require,module,exports){
+},{"./utils":120}],114:[function(require,module,exports){
 // string -> DOM conversion
 // wrappers originally from jQuery, scooped from component/domify
 var map = {
@@ -55147,7 +55311,7 @@ module.exports = function (templateString) {
     }
     return frag
 }
-},{}],114:[function(require,module,exports){
+},{}],115:[function(require,module,exports){
 var config      = require('./config'),
     ViewModel   = require('./viewmodel'),
     utils       = require('./utils'),
@@ -55336,7 +55500,7 @@ function inheritOptions (child, parent, topLevel) {
 }
 
 module.exports = ViewModel
-},{"./config":97,"./directives":102,"./filters":112,"./observer":115,"./transition":118,"./utils":119,"./viewmodel":120}],115:[function(require,module,exports){
+},{"./config":98,"./directives":103,"./filters":113,"./observer":116,"./transition":119,"./utils":120,"./viewmodel":121}],116:[function(require,module,exports){
 /* jshint proto:true */
 
 var Emitter  = require('./emitter'),
@@ -55783,7 +55947,7 @@ var pub = module.exports = {
     convert     : convert,
     convertKey  : convertKey
 }
-},{"./emitter":110,"./utils":119}],116:[function(require,module,exports){
+},{"./emitter":111,"./utils":120}],117:[function(require,module,exports){
 var toFragment = require('./fragment');
 
 /**
@@ -55831,7 +55995,7 @@ module.exports = function(template) {
     return toFragment(templateNode.outerHTML);
 }
 
-},{"./fragment":113}],117:[function(require,module,exports){
+},{"./fragment":114}],118:[function(require,module,exports){
 var openChar        = '{',
     endChar         = '}',
     ESCAPE_RE       = /[-.*+?^${}()|[\]\/\\]/g,
@@ -55928,7 +56092,7 @@ exports.parse         = parse
 exports.parseAttr     = parseAttr
 exports.setDelimiters = setDelimiters
 exports.delimiters    = [openChar, endChar]
-},{"./directive":99}],118:[function(require,module,exports){
+},{"./directive":100}],119:[function(require,module,exports){
 var endEvents  = sniffEndEvents(),
     config     = require('./config'),
     // batch enter animations so we only force the layout once
@@ -56157,7 +56321,7 @@ function sniffEndEvents () {
 // Expose some stuff for testing purposes
 transition.codes = codes
 transition.sniff = sniffEndEvents
-},{"./batcher":94,"./config":97}],119:[function(require,module,exports){
+},{"./batcher":95,"./config":98}],120:[function(require,module,exports){
 var config       = require('./config'),
     toString     = ({}).toString,
     win          = window,
@@ -56484,7 +56648,7 @@ function enableDebug () {
         }
     }
 }
-},{"./config":97,"./fragment":113,"./template-parser.js":116,"./viewmodel":120}],120:[function(require,module,exports){
+},{"./config":98,"./fragment":114,"./template-parser.js":117,"./viewmodel":121}],121:[function(require,module,exports){
 var Compiler   = require('./compiler'),
     utils      = require('./utils'),
     transition = require('./transition'),
@@ -56676,4 +56840,4 @@ function query (el) {
 
 module.exports = ViewModel
 
-},{"./batcher":94,"./compiler":96,"./transition":118,"./utils":119}]},{},[10])
+},{"./batcher":95,"./compiler":97,"./transition":119,"./utils":120}]},{},[10])

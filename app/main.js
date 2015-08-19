@@ -9,6 +9,8 @@ var pFile = require('./models/pfile');
 var Project = require('./models/project');
 var User = require('./models/user');
 
+var timeago = require('timeago');
+
 require('./keybindings');
 
 var modes = {
@@ -268,6 +270,9 @@ var appConfig = {
 
 
 			user.projects.forEach(function(projID) {
+				var dateModified = projects[projID].dateModified;
+				console.log(dateModified);
+				projects[projID].timeago = timeago(dateModified);
 				recentUserProjects.push( projects[projID] );
 			});
 
