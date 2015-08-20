@@ -1,3 +1,7 @@
+/**
+ *  not currently in use, 8/20/2015
+ */
+
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 

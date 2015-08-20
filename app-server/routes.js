@@ -160,18 +160,23 @@ module.exports = function(app, passport) {
 	});
 
 	app.get('/authenticate', function(req, res) {
-		var username;
+		var resp = {'username': null, '_id': null};
 
 		try {
 			// set github oauth to upload gists to the user's account
 			// app.GHOAUTH = req.session.passport.user.accessToken;
 
-			username = req.user.username; 	// req.session.passport.user.profile.username;
+			resp.username = req.user.username; 	// req.session.passport.user.profile.username;
+			resp._id = req.user._id; 	// req.session.passport.user.profile.username;
+			res.send(resp);
+
 		} catch(e) {
 			console.log('not logged in');
+			res.send(resp);
 		}
-		res.send(username);
+
 	});
+
 
 	// Simple route middleware to ensure user is authenticated.
 	//   Use this route middleware on any resource that needs to be protected.  If

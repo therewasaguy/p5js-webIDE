@@ -32,9 +32,9 @@ var Project = function(options) {
 		this.openTabNames = ['sketch.js', 'style.css'];
 
 		/**
-		 *  @property {String} id 	a unique ID for our application
+		 *  @property {String} _id 	a unique ID for our application, set by the database.
 		 */
-		this.id = '_' + Math.random().toString(36).substr(2, 9);
+		this._id = null;
 
 		/**
 		 *  @property {String} gistID 	a unique ID for GitHub API

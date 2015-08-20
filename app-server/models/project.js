@@ -5,7 +5,10 @@ var Schema = mongoose.Schema;
 // create a schema
 var projectSchema = new Schema({
   name: String,
-  owner: String,
+
+  owner_username: String,
+  owner_id: Schema.Types.ObjectId,
+
   gist_id: String,
 
   created_at: {
@@ -16,11 +19,6 @@ var projectSchema = new Schema({
     type: Date,
     default: Date.now
   },
-
-  // files: [{
-  //   type: Schema.Types.ObjectId,
-  //   ref: 'Project'
-  // }],
 
   files: [{
     name: String,

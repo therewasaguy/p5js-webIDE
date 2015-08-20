@@ -777,6 +777,9 @@ var appConfig = {
 		var self = this;
 		var sketchID = window.location.pathname.split('/').pop();
 
+		// for testing
+		window._app = this;
+
 		if (sketchID.length > 12) {
 			// get sketch from server
 			$.ajax({
@@ -818,8 +821,6 @@ var appConfig = {
 				openfile = f.filename;
 			}
 
-			console.log(fileArray[0]);
-
 			var options = {
 				'fileObjects': fileArray,
 				'name': data.id,
@@ -827,8 +828,6 @@ var appConfig = {
 				'openFileName': openfile,
 				'openTabNames': opentabnames
 			}
-
-			console.log(options);
 
 			var projObj = new Project(options);
 			self.openProject(projObj)
@@ -843,6 +842,7 @@ var appConfig = {
 		this.setupUser();
 
 		this.initProject();
+		this.updateCurrentProject();
 
 		this.$on('updateCurrentProject', this.updateCurrentProject);
 
@@ -914,6 +914,7 @@ var appConfig = {
 			else {
 				this.newProject('Hello p5');
 			}
+
 		},
 
 		// handle users
@@ -933,17 +934,22 @@ var appConfig = {
 				})
 				.success(function(res) {
 
-					username = res;
+					var username = res.username;
+					var id = res._id;
 					self.currentUser.username = username;
+					self.currentUser._id = id;
 
-					self.currentUser.authenticated = username.length > 0 ? true : false;
+					self.currentUser.authenticated = username && username.length > 0 ? true : false;
 					console.log('user authenticated? ' + self.currentUser.authenticated);
 
-					// load user recent projects
-					self.recentProjects = self.findRecentUserProjects(self.currentUser);
+					// load user recent projects if user is authenticated
+					if (self.currentUser.authenticated) {
+						self.recentProjects = self.findRecentUserProjects(self.currentUser);
+					}
 
 				})
 				.fail(function(res) {
+
 					// create a new user if there was not one in local storage
 					if (!this.currentUser) {
 
@@ -952,8 +958,9 @@ var appConfig = {
 						localStorage.setItem('user', JSON.stringify(self.currentUser));
 					}
 
-					// load user recent projects
-					self.recentProjects = self.findRecentUserProjects(self.currentUser);
+					// TO DO: reset recent projects
+					console.log('ERROR');
+					// self.recentProjects = []; //self.findRecentUserProjects(self.currentUser);
 
 				});
 		},
@@ -969,6 +976,7 @@ var appConfig = {
 
 		// returns an array of recent user projects by ID
 		findRecentUserProjects: function(user) {
+			console.log(user);
 			this.modeFunction('findRecentUserProjects', user);
 		},
 
@@ -1094,7 +1102,6 @@ var appConfig = {
 		loadProjectByOurID: function(projID) {
 			var self = this;
 			var ourID = projID;
-			console.log('project id: ' + projID);
 
 			// change url
 			return;
@@ -1320,9 +1327,9 @@ var Project = function(options) {
 		this.openTabNames = ['sketch.js', 'style.css'];
 
 		/**
-		 *  @property {String} id 	a unique ID for our application
+		 *  @property {String} _id 	a unique ID for our application, set by the database.
 		 */
-		this.id = '_' + Math.random().toString(36).substr(2, 9);
+		this._id = null;
 
 		/**
 		 *  @property {String} gistID 	a unique ID for GitHub API
@@ -1372,8 +1379,7 @@ module.exports = Project;
 },{"./pFile":13}],16:[function(require,module,exports){
 var User = function(name) {
 
-	// generate random unique id, thank you https://gist.github.com/gordonbrander/2230317
-	this.id = '_' + Math.random().toString(36).substr(2, 9);
+	this._id = null; // set by database
 
 	this.projects = [];
 	this.username = '';
@@ -1428,27 +1434,29 @@ module.exports = {
 		this.currentProject = proj;
 	},
 
-	getUserProjects: function() {
-		var projects = JSON.parse(localStorage.getItem('p5projects'));
-		var projectsToReturn = [];
+	// getUserProjects: function() {
+	// 	console.log('get user projects');
 
-		if (projects) {
-			var projectKeys = Object.keys(projects);
-			for (var i in projects) {
-				var proj = projects[i];
-				var projID = projects[i].id;
+	// 	var projects = JSON.parse(localStorage.getItem('p5projects'));
+	// 	var projectsToReturn = [];
 
-				// if the user owns this project, list it:
-				if (this.currentUser.projects.indexOf(projID) > -1) {
-					projectsToReturn.push(proj);
-					console.log('project name: ' + proj.name + ', date modified: ' + proj.dateModified + 'gistID: ' + proj.gistID);
-				}
-			}
-		} else {
-			console.log('no recent projects');
-		}
-		return projectsToReturn;
-	},
+	// 	if (projects) {
+	// 		var projectKeys = Object.keys(projects);
+	// 		for (var i in projects) {
+	// 			var proj = projects[i];
+	// 			var projID = projects[i].id;
+
+	// 			// if the user owns this project, list it:
+	// 			if (this.currentUser.projects.indexOf(projID) > -1) {
+	// 				projectsToReturn.push(proj);
+	// 				console.log('project name: ' + proj.name + ', date modified: ' + proj.dateModified + 'gistID: ' + proj.gistID);
+	// 			}
+	// 		}
+	// 	} else {
+	// 		console.log('no recent projects');
+	// 	}
+	// 	return projectsToReturn;
+	// },
 
 
 	// commit as a gist --> TO DO: move this to server side
@@ -1508,7 +1516,8 @@ module.exports = {
 		var self = this;
 
 		var data = {
-			owner: this.currentUser.username,
+			owner_username: this.currentUser.username,
+			owner_id: this.currentUser._id,
 			gistID: proj.gistID,
 			name: proj.name,
 			_id: proj._id,
@@ -1516,6 +1525,8 @@ module.exports = {
 			openFileName: proj.openFileName,
 			openTabNames: proj.openTabNames
 		};
+
+		console.log(data);
 
 		$.ajax({
 			url: './saveproject',
@@ -1540,12 +1551,6 @@ module.exports = {
 		var self = this;
 		var projectID = self.currentProject._id;
 
-		if (typeof(projectID) == 'undefined') {
-			console.log('no projectID');
-			return;
-		}
-		console.log('update current project: ' + projectID);
-
 		// update date modified
 		var dateModified = JSON.stringify(new Date());
 		self.currentProject.dateModified = dateModified;
@@ -1559,28 +1564,30 @@ module.exports = {
 		// add or update the localStorage project listing with { key: ID - value: dateModified }
 		var projects = JSON.parse( localStorage.getItem('recentProjects') );
 		if (!projects) projects = {};
-		projects[self.currentProject._id] = {
-			'dateModified': self.currentProject.dateModified,
-			'name' : self.currentProject.name
+
+		// update localstorage if there is a project id
+		if (typeof(projectID) !== 'undefined') {
+			projects[self.currentProject._id] = {
+				'dateModified': self.currentProject.dateModified,
+				'name' : self.currentProject.name
+			}
+			localStorage.setItem('recentProjects', JSON.stringify(projects));
+
+			// add projectID to the user's table if it doesn't exist (theoretically this has already been done DB-side if user authenticated)
+			if (self.currentUser.projects.indexOf(projectID) === -1) {
+				self.currentUser.projects.push(projectID);
+				localStorage.setItem('user', JSON.stringify(self.currentUser));
+			}
 		}
-		localStorage.setItem('recentProjects', JSON.stringify(projects));
 
-
-		// add projectID to the user's table if it doesn't exist (theoretically this has already been done DB-side)
-		if (self.currentUser.projects.indexOf(projectID) === -1) {
-			self.currentUser.projects.push(projectID);
-			localStorage.setItem('user', JSON.stringify(self.currentUser));
-		}
-
-		// reload recent user projects
-		// self.recentProjects = self.findRecentUserProjects(self.currentUser);
+		// reload / display recent user projects
 		self.sortRecentProjects(projects);
-		console.log('recent proj');
-		console.log(self.recentProjects);
 	},
 
+	// sort by object, as stored in localStorage
 	sortRecentProjects: function(projects) {
 		var self = this;
+		console.log('sorting...');
 
 		var recentUserProjects = [];
 		var projIDs = Object.keys(projects);
@@ -1597,48 +1604,58 @@ module.exports = {
 			});
 		}
 
-		console.log(recentUserProjects);
 		self.recentProjects = recentUserProjects;
 	},
 
+	// get recent projects of an authenticated user from the database and reset recentProjects
 	findRecentUserProjects: function(user) {
+		var self = this;
+		var projects = [];
+		var recentUserProjects = [];
 
-			// var projects = [];
-			// var recentUserProjects = [];
+		// // if user is not logged in, get recentProjects array from local storage
+		if (!user.authenticated) {
+			console.log('user not authenticated');
 
-			// // if user is not logged in, get recentProjects array from local storage
-			// if (!user.authenticated) {
-			// 	projects = JSON.parse( localStorage.getItem('recentProjects') );
-			// }
+			projects = JSON.parse( localStorage.getItem('recentProjects') );
+			sortRecentProjects(projects); 
+		}
 
-			// else {
-			// 	projects = user.projects;
-			// }
+		else {
+			console.log('fetch user projects for user id: ' + user._id);
 
-			// // otherwise, use the ID to get recentprojects from database
+			$.ajax({
+				url: '/recentuserprojects',
+				data: {
+					'userID' : user._id,
+					'username' : user.username
+				},
+				type: 'GET',
+				success: function(projArray) {
 
-			// console.log(projects);
+					for (var i = 0; i < projArray.length; i++) {
+						var proj = projArray[i];
 
-			// return;
+						var id = proj._id;
+						var name = proj.name;
+						var dateModified = proj.updated_at;
+						var dateAgo = timeago(dateModified);
 
-			// // fetch projects from database 
-			// // $.ajax({
-			// // 	url: '/findrecentuserprojects',
-			// // 	data: user._id
-			// // })
+						recentUserProjects.push({
+							name: name,
+							id: id,
+							timeago: dateAgo
+						});
 
-			// // localStorage
-			// var projects = JSON.parse( localStorage.getItem('p5projects') );
-			// if (!projects) projects = {};
+						console.log('add a proj');
+					}
 
+					// reset recent projects
+					self.recentProjects = recentUserProjects;
 
-			// user.projects.forEach(function(projID) {
-			// 	var dateModified = projects[projID].dateModified;
-			// 	projects[projID].timeago = timeago(dateModified);
-			// 	recentUserProjects.push( projects[projID] );
-			// });
-
-			// return recentUserProjects;
+				}
+			});
+		}
 	},
 
 	// fork!

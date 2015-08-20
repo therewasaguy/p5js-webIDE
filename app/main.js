@@ -68,6 +68,9 @@ var appConfig = {
 		var self = this;
 		var sketchID = window.location.pathname.split('/').pop();
 
+		// for testing
+		window._app = this;
+
 		if (sketchID.length > 12) {
 			// get sketch from server
 			$.ajax({
@@ -109,8 +112,6 @@ var appConfig = {
 				openfile = f.filename;
 			}
 
-			console.log(fileArray[0]);
-
 			var options = {
 				'fileObjects': fileArray,
 				'name': data.id,
@@ -118,8 +119,6 @@ var appConfig = {
 				'openFileName': openfile,
 				'openTabNames': opentabnames
 			}
-
-			console.log(options);
 
 			var projObj = new Project(options);
 			self.openProject(projObj)
@@ -134,6 +133,7 @@ var appConfig = {
 		this.setupUser();
 
 		this.initProject();
+		this.updateCurrentProject();
 
 		this.$on('updateCurrentProject', this.updateCurrentProject);
 
@@ -205,6 +205,7 @@ var appConfig = {
 			else {
 				this.newProject('Hello p5');
 			}
+
 		},
 
 		// handle users
@@ -224,17 +225,22 @@ var appConfig = {
 				})
 				.success(function(res) {
 
-					username = res;
+					var username = res.username;
+					var id = res._id;
 					self.currentUser.username = username;
+					self.currentUser._id = id;
 
-					self.currentUser.authenticated = username.length > 0 ? true : false;
+					self.currentUser.authenticated = username && username.length > 0 ? true : false;
 					console.log('user authenticated? ' + self.currentUser.authenticated);
 
-					// load user recent projects
-					self.recentProjects = self.findRecentUserProjects(self.currentUser);
+					// load user recent projects if user is authenticated
+					if (self.currentUser.authenticated) {
+						self.recentProjects = self.findRecentUserProjects(self.currentUser);
+					}
 
 				})
 				.fail(function(res) {
+
 					// create a new user if there was not one in local storage
 					if (!this.currentUser) {
 
@@ -243,8 +249,9 @@ var appConfig = {
 						localStorage.setItem('user', JSON.stringify(self.currentUser));
 					}
 
-					// load user recent projects
-					self.recentProjects = self.findRecentUserProjects(self.currentUser);
+					// TO DO: reset recent projects
+					console.log('ERROR');
+					// self.recentProjects = []; //self.findRecentUserProjects(self.currentUser);
 
 				});
 		},
@@ -260,6 +267,7 @@ var appConfig = {
 
 		// returns an array of recent user projects by ID
 		findRecentUserProjects: function(user) {
+			console.log(user);
 			this.modeFunction('findRecentUserProjects', user);
 		},
 
@@ -385,7 +393,6 @@ var appConfig = {
 		loadProjectByOurID: function(projID) {
 			var self = this;
 			var ourID = projID;
-			console.log('project id: ' + projID);
 
 			// change url
 			return;

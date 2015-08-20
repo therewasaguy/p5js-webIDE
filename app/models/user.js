@@ -1,7 +1,6 @@
 var User = function(name) {
 
-	// generate random unique id, thank you https://gist.github.com/gordonbrander/2230317
-	this.id = '_' + Math.random().toString(36).substr(2, 9);
+	this._id = null; // set by database
 
 	this.projects = [];
 	this.username = '';

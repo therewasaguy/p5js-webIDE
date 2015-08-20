@@ -35,6 +35,19 @@ module.exports = db = {
 			});
 		});
 
+
+		app.get('/recentuserprojects', function(req, res) {
+			var userID = req.query.userID;
+
+			Project.find( {'owner_id': userID}, function(err, data) {
+				console.log(data);
+				res.send(data);
+			});
+
+		});
+
+
+
 		// save project to database
 		app.post('/saveproject', function(req, res) {
 			var callback = function(error, successData) {
@@ -97,7 +110,8 @@ module.exports = db = {
 				}
 
 				var project = new Project({
-					owner: data.owner,
+					owner_username: data.owner_username,
+					owner_id: data.owner_id,
 					gist_id : data.gistID,
 					name : data.name,
 					files : projFiles,
