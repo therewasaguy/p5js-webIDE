@@ -4,11 +4,9 @@ exports.callback = function(req, res){
   // or if not you many need to create user.
 
   // res.send('Login success');
-  // console.log(req.headers);
   res.redirect('/');
 };
 
 exports.error = function(req, res){
-  // console.log(req);
   res.send('unable to login');
 };

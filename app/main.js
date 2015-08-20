@@ -9,8 +9,6 @@ var pFile = require('./models/pfile');
 var Project = require('./models/project');
 var User = require('./models/user');
 
-var timeago = require('timeago');
-
 require('./keybindings');
 
 var modes = {
@@ -262,24 +260,12 @@ var appConfig = {
 
 		// returns an array of recent user projects by ID
 		findRecentUserProjects: function(user) {
-			var recentUserProjects = [];
-
-			// fetch projects from database / localStorage
-			var projects = JSON.parse( localStorage.getItem('p5projects') );
-			if (!projects) projects = {};
-
-
-			user.projects.forEach(function(projID) {
-				var dateModified = projects[projID].dateModified;
-				console.log(dateModified);
-				projects[projID].timeago = timeago(dateModified);
-				recentUserProjects.push( projects[projID] );
-			});
-
-			console.log(recentUserProjects);
-			return recentUserProjects;
+			this.modeFunction('findRecentUserProjects', user);
 		},
 
+		sortRecentProjects: function(projects) {
+			this.modeFunction('sortRecentProjects', projects);
+		},
 
 		// HANDLE FILES
 
@@ -297,12 +283,9 @@ var appConfig = {
 
 			var filename = title;
 
-			// var f = Files.setup(filename);
-			// Files.addToTree(f, this.files, this.projectPath);
 			var f = new pFile(filename);
 			this.currentProject.addFile(f);
 			this.openFile(f.name);
-			console.log('new file 4');
 
 		},
 
@@ -310,10 +293,6 @@ var appConfig = {
 		 *  open file by filename
 		 */
 		openFile: function(fileName, callback) {
-			// var self = this;
-			// var re = /(?:\.([^.]+))?$/;
-			// var ext = re.exec(fileName)[1];
-			console.log(this.currentProject);
 			var file = this.currentProject.findFile(fileName);
 
 			if (!file) {
@@ -406,7 +385,10 @@ var appConfig = {
 		loadProjectByOurID: function(projID) {
 			var self = this;
 			var ourID = projID;
+			console.log('project id: ' + projID);
 
+			// change url
+			return;
 			// find project in the database (localStorage if offline...)
 			var projects = JSON.parse( localStorage.getItem('p5projects') );
 			var projObj = projects[ourID];
@@ -475,7 +457,6 @@ var appConfig = {
 		},
 
 		updateCurrentProject: function() {
-			console.log('update current proj');
 			this.modeFunction('updateCurrentProject');
 		}
 

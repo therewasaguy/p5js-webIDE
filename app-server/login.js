@@ -16,14 +16,8 @@ module.exports = function(app, passport, GithubStrategy, gh_clientID, gh_secret)
   }));
 
   passport.serializeUser(function(user, done) {
-    // for the time being tou can serialize the user 
-    // object {accessToken: accessToken, profile: profile }
+    // for the time being you can serialize the user 
     // In the real app you might be storing on the id like user.profile.id 
-
-    // var obj = {
-    //   accessToken: user.accessToken,
-    //   username: user.username
-    // }
 
     done(null, user);
   });

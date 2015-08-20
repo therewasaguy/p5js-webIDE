@@ -62,8 +62,7 @@ module.exports = db = {
 			if (proj) {
 				console.log('found existing project: ' + proj.name);
 
-				// to do: update
-
+				// update contents:
 				var projFiles = [];
 				var fileNames = Object.keys(data.fileObjects);
 				for (var i = 0; i < fileNames.length; i++) {
@@ -115,7 +114,7 @@ module.exports = db = {
 					if (data.owner) {
 						self.addProjectToUser(data.owner, project._id);
 					}
-					return callback(null, proj);
+					return callback(null, project);
 				});
 
 			}
@@ -169,11 +168,6 @@ module.exports = db = {
 
 			console.log('added project to user!');
 		});
-
-		// User.update({'username': ownerName}, {'$set': {
-		// 	'items.$.name': 'updated item2',
-		// 	'items.$.value': 'two updated'
-		// }}, function(err) { ...
 	},
 
 };
