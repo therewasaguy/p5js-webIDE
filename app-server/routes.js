@@ -4,25 +4,16 @@ var request = require('request');
 var auth = require('./auth');
 var settings = require('./settings');
 
+var url = require('url');
 
 module.exports = function(app, passport) {
 
 	app.get('/', function(req, res) {
-		// res.render('default');
 		res.redirect('/editor');
 	});
 
 	app.get('/editor', function(req, res) {
-		var username = 'anonymous';
-
-		try {
-			var username = req.session.passport.user.profile.username;
-		} catch(e) {
-			console.log('not logged in');
-		}
-
-		console.log('username: ' + username);
-		res.render('default', {'username': username});
+		res.render('default');
 	});
 
 
@@ -177,6 +168,28 @@ module.exports = function(app, passport) {
 
 	});
 
+
+	// route user/project
+	app.get('/*/*', function(req, res, next) {
+		if (url.parse(req.url).path.indexOf('.') === -1) {
+			res.render('default');
+		};
+
+		// if (url.parse(req.url).path.indexOf('.js') > -1) {
+		// 	console.log('hey');
+		// 	next();
+		// }
+		// parse username / projID --> this should actually happen clientside so it does nothing now.
+		// var pathname = url.parse(req.url).path;
+		// var args = pathname.split('/');
+		// console.log(args);
+		// var username = args[1];
+		// var projectID = args[2];
+		// console.log('username: ' + username);
+		// console.log('projectID: ' + projectID);
+
+		// res.send(username +','+ projectID);
+	});
 
 	// Simple route middleware to ensure user is authenticated.
 	//   Use this route middleware on any resource that needs to be protected.  If

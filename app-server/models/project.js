@@ -26,7 +26,7 @@ var projectSchema = new Schema({
   }],
 
   openFileName: String,
-  openTabTames: String
+  openTabNames: String
 });
 
 // on every save, add the date

@@ -42,7 +42,7 @@ $transitiontimeshort: 0.1s;
 
 #play {
  background: none;
- background-image: url('../images/play-gray.svg');
+ background-image: url('/images/play-gray.svg');
  border: 0;
  width: 33px;
  height: 34px;
@@ -54,21 +54,21 @@ $transitiontimeshort: 0.1s;
  float: left;
  margin-top: 8px;
  &:hover {
-  background-image: url('../images/play-pink.svg');
+  background-image: url('/images/play-pink.svg');
 }
 
 &.running {
-  background-image: url('../images/stop-gray.svg');
+  background-image: url('/images/stop-gray.svg');
 
   &:hover {
-    background-image: url('../images/stop-orange.svg');
+    background-image: url('/images/stop-orange.svg');
   }
 }
 }
 
 #filemenu-burger {
   background: none;
-  background-image: url('../images/filemenu-gray.svg');
+  background-image: url('/images/filemenu-gray.svg');
   background-repeat: no-repeat;
   background-size: 100% 100%;
   border: 0;
@@ -82,7 +82,7 @@ $transitiontimeshort: 0.1s;
   float: left;
   //margin-top: 0px;
   &:hover {
-   background-image: url('../images/filemenu-white.svg');
+   background-image: url('/images/filemenu-white.svg');
   }
 }
 
@@ -145,7 +145,7 @@ $transitiontimeshort: 0.1s;
   right: 0px;
   margin-top:-20px;
   display:block;
-  background:url('../images/temp/profile.png') no-repeat top left;
+  background:url('/images/temp/profile.png') no-repeat top left;
   background-size:100%;
   width:50px;
   height:50px;

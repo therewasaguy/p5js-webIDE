@@ -66,21 +66,54 @@ var appConfig = {
 
 	created: function() {
 		var self = this;
-		var sketchID = window.location.pathname.split('/').pop();
+
+		var pathname = window.location.pathname.split('/');
+		if (pathname.length === 3) {
+			var username = pathname[1];
+			var projectID = pathname[2];
+
+			// get sketch from server
+			$.ajax({
+				url: '/loadproject',
+				data: {username: username, projectID: projectID},
+				type: 'GET',
+				success: function(data) {
+					var fileObjects = [];
+					if (typeof(data) === 'string') {
+						window.open('/', '_self');
+					}
+					else {
+						// // create files
+						for (var i = 0; i < data.files.length; i++) {
+							var dbFile = data.files[i];
+							var newFile = new pFile(dbFile.name, dbFile.contents);
+							fileObjects.push(newFile);
+						}
+
+						data.fileObjects = fileObjects;
+					}
+
+					console.log(data);
+					// self.openProject(data);
+				}
+			});
+		}
 
 		// for testing
 		window._app = this;
 
-		if (sketchID.length > 12) {
-			// get sketch from server
-			$.ajax({
-			  url: '/loadprojectbygistid',
-			  data: {'gistID': sketchID},
-			  success: gotsketchdata,
-				timeout: 8000,
-			  error: sketchdataerror
-			});
-		}
+		// parse username and sketch ID
+
+		// if (sketchID.length > 12) {
+		// 	// get sketch from server
+		// 	$.ajax({
+		// 	  url: '/loadprojectbygistid',
+		// 	  data: {'gistID': sketchID},
+		// 	  success: gotsketchdata,
+		// 		timeout: 8000,
+		// 	  error: sketchdataerror
+		// 	});
+		// }
 
 		// on success, load sketch
 		function gotsketchdata(data) {

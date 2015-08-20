@@ -49,7 +49,7 @@ var Project = function(options) {
 		this.openFileName = options.openFileName || options.openFile;
 		this.openTabNames = options.openTabNames || options.openTabs;
 		this.dateModified = options.dateModified;
-		this.id = options.id;
+		this._id = options._id;
 		this.gistID = options.gistID;
 	}
 

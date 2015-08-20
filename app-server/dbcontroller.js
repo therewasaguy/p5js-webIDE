@@ -47,6 +47,39 @@ module.exports = db = {
 		});
 
 
+		app.get('/loadproject', function(req, res, next) {
+			var username = req.query.username
+			var projectID = req.query.projectID;
+
+			// res.send('hi');
+			Project.findOne({'_id': projectID}, function(err, proj) {
+				if (err) {
+					console.log('no project found');
+					res.send('Error: No project found');
+					return;
+				}
+
+				// TO DO: ensure that owner === user...if not?
+				if (proj && proj.owner_username !== username) {
+					console.log('project does not belong to this user');
+					res.send('Error: project does not belong to this user');
+					return;
+
+				}
+				else if (proj) {
+					console.log('found the project, it belongs to this user');
+					res.send(proj);
+					return;
+				}
+				else {
+					console.log('no project found :(');
+					res.send('Error: No project found');
+					return;
+
+				}
+			});
+
+		});
 
 		// save project to database
 		app.post('/saveproject', function(req, res) {

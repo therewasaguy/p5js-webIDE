@@ -72,68 +72,6 @@
 .handle-down.console-hidden {
   display: none; }
 
-#filemenu-container {
-  margin: 0px;
-  padding-right: 15px;
-  padding-top: 5px;
-  font: 14px karla,sans-serif;
-  display: inline-block;
-  width: 200px; }
-
-ul.a {
-  list-style-type: circle; }
-
-p.filemenu {
-  font: 16px;
-  color: #5D75C5;
-  line-height: 100%;
-  width: 180px;
-  padding-left: 20px; }
-
-#filemenu {
-  background-color: #202020;
-  width: 220px;
-  height: 100vh;
-  box-shadow: 0px 0px 6px #999;
-  color: #B3B3B3;
-  cursor: default;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden; }
-
-#newProject {
-  background-color: #2D2D2D;
-  padding: 1px; }
-
-#examples {
-  line-height: 150%; }
-
-#myProjects {
-  line-height: 150%; }
-
-.buttonIcon {
-  position: relative;
-  clear: none;
-  float: right;
-  width: 15px;
-  margin-right: 20px; }
-
-.projectList {
-  margin-left: 10px;
-  line-height: 150%; }
-
-.accordion {
-  margin-bottom: 20px; }
-
-.timeago {
-  font-size: 10px;
-  color: #646464; }
-
-li.filemenu {
-  list-style-type: none;
-  padding-left: 2em;
-  line-height: 150%; }
-
 #body-row-container {
   margin-top: 50px;
   padding: 5px; }
@@ -265,6 +203,68 @@ variable */
 #settings-button {
   float: right; }
 
+#filemenu-container {
+  margin: 0px;
+  padding-right: 15px;
+  padding-top: 5px;
+  font: 14px karla,sans-serif;
+  display: inline-block;
+  width: 200px; }
+
+ul.a {
+  list-style-type: circle; }
+
+p.filemenu {
+  font: 16px;
+  color: #5D75C5;
+  line-height: 100%;
+  width: 180px;
+  padding-left: 20px; }
+
+#filemenu {
+  background-color: #202020;
+  width: 220px;
+  height: 100vh;
+  box-shadow: 0px 0px 6px #999;
+  color: #B3B3B3;
+  cursor: default;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden; }
+
+#newProject {
+  background-color: #2D2D2D;
+  padding: 1px; }
+
+#examples {
+  line-height: 150%; }
+
+#myProjects {
+  line-height: 150%; }
+
+.buttonIcon {
+  position: relative;
+  clear: none;
+  float: right;
+  width: 15px;
+  margin-right: 20px; }
+
+.projectList {
+  margin-left: 10px;
+  line-height: 150%; }
+
+.accordion {
+  margin-bottom: 20px; }
+
+.timeago {
+  font-size: 10px;
+  color: #646464; }
+
+li.filemenu {
+  list-style-type: none;
+  padding-left: 2em;
+  line-height: 150%; }
+
 #menu-container {
   display: flex;
   flex: 1;
@@ -297,7 +297,7 @@ variable */
 
 #play {
   background: none;
-  background-image: url("../images/play-gray.svg");
+  background-image: url("/images/play-gray.svg");
   border: 0;
   width: 33px;
   height: 34px;
@@ -309,15 +309,15 @@ variable */
   float: left;
   margin-top: 8px; }
   #play:hover {
-    background-image: url("../images/play-pink.svg"); }
+    background-image: url("/images/play-pink.svg"); }
   #play.running {
-    background-image: url("../images/stop-gray.svg"); }
+    background-image: url("/images/stop-gray.svg"); }
     #play.running:hover {
-      background-image: url("../images/stop-orange.svg"); }
+      background-image: url("/images/stop-orange.svg"); }
 
 #filemenu-burger {
   background: none;
-  background-image: url("../images/filemenu-gray.svg");
+  background-image: url("/images/filemenu-gray.svg");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   border: 0;
@@ -330,7 +330,7 @@ variable */
   outline: 0;
   float: left; }
   #filemenu-burger:hover {
-    background-image: url("../images/filemenu-white.svg"); }
+    background-image: url("/images/filemenu-white.svg"); }
 
 #button_header {
   margin-left: 0px;
@@ -374,7 +374,7 @@ variable */
   right: 0px;
   margin-top: -20px;
   display: block;
-  background: url("../images/temp/profile.png") no-repeat top left;
+  background: url("/images/temp/profile.png") no-repeat top left;
   background-size: 100%;
   width: 50px;
   height: 50px; }
