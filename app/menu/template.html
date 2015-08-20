@@ -4,15 +4,19 @@
     <ul class="pure-menu-list">
 
       <li class="pure-menu-item" v-on="click: $root.toggleFilemenu()">
-        <button id="filemenu-burger"></button>
+        <button class="menuItem">
+          <img class="menu" src="images/filemenu-white.svg">
+        </button>
+      </li>
+
+      <li class="pure-menu-item">
+        <div class="menuItem">
+        <img class="menu" src="images/temp/logo.png">
+      </div>
       </li>
 
       <li class="pure-menu-item">
         <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>
-      </li>
-
-      <li class="pure-menu-item">
-        <button id="play" v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>
       </li>
 
     </ul>
@@ -23,11 +27,20 @@
       <div id="custom-dropdown-menus">
         <ul class="pure-menu-list">
 
+          <li class="pure-menu-item">
+            <button id="play"  v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>
+          </li>
 
-          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
-            <span v-on="click: $root.commitGist()">Save to Cloud</span>
+          <!-- <li class="pure-menu-item">
+            <button id="save" v-on="click: $root.commitGist()"><img class="menu" src="images/save-white.svg"></button>
+          </li> -->
+
+          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-mousedown">
+            <button id="save" v-on="click: $root.commitGist()"><img class="menu" src="images/save-white.svg"></button>
+            <!-- <button id="dropDown"><img class="menu" src="images/arrow-down.svg"></button> -->
             <ul class="pure-menu-children" id="recentProjects">
               <li class="pure-menu-item">
+                <span v-on="click: $root.commitGist()">Save to Cloud</span>
                 <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>
               </li>
             </ul>
@@ -65,6 +78,7 @@
 
 
   </div> <!-- end pure-menu-->
+
 
 
   <!-- <div id="toolbar"> -->
