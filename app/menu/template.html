@@ -5,13 +5,13 @@
 
       <li class="pure-menu-item" v-on="click: $root.toggleFilemenu()">
         <button class="menuItem">
-          <img class="menu" src="images/filemenu-white.svg">
+          <img class="menu" src="/images/filemenu-white.svg">
         </button>
       </li>
 
       <li class="pure-menu-item">
         <div class="menuItem">
-        <img class="menu" src="images/temp/logo.png">
+        <img class="menu" src="/images/temp/logo.png">
       </div>
       </li>
 
@@ -35,12 +35,15 @@
             <button id="save" v-on="click: $root.commitGist()"><img class="menu" src="images/save-white.svg"></button>
           </li> -->
 
-          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-mousedown">
-            <button id="save" v-on="click: $root.commitGist()"><img class="menu" src="images/save-white.svg"></button>
+          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover pure-menu-allow-mousedown">
+            <!-- <span>save</span> -->
+            <button id="save" v-on="click: $root.commitGist()"><img class="menu" src="/images/save-white.svg"></button>
             <!-- <button id="dropDown"><img class="menu" src="images/arrow-down.svg"></button> -->
-            <ul class="pure-menu-children" id="recentProjects">
+            <ul class="pure-menu-children">
               <li class="pure-menu-item">
                 <span v-on="click: $root.commitGist()">Save to Cloud</span>
+              </li>
+              <li class="pure-menu-item">
                 <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>
               </li>
             </ul>
