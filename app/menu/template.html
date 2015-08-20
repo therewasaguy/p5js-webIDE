@@ -21,9 +21,6 @@
 
     </ul>
 
-<!--       <li class="pure-menu-item">
-        <span v-on="click: $root.forkProject()">Save: Fork</span>
-      </li> -->
       <div id="custom-dropdown-menus">
         <ul class="pure-menu-list">
 
@@ -31,14 +28,8 @@
             <button id="play"  v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>
           </li>
 
-          <!-- <li class="pure-menu-item">
-            <button id="save" v-on="click: $root.commitGist()"><img class="menu" src="images/save-white.svg"></button>
-          </li> -->
-
           <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover pure-menu-allow-mousedown">
-            <!-- <span>save</span> -->
             <button id="save" v-on="click: $root.commitGist()"><img class="menu" src="/images/save-white.svg"></button>
-            <!-- <button id="dropDown"><img class="menu" src="images/arrow-down.svg"></button> -->
             <ul class="pure-menu-children">
               <li class="pure-menu-item">
                 <span v-on="click: $root.commitGist()">Save to Cloud</span>
@@ -66,13 +57,6 @@
               <span>Log Out</span>
             </li>
 
-
-
-<!--             <ul class="pure-menu-children" id="recentProjects">
-              <li class="pure-menu-item">
-                <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>
-              </li>
-            </ul> -->
           </ul>
         </li>
 
