@@ -1550,7 +1550,7 @@ module.exports = {
 		}
 
 		$.ajax({
-			url: './savegist',
+			url: '/savegist',
 			type: 'POST',
 			data: data,
 			dataType: 'json'
@@ -1593,7 +1593,7 @@ module.exports = {
 		console.log(data);
 
 		$.ajax({
-			url: './saveproject',
+			url: '/saveproject',
 			type: 'POST',
 			data: data,
 			dataType: 'json'
