@@ -191,7 +191,7 @@ variable */
 
 #actions button, #actions button img {
   width: 20px;
-  opacity: 0.5;
+  opacity: 0.75;
   transition: opacity 0.25s ease-in-out 0s; }
 
 #actions button:hover {
@@ -204,9 +204,9 @@ variable */
   float: right; }
 
 #filemenu-container {
-  margin: 0px;
+  margin: -5px;
+  margin-top: -7px;
   padding-right: 15px;
-  padding-top: 5px;
   font: 14px karla,sans-serif;
   display: inline-block;
   width: 200px; }
@@ -301,13 +301,13 @@ li.filemenu {
   border: 0;
   width: 33px;
   height: 34px;
-  padding: 7px;
   font-size: 25px;
   display: inline;
   cursor: pointer;
   outline: 0;
-  float: left;
-  margin-top: 8px; }
+  float: right;
+  margin-top: -22px;
+  margin-right: 10px; }
   #play:hover {
     background-image: url("/images/play-pink.svg"); }
   #play.running {
@@ -315,37 +315,52 @@ li.filemenu {
     #play.running:hover {
       background-image: url("/images/stop-orange.svg"); }
 
-#filemenu-burger {
+#save {
   background: none;
-  background-image: url("/images/filemenu-gray.svg");
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
   border: 0;
-  width: 28px;
-  height: 34px;
-  padding: 0px;
+  height: 40px;
   font-size: 25px;
   display: inline;
   cursor: pointer;
   outline: 0;
+  float: right;
+  margin-top: -18px;
+  margin-right: 20px; }
+
+.menuItem {
+  background: none;
+  border: 0;
+  height: 20px;
+  padding: 0px;
+  padding-right: 20px;
+  display: inline;
+  cursor: pointer;
+  outline: 0;
   float: left; }
-  #filemenu-burger:hover {
-    background-image: url("/images/filemenu-white.svg"); }
+
+img.menu {
+  max-height: 100%; }
 
 #button_header {
-  margin-left: 0px;
   height: 50px;
-  margin-bottom: 8px;
+  margin: 0px;
   padding-left: 10px;
   width: 100%; }
+  #button_header button {
+    border: 0;
+    cursor: pointer;
+    z-index: 3; }
+  #button_header button, #button_header button img {
+    opacity: 0.75;
+    transition: opacity 0.25s ease-in-out 0s; }
+  #button_header button:hover {
+    opacity: 1; }
 
 #project-name {
-  padding-left: 20px;
   padding-right: 20px;
-  margin-right: 20px;
+  margin-right: 10px;
+  margin-left: -20px;
   font-size: 24px;
-  color: #ed225d;
-  font-weight: bold;
   margin-top: 10px;
   margin-bottom: 10px;
   cursor: default;
@@ -366,8 +381,7 @@ li.filemenu {
 
 #custom-dropdown-menus {
   float: right;
-  margin-top: 15px;
-  margin-right: 5px; }
+  margin-top: 13px; }
 
 #profile-span {
   margin-top: 0px;
