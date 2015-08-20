@@ -20,10 +20,13 @@ app.use(session({secret: 'mysecret'}));
 app.use(passport.initialize());
 app.use(passport.session());
 
+
 // find hostname
-app.use(function(req, res, next) {
-	settings.hostname = req.headers.host;
-});
+// app.use(function(req, res, next) {
+// 	settings.hostname = req.headers.host;
+// 	console.log(settings.hostname);
+// 	next();
+// });
 
 app.use( bodyParser.json() );				// to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({			// to support URL-encoded bodies

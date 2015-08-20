@@ -4,13 +4,11 @@ var settings = require('./settings.js');
 
 module.exports = function(app, passport, GithubStrategy, gh_clientID, gh_secret) {
 
-  // config Passport
-
   // via http://blog.revathskumar.com/2014/06/express-github-authentication-with-passport.html
   passport.use('github', new GithubStrategy({
     clientID: gh_clientID,
     clientSecret: gh_secret,
-    callbackURL: settings.hostname + '/auth-gh/callback'
+    callbackURL: settings.address + '/auth-gh/callback'
   }, function(accessToken, refreshToken, profile, done){
 
       db.createOrFindUser(accessToken, refreshToken, profile, done)
