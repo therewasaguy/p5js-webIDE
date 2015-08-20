@@ -121,7 +121,7 @@ module.exports = db = {
 
 				// overwrite the files
 				Project.update({_id: proj._id}, {files: projFiles}, function(err) {
-					if (err) throw err;
+					if (err) console.log( err );
 
 					console.log('updated files for project ' + proj._id);
 				});
@@ -153,7 +153,7 @@ module.exports = db = {
 				});
 
 				project.save(function(err) {
-					if (err) throw err;
+					if (err) console.log( err );
 
 					console.log('project save successfully!');
 
@@ -198,7 +198,7 @@ module.exports = db = {
 				user.tokens['github'] = accessToken;
 
 				user.save(function(err) {
-					if (err) throw err;
+					if (err) console.log( err );
 
 					console.log('User saved successfully!');
 					return done(null, user);
@@ -211,7 +211,7 @@ module.exports = db = {
 
 	addProjectToUser: function(ownerName, projectID) {
 		User.update({username: ownerName}, {$addToSet: {projects: projectID}}, function(err) {
-			if (err) throw err;
+			if (err) console.log( err );
 
 			console.log('added project to user!');
 		});

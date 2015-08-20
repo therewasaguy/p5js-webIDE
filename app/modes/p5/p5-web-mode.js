@@ -105,6 +105,10 @@ module.exports = {
 			console.log(e);
 			self.currentProject.state = 'syncError';
 			console.warn('gist save error');
+
+			// save anyway...
+			self.saveProjectToDatabase(self.currentProject);
+
 		});
 
 	},

@@ -744,6 +744,7 @@ var appConfig = {
 	},
 
 	data: {
+		shouldLoadExistingProject: false, // if url points to an existing project
 		settings: {},
 		showSettings: false,
 		showFilemenu: false,
@@ -778,6 +779,10 @@ var appConfig = {
 
 		var pathname = window.location.pathname.split('/');
 		if (pathname.length === 3) {
+
+			// do not init a blank one, or one from local storage. We are loading one from db instead
+			this.shouldLoadExistingProject = true;
+
 			var username = pathname[1];
 			var projectID = pathname[2];
 
@@ -799,11 +804,17 @@ var appConfig = {
 							fileObjects.push(newFile);
 						}
 
+						data.files = undefined;  // clear
 						data.fileObjects = fileObjects;
 					}
 
 					console.log(data);
-					// self.openProject(data);
+
+					var proj = new Project(data);
+					proj.fileObjects = fileObjects;
+					console.log(proj);
+
+					self.openProject(proj);
 				}
 			});
 		}
@@ -874,7 +885,10 @@ var appConfig = {
 
 		this.setupUser();
 
-		this.initProject();
+		if (!this.shouldLoadExistingProject) {
+			this.initProject();
+		}
+
 		this.updateCurrentProject();
 
 		this.$on('updateCurrentProject', this.updateCurrentProject);
@@ -936,7 +950,7 @@ var appConfig = {
 
 
 		initProject: function() {
-
+			alert('init!');
 			// if there is a recent project in local storage, load it.
 			var latestProj = JSON.parse( localStorage.getItem('latestProject') );
 			if (latestProj) {
@@ -1107,12 +1121,13 @@ var appConfig = {
 				self.closeFile(fileObj.name);
 			});
 
+			proj.fileObjects = [];
+			this.stop();
 		},
 
 		openProject: function(projObj, gistData) {
 			var self = this;
-
-			self.closeProject();
+			// self.closeProject();
 
 			self.currentProject = new Project(projObj);
 
@@ -1126,7 +1141,13 @@ var appConfig = {
 			for (var i = 0; i < tabNames.length; i++) {
 				var tabName = tabNames[i];
 				var fileObj = self.currentProject.findFile(tabName);
-				self.$broadcast('add-tab', fileObj, self.tabs);
+
+				if (typeof(fileObj) !== 'undefined') {
+					console.log('found file ' + tabName);
+					self.$broadcast('add-tab', fileObj, self.tabs);
+				} else {
+					console.log('error loading file ' + tabName);
+				}
 			}
 
 		},
@@ -1264,7 +1285,7 @@ var pFile = function(name, contents) {
 
 	var defaultFiles = ['index.html', 'p5.js', 'sketch.js', 'style.css'];
 
-	if (defaultFiles.indexOf(name) > -1) {
+	if (defaultFiles.indexOf(name) > -1 && contents.length === 0) {
 		this.setDefaultContents(name);
 	}
 
@@ -1330,10 +1351,14 @@ var pFile = require('./pFile');
 
 // either load default file, or load new file;
 var Project = function(options) {
-
+	console.log('new project!!!!');
+	console.log(options);
+	if (options.fileObjects) {
+		console.log(options.fileObjects);
+	}
 	// if no options are provided, set default files
 	if (!options) {
-
+		console.log('there were no options!');
 		// is it necessary for the file to know if it is the current file?
 		var sketchFile = new pFile('sketch.js');
 		sketchFile.currentFile = true;
@@ -1382,6 +1407,8 @@ var Project = function(options) {
 	}
 
 	this.findFile = function(name) {
+		console.log('looking for file ' + name);
+		console.log(this.fileObjects);
 		for (var i = 0; i < this.fileObjects.length; i++) {
 			if (this.fileObjects[i].name === name) {
 				return this.fileObjects[i];
@@ -1541,6 +1568,10 @@ module.exports = {
 			console.log(e);
 			self.currentProject.state = 'syncError';
 			console.warn('gist save error');
+
+			// save anyway...
+			self.saveProjectToDatabase(self.currentProject);
+
 		});
 
 	},

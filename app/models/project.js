@@ -2,10 +2,14 @@ var pFile = require('./pFile');
 
 // either load default file, or load new file;
 var Project = function(options) {
-
+	console.log('new project!!!!');
+	console.log(options);
+	if (options.fileObjects) {
+		console.log(options.fileObjects);
+	}
 	// if no options are provided, set default files
 	if (!options) {
-
+		console.log('there were no options!');
 		// is it necessary for the file to know if it is the current file?
 		var sketchFile = new pFile('sketch.js');
 		sketchFile.currentFile = true;
@@ -54,6 +58,8 @@ var Project = function(options) {
 	}
 
 	this.findFile = function(name) {
+		console.log('looking for file ' + name);
+		console.log(this.fileObjects);
 		for (var i = 0; i < this.fileObjects.length; i++) {
 			if (this.fileObjects[i].name === name) {
 				return this.fileObjects[i];

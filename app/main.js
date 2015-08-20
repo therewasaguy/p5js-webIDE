@@ -35,6 +35,7 @@ var appConfig = {
 	},
 
 	data: {
+		shouldLoadExistingProject: false, // if url points to an existing project
 		settings: {},
 		showSettings: false,
 		showFilemenu: false,
@@ -69,6 +70,10 @@ var appConfig = {
 
 		var pathname = window.location.pathname.split('/');
 		if (pathname.length === 3) {
+
+			// do not init a blank one, or one from local storage. We are loading one from db instead
+			this.shouldLoadExistingProject = true;
+
 			var username = pathname[1];
 			var projectID = pathname[2];
 
@@ -90,11 +95,17 @@ var appConfig = {
 							fileObjects.push(newFile);
 						}
 
+						data.files = undefined;  // clear
 						data.fileObjects = fileObjects;
 					}
 
 					console.log(data);
-					// self.openProject(data);
+
+					var proj = new Project(data);
+					proj.fileObjects = fileObjects;
+					console.log(proj);
+
+					self.openProject(proj);
 				}
 			});
 		}
@@ -165,7 +176,10 @@ var appConfig = {
 
 		this.setupUser();
 
-		this.initProject();
+		if (!this.shouldLoadExistingProject) {
+			this.initProject();
+		}
+
 		this.updateCurrentProject();
 
 		this.$on('updateCurrentProject', this.updateCurrentProject);
@@ -227,7 +241,7 @@ var appConfig = {
 
 
 		initProject: function() {
-
+			alert('init!');
 			// if there is a recent project in local storage, load it.
 			var latestProj = JSON.parse( localStorage.getItem('latestProject') );
 			if (latestProj) {
@@ -398,12 +412,13 @@ var appConfig = {
 				self.closeFile(fileObj.name);
 			});
 
+			proj.fileObjects = [];
+			this.stop();
 		},
 
 		openProject: function(projObj, gistData) {
 			var self = this;
-
-			self.closeProject();
+			// self.closeProject();
 
 			self.currentProject = new Project(projObj);
 
@@ -417,7 +432,13 @@ var appConfig = {
 			for (var i = 0; i < tabNames.length; i++) {
 				var tabName = tabNames[i];
 				var fileObj = self.currentProject.findFile(tabName);
-				self.$broadcast('add-tab', fileObj, self.tabs);
+
+				if (typeof(fileObj) !== 'undefined') {
+					console.log('found file ' + tabName);
+					self.$broadcast('add-tab', fileObj, self.tabs);
+				} else {
+					console.log('error loading file ' + tabName);
+				}
 			}
 
 		},
