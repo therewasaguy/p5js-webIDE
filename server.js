@@ -23,6 +23,7 @@ app.use(passport.session());
 // find hostname
 app.use(function(req, res, next) {
 	settings.hostname = req.headers.host;
+	next();
 });
 
 app.use( bodyParser.json() );				// to support JSON-encoded bodies
