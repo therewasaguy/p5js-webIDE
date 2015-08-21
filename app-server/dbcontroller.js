@@ -83,6 +83,9 @@ module.exports = db = {
 
 		// save project to database
 		app.post('/saveproject', function(req, res) {
+
+			console.log(req.body.owner_username);
+
 			var callback = function(error, successData) {
 				if (error) {
 					res.send(error)
@@ -105,29 +108,65 @@ module.exports = db = {
 				callback(err, null);
 				return;
 			}
-			if (proj) {
-				console.log('found existing project: ' + proj.name);
 
-				// update contents:
-				var projFiles = [];
-				var fileNames = Object.keys(data.fileObjects);
-				for (var i = 0; i < fileNames.length; i++) {
-					var f = data.fileObjects[fileNames[i]];
-					projFiles.push({
-						name: f.name,
-						contents: f.contents
+			// if the project already exists AND the user is the owner...
+			if (proj) {
+				console.log(proj.owner_id);
+				console.log(data.owner_id);
+
+				// check whether it is the owner
+				if (String(proj.owner_id) == String(data.owner_id)) {
+
+					console.log('found existing project: ' + proj.name);
+
+					// update contents:
+					var projFiles = [];
+					var fileNames = Object.keys(data.fileObjects);
+					for (var i = 0; i < fileNames.length; i++) {
+						var f = data.fileObjects[fileNames[i]];
+						projFiles.push({
+							name: f.name,
+							contents: f.contents
+						});
+					}
+
+					// overwrite the files
+					Project.update({_id: proj._id}, {files: projFiles}, function(err) {
+						if (err) console.log( err );
+
+						console.log('updated files for project ' + proj._id);
 					});
+
+					return callback(null, proj);
+
 				}
 
-				// overwrite the files
-				Project.update({_id: proj._id}, {files: projFiles}, function(err) {
-					if (err) console.log( err );
+				// otherwise, FORK
+				else {
+					var obj = {
+						owner_username : data.owner_username || undefined,
+						owner_id : data.owner_id || undefined,
+						gist_id : data.gistID,
+						name : data.name,
+						files : projFiles,
+						openFileName : data.openFileName,
+						openTabNames : data.openTabNames,
+						forkedFrom : proj._id
+					}
 
-					console.log('updated files for project ' + proj._id);
-				});
+					var newProj = new Project(obj);
+					// proj._id = undefined;
 
-				return callback(null, proj);
+					newProj.save(function(err) {
+						if (err) console.log(err);
 
+						// if user exists, save
+						if (newProj.owner_id) {
+							self.addProjectToUser(data.owner_id, project._id);
+						}
+						return callback(null, newProj);
+					});
+				}
 			}
 			else {
 				console.log('creating new project: ' + data.name );
@@ -158,8 +197,8 @@ module.exports = db = {
 					console.log('project save successfully!');
 
 					// if user exists, save
-					if (data.owner) {
-						self.addProjectToUser(data.owner, project._id);
+					if (data.owner_id) {
+						self.addProjectToUser(data.owner_id, project._id);
 					}
 					return callback(null, project);
 				});
@@ -209,8 +248,8 @@ module.exports = db = {
 	},
 
 
-	addProjectToUser: function(ownerName, projectID) {
-		User.update({username: ownerName}, {$addToSet: {projects: projectID}}, function(err) {
+	addProjectToUser: function(ownerID, projectID) {
+		User.update({_id: ownerID}, {$addToSet: {projects: projectID}}, function(err) {
 			if (err) console.log( err );
 
 			console.log('added project to user!');
