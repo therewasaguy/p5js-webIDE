@@ -48,8 +48,8 @@ var Project = function(options) {
 		this.openFileName = options.openFileName || options.openFile;
 		this.openTabNames = options.openTabNames || options.openTabs;
 		this.dateModified = options.dateModified;
-		this._id = options._id;
-		this.gistID = options.gistID;
+		this._id = options._id || null;
+		this.gistID = options.gistID || null;
 	}
 
 	this.findFile = function(name) {

@@ -1390,11 +1390,9 @@ var pFile = function(name, contents) {
 
 	var defaultFiles = ['index.html', 'p5.js', 'sketch.js', 'style.css'];
 
-	if (defaultFiles.indexOf(name) > -1 && this.contents.length === 0) {
-		console.log('setting default contents for ' + name);
+	if (defaultFiles.indexOf(name) > -1 && !this.contents) {
 		this.setDefaultContents(name);
 	}
-
 
 };
 
@@ -1500,8 +1498,8 @@ var Project = function(options) {
 		this.openFileName = options.openFileName || options.openFile;
 		this.openTabNames = options.openTabNames || options.openTabs;
 		this.dateModified = options.dateModified;
-		this._id = options._id;
-		this.gistID = options.gistID;
+		this._id = options._id || null;
+		this.gistID = options.gistID || null;
 	}
 
 	this.findFile = function(name) {
@@ -1567,24 +1565,19 @@ var timeago = require('timeago');
 module.exports = {
 
 	/**
-	 *  Create a new project and close out everything else
+	 *  Create a new empty project and close out everything else
 	 *  
-	 *  @param  {Object} titleOrOptions either a title (string) or options (object)
+	 *  @param  {String} title 
 	 */
-	newProject: function(titleOrOptions) {
+	newProject: function(title) {
 		var proj;
 
-		if (typeof(titleOrOptions) === 'string') {
-			var name = titleOrOptions ? titleOrOptions : prompt('Project Name', 'Cool Sketch');
-			proj = new Project();
-			proj.name = name;
-		} else if (titleOrOptions) {
-			console.log('new file with options');
-			proj = new Project(titleOrOptions);
-		}
+		var name = title ? title : prompt('Project Name', 'Cool Sketch');
+		proj = new Project();
+		proj.name = name;
 
 		console.log(proj);
-		return;
+
 		// close existing project
 		this.closeProject();
 
