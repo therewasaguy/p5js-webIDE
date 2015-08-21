@@ -5,6 +5,7 @@ var defaults = {
   theme: 'tomorrow',
   consoleOrientation: 'horizontal',
   showSidebar: false,
+  showEditor: true,
   wordWrap: false,
   runInBrowser: false,
   fullCanvas: false // automatically make canvas full width/height of screen

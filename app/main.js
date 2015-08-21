@@ -61,7 +61,7 @@ var appConfig = {
 		},
 
 		editorClass: function() {
-			return this.editorHidden ? 'editor-hidden' : 'editor-visible';
+			return this.settings.showEditor ? 'editor-visible' : 'editor-hidden';
 		}
 	},
 
@@ -224,6 +224,7 @@ var appConfig = {
 			this.settings = settings.load();
 			this.$watch('settings', function(value) {
 				this.$broadcast('settings-changed', value);
+				// this.editorHidden = !this.settings.showEditor;
 				settings.save(value);
 			})
 		},
@@ -549,10 +550,12 @@ var appConfig = {
 
 		hideEditor: function() {
 			this.editorHidden = true;
+			this.settings.showEditor = false;
 		},
 
 		showEditor: function() {
 			this.editorHidden = false;
+			this.settings.showEditor = true;
 		},
 
 		updateCurrentProject: function() {

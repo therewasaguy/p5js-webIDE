@@ -44,7 +44,8 @@ module.exports = {
 		className: function() {
 			var container = this.container || $('#sidebar-container');
 
-			if (this.$root.editorHidden || !this.$root.settings.showSidebar) {
+			// if (this.$root.editorHidden || !this.$root.settings.showSidebar) {
+			if (!this.$root.settings.showEditor || !this.$root.settings.showSidebar) {
 				this.sidebarWidth = container.width();
 				container.css({
 					width: 10
@@ -63,11 +64,13 @@ module.exports = {
 		},
 
 		showEditorClass: function() {
-			return this.$root.editorHidden ? 'show' : 'hide';
+			// return this.$root.editorHidden ? 'show' : 'hide';
+			return this.$root.settings.showEditor ? 'hide' : 'show';
+
 		},
 
 		sidebarIconClass: function() {
-			return this.$root.editorHidden ? 'hide' : 'show';
+			return this.$root.settings.showEditor ? 'show' : 'hide';
 		}
 
 	},

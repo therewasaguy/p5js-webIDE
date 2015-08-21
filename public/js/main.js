@@ -768,7 +768,7 @@ var appConfig = {
 		},
 
 		editorClass: function() {
-			return this.editorHidden ? 'editor-hidden' : 'editor-visible';
+			return this.settings.showEditor ? 'editor-visible' : 'editor-hidden';
 		}
 	},
 
@@ -931,6 +931,7 @@ var appConfig = {
 			this.settings = settings.load();
 			this.$watch('settings', function(value) {
 				this.$broadcast('settings-changed', value);
+				// this.editorHidden = !this.settings.showEditor;
 				settings.save(value);
 			})
 		},
@@ -1256,10 +1257,12 @@ var appConfig = {
 
 		hideEditor: function() {
 			this.editorHidden = true;
+			this.settings.showEditor = false;
 		},
 
 		showEditor: function() {
 			this.editorHidden = false;
+			this.settings.showEditor = true;
 		},
 
 		updateCurrentProject: function() {
@@ -1945,6 +1948,7 @@ var defaults = {
   theme: 'tomorrow',
   consoleOrientation: 'horizontal',
   showSidebar: false,
+  showEditor: true,
   wordWrap: false,
   runInBrowser: false,
   fullCanvas: false // automatically make canvas full width/height of screen
@@ -2067,7 +2071,8 @@ module.exports = {
 		className: function() {
 			var container = this.container || $('#sidebar-container');
 
-			if (this.$root.editorHidden || !this.$root.settings.showSidebar) {
+			// if (this.$root.editorHidden || !this.$root.settings.showSidebar) {
+			if (!this.$root.settings.showEditor || !this.$root.settings.showSidebar) {
 				this.sidebarWidth = container.width();
 				container.css({
 					width: 10
@@ -2086,11 +2091,13 @@ module.exports = {
 		},
 
 		showEditorClass: function() {
-			return this.$root.editorHidden ? 'show' : 'hide';
+			// return this.$root.editorHidden ? 'show' : 'hide';
+			return this.$root.settings.showEditor ? 'hide' : 'show';
+
 		},
 
 		sidebarIconClass: function() {
-			return this.$root.editorHidden ? 'hide' : 'show';
+			return this.$root.settings.showEditor ? 'show' : 'hide';
 		}
 
 	},
