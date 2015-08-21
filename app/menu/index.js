@@ -3,7 +3,12 @@ module.exports = {
 
 	computed: {
 		className: function() {
-			return this.$root.running ? 'sketchrunning' : 'sketchstopped';
+			if (this.$root.running && this.$root.editorHidden) {
+				return 'hidden';
+			} else {
+				return 'visible';
+			}
+			// return this.$root.running ? 'sketchrunning' : 'sketchstopped';
 		},
 		loggedIn: function() {
 			return this.$root.currentUser && this.$root.currentUser.authenticated;

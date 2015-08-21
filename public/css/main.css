@@ -1,3 +1,77 @@
+#debug {
+  background-color: #F1F1F1;
+  width: 100%;
+  display: block;
+  height: 100px;
+  z-index: 100;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  text-align: bottom;
+  flex: 1;
+  flex-direction: column;
+  display: flex; }
+
+#debug.console-visible {
+  max-height: 250px;
+  opacity: 1.0;
+  transition: opacity 1.75s ease-out;
+  -moz-transition: opacity 1.75s ease-out;
+  -webkit-transition: opacity 1.75s ease-out;
+  transition: opacity 0.25s ease-in;
+  -moz-transition: opacity 0.25s ease-in;
+  -webkit-transition: opacity 0.25s ease-in; }
+
+#debug.console-hidden {
+  max-height: 18px;
+  opacity: 0.05;
+  transition: opacity 1.75s ease-in-out;
+  -moz-transition: opacity 1.75s ease-in-out;
+  -webkit-transition: opacity 1.75s ease-in-out; }
+
+#debug.console-hidden:hover {
+  opacity: 1.0;
+  transition: opacity 0.25s ease-in-out;
+  -moz-transition: opacity 0.25s ease-in-out;
+  -webkit-transition: opacity 0.25s ease-in-out; }
+
+#debugText {
+  position: relative;
+  width: 100%;
+  bottom: 0px;
+  left: 10px;
+  overflow: scroll; }
+
+#debugText.console-hidden {
+  display: none; }
+
+#debugheader {
+  position: relative;
+  top: 0px;
+  width: 100%;
+  background-color: #9C9C9C;
+  /* #B7B7B7; */ }
+
+#cleardebug {
+  float: right;
+  margin-right: 5px;
+  border-width: 2px;
+  border-color: black; }
+
+#cleardebug:hover {
+  background-color: yellow; }
+
+.resizehandle {
+  position: absolute;
+  width: 100%;
+  text-align: center; }
+
+.handle-up.console-visible {
+  display: none; }
+
+.handle-down.console-hidden {
+  display: none; }
+
 #body-row-container {
   margin-top: 50px;
   padding: 5px; }
@@ -129,80 +203,6 @@ variable */
 #settings-button {
   float: right; }
 
-#debug {
-  background-color: #F1F1F1;
-  width: 100%;
-  display: block;
-  height: 100px;
-  z-index: 100;
-  position: absolute;
-  bottom: 0px;
-  left: 0px;
-  text-align: bottom;
-  flex: 1;
-  flex-direction: column;
-  display: flex; }
-
-#debug.console-visible {
-  max-height: 250px;
-  opacity: 1.0;
-  transition: opacity 1.75s ease-out;
-  -moz-transition: opacity 1.75s ease-out;
-  -webkit-transition: opacity 1.75s ease-out;
-  transition: opacity 0.25s ease-in;
-  -moz-transition: opacity 0.25s ease-in;
-  -webkit-transition: opacity 0.25s ease-in; }
-
-#debug.console-hidden {
-  max-height: 18px;
-  opacity: 0.05;
-  transition: opacity 1.75s ease-in-out;
-  -moz-transition: opacity 1.75s ease-in-out;
-  -webkit-transition: opacity 1.75s ease-in-out; }
-
-#debug.console-hidden:hover {
-  opacity: 1.0;
-  transition: opacity 0.25s ease-in-out;
-  -moz-transition: opacity 0.25s ease-in-out;
-  -webkit-transition: opacity 0.25s ease-in-out; }
-
-#debugText {
-  position: relative;
-  width: 100%;
-  bottom: 0px;
-  left: 10px;
-  overflow: scroll; }
-
-#debugText.console-hidden {
-  display: none; }
-
-#debugheader {
-  position: relative;
-  top: 0px;
-  width: 100%;
-  background-color: #9C9C9C;
-  /* #B7B7B7; */ }
-
-#cleardebug {
-  float: right;
-  margin-right: 5px;
-  border-width: 2px;
-  border-color: black; }
-
-#cleardebug:hover {
-  background-color: yellow; }
-
-.resizehandle {
-  position: absolute;
-  width: 100%;
-  text-align: center; }
-
-.handle-up.console-visible {
-  display: none; }
-
-.handle-down.console-hidden {
-  display: none; }
-
 #filemenu-container {
   margin: -5px;
   margin-top: -7px;
@@ -279,17 +279,16 @@ li.filemenu {
   height: 48px;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
-  opacity: 1.0;
   /*position: absolute;*/
   left: 0px;
   top: 0px;
-  transition: opacity 1.75s 0.5s ease-out;
-  -moz-transition: opacity 1.75s 0.5s ease-out;
-  -webkit-transition: opacity 1.75s 0.5s ease-out;
   position: absolute;
   background-color: black; }
 
-#menu-container.sketchstopped {
+#menu-container.hidden {
+  opacity: 0.0; }
+
+#menu-container.visible {
   opacity: 1;
   transition: opacity 0.1s 0s ease-in;
   -moz-transition: opacity 0.1s 0s ease-in;
@@ -604,28 +603,6 @@ img.menu {
   #settingsPane input#tabSize {
     margin-left: 0.3em; }
 
-#sketchframe-container {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  z-index: -1; }
-
-#sketchPane, #editorPane {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  height: 100%; }
-
-#sketchPane {
-  width: 100%;
-  height: 100%;
-  right: 0; }
-
-#sketchFrame {
-  width: 100%;
-  height: 100%; }
-
 #side-container {
   flex-direction: column;
   display: flex; }
@@ -771,6 +748,28 @@ img.menu {
 #show-editor-button.hide {
   opacity: 0;
   display: none; }
+
+#sketchframe-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  z-index: -1; }
+
+#sketchPane, #editorPane {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%; }
+
+#sketchPane {
+  width: 100%;
+  height: 100%;
+  right: 0; }
+
+#sketchFrame {
+  width: 100%;
+  height: 100%; }
 
 #tab-container {
   display: flex;

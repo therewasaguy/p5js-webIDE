@@ -9,21 +9,23 @@ $transitiontimeshort: 0.1s;
   height: 48px;
    -webkit-touch-callout: none;
     -webkit-user-select: none;
-    opacity: 1.0;
     /*position: absolute;*/
     left: 0px;
     top: 0px;
-
-  transition: opacity $transitiontimelong 0.5s ease-out;
-   -moz-transition: opacity $transitiontimelong 0.5s ease-out;
-   -webkit-transition: opacity $transitiontimelong 0.5s ease-out;
 
   position:absolute;
   background-color:black;
 
 }
 
-#menu-container.sketchstopped {
+#menu-container.hidden {
+    opacity: 0.0;
+    // transition: opacity $transitiontimelong 0.1s ease-out;
+    //  -moz-transition: opacity $transitiontimelong 0.1s ease-out;
+    //  -webkit-transition: opacity $transitiontimelong 0.1s ease-out;
+}
+
+#menu-container.visible {
   opacity:1;
   transition: opacity $transitiontimeshort 0s ease-in;
    -moz-transition: opacity $transitiontimeshort 0s ease-in;
