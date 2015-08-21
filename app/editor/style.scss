@@ -40,7 +40,7 @@ div#editor-container.editor-hidden {
   border-radius: 7px;
   flex: 1;
   // background: rgba(70, 70, 70, 0.7);
-  background: rgba(20, 20, 0, 1);
+  background: rgba(20, 20, 0, 0.5);
   height:400px;
   // max-height:400px;
 }
@@ -106,7 +106,8 @@ body.horizontal {
 .ace_type,
 .ace_class,
 .ace_attribute-name {
-    color: #704F21 !important; /* darker brown */
+    // color: #704F21 !important; /* darker brown */
+    color: #FFA82F !important;
 }
 
 /* selector, attr-name, 
@@ -130,7 +131,8 @@ variable */
 }
 
 .ace_operator {
-    color: #333 !important;
+    // color: #333 !important;
+    color: #E19999 !important;
 }
 
 /* regex, important */
