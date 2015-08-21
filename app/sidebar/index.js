@@ -70,6 +70,29 @@ module.exports = {
 
 	ready: function() {
 		this.container = $('#sidebar-container');
+		//this.sidebarUI();
 	}
 
+
+	// methods: {
+
+		// sidebarUI: function() {
+			
+
+		// 	$(function(){ 
+		// 	   $("#sidebarIcon").click(function(){ 
+		// 	   $("#sidebarIcon").attr('src',  
+		// 	                ($("#sidebarIcon").attr('src') == 'images/arrow-right.svg'  
+		// 	                    ? 'images/arrow-left.svg'  
+		// 	                    : 'images/arrow-right.svg' 
+		// 	                     ) 
+		// 	                )  
+		// 	    }); 
+		// 	}); 
+ 
+		// }
+	//}
+
 };
+
+

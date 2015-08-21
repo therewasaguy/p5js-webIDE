@@ -31,9 +31,9 @@ module.exports = {
 			$(function(){ 
 			   $("#exampleButton").click(function(){ 
 			   $("#exampleIcon").attr('src',  
-			                ($("#exampleIcon").attr('src') == 'images/arrow-down.svg'  
-			                    ? 'images/arrow-up.svg'  
-			                    : 'images/arrow-down.svg' 
+			                ($("#exampleIcon").attr('src') == 'images/arrow-up.svg'  
+			                    ? 'images/arrow-down.svg'  
+			                    : 'images/arrow-up.svg' 
 			                     ) 
 			                )  
 			    }); 
@@ -42,9 +42,9 @@ module.exports = {
 			$(function(){ 
 			    $("#projectsButton").click(function(){ 
 			   $("#projectIcon").attr('src',  
-			                ($("#projectIcon").attr('src') == 'images/arrow-up.svg'  
-			                    ? 'images/arrow-down.svg'  
-			                    : 'images/arrow-up.svg' 
+			                ($("#projectIcon").attr('src') == 'images/arrow-down.svg'  
+			                    ? 'images/arrow-up.svg'  
+			                    : 'images/arrow-down.svg' 
 			                     ) 
 			                )
 			    }); 
