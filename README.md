@@ -1,8 +1,10 @@
 # p5.js web ide prototype
 
-A prototype adapting the [p5.js Desktop IDE](https://github.com/processing/p5.js-editor) for the web.
+## Github Repo: https://github.com/therewasaguy/p5js-webIDE
 
-## >> [Web IDE Brainstorm on Hackpad](https://p5jscon.hackpad.com/Web-IDE-Brainstorm-d74TxVTnU4H)
+## View the prototype in action: https://github.com/therewasaguy/p5js-webIDE
+
+This project adapts the [p5.js Desktop IDE](https://github.com/processing/p5.js-editor) (originally by Sam Lavigne, GSOC '14) for the web, with inspiration from [Gene Kogan's p5 Sandbox](https://github.com/genekogan/p5js-sandbox) and many other projects. Thank you to everyone who has contributed so far. Check out the [Web IDE Brainstorm on Hackpad](https://p5jscon.hackpad.com/Web-IDE-Brainstorm-d74TxVTnU4H) and feel free to join in on this open source project.
 
 ## Run it:
 - fork the repo
