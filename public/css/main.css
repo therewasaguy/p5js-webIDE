@@ -605,28 +605,6 @@ img.menu {
   #settingsPane input#tabSize {
     margin-left: 0.3em; }
 
-#sketchframe-container {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  z-index: -1; }
-
-#sketchPane, #editorPane {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  height: 100%; }
-
-#sketchPane {
-  width: 100%;
-  height: 100%;
-  right: 0; }
-
-#sketchFrame {
-  width: 100%;
-  height: 100%; }
-
 #side-container {
   flex-direction: column;
   display: flex; }
@@ -772,6 +750,28 @@ img.menu {
 #show-editor-button.hide {
   opacity: 0;
   display: none; }
+
+#sketchframe-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  z-index: -1; }
+
+#sketchPane, #editorPane {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%; }
+
+#sketchPane {
+  width: 100%;
+  height: 100%;
+  right: 0; }
+
+#sketchFrame {
+  width: 100%;
+  height: 100%; }
 
 #tab-container {
   display: flex;
