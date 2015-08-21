@@ -59,12 +59,6 @@ module.exports = {
 					console.log('no file to open');
 					this.$root.clearEditor();
 				}
-				// try {
-				// } catch(e) {
-				// 	console.log('error');
-					// this.
-					// this.$root.newFile();
-				// }
 			}
 		},
 
@@ -73,7 +67,7 @@ module.exports = {
 			// make sure tab is not already open
 			var tabExists = _.findWhere(tabs, {name: fileObject.name});
 			if (tabExists) {
-				console.log('tab exists');
+				// console.log('tab exists');
 				return;
 			}
 

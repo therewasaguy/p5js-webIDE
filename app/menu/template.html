@@ -4,57 +4,71 @@
     <ul class="pure-menu-list">
 
       <li class="pure-menu-item" v-on="click: $root.toggleFilemenu()">
-        <button id="filemenu-burger"></button>
+        <button class="menuItem">
+          <img class="menu" src="/images/filemenu-white.svg">
+        </button>
+      </li>
+
+      <li class="pure-menu-item">
+        <div class="menuItem">
+        <img class="menu" src="/images/temp/logo.png">
+      </div>
       </li>
 
       <li class="pure-menu-item">
         <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>
       </li>
 
-      <li class="pure-menu-item">
-        <button id="play" v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>
-      </li>
-
     </ul>
 
-<!--       <li class="pure-menu-item">
-        <span v-on="click: $root.forkProject()">Save: Fork</span>
-      </li> -->
-      <div id="custom-dropdown-menus">
-        <ul class="pure-menu-list">
+    <!-- display a message -->
+    <span id="toast-msg">{{toastMsg}}</span>
+
+      <!-- <div > -->
+        <ul class="pure-menu-list" id="custom-dropdown-menus">
 
           <li class="pure-menu-item">
-            <span v-on="click: $root.newProject()">New</span>
+            <button id="play"  v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>
           </li>
 
-          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
-            <!-- <span v-on="click: $root.recentProjects()">Recent Projects</span> -->
-            <span>Recent Projects</span>
-
-            <ul class="pure-menu-children" id="recentProjects">
-              <li v-repeat="$root.recentProjects" class="pure-menu-item">
-                <span data-projectid="{{id}}" class="pure-menu-link" v-on="click: selectRecentProject(this)">
-                  <b data-projectid="{{id}}">{{name}}</b>, <em data-projectid="{{id}}"> Last Modified on {{dateModified}}</em>
-                </span>
+          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover pure-menu-allow-mousedown">
+            <button id="save" v-on="click: $root.commitGist()"><img class="menu" src="/images/save-white.svg"></button>
+            <ul class="pure-menu-children">
+              <li class="pure-menu-item">
+                <span v-on="click: $root.commitGist()">Save to Cloud</span>
+              </li>
+              <li class="pure-menu-item">
+                <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>
               </li>
             </ul>
-
-
-
           </li>
 
-          <li class="pure-menu-item">
-            <span v-on="click: $root.commitGist()">Save: Commit</span>
-          </li>
+        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+          <span id="profile-span" v-on="click: profileClicked()"></span>
+
+          <ul class="pure-menu-children">
+
+            <li class="pure-menu-item" v-if="!loggedIn" v-on="click: $root.authenticate()">
+              <span>Log in</span>
+            </li>
+
+            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.authenticate()">
+              <span class="username"> hello <b>{{currentUser.username}}</b> </span>!
+            </li>
+
+            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.logOut()">
+              <span>Log Out</span>
+            </li>
+
+          </ul>
+        </li>
+
       </ul>
+    <!-- </div> -->
 
-      <div id="profile-div">
-        <img src="images/temp/profile.png" id="profile-image">
-      </div>
-
-    </div>
 
   </div> <!-- end pure-menu-->
+
 
 
   <!-- <div id="toolbar"> -->

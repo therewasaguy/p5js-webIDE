@@ -1,5 +1,8 @@
 var Project = require('../../models/project');
 var $ = require('jquery');
+var JSZip = require('jszip');
+var FileSaver = require('../../libs/FileSaver.js');
+var timeago = require('timeago');
 
 module.exports = {
 
@@ -28,27 +31,29 @@ module.exports = {
 		this.currentProject = proj;
 	},
 
-	getUserProjects: function() {
-		var projects = JSON.parse(localStorage.getItem('p5projects'));
-		var projectsToReturn = [];
+	// getUserProjects: function() {
+	// 	console.log('get user projects');
 
-		if (projects) {
-			var projectKeys = Object.keys(projects);
-			for (var i in projects) {
-				var proj = projects[i];
-				var projID = projects[i].id;
+	// 	var projects = JSON.parse(localStorage.getItem('p5projects'));
+	// 	var projectsToReturn = [];
 
-				// if the user owns this project, list it:
-				if (this.currentUser.projects.indexOf(projID) > -1) {
-					projectsToReturn.push(proj);
-					console.log('project name: ' + proj.name + ', date modified: ' + proj.dateModified + 'gistID: ' + proj.gistID);
-				}
-			}
-		} else {
-			console.log('no recent projects');
-		}
-		return projectsToReturn;
-	},
+	// 	if (projects) {
+	// 		var projectKeys = Object.keys(projects);
+	// 		for (var i in projects) {
+	// 			var proj = projects[i];
+	// 			var projID = projects[i].id;
+
+	// 			// if the user owns this project, list it:
+	// 			if (this.currentUser.projects.indexOf(projID) > -1) {
+	// 				projectsToReturn.push(proj);
+	// 				console.log('project name: ' + proj.name + ', date modified: ' + proj.dateModified + 'gistID: ' + proj.gistID);
+	// 			}
+	// 		}
+	// 	} else {
+	// 		console.log('no recent projects');
+	// 	}
+	// 	return projectsToReturn;
+	// },
 
 
 	// commit as a gist --> TO DO: move this to server side
@@ -74,9 +79,6 @@ module.exports = {
 			theFiles[f.name] = {"content": f.contents};
 		}
 
-		self.$emit('updateCurrentProject');
-		console.log(theFiles);
-
 		var data = {
 			"description": commitMessage,
 			"public": true,
@@ -85,7 +87,7 @@ module.exports = {
 		}
 
 		$.ajax({
-			url: './savegist',
+			url: '/savegist',
 			type: 'POST',
 			data: data,
 			dataType: 'json'
@@ -95,21 +97,69 @@ module.exports = {
 			// save gistID
 			self.currentProject.gistID = res.id;
 			self.currentProject.state = 'syncSuccess';
-			self.updateCurrentProject();
-			console.log('uploaded successfully!');
-			console.log(res);
+
+			self.$.menu.setToastMsg('Gist Saved Successfully');
+
+			self.saveProjectToDatabase(self.currentProject);
 		})
 		.error( function(e) {
 			console.log(e);
 			self.currentProject.state = 'syncError';
+
+			self.$.menu.setToastMsg('Error Saving Gist. Please Try Again');
+
 			console.warn('gist save error');
+
+			// save anyway...
+			self.saveProjectToDatabase(self.currentProject);
+
 		});
 
 	},
 
+	saveProjectToDatabase: function(proj) {
+		var self = this;
+
+		var data = {
+			owner_username: this.currentUser.username,
+			owner_id: this.currentUser._id,
+			gistID: proj.gistID,
+			name: proj.name,
+			_id: proj._id,
+			fileObjects: proj.fileObjects,
+			openFileName: proj.openFileName,
+			openTabNames: proj.openTabNames
+		};
+
+		console.log(data);
+
+		$.ajax({
+			url: '/saveproject',
+			type: 'POST',
+			data: data,
+			dataType: 'json'
+		})
+		.success( function(res) {
+			self.currentProject._id = res._id;
+			self.$.menu.setToastMsg('Project Saved Successfully');
+
+			self.$emit('updateCurrentProject');
+			console.log(res);
+		})
+		.error( function(res) {
+			self.currentProject._id = res._id;
+			self.$emit('updateCurrentProject');
+
+			self.$.menu.setToastMsg('There was an error saving. Please try again');
+
+			console.log(res);
+		})
+	},
+
+	// called when user hits 'save to cloud'
 	updateCurrentProject: function() {
 		var self = this;
-		var projectID = self.currentProject.id;
+		var projectID = self.currentProject._id;
 
 		// update date modified
 		var dateModified = JSON.stringify(new Date());
@@ -121,20 +171,103 @@ module.exports = {
 			f.originalContents = f.contents;
 		}
 
-		// add or update the project listing
-		var projects = JSON.parse( localStorage.getItem('p5projects') );
+		// add or update the localStorage project listing with { key: ID - value: dateModified }
+		var projects = JSON.parse( localStorage.getItem('recentProjects') );
 		if (!projects) projects = {};
-		projects[projectID] = self.currentProject;
-		localStorage.setItem('p5projects', JSON.stringify(projects));
 
-		// add projectID to the user's table if it doesn't exist
-		if (self.currentUser.projects.indexOf(projectID) === -1) {
-			self.currentUser.projects.push(projectID);
-			localStorage.setItem('user', JSON.stringify(self.currentUser));
+		// update localstorage if there is a project id
+		if (typeof(projectID) !== 'undefined') {
+			projects[self.currentProject._id] = {
+				'dateModified': self.currentProject.dateModified,
+				'name' : self.currentProject.name
+			}
+			localStorage.setItem('recentProjects', JSON.stringify(projects));
+
+			// add projectID to the user's table if it doesn't exist (theoretically this has already been done DB-side if user authenticated)
+			if (self.currentUser.projects.indexOf(projectID) === -1) {
+				self.currentUser.projects.push(projectID);
+				localStorage.setItem('user', JSON.stringify(self.currentUser));
+			}
 		}
 
-		// reload recent user projects
-		self.recentProjects = self.findRecentUserProjects(self.currentUser);
+		// reload / display recent user projects
+		self.sortRecentProjects(projects);
+	},
+
+	// sort by object, as stored in localStorage
+	sortRecentProjects: function(projects) {
+		var self = this;
+		console.log('sorting...');
+
+		var recentUserProjects = [];
+		var projIDs = Object.keys(projects);
+
+		for (var i = 0; i < projIDs.length; i++) {
+			var id = projIDs[i];
+			var name = projects[id].name;
+			var dateModified = projects[id].dateModified;
+			var dateAgo = timeago(dateModified);
+			recentUserProjects.push( {
+				name: name,
+				id: id,
+				timeago: dateAgo
+			});
+		}
+
+		self.recentProjects = recentUserProjects;
+	},
+
+	// get recent projects of an authenticated user from the database and reset recentProjects
+	findRecentUserProjects: function(user) {
+		var self = this;
+		var projects = [];
+		var recentUserProjects = [];
+
+		// // if user is not logged in, get recentProjects array from local storage
+		if (!user.authenticated) {
+			console.log('user not authenticated');
+
+			projects = JSON.parse( localStorage.getItem('recentProjects') );
+			sortRecentProjects(projects); 
+		}
+
+		else {
+			console.log('fetch user projects for user id: ' + user._id);
+
+			$.ajax({
+				url: '/recentuserprojects',
+				data: {
+					'userID' : user._id,
+					'username' : user.username
+				},
+				type: 'GET',
+				success: function(projArray) {
+
+					for (var i = 0; i < projArray.length; i++) {
+						var proj = projArray[i];
+
+						var id = proj._id;
+						var name = proj.name;
+						var dateModified = proj.updated_at;
+						var dateAgo = timeago(dateModified);
+
+						recentUserProjects.push({
+							name: name,
+							id: id,
+							timeago: dateAgo
+						});
+
+						console.log('add a proj');
+					}
+
+					window.localStorage.removeItem('recentProjects');
+
+					// reset recent projects
+					self.recentProjects = recentUserProjects;
+
+				}
+			});
+		}
 	},
 
 	// fork!
@@ -171,8 +304,18 @@ module.exports = {
 	autoSave: function() {
 	},
 
-	downloadProject: function() {
-		console.log('downloadProject!!!');
+	downloadZip: function() {
+		var zip = new JSZip();
+		var currentProjectFileNames = Object.keys(this.currentProject.fileObjects);
+
+		for (var i = 0; i < currentProjectFileNames.length; i++) {
+			var f = this.currentProject.fileObjects[ currentProjectFileNames[i] ];
+			zip.file(f.name, f.contents);
+		}
+
+		var content = zip.generate({type:"blob"});
+
+		FileSaver.saveAs(content, this.currentProject.name);
 	},
 
 	run: function() {

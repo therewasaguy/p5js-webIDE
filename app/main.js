@@ -35,6 +35,7 @@ var appConfig = {
 	},
 
 	data: {
+		shouldLoadExistingProject: false, // if url points to an existing project
 		settings: {},
 		showSettings: false,
 		showFilemenu: false,
@@ -46,7 +47,7 @@ var appConfig = {
 		currentProject: null,
 		currentUser: null,
 		recentProjects: [],
-
+		examples: [],
 		editorHidden: false
 	},
 
@@ -64,14 +65,142 @@ var appConfig = {
 		}
 	},
 
+	created: function() {
+		var self = this;
+
+		var pathname = window.location.pathname.split('/');
+		if (pathname.length === 3) {
+
+			// do not init a blank one, or one from local storage. We are loading one from db instead
+			this.shouldLoadExistingProject = true;
+
+			var username = pathname[1];
+			var projectID = pathname[2];
+
+			// get sketch from server
+			$.ajax({
+				url: '/loadproject',
+				data: {username: username, projectID: projectID},
+				type: 'GET',
+				success: function(data) {
+					var fileObjects = [];
+					if (typeof(data) === 'string') {
+						window.open('/', '_self');
+					}
+					else {
+						// // create files
+						for (var i = 0; i < data.files.length; i++) {
+							var dbFile = data.files[i];
+							var newFile = new pFile(dbFile.name, dbFile.contents);
+							fileObjects.push(newFile);
+						}
+
+						data.files = undefined;  // clear
+						data.fileObjects = fileObjects;
+					}
+
+					var proj = new Project(data);
+					proj.fileObjects = fileObjects;
+
+					self.openProject(proj);
+				}
+			});
+		}
+
+		// get all example paths from server
+		$.ajax({
+			url: '/fetchexamples',
+			type: 'GET',
+			success: function(data) {
+				var examples = [];
+
+				for (var i = 0; i < data.length; i++) {
+
+					var example = {
+						'name': data[i].split('/').pop(),
+						'path': data[i].slice(1,data[i].length)
+					}
+					examples.push(example);
+				}
+
+				self.examples = examples;
+			}
+		});
+
+		// for testing
+		window._app = this;
+
+		// parse username and sketch ID
+
+		// if (sketchID.length > 12) {
+		// 	// get sketch from server
+		// 	$.ajax({
+		// 	  url: '/loadprojectbygistid',
+		// 	  data: {'gistID': sketchID},
+		// 	  success: gotsketchdata,
+		// 		timeout: 8000,
+		// 	  error: sketchdataerror
+		// 	});
+		// }
+
+		// on success, load sketch
+		function gotsketchdata(data) {
+
+			newProjectFromGist( JSON.parse(data) );
+
+		}
+
+		// on fail, go to blank editor
+		function sketchdataerror(e) {
+			console.log('error with sketch data');
+			console.log(e)
+		}
+
+		function newProjectFromGist(data) {
+			var fileArray = [];
+			var opentabnames = [];
+			var openfile = '';
+
+			var fileNames = Object.keys(data.files);
+
+			for (var i = 0; i < fileNames.length; i++) {
+				var key = fileNames[i];
+				var f = data.files[key];
+				console.log(f);
+
+				fileArray.push(new pFile(f.filename, f.content) );
+				opentabnames.push(f.filename);
+				openfile = f.filename;
+			}
+
+			var options = {
+				'fileObjects': fileArray,
+				'name': data.id,
+				'gistID': data.gistID,
+				'openFileName': openfile,
+				'openTabNames': opentabnames
+			}
+
+			var projObj = new Project(options);
+			self.openProject(projObj)
+
+		}
+
+	},
+
 	ready: function() {
 		this.setupSettings();
 
 		this.setupUser();
 
-		this.initProject();
+		if (!this.shouldLoadExistingProject) {
+			this.initProject();
+		}
+
+		this.updateCurrentProject();
 
 		this.$on('updateCurrentProject', this.updateCurrentProject);
+
 	},
 
 	methods: {
@@ -140,39 +269,87 @@ var appConfig = {
 			else {
 				this.newProject('Hello p5');
 			}
+
 		},
 
 		// handle users
 		setupUser: function() {
+			var self = this;
 
+			// get current user from local storage
 			if (localStorage.user) {
-				this.currentUser = JSON.parse( localStorage.getItem('user') );
+				self.currentUser = JSON.parse( localStorage.getItem('user') );
 			} else {
-				// current user is annonymous
-				this.currentUser = new User();
-				localStorage.setItem('user', JSON.stringify(this.currentUser));
+				self.currentUser = new User();
 			}
 
-			this.recentProjects = this.findRecentUserProjects(this.currentUser);
+			$.ajax({
+					url: '/authenticate',
+					type: 'get'
+				})
+				.success(function(res) {
+
+					var username = res.username;
+					var id = res._id;
+					self.currentUser.username = username;
+					self.currentUser._id = id;
+
+					self.currentUser.authenticated = username && username.length > 0 ? true : false;
+					console.log('user authenticated? ' + self.currentUser.authenticated);
+
+					// load user recent projects if user is authenticated
+					if (self.currentUser.authenticated) {
+						console.log('recentProjects');
+						self.recentProjects = self.findRecentUserProjects(self.currentUser);
+
+						// set toast message
+						self.$.menu.setToastMsg('Welcome back, ' + username);
+					}
+
+
+				})
+				.fail(function(res) {
+
+					// create a new user if there was not one in local storage
+					if (!this.currentUser) {
+
+						// current user remains annonymous
+						// self.currentUser = new User();
+						localStorage.setItem('user', JSON.stringify(self.currentUser));
+					}
+
+					// TO DO: reset recent projects
+					console.log('ERROR');
+					// self.recentProjects = []; //self.findRecentUserProjects(self.currentUser);
+
+				});
+		},
+
+		authenticate: function() {
+			window.open('/auth-gh', '_self');
+		},
+
+		logOut: function() {
+			this.currentUser = new User();
+			this.clearLocalStorage();
+			window.open('/auth-logout', '_self');
+		},
+
+		clearLocalStorage: function() {
+			window.localStorage.removeItem('recentProjects');
+			window.localStorage.removeItem('user');
+			window.localStorage.removeItem('latestProject');
 		},
 
 		// returns an array of recent user projects by ID
 		findRecentUserProjects: function(user) {
-			var recentUserProjects = [];
-
-			// fetch projects from database / localStorage
-			var projects = JSON.parse( localStorage.getItem('p5projects') );
-			if (!projects) projects = {};
-
-
-			user.projects.forEach(function(projID) {
-				recentUserProjects.push( projects[projID] );
-			});
-
-			console.log(recentUserProjects);
-			return recentUserProjects;
+			console.log(user);
+			this.modeFunction('findRecentUserProjects', user);
 		},
 
+		sortRecentProjects: function(projects) {
+			this.modeFunction('sortRecentProjects', projects);
+		},
 
 		// HANDLE FILES
 
@@ -190,12 +367,9 @@ var appConfig = {
 
 			var filename = title;
 
-			// var f = Files.setup(filename);
-			// Files.addToTree(f, this.files, this.projectPath);
 			var f = new pFile(filename);
 			this.currentProject.addFile(f);
 			this.openFile(f.name);
-			console.log('new file 4');
 
 		},
 
@@ -203,10 +377,6 @@ var appConfig = {
 		 *  open file by filename
 		 */
 		openFile: function(fileName, callback) {
-			// var self = this;
-			// var re = /(?:\.([^.]+))?$/;
-			// var ext = re.exec(fileName)[1];
-			console.log(this.currentProject);
 			var file = this.currentProject.findFile(fileName);
 
 			if (!file) {
@@ -258,6 +428,7 @@ var appConfig = {
 			var proj = this.currentProject;
 			var self = this;
 			var filesToClose = [];
+			this.editSessions = [];
 
 			// populate the array of filesToClose
 			self.tabs.forEach(function(tab) {
@@ -271,12 +442,13 @@ var appConfig = {
 				self.closeFile(fileObj.name);
 			});
 
+			proj.fileObjects = [];
+			this.stop();
 		},
 
 		openProject: function(projObj, gistData) {
 			var self = this;
-
-			self.closeProject();
+			// self.closeProject();
 
 			self.currentProject = new Project(projObj);
 
@@ -290,41 +462,57 @@ var appConfig = {
 			for (var i = 0; i < tabNames.length; i++) {
 				var tabName = tabNames[i];
 				var fileObj = self.currentProject.findFile(tabName);
-				self.$broadcast('add-tab', fileObj, self.tabs);
+
+				if (typeof(fileObj) !== 'undefined') {
+					self.$broadcast('add-tab', fileObj, self.tabs);
+				} else {
+					console.log('error loading file ' + tabName);
+				}
 			}
 
+			self.run();
 		},
 
 		// load project by our ID, not by the gistID
 		loadProjectByOurID: function(projID) {
 			var self = this;
-			var ourID = projID;
 
-			// find project in the database (localStorage if offline...)
-			var projects = JSON.parse( localStorage.getItem('p5projects') );
-			var projObj = projects[ourID];
-			var gistID = projObj.gistID;
+			// if not logged in, open via '_'
+			var username = this.currentUser.username ? this.currentUser.username : '_';
+			window.open('/' + username + '/' + projID, '_self');
 
-			// open the project now
-			self.openProject(projObj)
+			// change url
+			return;
 
-			// meanwhile, tell the server to fetch the gist data
-			$.ajax({
-				url: '/loadprojectbygistid',
-				type: 'get',
-				dataType: 'json',
-				data: {
-						'gistID': gistID,
-						'gh_oa': this.currentUser.gh_oa
-					}
-				})
-				.success(function(res) {
-					var gistData = res;
-					self.gotGistData(gistData);
-				})
-				.fail(function(res) {
-					console.log('error loading project' + res);
-				});
+			// // find project in the database (localStorage if offline...)
+			// var projects = JSON.parse( localStorage.getItem('p5projects') );
+			// var projObj = projects[ourID];
+			// var gistID = projObj.gistID;
+
+			// // open the project now
+			// self.openProject(projObj)
+
+			// // meanwhile, tell the server to fetch the gist data
+			// $.ajax({
+			// 	url: '/loadprojectbygistid',
+			// 	type: 'get',
+			// 	dataType: 'json',
+			// 	data: {
+			// 			'gistID': gistID,
+			// 			'gh_oa': this.currentUser.gh_oa
+			// 		}
+			// 	})
+			// 	.success(function(res) {
+			// 		var gistData = res;
+			// 		self.gotGistData(gistData);
+			// 	})
+			// 	.fail(function(res) {
+			// 		console.log('error loading project' + res);
+			// 	});
+		},
+
+		saveProjectToDatabase: function(proj) {
+			this.modeFunction('saveProjectToDatabase', proj);
 		},
 
 		gotGistData: function(gistData) {
@@ -347,6 +535,10 @@ var appConfig = {
 			this.modeFunction('commitGist');
 		},
 
+		downloadZip: function() {
+			this.modeFunction('downloadZip');
+		},
+
 		clearEditor: function() {
 			this.$.editor.clearEditor();
 		},
@@ -360,8 +552,39 @@ var appConfig = {
 		},
 
 		updateCurrentProject: function() {
-			console.log('update current proj');
 			this.modeFunction('updateCurrentProject');
+		},
+
+		loadExample: function(listItem) {
+			var self = this;
+			var pathToExample = listItem.path.replace('/public', '');
+
+			var name = listItem.name;
+
+			// get example contents
+			$.ajax({
+				// type: 'GET',
+				dataType: 'text',
+				url: pathToExample,
+				success: function(filedata) {
+
+					self.newProject(name);
+
+					setTimeout(function() {
+						self.currentFile.originalContents = filedata;
+						self.currentFile.contents = filedata;
+
+						// TO DO: this shouldnt be necessary why is it needed?
+						self.$.editor.editSessions[0].doc.setValue(filedata);
+
+						self.run();
+					}, 50);
+
+				},
+				error: function(e) {
+					console.log('fail');
+				}
+			});
 		}
 
 	}

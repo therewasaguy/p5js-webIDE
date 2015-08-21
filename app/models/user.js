@@ -1,10 +1,16 @@
 var User = function(name) {
 
-	// generate random unique id, thank you https://gist.github.com/gordonbrander/2230317
-	this.id = '_' + Math.random().toString(36).substr(2, 9);
+	this._id = null; // set by database
 
-	// no github auth yet
+	this.projects = [];
+	this.username = '';
+	this.email = '';
+	this.settings = ''; // string of JSON data
+
+	// authenticated stuff
+	this.githubAccount = '';
 	this.gh_oa = null;
+
 
 	if (name) {
 		this.username = name;
@@ -12,8 +18,6 @@ var User = function(name) {
 		this.username = '_anon'
 	}
 
-	this.projects = [];
-	this.settings = {};
 };
 
 module.exports = User;
