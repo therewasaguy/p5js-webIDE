@@ -988,7 +988,11 @@ var appConfig = {
 					if (self.currentUser.authenticated) {
 						console.log('recentProjects');
 						self.recentProjects = self.findRecentUserProjects(self.currentUser);
+
+						// set toast message
+						self.$.menu.setToastMsg('Welcome back, ' + username);
 					}
+
 
 				})
 				.fail(function(res) {
@@ -1262,11 +1266,11 @@ module.exports = {
 	ready: function() {
 		this.toastSpan = document.getElementById('toast-msg');
 
-		this.setToastMessage('welcome!!!');
+		this.setToastMsg('Hello World!');
 	},
 
 	data: {
-		toastMsg: 'hello world'
+		toastMsg: ''
 	},
 
 	methods: {
@@ -1274,17 +1278,20 @@ module.exports = {
 			this.loggedIn ? window.open('/profile', '_self') : this.$root.authenticate();
 		},
 
-		setToastMessage: function(msg) {
+		setToastMsg: function(msg) {
 			this.toastMsg = msg;
+			console.log(msg);
 
 			var toastSpan = this.toastSpan;
+
+			// remove 'hidden' class to show the message
 			toastSpan.className = '';
 
+			// fade out
 			setTimeout(function() {
 				toastSpan.className = 'hidden';
 			}, 200);
 
-			// fade message out
 		}
 	}
 
@@ -1584,13 +1591,17 @@ module.exports = {
 			// save gistID
 			self.currentProject.gistID = res.id;
 			self.currentProject.state = 'syncSuccess';
-			console.log('uploaded successfully!');
+
+			self.$.menu.setToastMsg('Gist Saved Successfully');
 
 			self.saveProjectToDatabase(self.currentProject);
 		})
 		.error( function(e) {
 			console.log(e);
 			self.currentProject.state = 'syncError';
+
+			self.$.menu.setToastMsg('Error Saving Gist. Please Try Again');
+
 			console.warn('gist save error');
 
 			// save anyway...
@@ -1624,12 +1635,17 @@ module.exports = {
 		})
 		.success( function(res) {
 			self.currentProject._id = res._id;
+			self.$.menu.setToastMsg('Project Saved Successfully');
+
 			self.$emit('updateCurrentProject');
 			console.log(res);
 		})
 		.error( function(res) {
 			self.currentProject._id = res._id;
 			self.$emit('updateCurrentProject');
+
+			self.$.menu.setToastMsg('There was an error saving. Please try again');
+
 			console.log(res);
 		})
 	},

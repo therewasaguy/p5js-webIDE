@@ -97,13 +97,17 @@ module.exports = {
 			// save gistID
 			self.currentProject.gistID = res.id;
 			self.currentProject.state = 'syncSuccess';
-			console.log('uploaded successfully!');
+
+			self.$.menu.setToastMsg('Gist Saved Successfully');
 
 			self.saveProjectToDatabase(self.currentProject);
 		})
 		.error( function(e) {
 			console.log(e);
 			self.currentProject.state = 'syncError';
+
+			self.$.menu.setToastMsg('Error Saving Gist. Please Try Again');
+
 			console.warn('gist save error');
 
 			// save anyway...
@@ -137,12 +141,17 @@ module.exports = {
 		})
 		.success( function(res) {
 			self.currentProject._id = res._id;
+			self.$.menu.setToastMsg('Project Saved Successfully');
+
 			self.$emit('updateCurrentProject');
 			console.log(res);
 		})
 		.error( function(res) {
 			self.currentProject._id = res._id;
 			self.$emit('updateCurrentProject');
+
+			self.$.menu.setToastMsg('There was an error saving. Please try again');
+
 			console.log(res);
 		})
 	},

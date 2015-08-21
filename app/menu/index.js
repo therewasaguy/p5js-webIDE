@@ -14,11 +14,11 @@ module.exports = {
 	ready: function() {
 		this.toastSpan = document.getElementById('toast-msg');
 
-		this.setToastMessage('welcome!!!');
+		this.setToastMsg('Hello World!');
 	},
 
 	data: {
-		toastMsg: 'hello world'
+		toastMsg: ''
 	},
 
 	methods: {
@@ -26,17 +26,20 @@ module.exports = {
 			this.loggedIn ? window.open('/profile', '_self') : this.$root.authenticate();
 		},
 
-		setToastMessage: function(msg) {
+		setToastMsg: function(msg) {
 			this.toastMsg = msg;
+			console.log(msg);
 
 			var toastSpan = this.toastSpan;
+
+			// remove 'hidden' class to show the message
 			toastSpan.className = '';
 
+			// fade out
 			setTimeout(function() {
 				toastSpan.className = 'hidden';
 			}, 200);
 
-			// fade message out
 		}
 	}
 

@@ -281,7 +281,11 @@ var appConfig = {
 					if (self.currentUser.authenticated) {
 						console.log('recentProjects');
 						self.recentProjects = self.findRecentUserProjects(self.currentUser);
+
+						// set toast message
+						self.$.menu.setToastMsg('Welcome back, ' + username);
 					}
+
 
 				})
 				.fail(function(res) {
