@@ -5,10 +5,14 @@ var Project = function(options) {
 
 	// if no options are provided, set default files
 	if (!options) {
+		// is it necessary for the file to know if it is the current file?
+		var sketchFile = new pFile('sketch.js');
+		sketchFile.currentFile = true;
+
 		/**
 		 *  @property {Array} fileObjects Array of pFile objects
 		 */
-		this.fileObjects = [ new pFile('p5.js'), new pFile('sketch.js', true), new pFile('index.html'), new pFile('style.css')];
+		this.fileObjects = [ new pFile('p5.js'), sketchFile, new pFile('index.html'), new pFile('style.css')];
 
 		/**
 		 *  [name description]
@@ -27,9 +31,9 @@ var Project = function(options) {
 		this.openTabNames = ['sketch.js', 'style.css'];
 
 		/**
-		 *  @property {String} id 	a unique ID for our application
+		 *  @property {String} _id 	a unique ID for our application, set by the database.
 		 */
-		this.id = '_' + Math.random().toString(36).substr(2, 9);
+		this._id = null;
 
 		/**
 		 *  @property {String} gistID 	a unique ID for GitHub API
@@ -44,11 +48,12 @@ var Project = function(options) {
 		this.openFileName = options.openFileName || options.openFile;
 		this.openTabNames = options.openTabNames || options.openTabs;
 		this.dateModified = options.dateModified;
-		this.id = options.id;
+		this._id = options._id;
 		this.gistID = options.gistID;
 	}
 
 	this.findFile = function(name) {
+
 		for (var i = 0; i < this.fileObjects.length; i++) {
 			if (this.fileObjects[i].name === name) {
 				return this.fileObjects[i];
@@ -69,6 +74,8 @@ var Project = function(options) {
 		}
 
 	};
+
+
 };
 
 

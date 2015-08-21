@@ -89,15 +89,8 @@ module.exports = {
 				}
 
 
-
 				// add some more code to the body
 				var ideCode = '';
-
-				// resize when in presentation mode
-				ideCode += '\n  function windowResized() {\n' +
-								'resizeCanvas(windowWidth, windowHeight);}\n';
-								'}\n'+
-								'resizeCanvas(windowWidth, windowHeight); if(typeof(setup) !== "undefined") {setup();}';
 
 				// create a new p5 otherwise p5 wont be instantiated
 				ideCode += '\n try { new p5();} catch(e){console.log("no p5");} ';
@@ -127,7 +120,7 @@ module.exports = {
 function parseIndexHTML(fileDict) {
 	var indexHTMLFileObj = fileDict['index.html'];
 	var contents = indexHTMLFileObj.contents;
-	var newContents = contents;
+	var newContents = removeComments(contents);
 
 	// append elements to these elements
 	var body = sketchFrame.contentWindow.document.createElement('body');
@@ -331,4 +324,15 @@ function injectDIV(someCode) {
 	userHTML.className = 'userHTML';
 	userHTML.innerHTML = someCode;
 	return userHTML;
+}
+
+function removeComments(contents) {
+	// remove comments
+	var htmlComments = contents.match(/<!--(.*)-->/);
+	if (htmlComments) {
+		htmlComments.forEach( function(comment) {
+			contents = contents.replace(comment, '');
+		});
+	}
+	return contents;
 }

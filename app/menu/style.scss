@@ -9,21 +9,23 @@ $transitiontimeshort: 0.1s;
   height: 48px;
    -webkit-touch-callout: none;
     -webkit-user-select: none;
-    opacity: 0.0;
     /*position: absolute;*/
     left: 0px;
     top: 0px;
-
-  transition: opacity $transitiontimelong 0.5s ease-out;
-   -moz-transition: opacity $transitiontimelong 0.5s ease-out;
-   -webkit-transition: opacity $transitiontimelong 0.5s ease-out;
 
   position:absolute;
   background-color:black;
 
 }
 
-#menu-container.sketchstopped {
+#menu-container.hidden {
+    opacity: 0.0;
+    // transition: opacity $transitiontimelong 0.1s ease-out;
+    //  -moz-transition: opacity $transitiontimelong 0.1s ease-out;
+    //  -webkit-transition: opacity $transitiontimelong 0.1s ease-out;
+}
+
+#menu-container.visible {
   opacity:1;
   transition: opacity $transitiontimeshort 0s ease-in;
    -moz-transition: opacity $transitiontimeshort 0s ease-in;
@@ -42,64 +44,134 @@ $transitiontimeshort: 0.1s;
 
 #play {
  background: none;
- background-image: url('../images/play-gray.svg');
+ background-image: url('/images/play-gray.svg');
  border: 0;
  width: 33px;
  height: 34px;
- padding: 7px;
  font-size: 25px;
  display: inline;
  cursor: pointer;
  outline: 0; 
- float: left;
- margin-top: 8px;
+ float: right;
+ margin-top: -22px;
+ margin-right: 10px;
  &:hover {
-  background-image: url('../images/play-pink.svg');
+  background-image: url('/images/play-pink.svg');
 }
 
 &.running {
-  background-image: url('../images/stop-gray.svg');
+  background-image: url('/images/stop-gray.svg');
 
   &:hover {
-    background-image: url('../images/stop-orange.svg');
+    background-image: url('/images/stop-orange.svg');
   }
 }
 }
 
-#filemenu-burger {
+#save {
+ background: none;
+ border: 0;
+ //width: 33px;
+ height: 40px;
+ font-size: 25px;
+ display: inline;
+ cursor: pointer;
+ outline: 0; 
+ float: right;
+ margin-top: -18px;
+ margin-right: 20px;
+}
+
+// #dropDown {
+//  background: none;
+//  border: 0;
+//  //width: 33px;
+//  height: 20px;
+//  display: inline;
+//  cursor: default;
+//  float: right;
+//  margin-top: -18px;
+//  margin-right: 20px;
+// }
+
+.menuItem {
   background: none;
-  background-image: url('../images/filemenu-gray.svg');
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
   border: 0;
-  width: 28px;
-  height: 34px;
+  height: 20px;
   padding: 0px;
-  font-size: 25px;
+  padding-right: 20px;
   display: inline;
   cursor: pointer;
   outline: 0; 
   float: left;
-  //margin-top: 0px;
-  &:hover {
-   background-image: url('../images/filemenu-white.svg');
-  }
+}
+
+// #filemenu-burger {
+//   background: none;
+//   border: 0;
+//   height: 20px;
+//   padding: 0px;
+//   display: inline;
+//   cursor: pointer;
+//   outline: 0; 
+//   float: left;
+// }
+
+// #actions {
+//   button {
+//     border: 0;
+//     cursor: pointer;
+//     z-index: 3;
+//     position: absolute;
+//   }
+
+//   button, button img {
+//     width: 20px;
+//     opacity: 0.5;
+//     transition: opacity 0.25s ease-in-out 0s;
+//   }
+
+//   button:hover {
+//     opacity: 1;
+//   }
+// }
+
+img.menu{
+  max-height: 100%;
 }
 
 #button_header {
-  margin-left: 0px;
+  // margin-left: 0px;
   height: 50px;
-  margin-bottom: 8px;
+  margin: 0px;
   padding-left:10px;
+  width:100%;
+
+  button {
+    border: 0;
+    cursor: pointer;
+    z-index: 3;
+  }
+
+  button, button img {
+    opacity: 0.75;
+    transition: opacity .25s ease-in-out 0s;
+  }
+
+  button:hover {
+    opacity: 1;
+  }
 }
 
 #project-name {
-  padding-left: 20px;
+  //padding-left: 20px;
   padding-right: 20px;
+  margin-right: 10px;
+  margin-left: -20px;
   font-size: 24px;
   // color: #58585b;
-  color: #ed225d;
-  font-weight: bold;
+  //color: #ed225d;
+  // font-weight: bold;
   margin-top: 10px;
   margin-bottom: 10px;
   cursor: default; 
@@ -134,17 +206,39 @@ $transitiontimeshort: 0.1s;
 
 #custom-dropdown-menus {
   float:right;
-  margin-right: 120px;
-  margin-top: 15px;
+  margin-top: 13px;
+  // margin-right: 5px;
 }
 
-#profile-div {
-  position:absolute;
+#profile-span {
+  margin-top:0px;
   right: 0px;
-  top: 0px;
-}
-
-#profile-image {
+  margin-top:-20px;
+  display:block;
+  background:url('/images/temp/profile.png') no-repeat top left;
+  background-size:100%;
   width:50px;
   height:50px;
+}
+
+.username {
+  position: fixed;
+  right:5px;
+  margin-top:-15px;
+}
+
+#toast-msg {
+  text-align: center;
+  margin-left: auto;
+  left: 25%;
+  position: relative;
+  opacity: 1;
+}
+
+#toast-msg.hidden {
+  opacity:0;
+  transition: opacity $transitiontimelong 1.5s ease-out;
+   -moz-transition: opacity $transitiontimelong 1.5s ease-out;
+   -webkit-transition: opacity $transitiontimelong 1.5s ease-out;
+
 }

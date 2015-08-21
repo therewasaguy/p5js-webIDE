@@ -3,14 +3,48 @@ module.exports = {
 
 	computed: {
 		className: function() {
-			return this.$root.running ? 'sketchrunning' : 'sketchstopped';
+			if (this.$root.running && this.$root.editorHidden) {
+				return 'hidden';
+			} else {
+				return 'visible';
+			}
+			// return this.$root.running ? 'sketchrunning' : 'sketchstopped';
+		},
+		loggedIn: function() {
+			return this.$root.currentUser && this.$root.currentUser.authenticated;
 		}
+
+	},
+
+	ready: function() {
+		this.toastSpan = document.getElementById('toast-msg');
+
+		this.setToastMsg('Hello World!');
+	},
+
+	data: {
+		toastMsg: ''
 	},
 
 	methods: {
-		selectRecentProject: function(e) {
-			var projectID = e.$event.target.getAttribute('data-projectid');
-			this.$root.loadProjectByOurID(projectID);
+		profileClicked: function() {
+			this.loggedIn ? window.open('/profile', '_self') : this.$root.authenticate();
+		},
+
+		setToastMsg: function(msg) {
+			this.toastMsg = msg;
+			console.log(msg);
+
+			var toastSpan = this.toastSpan;
+
+			// remove 'hidden' class to show the message
+			toastSpan.className = '';
+
+			// fade out
+			setTimeout(function() {
+				toastSpan.className = 'hidden';
+			}, 200);
+
 		}
 	}
 

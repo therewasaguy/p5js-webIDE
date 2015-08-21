@@ -2,11 +2,11 @@ var $ = require('jquery');
 var Vue = require('vue');
 var Path = require('path');
 
-var pFile = function(name, isCurrentlyOpen) {
+var pFile = function(name, contents) {
 	this.id = null;
 
 	// contents is the version of the file with any modifications
-	this.contents = '';
+	this.contents = contents || '';
 
 	// original contents is the last committed version of the file
 	this.originalContents = '';
@@ -14,14 +14,14 @@ var pFile = function(name, isCurrentlyOpen) {
 	this.session = null;
 
 	this.open = true;
-	this.currentFile = isCurrentlyOpen || false;
+	this.currentFile = false;
 	this.ext = Path.extname(name);
 
 	this.name = name || 'untitled';
 
 	var defaultFiles = ['index.html', 'p5.js', 'sketch.js', 'style.css'];
 
-	if (defaultFiles.indexOf(name) > -1) {
+	if (defaultFiles.indexOf(name) > -1 && this.contents.length === 0) {
 		this.setDefaultContents(name);
 	}
 
@@ -35,7 +35,7 @@ pFile.prototype.setDefaultContents = function(fileName) {
 	var contents = $.ajax({
 		// type: 'GET',
 		dataType: 'text',
-		url: '../sketch/template/' + fileName,
+		url: '/sketch/template/' + fileName,
 		success: function(filedata) {
 			self.contents = String(contents.responseText);
 			self.originalContents = self.contents;
@@ -53,9 +53,6 @@ pFile.prototype.setDefaultContents = function(fileName) {
 		}
 	});
 
-	// var contents = $.get('../sketch/template/' + fileName, function(data) {
-	// 	self.contents = contents.responseText;
-	// });
 };
 
 
