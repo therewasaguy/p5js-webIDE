@@ -21,7 +21,7 @@ var pFile = function(name, contents) {
 
 	var defaultFiles = ['index.html', 'p5.js', 'sketch.js', 'style.css'];
 
-	if (defaultFiles.indexOf(name) > -1) {
+	if (defaultFiles.indexOf(name) > -1 && this.contents.length === 0) {
 		this.setDefaultContents(name);
 	}
 

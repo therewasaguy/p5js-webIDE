@@ -35,6 +35,7 @@ var appConfig = {
 	},
 
 	data: {
+		shouldLoadExistingProject: false, // if url points to an existing project
 		settings: {},
 		showSettings: false,
 		showFilemenu: false,
@@ -69,6 +70,10 @@ var appConfig = {
 
 		var pathname = window.location.pathname.split('/');
 		if (pathname.length === 3) {
+
+			// do not init a blank one, or one from local storage. We are loading one from db instead
+			this.shouldLoadExistingProject = true;
+
 			var username = pathname[1];
 			var projectID = pathname[2];
 
@@ -90,11 +95,14 @@ var appConfig = {
 							fileObjects.push(newFile);
 						}
 
+						data.files = undefined;  // clear
 						data.fileObjects = fileObjects;
 					}
 
-					console.log(data);
-					// self.openProject(data);
+					var proj = new Project(data);
+					proj.fileObjects = fileObjects;
+
+					self.openProject(proj);
 				}
 			});
 		}
@@ -165,7 +173,10 @@ var appConfig = {
 
 		this.setupUser();
 
-		this.initProject();
+		if (!this.shouldLoadExistingProject) {
+			this.initProject();
+		}
+
 		this.updateCurrentProject();
 
 		this.$on('updateCurrentProject', this.updateCurrentProject);
@@ -253,8 +264,8 @@ var appConfig = {
 			}
 
 			$.ajax({
-				url: '/authenticate',
-				type: 'get'
+					url: '/authenticate',
+					type: 'get'
 				})
 				.success(function(res) {
 
@@ -268,6 +279,7 @@ var appConfig = {
 
 					// load user recent projects if user is authenticated
 					if (self.currentUser.authenticated) {
+						console.log('recentProjects');
 						self.recentProjects = self.findRecentUserProjects(self.currentUser);
 					}
 
@@ -295,7 +307,14 @@ var appConfig = {
 
 		logOut: function() {
 			this.currentUser = new User();
+			this.clearLocalStorage();
 			window.open('/auth-logout', '_self');
+		},
+
+		clearLocalStorage: function() {
+			window.localStorage.removeItem('recentProjects');
+			window.localStorage.removeItem('user');
+			window.localStorage.removeItem('latestProject');
 		},
 
 		// returns an array of recent user projects by ID
@@ -398,12 +417,13 @@ var appConfig = {
 				self.closeFile(fileObj.name);
 			});
 
+			proj.fileObjects = [];
+			this.stop();
 		},
 
 		openProject: function(projObj, gistData) {
 			var self = this;
-
-			self.closeProject();
+			// self.closeProject();
 
 			self.currentProject = new Project(projObj);
 
@@ -417,43 +437,53 @@ var appConfig = {
 			for (var i = 0; i < tabNames.length; i++) {
 				var tabName = tabNames[i];
 				var fileObj = self.currentProject.findFile(tabName);
-				self.$broadcast('add-tab', fileObj, self.tabs);
+
+				if (typeof(fileObj) !== 'undefined') {
+					self.$broadcast('add-tab', fileObj, self.tabs);
+				} else {
+					console.log('error loading file ' + tabName);
+				}
 			}
 
+			self.run();
 		},
 
 		// load project by our ID, not by the gistID
 		loadProjectByOurID: function(projID) {
 			var self = this;
-			var ourID = projID;
+
+			// if not logged in, open via '_'
+			var username = this.currentUser.username ? this.currentUser.username : '_';
+			window.open('/' + username + '/' + projID, '_self');
 
 			// change url
 			return;
-			// find project in the database (localStorage if offline...)
-			var projects = JSON.parse( localStorage.getItem('p5projects') );
-			var projObj = projects[ourID];
-			var gistID = projObj.gistID;
 
-			// open the project now
-			self.openProject(projObj)
+			// // find project in the database (localStorage if offline...)
+			// var projects = JSON.parse( localStorage.getItem('p5projects') );
+			// var projObj = projects[ourID];
+			// var gistID = projObj.gistID;
 
-			// meanwhile, tell the server to fetch the gist data
-			$.ajax({
-				url: '/loadprojectbygistid',
-				type: 'get',
-				dataType: 'json',
-				data: {
-						'gistID': gistID,
-						'gh_oa': this.currentUser.gh_oa
-					}
-				})
-				.success(function(res) {
-					var gistData = res;
-					self.gotGistData(gistData);
-				})
-				.fail(function(res) {
-					console.log('error loading project' + res);
-				});
+			// // open the project now
+			// self.openProject(projObj)
+
+			// // meanwhile, tell the server to fetch the gist data
+			// $.ajax({
+			// 	url: '/loadprojectbygistid',
+			// 	type: 'get',
+			// 	dataType: 'json',
+			// 	data: {
+			// 			'gistID': gistID,
+			// 			'gh_oa': this.currentUser.gh_oa
+			// 		}
+			// 	})
+			// 	.success(function(res) {
+			// 		var gistData = res;
+			// 		self.gotGistData(gistData);
+			// 	})
+			// 	.fail(function(res) {
+			// 		console.log('error loading project' + res);
+			// 	});
 		},
 
 		saveProjectToDatabase: function(proj) {

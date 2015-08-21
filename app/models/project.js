@@ -5,7 +5,6 @@ var Project = function(options) {
 
 	// if no options are provided, set default files
 	if (!options) {
-
 		// is it necessary for the file to know if it is the current file?
 		var sketchFile = new pFile('sketch.js');
 		sketchFile.currentFile = true;
@@ -54,6 +53,7 @@ var Project = function(options) {
 	}
 
 	this.findFile = function(name) {
+
 		for (var i = 0; i < this.fileObjects.length; i++) {
 			if (this.fileObjects[i].name === name) {
 				return this.fileObjects[i];

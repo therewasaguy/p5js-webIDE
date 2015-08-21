@@ -275,8 +275,6 @@ module.exports = {
 	template: require('./template.html'),
 
 	ready: function() {
-		console.log('filemenu ready');
-
 		this.setupUI();
 	},
 
@@ -304,7 +302,7 @@ module.exports = {
 			});
 
 			$(function(){ 
-			    $("#exampleButton").click(function(){ 
+			   $("#exampleButton").click(function(){ 
 			   $("#exampleIcon").attr('src',  
 			                ($("#exampleIcon").attr('src') == 'images/arrow-down.svg'  
 			                    ? 'images/arrow-up.svg'  
@@ -744,6 +742,7 @@ var appConfig = {
 	},
 
 	data: {
+		shouldLoadExistingProject: false, // if url points to an existing project
 		settings: {},
 		showSettings: false,
 		showFilemenu: false,
@@ -778,6 +777,10 @@ var appConfig = {
 
 		var pathname = window.location.pathname.split('/');
 		if (pathname.length === 3) {
+
+			// do not init a blank one, or one from local storage. We are loading one from db instead
+			this.shouldLoadExistingProject = true;
+
 			var username = pathname[1];
 			var projectID = pathname[2];
 
@@ -799,11 +802,14 @@ var appConfig = {
 							fileObjects.push(newFile);
 						}
 
+						data.files = undefined;  // clear
 						data.fileObjects = fileObjects;
 					}
 
-					console.log(data);
-					// self.openProject(data);
+					var proj = new Project(data);
+					proj.fileObjects = fileObjects;
+
+					self.openProject(proj);
 				}
 			});
 		}
@@ -874,7 +880,10 @@ var appConfig = {
 
 		this.setupUser();
 
-		this.initProject();
+		if (!this.shouldLoadExistingProject) {
+			this.initProject();
+		}
+
 		this.updateCurrentProject();
 
 		this.$on('updateCurrentProject', this.updateCurrentProject);
@@ -962,8 +971,8 @@ var appConfig = {
 			}
 
 			$.ajax({
-				url: '/authenticate',
-				type: 'get'
+					url: '/authenticate',
+					type: 'get'
 				})
 				.success(function(res) {
 
@@ -977,6 +986,7 @@ var appConfig = {
 
 					// load user recent projects if user is authenticated
 					if (self.currentUser.authenticated) {
+						console.log('recentProjects');
 						self.recentProjects = self.findRecentUserProjects(self.currentUser);
 					}
 
@@ -1004,7 +1014,14 @@ var appConfig = {
 
 		logOut: function() {
 			this.currentUser = new User();
+			this.clearLocalStorage();
 			window.open('/auth-logout', '_self');
+		},
+
+		clearLocalStorage: function() {
+			window.localStorage.removeItem('recentProjects');
+			window.localStorage.removeItem('user');
+			window.localStorage.removeItem('latestProject');
 		},
 
 		// returns an array of recent user projects by ID
@@ -1107,12 +1124,13 @@ var appConfig = {
 				self.closeFile(fileObj.name);
 			});
 
+			proj.fileObjects = [];
+			this.stop();
 		},
 
 		openProject: function(projObj, gistData) {
 			var self = this;
-
-			self.closeProject();
+			// self.closeProject();
 
 			self.currentProject = new Project(projObj);
 
@@ -1126,43 +1144,53 @@ var appConfig = {
 			for (var i = 0; i < tabNames.length; i++) {
 				var tabName = tabNames[i];
 				var fileObj = self.currentProject.findFile(tabName);
-				self.$broadcast('add-tab', fileObj, self.tabs);
+
+				if (typeof(fileObj) !== 'undefined') {
+					self.$broadcast('add-tab', fileObj, self.tabs);
+				} else {
+					console.log('error loading file ' + tabName);
+				}
 			}
 
+			self.run();
 		},
 
 		// load project by our ID, not by the gistID
 		loadProjectByOurID: function(projID) {
 			var self = this;
-			var ourID = projID;
+
+			// if not logged in, open via '_'
+			var username = this.currentUser.username ? this.currentUser.username : '_';
+			window.open('/' + username + '/' + projID, '_self');
 
 			// change url
 			return;
-			// find project in the database (localStorage if offline...)
-			var projects = JSON.parse( localStorage.getItem('p5projects') );
-			var projObj = projects[ourID];
-			var gistID = projObj.gistID;
 
-			// open the project now
-			self.openProject(projObj)
+			// // find project in the database (localStorage if offline...)
+			// var projects = JSON.parse( localStorage.getItem('p5projects') );
+			// var projObj = projects[ourID];
+			// var gistID = projObj.gistID;
 
-			// meanwhile, tell the server to fetch the gist data
-			$.ajax({
-				url: '/loadprojectbygistid',
-				type: 'get',
-				dataType: 'json',
-				data: {
-						'gistID': gistID,
-						'gh_oa': this.currentUser.gh_oa
-					}
-				})
-				.success(function(res) {
-					var gistData = res;
-					self.gotGistData(gistData);
-				})
-				.fail(function(res) {
-					console.log('error loading project' + res);
-				});
+			// // open the project now
+			// self.openProject(projObj)
+
+			// // meanwhile, tell the server to fetch the gist data
+			// $.ajax({
+			// 	url: '/loadprojectbygistid',
+			// 	type: 'get',
+			// 	dataType: 'json',
+			// 	data: {
+			// 			'gistID': gistID,
+			// 			'gh_oa': this.currentUser.gh_oa
+			// 		}
+			// 	})
+			// 	.success(function(res) {
+			// 		var gistData = res;
+			// 		self.gotGistData(gistData);
+			// 	})
+			// 	.fail(function(res) {
+			// 		console.log('error loading project' + res);
+			// 	});
 		},
 
 		saveProjectToDatabase: function(proj) {
@@ -1239,7 +1267,7 @@ module.exports = {
 
 };
 },{"./template.html":12}],12:[function(require,module,exports){
-module.exports = '<div id ="button_header">\n\n  <div class="pure-menu pure-menu-horizontal">\n    <ul class="pure-menu-list">\n\n      <li class="pure-menu-item" v-on="click: $root.toggleFilemenu()">\n        <button class="menuItem">\n          <img class="menu" src="/images/filemenu-white.svg">\n        </button>\n      </li>\n\n      <li class="pure-menu-item">\n        <div class="menuItem">\n        <img class="menu" src="/images/temp/logo.png">\n      </div>\n      </li>\n\n      <li class="pure-menu-item">\n        <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>\n      </li>\n\n    </ul>\n\n<!--       <li class="pure-menu-item">\n        <span v-on="click: $root.forkProject()">Save: Fork</span>\n      </li> -->\n      <div id="custom-dropdown-menus">\n        <ul class="pure-menu-list">\n\n          <li class="pure-menu-item">\n            <button id="play"  v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>\n          </li>\n\n          <!-- <li class="pure-menu-item">\n            <button id="save" v-on="click: $root.commitGist()"><img class="menu" src="images/save-white.svg"></button>\n          </li> -->\n\n          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover pure-menu-allow-mousedown">\n            <!-- <span>save</span> -->\n            <button id="save" v-on="click: $root.commitGist()"><img class="menu" src="/images/save-white.svg"></button>\n            <!-- <button id="dropDown"><img class="menu" src="images/arrow-down.svg"></button> -->\n            <ul class="pure-menu-children">\n              <li class="pure-menu-item">\n                <span v-on="click: $root.commitGist()">Save to Cloud</span>\n              </li>\n              <li class="pure-menu-item">\n                <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>\n              </li>\n            </ul>\n          </li>\n\n        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">\n          <span id="profile-span" v-on="click: profileClicked()"></span>\n\n          <ul class="pure-menu-children">\n\n            <li class="pure-menu-item" v-if="!loggedIn" v-on="click: $root.authenticate()">\n              <span>Log in</span>\n            </li>\n\n            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.authenticate()">\n              <span class="username"> hello <b>{{currentUser.username}}</b> </span>!\n            </li>\n\n            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.logOut()">\n              <span>Log Out</span>\n            </li>\n\n\n\n<!--             <ul class="pure-menu-children" id="recentProjects">\n              <li class="pure-menu-item">\n                <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>\n              </li>\n            </ul> -->\n          </ul>\n        </li>\n\n      </ul>\n    </div>\n\n\n  </div> <!-- end pure-menu-->\n\n\n\n  <!-- <div id="toolbar"> -->\n\n  <!-- </div> -->\n\n</div>';
+module.exports = '<div id ="button_header">\n\n  <div class="pure-menu pure-menu-horizontal">\n    <ul class="pure-menu-list">\n\n      <li class="pure-menu-item" v-on="click: $root.toggleFilemenu()">\n        <button class="menuItem">\n          <img class="menu" src="/images/filemenu-white.svg">\n        </button>\n      </li>\n\n      <li class="pure-menu-item">\n        <div class="menuItem">\n        <img class="menu" src="/images/temp/logo.png">\n      </div>\n      </li>\n\n      <li class="pure-menu-item">\n        <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>\n      </li>\n\n    </ul>\n\n      <div id="custom-dropdown-menus">\n        <ul class="pure-menu-list">\n\n          <li class="pure-menu-item">\n            <button id="play"  v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>\n          </li>\n\n          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover pure-menu-allow-mousedown">\n            <button id="save" v-on="click: $root.commitGist()"><img class="menu" src="/images/save-white.svg"></button>\n            <ul class="pure-menu-children">\n              <li class="pure-menu-item">\n                <span v-on="click: $root.commitGist()">Save to Cloud</span>\n              </li>\n              <li class="pure-menu-item">\n                <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>\n              </li>\n            </ul>\n          </li>\n\n        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">\n          <span id="profile-span" v-on="click: profileClicked()"></span>\n\n          <ul class="pure-menu-children">\n\n            <li class="pure-menu-item" v-if="!loggedIn" v-on="click: $root.authenticate()">\n              <span>Log in</span>\n            </li>\n\n            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.authenticate()">\n              <span class="username"> hello <b>{{currentUser.username}}</b> </span>!\n            </li>\n\n            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.logOut()">\n              <span>Log Out</span>\n            </li>\n\n          </ul>\n        </li>\n\n      </ul>\n    </div>\n\n\n  </div> <!-- end pure-menu-->\n\n\n\n  <!-- <div id="toolbar"> -->\n\n  <!-- </div> -->\n\n</div>';
 },{}],13:[function(require,module,exports){
 var $ = require('jquery');
 var Vue = require('vue');
@@ -1264,7 +1292,7 @@ var pFile = function(name, contents) {
 
 	var defaultFiles = ['index.html', 'p5.js', 'sketch.js', 'style.css'];
 
-	if (defaultFiles.indexOf(name) > -1) {
+	if (defaultFiles.indexOf(name) > -1 && this.contents.length === 0) {
 		this.setDefaultContents(name);
 	}
 
@@ -1333,7 +1361,6 @@ var Project = function(options) {
 
 	// if no options are provided, set default files
 	if (!options) {
-
 		// is it necessary for the file to know if it is the current file?
 		var sketchFile = new pFile('sketch.js');
 		sketchFile.currentFile = true;
@@ -1382,6 +1409,7 @@ var Project = function(options) {
 	}
 
 	this.findFile = function(name) {
+
 		for (var i = 0; i < this.fileObjects.length; i++) {
 			if (this.fileObjects[i].name === name) {
 				return this.fileObjects[i];
@@ -1523,7 +1551,7 @@ module.exports = {
 		}
 
 		$.ajax({
-			url: './savegist',
+			url: '/savegist',
 			type: 'POST',
 			data: data,
 			dataType: 'json'
@@ -1541,6 +1569,10 @@ module.exports = {
 			console.log(e);
 			self.currentProject.state = 'syncError';
 			console.warn('gist save error');
+
+			// save anyway...
+			self.saveProjectToDatabase(self.currentProject);
+
 		});
 
 	},
@@ -1562,7 +1594,7 @@ module.exports = {
 		console.log(data);
 
 		$.ajax({
-			url: './saveproject',
+			url: '/saveproject',
 			type: 'POST',
 			data: data,
 			dataType: 'json'
@@ -1682,6 +1714,8 @@ module.exports = {
 
 						console.log('add a proj');
 					}
+
+					window.localStorage.removeItem('recentProjects');
 
 					// reset recent projects
 					self.recentProjects = recentUserProjects;
@@ -2024,15 +2058,8 @@ module.exports = {
 				}
 
 
-
 				// add some more code to the body
 				var ideCode = '';
-
-				// resize when in presentation mode
-				ideCode += '\n  function windowResized() {\n' +
-								'resizeCanvas(windowWidth, windowHeight);}\n';
-								'}\n'+
-								'resizeCanvas(windowWidth, windowHeight); if(typeof(setup) !== "undefined") {setup();}';
 
 				// create a new p5 otherwise p5 wont be instantiated
 				ideCode += '\n try { new p5();} catch(e){console.log("no p5");} ';
@@ -2342,12 +2369,6 @@ module.exports = {
 					console.log('no file to open');
 					this.$root.clearEditor();
 				}
-				// try {
-				// } catch(e) {
-				// 	console.log('error');
-					// this.
-					// this.$root.newFile();
-				// }
 			}
 		},
 
@@ -2356,7 +2377,7 @@ module.exports = {
 			// make sure tab is not already open
 			var tabExists = _.findWhere(tabs, {name: fileObject.name});
 			if (tabExists) {
-				console.log('tab exists');
+				// console.log('tab exists');
 				return;
 			}
 

@@ -87,7 +87,7 @@ module.exports = {
 		}
 
 		$.ajax({
-			url: './savegist',
+			url: '/savegist',
 			type: 'POST',
 			data: data,
 			dataType: 'json'
@@ -105,6 +105,10 @@ module.exports = {
 			console.log(e);
 			self.currentProject.state = 'syncError';
 			console.warn('gist save error');
+
+			// save anyway...
+			self.saveProjectToDatabase(self.currentProject);
+
 		});
 
 	},
@@ -126,7 +130,7 @@ module.exports = {
 		console.log(data);
 
 		$.ajax({
-			url: './saveproject',
+			url: '/saveproject',
 			type: 'POST',
 			data: data,
 			dataType: 'json'
@@ -246,6 +250,8 @@ module.exports = {
 
 						console.log('add a proj');
 					}
+
+					window.localStorage.removeItem('recentProjects');
 
 					// reset recent projects
 					self.recentProjects = recentUserProjects;

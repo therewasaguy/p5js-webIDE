@@ -16,7 +16,14 @@ var GithubStrategy = require('passport-github').Strategy;
 var app = express();
 
 app.use(cookieParser());
-app.use(session({secret: 'mysecret'}));
+app.use(session({
+		secret: 'mysecret',
+		resave: true,
+		saveUninitialized: true,
+		cookie: { 
+			maxAge: 60000000000
+		}
+	}));
 app.use(passport.initialize());
 app.use(passport.session());
 

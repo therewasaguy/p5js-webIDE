@@ -2,8 +2,6 @@ module.exports = {
 	template: require('./template.html'),
 
 	ready: function() {
-		console.log('filemenu ready');
-
 		this.setupUI();
 	},
 
@@ -31,7 +29,7 @@ module.exports = {
 			});
 
 			$(function(){ 
-			    $("#exampleButton").click(function(){ 
+			   $("#exampleButton").click(function(){ 
 			   $("#exampleIcon").attr('src',  
 			                ($("#exampleIcon").attr('src') == 'images/arrow-down.svg'  
 			                    ? 'images/arrow-up.svg'  
