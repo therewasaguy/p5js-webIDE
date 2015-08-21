@@ -11,6 +11,10 @@ module.exports = {
 
 	},
 
+	data: {
+		toastMsg: 'hello world'
+	},
+
 	methods: {
 		profileClicked: function() {
 			this.loggedIn ? window.open('/profile', '_self') : this.$root.authenticate();

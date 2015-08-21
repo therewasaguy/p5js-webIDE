@@ -21,8 +21,11 @@
 
     </ul>
 
-      <div id="custom-dropdown-menus">
-        <ul class="pure-menu-list">
+    <!-- display a message -->
+    <span id="toast-msg">{{toastMsg}}</span>
+
+      <!-- <div > -->
+        <ul class="pure-menu-list" id="custom-dropdown-menus">
 
           <li class="pure-menu-item">
             <button id="play"  v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>
@@ -61,7 +64,7 @@
         </li>
 
       </ul>
-    </div>
+    <!-- </div> -->
 
 
   </div> <!-- end pure-menu-->
