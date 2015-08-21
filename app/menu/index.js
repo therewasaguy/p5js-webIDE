@@ -11,6 +11,12 @@ module.exports = {
 
 	},
 
+	ready: function() {
+		this.toastSpan = document.getElementById('toast-msg');
+
+		this.setToastMessage('welcome!!!');
+	},
+
 	data: {
 		toastMsg: 'hello world'
 	},
@@ -18,6 +24,19 @@ module.exports = {
 	methods: {
 		profileClicked: function() {
 			this.loggedIn ? window.open('/profile', '_self') : this.$root.authenticate();
+		},
+
+		setToastMessage: function(msg) {
+			this.toastMsg = msg;
+
+			var toastSpan = this.toastSpan;
+			toastSpan.className = '';
+
+			setTimeout(function() {
+				toastSpan.className = 'hidden';
+			}, 200);
+
+			// fade message out
 		}
 	}
 

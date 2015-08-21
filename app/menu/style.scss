@@ -9,7 +9,7 @@ $transitiontimeshort: 0.1s;
   height: 48px;
    -webkit-touch-callout: none;
     -webkit-user-select: none;
-    opacity: 0.0;
+    opacity: 1.0;
     /*position: absolute;*/
     left: 0px;
     top: 0px;
@@ -230,4 +230,13 @@ img.menu{
   margin-left: auto;
   left: 25%;
   position: relative;
+  opacity: 1;
+}
+
+#toast-msg.hidden {
+  opacity:0;
+  transition: opacity $transitiontimelong 1.5s ease-out;
+   -moz-transition: opacity $transitiontimelong 1.5s ease-out;
+   -webkit-transition: opacity $transitiontimelong 1.5s ease-out;
+
 }
