@@ -206,7 +206,7 @@ variable */
 #filemenu-container {
   margin: -5px;
   margin-top: -7px;
-  padding-right: 15px;
+  padding-right: 29px;
   font: 14px karla,sans-serif;
   display: inline-block;
   width: 200px; }
@@ -219,7 +219,8 @@ p.filemenu {
   color: #5D75C5;
   line-height: 100%;
   width: 180px;
-  padding-left: 20px; }
+  padding-left: 20px;
+  outline: none; }
 
 #filemenu {
   background-color: #202020;
@@ -611,13 +612,10 @@ img.menu {
 
 #sidebar-container {
   -webkit-user-select: none;
-  visibility: hidden;
   position: relative;
-  width: 10px;
-  margin-top: 120px;
-  margin-bottom: 30px;
-  flex: 1;
-  overflow-y: auto; }
+  width: 14px;
+  margin-top: 65px;
+  flex: 1; }
 
 #sidebar-container.expanded {
   width: 160px;
@@ -636,7 +634,7 @@ img.menu {
   height: 0;
   border-top: 6px solid transparent;
   border-bottom: 6px solid transparent;
-  border-left: 10px solid #38B449;
+  border-left: 14px solid #38B449;
   top: 4px;
   display: none;
   cursor: pointer;
@@ -657,20 +655,21 @@ img.menu {
   top: 0; }
 
 #filetree {
-  overflow-x: auto;
-  flex: 1; }
+  flex: 1;
+  overflow: hidden;
+  padding-left: 14px; }
   #filetree ul {
     list-style: none;
-    margin: 0;
-    padding: 0; }
+    margin-top: 1px;
+    padding: 0;
+    background-color: #969696; }
     #filetree ul li {
       margin: 0;
       padding: 0;
       position: relative; }
       #filetree ul li div {
         padding: 3px;
-        padding-left: 64px;
-        margin-left: 10px;
+        padding-left: 40px;
         cursor: pointer;
         color: #333333;
         min-width: 60px; }
@@ -749,6 +748,35 @@ img.menu {
 
 #show-editor-button.hide {
   opacity: 0;
+  display: none; }
+
+#sidebarButton {
+  background-color: black;
+  height: 100%;
+  width: 14px;
+  float: left;
+  overflow: hidden;
+  margin-left: -14px;
+  vertical-align: middle;
+  cursor: pointer; }
+
+.sidebarButtonItem {
+  background: none;
+  border: 0;
+  height: 20px;
+  padding: 0px;
+  display: inline;
+  cursor: pointer;
+  outline: 0;
+  float: left; }
+
+#sidebarIcon {
+  max-width: 100%; }
+
+#sidebarIcon.hide {
+  display: none; }
+
+#sidebarButton.hide {
   display: none; }
 
 #sketchframe-container {

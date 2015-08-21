@@ -64,6 +64,10 @@ module.exports = {
 
 		showEditorClass: function() {
 			return this.$root.editorHidden ? 'show' : 'hide';
+		},
+
+		sidebarIconClass: function() {
+			return this.$root.editorHidden ? 'hide' : 'show';
 		}
 
 	},

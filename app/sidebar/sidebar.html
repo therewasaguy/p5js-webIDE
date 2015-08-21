@@ -3,9 +3,9 @@
 
 	<div id="sidebar">
 		<div id="filetree">
-			<div id="sidebarButton">
-				<label for="showSidebar" style="display: inline-flex;">
-					<img id="sidebarIcon" class="sidebar" style="cursor: pointer;" src="/images/sidebar-handle.svg">
+			<div id="sidebarButton" class="{{sidebarIconClass}}" v-on="click: this.$root.toggleSidebar()">
+				<label style="display: inline-flex;">
+					<img  id="sidebarIcon" class="{{sidebarIconClass}}" style="cursor: pointer;" src="/images/sidebar-handle.svg">
  
 				</label>
 			</div>

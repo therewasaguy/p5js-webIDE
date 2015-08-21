@@ -73,6 +73,7 @@
   #filetree {
     // overflow-x: auto;
     flex: 1;
+    overflow: hidden;
     //background-color: black;
     padding-left: 14px;
 
@@ -241,6 +242,14 @@
   float: left;
 }
 
-img.sidebar{
+#sidebarIcon{
   max-width: 100%;
+}
+
+#sidebarIcon.hide{
+  display:none;
+}
+
+#sidebarButton.hide{
+  display: none;
 }

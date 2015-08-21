@@ -237,6 +237,7 @@ var appConfig = {
 		},
 
 		toggleSidebar: function() {
+			console.log('toggle!');
 			this.settings.showSidebar = !this.settings.showSidebar;
 		},
 

@@ -944,6 +944,7 @@ var appConfig = {
 		},
 
 		toggleSidebar: function() {
+			console.log('toggle!');
 			this.settings.showSidebar = !this.settings.showSidebar;
 		},
 
@@ -2086,6 +2087,10 @@ module.exports = {
 
 		showEditorClass: function() {
 			return this.$root.editorHidden ? 'show' : 'hide';
+		},
+
+		sidebarIconClass: function() {
+			return this.$root.editorHidden ? 'hide' : 'show';
 		}
 
 	},
@@ -2120,7 +2125,7 @@ module.exports = {
 
 
 },{"./file.html":21,"./sidebar.html":23,"jquery":49}],23:[function(require,module,exports){
-module.exports = '<div id="sidebar-container" class = "{{className}}"  v-on="contextmenu: popupMenu(this, $event)">\n\n\n	<div id="sidebar">\n		<div id="filetree">\n			<div id="sidebarButton">\n				<label for="showSidebar" style="display: inline-flex;">\n					<img id="sidebarIcon" class="sidebar" style="cursor: pointer;" src="/images/sidebar-handle.svg">\n \n				</label>\n			</div>\n			<ul>\n				<li v-repeat="currentProject.fileObjects | orderBy \'name\'" v-component="file"></li>\n			</ul>\n		</div>\n	</div>\n\n	</div>\n\n\n	<!-- <div id="sidebar-drag" v-on="mousedown: startDrag"></div>\n</div> -->\n\n<div id="show-editor-button" class = "{{showEditorClass}}" v-on="click: this.$root.showEditor()"> \n  <a href="#"> > </a> \n</div>\n';
+module.exports = '<div id="sidebar-container" class = "{{className}}"  v-on="contextmenu: popupMenu(this, $event)">\n\n\n	<div id="sidebar">\n		<div id="filetree">\n			<div id="sidebarButton" class="{{sidebarIconClass}}" v-on="click: this.$root.toggleSidebar()">\n				<label style="display: inline-flex;">\n					<img  id="sidebarIcon" class="{{sidebarIconClass}}" style="cursor: pointer;" src="/images/sidebar-handle.svg">\n \n				</label>\n			</div>\n			<ul>\n				<li v-repeat="currentProject.fileObjects | orderBy \'name\'" v-component="file"></li>\n			</ul>\n		</div>\n	</div>\n\n	</div>\n\n\n	<!-- <div id="sidebar-drag" v-on="mousedown: startDrag"></div>\n</div> -->\n\n<div id="show-editor-button" class = "{{showEditorClass}}" v-on="click: this.$root.showEditor()"> \n  <a href="#"> > </a> \n</div>\n';
 },{}],24:[function(require,module,exports){
 /**
  *  sketchframe holds the iframe that runs the sketch.
@@ -2559,7 +2564,7 @@ module.exports = {
 },{"./tab.html":27,"./template.html":28,"underscore":94}],27:[function(require,module,exports){
 module.exports = '<div class="{{className}}"><a href="#" v-show="!hidden" v-on="click: $root.openFile(this.name)">{{name}}{{file.contents !== file.originalContents ? \'*\' : \'\'}}</a>&nbsp\n	<a class="delete" href="#" v-show="!hidden" v-on="click: $root.closeTab(this.name)">x</a>\n</div>';
 },{}],28:[function(require,module,exports){
-module.exports = '  <div id="tabs"> \n    <ul id="tab-list"> \n      <li v-repeat="tabs | orderBy \'name\'" v-component="tab"></li>\n\n      <li id = "add">\n        <div>\n          <a href="#" v-on="click: $root.newFile()">+</a>\n        </div>\n      </li>\n\n<!-- hide -->\n      <li id="minimize">\n        <div>\n          <a href="#" v-on="click: $root.hideEditor()"> < </a>\n        </div>\n      </li>\n\n\n    </ul>\n\n  </div>';
+module.exports = '  <div id="tabs"> \n    <ul id="tab-list"> \n      <li v-repeat="tabs | orderBy \'name\'" v-component="tab"></li>\n\n      <li id = "add">\n        <div>\n          <a href="#" v-on="click: $root.newFile()">+</a>\n        </div>\n      </li>\n\n      <li id="minimize">\n        <div>\n          <a href="#" v-on="click: $root.hideEditor()"> < </a>\n        </div>\n      </li>\n\n\n    </ul>\n\n  </div>';
 },{}],29:[function(require,module,exports){
 /**
  * Copyright 2012 Craig Campbell
