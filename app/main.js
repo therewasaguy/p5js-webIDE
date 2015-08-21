@@ -47,7 +47,7 @@ var appConfig = {
 		currentProject: null,
 		currentUser: null,
 		recentProjects: [],
-
+		examples: [],
 		editorHidden: false
 	},
 
@@ -106,6 +106,26 @@ var appConfig = {
 				}
 			});
 		}
+
+		// get all example paths from server
+		$.ajax({
+			url: '/fetchexamples',
+			type: 'GET',
+			success: function(data) {
+				var examples = [];
+
+				for (var i = 0; i < data.length; i++) {
+
+					var example = {
+						'name': data[i].split('/').pop(),
+						'path': data[i].slice(1,data[i].length)
+					}
+					examples.push(example);
+				}
+
+				self.examples = examples;
+			}
+		});
 
 		// for testing
 		window._app = this;
@@ -408,6 +428,7 @@ var appConfig = {
 			var proj = this.currentProject;
 			var self = this;
 			var filesToClose = [];
+			this.editSessions = [];
 
 			// populate the array of filesToClose
 			self.tabs.forEach(function(tab) {
@@ -532,6 +553,38 @@ var appConfig = {
 
 		updateCurrentProject: function() {
 			this.modeFunction('updateCurrentProject');
+		},
+
+		loadExample: function(listItem) {
+			var self = this;
+			var pathToExample = listItem.path.replace('/public', '');
+
+			var name = listItem.name;
+
+			// get example contents
+			$.ajax({
+				// type: 'GET',
+				dataType: 'text',
+				url: pathToExample,
+				success: function(filedata) {
+
+					self.newProject(name);
+
+					setTimeout(function() {
+						self.currentFile.originalContents = filedata;
+						self.currentFile.contents = filedata;
+
+						// TO DO: this shouldnt be necessary why is it needed?
+						self.$.editor.editSessions[0].doc.setValue(filedata);
+
+						self.run();
+					}, 50);
+
+				},
+				error: function(e) {
+					console.log('fail');
+				}
+			});
 		}
 
 	}

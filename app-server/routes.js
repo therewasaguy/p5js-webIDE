@@ -6,6 +6,15 @@ var settings = require('./settings');
 
 var url = require('url');
 
+var examples;
+
+require('./examples').fetchExamples( function(error, results) {
+	console.log('got examples');
+	examples = results;
+	console.log(examples);
+});
+
+
 module.exports = function(app, passport) {
 
 	app.get('/', function(req, res) {
@@ -171,6 +180,14 @@ module.exports = function(app, passport) {
 
 	});
 
+	app.get('/fetchexamples', function(req, res) {
+		res.send(examples);
+	}),
+
+	app.get('/loadexample', function(req, res) {
+		// get example data
+		// return
+	}),
 
 	// route user/project
 	app.get('/*/*', function(req, res, next) {

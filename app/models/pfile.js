@@ -35,7 +35,7 @@ pFile.prototype.setDefaultContents = function(fileName) {
 	var contents = $.ajax({
 		// type: 'GET',
 		dataType: 'text',
-		url: '../sketch/template/' + fileName,
+		url: '/sketch/template/' + fileName,
 		success: function(filedata) {
 			self.contents = String(contents.responseText);
 			self.originalContents = self.contents;
@@ -53,9 +53,6 @@ pFile.prototype.setDefaultContents = function(fileName) {
 		}
 	});
 
-	// var contents = $.get('../sketch/template/' + fileName, function(data) {
-	// 	self.contents = contents.responseText;
-	// });
 };
 
 
