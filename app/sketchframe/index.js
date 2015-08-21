@@ -93,12 +93,6 @@ module.exports = {
 				// add some more code to the body
 				var ideCode = '';
 
-				// resize when in presentation mode
-				ideCode += '\n  function windowResized() {\n' +
-								'resizeCanvas(windowWidth, windowHeight);}\n';
-								'}\n'+
-								'resizeCanvas(windowWidth, windowHeight); if(typeof(setup) !== "undefined") {setup();}';
-
 				// create a new p5 otherwise p5 wont be instantiated
 				ideCode += '\n try { new p5();} catch(e){console.log("no p5");} ';
 
