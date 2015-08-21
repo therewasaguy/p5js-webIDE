@@ -89,7 +89,6 @@ module.exports = {
 				}
 
 
-
 				// add some more code to the body
 				var ideCode = '';
 

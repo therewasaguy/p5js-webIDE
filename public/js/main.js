@@ -275,8 +275,6 @@ module.exports = {
 	template: require('./template.html'),
 
 	ready: function() {
-		console.log('filemenu ready');
-
 		this.setupUI();
 	},
 
@@ -808,11 +806,8 @@ var appConfig = {
 						data.fileObjects = fileObjects;
 					}
 
-					console.log(data);
-
 					var proj = new Project(data);
 					proj.fileObjects = fileObjects;
-					console.log(proj);
 
 					self.openProject(proj);
 				}
@@ -950,7 +945,7 @@ var appConfig = {
 
 
 		initProject: function() {
-			alert('init!');
+
 			// if there is a recent project in local storage, load it.
 			var latestProj = JSON.parse( localStorage.getItem('latestProject') );
 			if (latestProj) {
@@ -976,8 +971,8 @@ var appConfig = {
 			}
 
 			$.ajax({
-				url: '/authenticate',
-				type: 'get'
+					url: '/authenticate',
+					type: 'get'
 				})
 				.success(function(res) {
 
@@ -991,6 +986,7 @@ var appConfig = {
 
 					// load user recent projects if user is authenticated
 					if (self.currentUser.authenticated) {
+						console.log('recentProjects');
 						self.recentProjects = self.findRecentUserProjects(self.currentUser);
 					}
 
@@ -1143,13 +1139,13 @@ var appConfig = {
 				var fileObj = self.currentProject.findFile(tabName);
 
 				if (typeof(fileObj) !== 'undefined') {
-					console.log('found file ' + tabName);
 					self.$broadcast('add-tab', fileObj, self.tabs);
 				} else {
 					console.log('error loading file ' + tabName);
 				}
 			}
 
+			self.run();
 		},
 
 		// load project by our ID, not by the gistID
@@ -1351,14 +1347,9 @@ var pFile = require('./pFile');
 
 // either load default file, or load new file;
 var Project = function(options) {
-	console.log('new project!!!!');
-	console.log(options);
-	if (options.fileObjects) {
-		console.log(options.fileObjects);
-	}
+
 	// if no options are provided, set default files
 	if (!options) {
-		console.log('there were no options!');
 		// is it necessary for the file to know if it is the current file?
 		var sketchFile = new pFile('sketch.js');
 		sketchFile.currentFile = true;
@@ -1407,8 +1398,7 @@ var Project = function(options) {
 	}
 
 	this.findFile = function(name) {
-		console.log('looking for file ' + name);
-		console.log(this.fileObjects);
+
 		for (var i = 0; i < this.fileObjects.length; i++) {
 			if (this.fileObjects[i].name === name) {
 				return this.fileObjects[i];
@@ -1704,7 +1694,7 @@ module.exports = {
 						var name = proj.name;
 						var dateModified = proj.updated_at;
 						var dateAgo = timeago(dateModified);
-
+						console.log('id: ' + id);
 						recentUserProjects.push({
 							name: name,
 							id: id,
@@ -2055,15 +2045,8 @@ module.exports = {
 				}
 
 
-
 				// add some more code to the body
 				var ideCode = '';
-
-				// resize when in presentation mode
-				ideCode += '\n  function windowResized() {\n' +
-								'resizeCanvas(windowWidth, windowHeight);}\n';
-								'}\n'+
-								'resizeCanvas(windowWidth, windowHeight); if(typeof(setup) !== "undefined") {setup();}';
 
 				// create a new p5 otherwise p5 wont be instantiated
 				ideCode += '\n try { new p5();} catch(e){console.log("no p5");} ';
@@ -2373,12 +2356,6 @@ module.exports = {
 					console.log('no file to open');
 					this.$root.clearEditor();
 				}
-				// try {
-				// } catch(e) {
-				// 	console.log('error');
-					// this.
-					// this.$root.newFile();
-				// }
 			}
 		},
 
@@ -2387,7 +2364,7 @@ module.exports = {
 			// make sure tab is not already open
 			var tabExists = _.findWhere(tabs, {name: fileObject.name});
 			if (tabExists) {
-				console.log('tab exists');
+				// console.log('tab exists');
 				return;
 			}
 

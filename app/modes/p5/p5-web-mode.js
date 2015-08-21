@@ -241,7 +241,7 @@ module.exports = {
 						var name = proj.name;
 						var dateModified = proj.updated_at;
 						var dateAgo = timeago(dateModified);
-
+						console.log('id: ' + id);
 						recentUserProjects.push({
 							name: name,
 							id: id,

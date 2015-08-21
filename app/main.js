@@ -99,11 +99,8 @@ var appConfig = {
 						data.fileObjects = fileObjects;
 					}
 
-					console.log(data);
-
 					var proj = new Project(data);
 					proj.fileObjects = fileObjects;
-					console.log(proj);
 
 					self.openProject(proj);
 				}
@@ -241,7 +238,7 @@ var appConfig = {
 
 
 		initProject: function() {
-			alert('init!');
+
 			// if there is a recent project in local storage, load it.
 			var latestProj = JSON.parse( localStorage.getItem('latestProject') );
 			if (latestProj) {
@@ -267,8 +264,8 @@ var appConfig = {
 			}
 
 			$.ajax({
-				url: '/authenticate',
-				type: 'get'
+					url: '/authenticate',
+					type: 'get'
 				})
 				.success(function(res) {
 
@@ -282,6 +279,7 @@ var appConfig = {
 
 					// load user recent projects if user is authenticated
 					if (self.currentUser.authenticated) {
+						console.log('recentProjects');
 						self.recentProjects = self.findRecentUserProjects(self.currentUser);
 					}
 
@@ -434,13 +432,13 @@ var appConfig = {
 				var fileObj = self.currentProject.findFile(tabName);
 
 				if (typeof(fileObj) !== 'undefined') {
-					console.log('found file ' + tabName);
 					self.$broadcast('add-tab', fileObj, self.tabs);
 				} else {
 					console.log('error loading file ' + tabName);
 				}
 			}
 
+			self.run();
 		},
 
 		// load project by our ID, not by the gistID
