@@ -48,7 +48,8 @@ module.exports = db = {
 
 
 		app.get('/loadproject', function(req, res, next) {
-			var username = req.query.username
+			var username = req.query.username;
+			console.log('username: ' + username);
 			var projectID = req.query.projectID;
 
 			// res.send('hi');
@@ -67,7 +68,6 @@ module.exports = db = {
 				// }
 				else if (proj) {
 					console.log('found the project, it belongs to this user');
-					console.log(proj);
 					res.send(proj);
 					return;
 				}
@@ -194,7 +194,7 @@ module.exports = db = {
 
 				var project = new Project({
 					owner_username: data.owner_username,
-					owner_id: data.owner_id,
+					owner_id: data.owner_id || null,
 					gist_id : data.gistID,
 					name : data.name,
 					files : projFiles,
