@@ -329,7 +329,7 @@ module.exports = {
 
 };
 },{"./template.html":6}],6:[function(require,module,exports){
-module.exports = '<div id="filemenu" class="pure-menu">\n\n  <span id="newProject" class="pure-menu-heading">\n    <p class="filemenu" v-on="click: $root.newProject()">NEW PROJECT <input type="image" class="buttonIcon" src="/images/plus-thin.svg" width="50 px" border="0"></p>\n  </span>\n\n  <div id="examples" class="accordion">\n  <p id="exampleButton" class="filemenu">EXAMPLES<img id="exampleIcon" class="buttonIcon" src="/images/arrow-down.svg" width="50 px" border="0"></p>\n  <div class="projectList">\n\n    <li class="filemenu">example 1</li>\n    <li class="filemenu">example 2</li>\n    <li class="filemenu">example 3</li>\n    <li class="filemenu">example 4</li>\n    <li class="filemenu">example 5</li>\n\n  </div>\n</div>\n<div id="myProjects" class="accordion">\n  <p id="projectsButton" class="filemenu">MY PROJECTS<img id="projectIcon" class="buttonIcon" src="/images/arrow-up.svg" width="50 px" border="0"></p>\n  <div class="projectList">\n\n<!-- class="pure-menu-link" -->\n    <li v-repeat="$root.recentProjects" class="filemenu">\n      <span data-projectid="{{id}}"  v-on="click: selectRecentProject(this)">\n        <span data-projectid="{{id}}">{{name}}</span> &nbsp;<span class="timeago" data-projectid="{{id}}"> {{timeago}}</span>\n      </span>\n    </li>\n  \n  </div>\n</div>\n\n\n</div>';
+module.exports = '<div id="filemenu" class="pure-menu">\n\n  <span id="newProject" class="pure-menu-heading">\n    <p class="filemenu" v-on="click: $root.newProject()">NEW PROJECT <input type="image" class="buttonIcon" src="/images/plus-thin.svg" width="50 px" border="0"></p>\n  </span>\n\n  <div id="examples" class="accordion">\n  <p id="exampleButton" class="filemenu">EXAMPLES<img id="exampleIcon" class="buttonIcon" src="/images/arrow-down.svg" width="50 px" border="0"></p>\n  <div class="projectList">\n\n    <li v-repeat="$root.examples" class="filemenu" data-path="{{path}}" v-on="click: $root.loadExample(this)">{{name}}</li>\n\n  </div>\n</div>\n<div id="myProjects" class="accordion">\n  <p id="projectsButton" class="filemenu">MY PROJECTS<img id="projectIcon" class="buttonIcon" src="/images/arrow-up.svg" width="50 px" border="0"></p>\n  <div class="projectList">\n\n<!-- class="pure-menu-link" -->\n    <li v-repeat="$root.recentProjects" class="filemenu">\n      <span data-projectid="{{id}}"  v-on="click: selectRecentProject(this)">\n        <span data-projectid="{{id}}">{{name}}</span> &nbsp;<span class="timeago" data-projectid="{{id}}"> {{timeago}}</span>\n      </span>\n    </li>\n  \n  </div>\n</div>\n\n\n</div>';
 },{}],7:[function(require,module,exports){
 /**
  *  Files module to handle the file tree
@@ -754,7 +754,7 @@ var appConfig = {
 		currentProject: null,
 		currentUser: null,
 		recentProjects: [],
-
+		examples: [],
 		editorHidden: false
 	},
 
@@ -813,6 +813,26 @@ var appConfig = {
 				}
 			});
 		}
+
+		// get all example paths from server
+		$.ajax({
+			url: '/fetchexamples',
+			type: 'GET',
+			success: function(data) {
+				var examples = [];
+
+				for (var i = 0; i < data.length; i++) {
+
+					var example = {
+						'name': data[i].split('/').pop(),
+						'path': data[i].slice(1,data[i].length)
+					}
+					examples.push(example);
+				}
+
+				self.examples = examples;
+			}
+		});
 
 		// for testing
 		window._app = this;
@@ -1115,6 +1135,7 @@ var appConfig = {
 			var proj = this.currentProject;
 			var self = this;
 			var filesToClose = [];
+			this.editSessions = [];
 
 			// populate the array of filesToClose
 			self.tabs.forEach(function(tab) {
@@ -1239,6 +1260,38 @@ var appConfig = {
 
 		updateCurrentProject: function() {
 			this.modeFunction('updateCurrentProject');
+		},
+
+		loadExample: function(listItem) {
+			var self = this;
+			var pathToExample = listItem.path.replace('/public', '');
+
+			var name = listItem.name;
+
+			// get example contents
+			$.ajax({
+				// type: 'GET',
+				dataType: 'text',
+				url: pathToExample,
+				success: function(filedata) {
+
+					self.newProject(name);
+
+					setTimeout(function() {
+						self.currentFile.originalContents = filedata;
+						self.currentFile.contents = filedata;
+
+						// TO DO: this shouldnt be necessary why is it needed?
+						self.$.editor.editSessions[0].doc.setValue(filedata);
+
+						self.run();
+					}, 50);
+
+				},
+				error: function(e) {
+					console.log('fail');
+				}
+			});
 		}
 
 	}
@@ -1341,7 +1394,7 @@ pFile.prototype.setDefaultContents = function(fileName) {
 	var contents = $.ajax({
 		// type: 'GET',
 		dataType: 'text',
-		url: '../sketch/template/' + fileName,
+		url: '/sketch/template/' + fileName,
 		success: function(filedata) {
 			self.contents = String(contents.responseText);
 			self.originalContents = self.contents;
@@ -1359,9 +1412,6 @@ pFile.prototype.setDefaultContents = function(fileName) {
 		}
 	});
 
-	// var contents = $.get('../sketch/template/' + fileName, function(data) {
-	// 	self.contents = contents.responseText;
-	// });
 };
 
 

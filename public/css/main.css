@@ -257,7 +257,9 @@ li.filemenu:active {
 
 .projectList {
   margin-left: 10px;
-  line-height: 150%; }
+  line-height: 150%;
+  max-height: 300px;
+  overflow: scroll; }
 
 .accordion {
   margin-bottom: 20px; }

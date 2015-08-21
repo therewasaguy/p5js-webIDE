@@ -8,11 +8,7 @@
   <p id="exampleButton" class="filemenu">EXAMPLES<img id="exampleIcon" class="buttonIcon" src="/images/arrow-down.svg" width="50 px" border="0"></p>
   <div class="projectList">
 
-    <li class="filemenu">example 1</li>
-    <li class="filemenu">example 2</li>
-    <li class="filemenu">example 3</li>
-    <li class="filemenu">example 4</li>
-    <li class="filemenu">example 5</li>
+    <li v-repeat="$root.examples" class="filemenu" data-path="{{path}}" v-on="click: $root.loadExample(this)">{{name}}</li>
 
   </div>
 </div>
