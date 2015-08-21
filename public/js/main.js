@@ -1285,7 +1285,7 @@ var appConfig = {
 						self.$.editor.editSessions[0].doc.setValue(filedata);
 
 						self.run();
-					}, 50);
+					}, 150);
 
 				},
 				error: function(e) {
