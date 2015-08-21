@@ -5,6 +5,8 @@ exports.callback = function(req, res){
 
   // res.send('Login success');
   res.redirect('/');
+	// res.redirect(req.headers.referer);
+
 };
 
 exports.error = function(req, res){

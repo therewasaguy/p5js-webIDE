@@ -29,7 +29,7 @@ module.exports = {
 			});
 
 			$(function(){ 
-			    $("#exampleButton").click(function(){ 
+			   $("#exampleButton").click(function(){ 
 			   $("#exampleIcon").attr('src',  
 			                ($("#exampleIcon").attr('src') == 'images/arrow-down.svg'  
 			                    ? 'images/arrow-up.svg'  

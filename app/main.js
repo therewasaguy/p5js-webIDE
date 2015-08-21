@@ -307,7 +307,14 @@ var appConfig = {
 
 		logOut: function() {
 			this.currentUser = new User();
+			this.clearLocalStorage();
 			window.open('/auth-logout', '_self');
+		},
+
+		clearLocalStorage: function() {
+			window.localStorage.removeItem('recentProjects');
+			window.localStorage.removeItem('user');
+			window.localStorage.removeItem('latestProject');
 		},
 
 		// returns an array of recent user projects by ID
@@ -444,35 +451,39 @@ var appConfig = {
 		// load project by our ID, not by the gistID
 		loadProjectByOurID: function(projID) {
 			var self = this;
-			var ourID = projID;
+
+			// if not logged in, open via '_'
+			var username = this.currentUser.username ? this.currentUser.username : '_';
+			window.open('/' + username + '/' + projID, '_self');
 
 			// change url
 			return;
-			// find project in the database (localStorage if offline...)
-			var projects = JSON.parse( localStorage.getItem('p5projects') );
-			var projObj = projects[ourID];
-			var gistID = projObj.gistID;
 
-			// open the project now
-			self.openProject(projObj)
+			// // find project in the database (localStorage if offline...)
+			// var projects = JSON.parse( localStorage.getItem('p5projects') );
+			// var projObj = projects[ourID];
+			// var gistID = projObj.gistID;
 
-			// meanwhile, tell the server to fetch the gist data
-			$.ajax({
-				url: '/loadprojectbygistid',
-				type: 'get',
-				dataType: 'json',
-				data: {
-						'gistID': gistID,
-						'gh_oa': this.currentUser.gh_oa
-					}
-				})
-				.success(function(res) {
-					var gistData = res;
-					self.gotGistData(gistData);
-				})
-				.fail(function(res) {
-					console.log('error loading project' + res);
-				});
+			// // open the project now
+			// self.openProject(projObj)
+
+			// // meanwhile, tell the server to fetch the gist data
+			// $.ajax({
+			// 	url: '/loadprojectbygistid',
+			// 	type: 'get',
+			// 	dataType: 'json',
+			// 	data: {
+			// 			'gistID': gistID,
+			// 			'gh_oa': this.currentUser.gh_oa
+			// 		}
+			// 	})
+			// 	.success(function(res) {
+			// 		var gistData = res;
+			// 		self.gotGistData(gistData);
+			// 	})
+			// 	.fail(function(res) {
+			// 		console.log('error loading project' + res);
+			// 	});
 		},
 
 		saveProjectToDatabase: function(proj) {

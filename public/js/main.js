@@ -302,7 +302,7 @@ module.exports = {
 			});
 
 			$(function(){ 
-			    $("#exampleButton").click(function(){ 
+			   $("#exampleButton").click(function(){ 
 			   $("#exampleIcon").attr('src',  
 			                ($("#exampleIcon").attr('src') == 'images/arrow-down.svg'  
 			                    ? 'images/arrow-up.svg'  
@@ -1014,7 +1014,14 @@ var appConfig = {
 
 		logOut: function() {
 			this.currentUser = new User();
+			this.clearLocalStorage();
 			window.open('/auth-logout', '_self');
+		},
+
+		clearLocalStorage: function() {
+			window.localStorage.removeItem('recentProjects');
+			window.localStorage.removeItem('user');
+			window.localStorage.removeItem('latestProject');
 		},
 
 		// returns an array of recent user projects by ID
@@ -1151,35 +1158,39 @@ var appConfig = {
 		// load project by our ID, not by the gistID
 		loadProjectByOurID: function(projID) {
 			var self = this;
-			var ourID = projID;
+
+			// if not logged in, open via '_'
+			var username = this.currentUser.username ? this.currentUser.username : '_';
+			window.open('/' + username + '/' + projID, '_self');
 
 			// change url
 			return;
-			// find project in the database (localStorage if offline...)
-			var projects = JSON.parse( localStorage.getItem('p5projects') );
-			var projObj = projects[ourID];
-			var gistID = projObj.gistID;
 
-			// open the project now
-			self.openProject(projObj)
+			// // find project in the database (localStorage if offline...)
+			// var projects = JSON.parse( localStorage.getItem('p5projects') );
+			// var projObj = projects[ourID];
+			// var gistID = projObj.gistID;
 
-			// meanwhile, tell the server to fetch the gist data
-			$.ajax({
-				url: '/loadprojectbygistid',
-				type: 'get',
-				dataType: 'json',
-				data: {
-						'gistID': gistID,
-						'gh_oa': this.currentUser.gh_oa
-					}
-				})
-				.success(function(res) {
-					var gistData = res;
-					self.gotGistData(gistData);
-				})
-				.fail(function(res) {
-					console.log('error loading project' + res);
-				});
+			// // open the project now
+			// self.openProject(projObj)
+
+			// // meanwhile, tell the server to fetch the gist data
+			// $.ajax({
+			// 	url: '/loadprojectbygistid',
+			// 	type: 'get',
+			// 	dataType: 'json',
+			// 	data: {
+			// 			'gistID': gistID,
+			// 			'gh_oa': this.currentUser.gh_oa
+			// 		}
+			// 	})
+			// 	.success(function(res) {
+			// 		var gistData = res;
+			// 		self.gotGistData(gistData);
+			// 	})
+			// 	.fail(function(res) {
+			// 		console.log('error loading project' + res);
+			// 	});
 		},
 
 		saveProjectToDatabase: function(proj) {
@@ -1256,7 +1267,7 @@ module.exports = {
 
 };
 },{"./template.html":12}],12:[function(require,module,exports){
-module.exports = '<div id ="button_header">\n\n  <div class="pure-menu pure-menu-horizontal">\n    <ul class="pure-menu-list">\n\n      <li class="pure-menu-item" v-on="click: $root.toggleFilemenu()">\n        <button class="menuItem">\n          <img class="menu" src="/images/filemenu-white.svg">\n        </button>\n      </li>\n\n      <li class="pure-menu-item">\n        <div class="menuItem">\n        <img class="menu" src="/images/temp/logo.png">\n      </div>\n      </li>\n\n      <li class="pure-menu-item">\n        <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>\n      </li>\n\n    </ul>\n\n<!--       <li class="pure-menu-item">\n        <span v-on="click: $root.forkProject()">Save: Fork</span>\n      </li> -->\n      <div id="custom-dropdown-menus">\n        <ul class="pure-menu-list">\n\n          <li class="pure-menu-item">\n            <button id="play"  v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>\n          </li>\n\n          <!-- <li class="pure-menu-item">\n            <button id="save" v-on="click: $root.commitGist()"><img class="menu" src="images/save-white.svg"></button>\n          </li> -->\n\n          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover pure-menu-allow-mousedown">\n            <!-- <span>save</span> -->\n            <button id="save" v-on="click: $root.commitGist()"><img class="menu" src="/images/save-white.svg"></button>\n            <!-- <button id="dropDown"><img class="menu" src="images/arrow-down.svg"></button> -->\n            <ul class="pure-menu-children">\n              <li class="pure-menu-item">\n                <span v-on="click: $root.commitGist()">Save to Cloud</span>\n              </li>\n              <li class="pure-menu-item">\n                <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>\n              </li>\n            </ul>\n          </li>\n\n        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">\n          <span id="profile-span" v-on="click: profileClicked()"></span>\n\n          <ul class="pure-menu-children">\n\n            <li class="pure-menu-item" v-if="!loggedIn" v-on="click: $root.authenticate()">\n              <span>Log in</span>\n            </li>\n\n            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.authenticate()">\n              <span class="username"> hello <b>{{currentUser.username}}</b> </span>!\n            </li>\n\n            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.logOut()">\n              <span>Log Out</span>\n            </li>\n\n\n\n<!--             <ul class="pure-menu-children" id="recentProjects">\n              <li class="pure-menu-item">\n                <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>\n              </li>\n            </ul> -->\n          </ul>\n        </li>\n\n      </ul>\n    </div>\n\n\n  </div> <!-- end pure-menu-->\n\n\n\n  <!-- <div id="toolbar"> -->\n\n  <!-- </div> -->\n\n</div>';
+module.exports = '<div id ="button_header">\n\n  <div class="pure-menu pure-menu-horizontal">\n    <ul class="pure-menu-list">\n\n      <li class="pure-menu-item" v-on="click: $root.toggleFilemenu()">\n        <button class="menuItem">\n          <img class="menu" src="/images/filemenu-white.svg">\n        </button>\n      </li>\n\n      <li class="pure-menu-item">\n        <div class="menuItem">\n        <img class="menu" src="/images/temp/logo.png">\n      </div>\n      </li>\n\n      <li class="pure-menu-item">\n        <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>\n      </li>\n\n    </ul>\n\n      <div id="custom-dropdown-menus">\n        <ul class="pure-menu-list">\n\n          <li class="pure-menu-item">\n            <button id="play"  v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>\n          </li>\n\n          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover pure-menu-allow-mousedown">\n            <button id="save" v-on="click: $root.commitGist()"><img class="menu" src="/images/save-white.svg"></button>\n            <ul class="pure-menu-children">\n              <li class="pure-menu-item">\n                <span v-on="click: $root.commitGist()">Save to Cloud</span>\n              </li>\n              <li class="pure-menu-item">\n                <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>\n              </li>\n            </ul>\n          </li>\n\n        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">\n          <span id="profile-span" v-on="click: profileClicked()"></span>\n\n          <ul class="pure-menu-children">\n\n            <li class="pure-menu-item" v-if="!loggedIn" v-on="click: $root.authenticate()">\n              <span>Log in</span>\n            </li>\n\n            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.authenticate()">\n              <span class="username"> hello <b>{{currentUser.username}}</b> </span>!\n            </li>\n\n            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.logOut()">\n              <span>Log Out</span>\n            </li>\n\n          </ul>\n        </li>\n\n      </ul>\n    </div>\n\n\n  </div> <!-- end pure-menu-->\n\n\n\n  <!-- <div id="toolbar"> -->\n\n  <!-- </div> -->\n\n</div>';
 },{}],13:[function(require,module,exports){
 var $ = require('jquery');
 var Vue = require('vue');
@@ -1281,7 +1292,7 @@ var pFile = function(name, contents) {
 
 	var defaultFiles = ['index.html', 'p5.js', 'sketch.js', 'style.css'];
 
-	if (defaultFiles.indexOf(name) > -1 && contents.length === 0) {
+	if (defaultFiles.indexOf(name) > -1 && this.contents.length === 0) {
 		this.setDefaultContents(name);
 	}
 
@@ -1694,7 +1705,7 @@ module.exports = {
 						var name = proj.name;
 						var dateModified = proj.updated_at;
 						var dateAgo = timeago(dateModified);
-						console.log('id: ' + id);
+
 						recentUserProjects.push({
 							name: name,
 							id: id,
@@ -1703,6 +1714,8 @@ module.exports = {
 
 						console.log('add a proj');
 					}
+
+					window.localStorage.removeItem('recentProjects');
 
 					// reset recent projects
 					self.recentProjects = recentUserProjects;

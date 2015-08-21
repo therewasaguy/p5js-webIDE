@@ -13,6 +13,7 @@ module.exports = function(app, passport) {
 	});
 
 	app.get('/editor', function(req, res) {
+
 		res.render('default');
 	});
 
@@ -143,7 +144,9 @@ module.exports = function(app, passport) {
 		req.session.destroy();
 		req.logout();
 
-		res.redirect(req.headers.referer);
+		// res.redirect(req.headers.referer);
+		res.clearCookie('userid');
+		res.redirect('/');
 	});
 
 	app.get('/profile', ensureAuthenticated, function(req, res) {
