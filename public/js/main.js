@@ -1230,8 +1230,8 @@ var appConfig = {
 			this.modeFunction('forkProject');
 		},
 
-		newProject: function(title) {
-			this.modeFunction('newProject', title);
+		newProject: function(title, sketchContents) {
+			this.modeFunction('newProject', title, sketchContents);
 		},
 
 		downloadProject: function() {
@@ -1273,19 +1273,33 @@ var appConfig = {
 				// type: 'GET',
 				dataType: 'text',
 				url: pathToExample,
-				success: function(filedata) {
+				success: function(fileData) {
 
-					self.newProject(name);
+					if (typeof (fileData) == 'undefined') {
+						// error
+						self.$.menu.setToastMsg('Error loading sketch ' + name);
+					} else {
 
-					setTimeout(function() {
-						self.currentFile.originalContents = filedata;
-						self.currentFile.contents = filedata;
+						self.newProject(name, fileData);
 
-						// TO DO: this shouldnt be necessary why is it needed?
-						self.$.editor.editSessions[0].doc.setValue(filedata);
+						setTimeout(function() {
+							self.currentFile.session = null;
+							window.ace.setValue(fileData, -1);
+							self.currentFile.originalContents = fileData;
+							self.currentFile.contents = fileData;
+						}, 50);
 
-						self.run();
-					}, 150);
+						// setTimeout(function() {
+						// 	self.currentFile.originalContents = fileData;
+						// 	self.currentFile.contents = fileData;
+
+						// 	// TO DO: this shouldnt be necessary why is it needed?
+						// 	// self.$.editor.editSessions[0].doc.setValue(filedata);
+						// 	window.ace.setValue(fileData, -1);
+
+						// 	self.run();
+						// }, 50);
+					}
 
 				},
 				error: function(e) {
@@ -1555,7 +1569,7 @@ var timeago = require('timeago');
 
 module.exports = {
 
-	newProject: function(title) {
+	newProject: function(title, sketchContents) {
 		var name = title ? title : prompt('Project Name', 'Cool Sketch');
 		var proj = new Project();
 		proj.name = name;
@@ -1565,6 +1579,7 @@ module.exports = {
 
 		// load current file
 		this.currentFile = proj.findFile(proj.openFileName);
+
 		// this.$broadcast('open-file', this.currentFile);
 
 		// set up tabs

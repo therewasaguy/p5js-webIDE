@@ -6,7 +6,7 @@ var timeago = require('timeago');
 
 module.exports = {
 
-	newProject: function(title) {
+	newProject: function(title, sketchContents) {
 		var name = title ? title : prompt('Project Name', 'Cool Sketch');
 		var proj = new Project();
 		proj.name = name;
@@ -16,6 +16,7 @@ module.exports = {
 
 		// load current file
 		this.currentFile = proj.findFile(proj.openFileName);
+
 		// this.$broadcast('open-file', this.currentFile);
 
 		// set up tabs
