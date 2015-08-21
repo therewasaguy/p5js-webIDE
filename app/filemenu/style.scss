@@ -34,6 +34,15 @@ p.filemenu {
 
 }
 
+// to do: change these styles
+li.filemenu:hover {
+  background-color:white;
+}
+
+li.filemenu:active {
+  background-color:yellow;
+}
+
 #newProject {
   background-color: #2D2D2D;
   padding: 1px;
