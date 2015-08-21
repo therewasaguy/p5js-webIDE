@@ -60,14 +60,14 @@ module.exports = db = {
 				}
 
 				// TO DO: ensure that owner === user...if not?
-				if (proj && proj.owner_username !== username) {
-					console.log('project does not belong to this user');
-					res.send('Error: project does not belong to this user');
-					return;
-
-				}
+				// if (proj && proj.owner_username !== username) {
+				// 	console.log('project does not belong to this user');
+				// 	res.send('Error: project does not belong to this user');
+				// 	return;
+				// }
 				else if (proj) {
 					console.log('found the project, it belongs to this user');
+					console.log(proj);
 					res.send(proj);
 					return;
 				}
@@ -143,6 +143,17 @@ module.exports = db = {
 
 				// otherwise, FORK
 				else {
+
+					var projFiles = [];
+					var fileNames = Object.keys(data.fileObjects);
+					for (var i = 0; i < fileNames.length; i++) {
+						var f = data.fileObjects[fileNames[i]];
+						projFiles.push({
+							name: f.name,
+							contents: f.contents
+						});
+					}
+
 					var obj = {
 						owner_username : data.owner_username || undefined,
 						owner_id : data.owner_id || undefined,
