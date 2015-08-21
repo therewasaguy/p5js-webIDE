@@ -791,9 +791,12 @@ var appConfig = {
 				type: 'GET',
 				success: function(data) {
 					var fileObjects = [];
+
 					if (typeof(data) === 'string') {
+						alert(data);
 						window.open('/', '_self');
 					}
+
 					else {
 						// // create files
 						for (var i = 0; i < data.files.length; i++) {
