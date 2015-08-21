@@ -566,32 +566,28 @@ var appConfig = {
 				// type: 'GET',
 				dataType: 'text',
 				url: pathToExample,
-				success: function(fileData) {
+				success: function(sketchContents) {
 
-					if (typeof (fileData) == 'undefined') {
-						// error
+					if (typeof (sketchContents) == 'undefined') {
 						self.$.menu.setToastMsg('Error loading sketch ' + name);
 					} else {
 
-						self.newProject(name, fileData);
+						// create a new project with default files
+						// except for a custom sketch and name
 
-						setTimeout(function() {
-							self.currentFile.session = null;
-							window.ace.setValue(fileData, -1);
-							self.currentFile.originalContents = fileData;
-							self.currentFile.contents = fileData;
-						}, 50);
+						var sketchFile = new pFile('sketch.js', sketchContents);
+						console.log(sketchFile);
 
-						// setTimeout(function() {
-						// 	self.currentFile.originalContents = fileData;
-						// 	self.currentFile.contents = fileData;
+						var projectOptions = {
+							'name': name,
+							'openFileName': 'sketch.js',
+							'openTabNames': ['sketch.js'],
+							'fileObjects': [new pFile('p5.js'), sketchFile, new pFile('index.html'), new pFile('style.css')]
+						}
 
-						// 	// TO DO: this shouldnt be necessary why is it needed?
-						// 	// self.$.editor.editSessions[0].doc.setValue(filedata);
-						// 	window.ace.setValue(fileData, -1);
-
-						// 	self.run();
-						// }, 50);
+						var newProj = new Project(projectOptions);
+						self.closeProject();
+						self.openProject(newProj)
 					}
 
 				},

@@ -6,11 +6,25 @@ var timeago = require('timeago');
 
 module.exports = {
 
-	newProject: function(title, sketchContents) {
-		var name = title ? title : prompt('Project Name', 'Cool Sketch');
-		var proj = new Project();
-		proj.name = name;
+	/**
+	 *  Create a new project and close out everything else
+	 *  
+	 *  @param  {Object} titleOrOptions either a title (string) or options (object)
+	 */
+	newProject: function(titleOrOptions) {
+		var proj;
 
+		if (typeof(titleOrOptions) === 'string') {
+			var name = titleOrOptions ? titleOrOptions : prompt('Project Name', 'Cool Sketch');
+			proj = new Project();
+			proj.name = name;
+		} else if (titleOrOptions) {
+			console.log('new file with options');
+			proj = new Project(titleOrOptions);
+		}
+
+		console.log(proj);
+		return;
 		// close existing project
 		this.closeProject();
 
