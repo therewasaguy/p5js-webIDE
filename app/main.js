@@ -568,6 +568,12 @@ var appConfig = {
 				url: pathToExample,
 				success: function(sketchContents) {
 
+					// make examples full screen ~ they look cool!
+					var createCanvasLines = sketchContents.match(/createCanvas\((.*?)\)/gmi);
+					if (createCanvasLines.length === 1) {
+						sketchContents = sketchContents.replace(createCanvasLines[0], 'createCanvas(windowWidth, windowHeight)');
+					}
+
 					if (typeof (sketchContents) == 'undefined') {
 						self.$.menu.setToastMsg('Error loading sketch ' + name);
 					} else {
