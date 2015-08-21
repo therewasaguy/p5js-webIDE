@@ -1,12 +1,26 @@
 <div id="sidebar-container" class = "{{className}}"  v-on="contextmenu: popupMenu(this, $event)">
+
+
 	<div id="sidebar">
 		<div id="filetree">
+			<div id="sidebarButton">
+				<label for="showSidebar" style="display: inline-flex;">
+					<img id="sidebarIcon" class="sidebar" style="cursor: pointer;" src="/images/sidebar-handle.svg">
+ 
+				</label>
+			</div>
 			<ul>
 				<li v-repeat="currentProject.fileObjects | orderBy 'name'" v-component="file"></li>
 			</ul>
 		</div>
 	</div>
-	<div id="sidebar-drag" v-on="mousedown: startDrag"></div>
-</div>
 
-<div id="show-editor-button" class = "{{showEditorClass}}" v-on="click: this.$root.showEditor()"> <a href="#"> > </a> </div>
+	</div>
+
+
+	<!-- <div id="sidebar-drag" v-on="mousedown: startDrag"></div>
+</div> -->
+
+<div id="show-editor-button" class = "{{showEditorClass}}" v-on="click: this.$root.showEditor()"> 
+  <a href="#"> > </a> 
+</div>

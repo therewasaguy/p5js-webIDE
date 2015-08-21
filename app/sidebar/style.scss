@@ -15,19 +15,20 @@
 
   #sidebar-container {
     -webkit-user-select: none;
-    visibility: hidden;
+    //visibility: hidden;
     position: relative;
-    width: 10px;  
-    margin-top: 120px;
-    margin-bottom: 30px;
+    width: 14px;  
+    margin-top: 65px;
+    //margin-bottom: 30px;
     flex: 1;
-    overflow-y: auto;
+    //overflow-y: auto;
   }
 
   #sidebar-container.expanded{
     width:160px;
     visibility: visible;
     min-width: 40px; 
+
   }
 
 
@@ -44,7 +45,7 @@
     height: 0;
     border-top: 6px solid transparent;
     border-bottom: 6px solid transparent;
-    border-left: 10px solid #38B449;
+    border-left: 14px solid #38B449;
     top: 4px;
     display: none;
     cursor: pointer;
@@ -70,13 +71,16 @@
 
 
   #filetree {
-    overflow-x: auto;
+    // overflow-x: auto;
     flex: 1;
+    //background-color: black;
+    padding-left: 14px;
 
     ul {
       list-style: none;
-      margin: 0;
+      margin-top: 1px;
       padding: 0;
+      background-color: #969696;
 
       li {
         margin: 0;
@@ -85,8 +89,8 @@
        
         div {
           padding: 3px;
-          padding-left: 64px;
-          margin-left:10px;
+          padding-left: 40px;
+          //margin-left:10px;
           cursor: pointer;
           color: $dark-gray;
           min-width: 60px;
@@ -214,3 +218,29 @@
       display:none;
     }
 
+#sidebarButton {
+  background-color: black;
+  height: 100%;
+  width: 14px;
+  float: left;
+  overflow: hidden;
+  margin-left: -14px;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.sidebarButtonItem {
+  background: none;
+  border: 0;
+  height: 20px;
+  padding: 0px;
+  //padding-right: 20px;
+  display: inline;
+  cursor: pointer;
+  outline: 0; 
+  float: left;
+}
+
+img.sidebar{
+  max-width: 100%;
+}
