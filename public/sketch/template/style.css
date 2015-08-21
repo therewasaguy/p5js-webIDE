@@ -7,6 +7,9 @@ html, body {
 }
 
 #defaultCanvas {
-  right:0px;
-  position:absolute;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: auto;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
 }
