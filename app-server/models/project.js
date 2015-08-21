@@ -26,7 +26,9 @@ var projectSchema = new Schema({
   }],
 
   openFileName: String,
-  openTabNames: [String]
+  openTabNames: [String],
+
+  forkedFrom: Schema.Types.ObjectId
 });
 
 // on every save, add the date
