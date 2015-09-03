@@ -595,7 +595,7 @@ var appConfig = {
 							'name': name,
 							'openFileName': 'sketch.js',
 							'openTabNames': ['sketch.js'],
-							'fileObjects': [new pFile('p5.js'), sketchFile, new pFile('index.html'), new pFile('style.css')]
+							'fileObjects': [new pFile('p5.js'), new pFile('p5.dom.js'), new pFile('p5.sound.js'), sketchFile, new pFile('index.html'), new pFile('style.css')]
 						}
 
 						var newProj = new Project(projectOptions);

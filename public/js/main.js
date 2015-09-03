@@ -1302,7 +1302,7 @@ var appConfig = {
 							'name': name,
 							'openFileName': 'sketch.js',
 							'openTabNames': ['sketch.js'],
-							'fileObjects': [new pFile('p5.js'), sketchFile, new pFile('index.html'), new pFile('style.css')]
+							'fileObjects': [new pFile('p5.js'), new pFile('p5.dom.js'), new pFile('p5.sound.js'), sketchFile, new pFile('index.html'), new pFile('style.css')]
 						}
 
 						var newProj = new Project(projectOptions);
@@ -1401,7 +1401,7 @@ var pFile = function(name, contents) {
 
 	this.name = name || 'untitled';
 
-	var defaultFiles = ['index.html', 'p5.js', 'sketch.js', 'style.css'];
+	var defaultFiles = ['index.html', 'p5.js', 'p5.sound.js', 'p5.dom.js', 'sketch.js', 'style.css'];
 
 	if (defaultFiles.indexOf(name) > -1 && !this.contents) {
 		this.setDefaultContents(name);
@@ -1475,7 +1475,7 @@ var Project = function(options) {
 		/**
 		 *  @property {Array} fileObjects Array of pFile objects
 		 */
-		this.fileObjects = [ new pFile('p5.js'), sketchFile, new pFile('index.html'), new pFile('style.css')];
+		this.fileObjects = [ new pFile('p5.js'), sketchFile, new pFile('index.html'), new pFile('p5.sound.js'), new pFile('p5.dom.js'), new pFile('style.css')];
 
 		/**
 		 *  [name description]
