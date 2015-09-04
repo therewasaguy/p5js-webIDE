@@ -303,9 +303,20 @@ li.filemenu {
   -moz-transition: opacity 0.1s 0s ease-in;
   -webkit-transition: opacity 0.1s 0s ease-in; }
 
+#fullscreenbutton {
+  width: 33px;
+  height: 34px;
+  background: none;
+  margin-top: -15px;
+  background-image: url("/images/browser.svg");
+  display: inline;
+  cursor: pointer;
+  outline: 0;
+  float: right; }
+
 #play {
   background: none;
-  background-image: url("/images/play-gray.svg");
+  background-image: url("/images/play-pink.svg");
   border: 0;
   width: 33px;
   height: 34px;
@@ -314,14 +325,14 @@ li.filemenu {
   cursor: pointer;
   outline: 0;
   float: right;
-  margin-top: -22px;
-  margin-right: 10px; }
+  margin-right: 10px;
+  padding: 10px; }
   #play:hover {
-    background-image: url("/images/play-pink.svg"); }
+    background-image: url("/images/play-gray.svg"); }
   #play.running {
-    background-image: url("/images/stop-gray.svg"); }
+    background-image: url("/images/stop-orange.svg"); }
     #play.running:hover {
-      background-image: url("/images/stop-orange.svg"); }
+      background-image: url("/images/stop-gray.svg"); }
 
 #save {
   background: none;
@@ -367,7 +378,6 @@ img.menu {
 #project-name {
   padding-right: 20px;
   margin-right: 10px;
-  margin-left: -20px;
   font-size: 24px;
   margin-top: 10px;
   margin-bottom: 10px;
@@ -718,7 +728,7 @@ img.menu {
 #show-editor-button {
   position: relative;
   flex: 1;
-  top: 0px;
+  top: -195px;
   width: 30px;
   height: 30px;
   opacity: 0.4;

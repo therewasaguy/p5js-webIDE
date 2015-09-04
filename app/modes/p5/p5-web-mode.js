@@ -18,8 +18,6 @@ module.exports = {
 		proj = new Project();
 		proj.name = name;
 
-		console.log(proj);
-
 		// close existing project
 		this.closeProject();
 

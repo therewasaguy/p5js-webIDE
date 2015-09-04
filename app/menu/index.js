@@ -45,7 +45,14 @@ module.exports = {
 				toastSpan.className = 'hidden';
 			}, 200);
 
+		},
+
+		goFullScreen: function(e) {
+			var div = document.getElementById('sketchframe-container');
+			div.requestFullscreen();
 		}
+
+
 	}
 
 };

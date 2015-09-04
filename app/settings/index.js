@@ -24,13 +24,7 @@ module.exports = {
 			var parsed = parseInt(e.target.value);
 			this.tabSize = parsed >= 1 ? parsed : 1;
 			this.tabSizeDisplay = this.tabSize;
-		},
-
-		goFullScreen: function(e) {
-			var div = document.getElementById('sketchframe-container');
-			div.requestFullscreen();
 		}
-
 	}
 
 };

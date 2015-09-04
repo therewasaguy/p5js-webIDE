@@ -16,6 +16,10 @@
       </li>
 
       <li class="pure-menu-item">
+        <button id="play"  v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>
+      </li>
+
+      <li class="pure-menu-item">
         <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>
       </li>
 
@@ -28,7 +32,7 @@
         <ul class="pure-menu-list" id="custom-dropdown-menus">
 
           <li class="pure-menu-item">
-            <button id="play"  v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>
+            <button v-on="click: goFullScreen" id="fullscreenbutton"><img src="/images/browser.svg"></button>
           </li>
 
           <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover pure-menu-allow-mousedown">
