@@ -1,12 +1,13 @@
 doctype html
 
 html(lang="en")
-	head!=htmlHead
-		title!= projName
+	head
+		title!= projName +' by ' + username
+		!=htmlHead
 
 	each file in cssFiles
 		style!=file.contents
 
 	body!=htmlBody
-		h1!= username
-		h2!= projName
+
+		include ../templates/editbutton.html
