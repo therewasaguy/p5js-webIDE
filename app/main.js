@@ -68,8 +68,11 @@ var appConfig = {
 	created: function() {
 		var self = this;
 
+		// parse path and make ajax calls
 		var pathname = window.location.pathname.split('/');
-		if (pathname.length === 3) {
+
+		// ./username/project
+		if (pathname.length >= 3) {
 
 			// do not init a blank one, or one from local storage. We are loading one from db instead
 			this.shouldLoadExistingProject = true;
@@ -86,7 +89,7 @@ var appConfig = {
 					var fileObjects = [];
 
 					if (typeof(data) === 'string') {
-						alert(data);
+						// alert(data);
 						window.open('/', '_self');
 					}
 

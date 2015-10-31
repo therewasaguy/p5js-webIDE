@@ -1,0 +1,12 @@
+doctype html
+
+html(lang="en")
+	head!=htmlHead
+		title!= projName
+
+	each file in cssFiles
+		style!=file.contents
+
+	body!=htmlBody
+		h1!= username
+		h2!= projName
