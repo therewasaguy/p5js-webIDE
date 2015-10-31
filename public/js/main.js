@@ -1332,6 +1332,9 @@ window.onload = function() {
 module.exports = {
 	template: require('./template.html'),
 
+	// ref of most recently opened window, if there is one
+	newWindowOpen: -1,
+
 	computed: {
 		className: function() {
 			if (this.$root.running && this.$root.editorHidden) {
@@ -1381,6 +1384,31 @@ module.exports = {
 		goFullScreen: function(e) {
 			var div = document.getElementById('sketchframe-container');
 			div.requestFullscreen();
+		},
+
+		// open the current code in a new window
+		openInNewWindow: function(e) {
+
+			// this only works if a project is saved
+
+			var pathname = window.location.pathname.split('/');
+			var username = pathname[1];
+			var projectID = pathname[2];
+
+			if (!username || !projectID) {
+				alert('please save project before opening in a new window')
+				return false;
+			}
+
+			// TO DO: open without fetching code from server
+
+			// TO DO: refresh if a window is already open (is this possible?)
+			if (this.newWindowOpen) {
+				// the open tab will know to refresh
+				this.newWindowOpen.postMessage('newcode', window.localStorage.fileObjects);
+			} else {
+				this.newWindowOpen = window.open('http://' + window.location.host + '/view/' + username + '/' + projectID); 
+			}
 		}
 
 
@@ -1388,7 +1416,7 @@ module.exports = {
 
 };
 },{"./template.html":12}],12:[function(require,module,exports){
-module.exports = '<div id ="button_header">\n\n  <div class="pure-menu pure-menu-horizontal">\n    <ul class="pure-menu-list">\n\n      <li class="pure-menu-item" v-on="click: $root.toggleFilemenu()">\n        <button class="menuItem">\n          <img class="menu" src="/images/filemenu-white.svg">\n        </button>\n      </li>\n\n      <li class="pure-menu-item">\n        <div class="menuItem">\n        <img class="menu" src="/images/temp/logo.png">\n      </div>\n      </li>\n\n      <li class="pure-menu-item">\n        <button id="play"  v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>\n      </li>\n\n      <li class="pure-menu-item">\n        <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>\n      </li>\n\n    </ul>\n\n    <!-- display a message -->\n    <span id="toast-msg">{{toastMsg}}</span>\n\n      <!-- <div > -->\n        <ul class="pure-menu-list" id="custom-dropdown-menus">\n\n          <li class="pure-menu-item">\n            <button v-on="click: goFullScreen" id="fullscreenbutton"><img src="/images/browser.svg"></button>\n          </li>\n\n          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover pure-menu-allow-mousedown">\n            <button id="save" v-on="click: $root.commitGist()"><img class="menu" src="/images/save-white.svg"></button>\n            <ul class="pure-menu-children">\n              <li class="pure-menu-item">\n                <span v-on="click: $root.commitGist()">Save to Cloud</span>\n              </li>\n              <li class="pure-menu-item">\n                <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>\n              </li>\n            </ul>\n          </li>\n\n        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">\n          <span id="profile-span" v-on="click: profileClicked()"></span>\n\n          <ul class="pure-menu-children">\n\n            <li class="pure-menu-item" v-if="!loggedIn" v-on="click: $root.authenticate()">\n              <span>Log in</span>\n            </li>\n\n            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.authenticate()">\n              <span class="username"> hello <b>{{currentUser.username}}</b> </span>!\n            </li>\n\n            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.logOut()">\n              <span>Log Out</span>\n            </li>\n\n          </ul>\n        </li>\n\n      </ul>\n    <!-- </div> -->\n\n\n  </div> <!-- end pure-menu-->\n\n\n\n  <!-- <div id="toolbar"> -->\n\n  <!-- </div> -->\n\n</div>';
+module.exports = '<div id ="button_header">\n\n  <div class="pure-menu pure-menu-horizontal">\n    <ul class="pure-menu-list">\n\n      <li class="pure-menu-item" v-on="click: $root.toggleFilemenu()">\n        <button class="menuItem">\n          <img class="menu" src="/images/filemenu-white.svg">\n        </button>\n      </li>\n\n      <li class="pure-menu-item">\n        <div class="menuItem">\n        <img class="menu" src="/images/temp/logo.png">\n      </div>\n      </li>\n\n      <li class="pure-menu-item">\n        <button id="play"  v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>\n      </li>\n\n      <li class="pure-menu-item">\n        <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>\n      </li>\n\n    </ul>\n\n    <!-- display a message -->\n    <span id="toast-msg">{{toastMsg}}</span>\n\n      <!-- <div > -->\n        <ul class="pure-menu-list" id="custom-dropdown-menus">\n\n          <li class="pure-menu-item">\n            <button v-on="click: goFullScreen" id="fullscreenbutton"><img src="/images/browser.svg"></button>\n          </li>\n\n          <li class="pure-menu-item">\n            <button v-on="click: openInNewWindow" id="new-window-button"><img src="/images/browser.svg"></button>\n          </li>\n\n\n          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover pure-menu-allow-mousedown">\n            <button id="save" v-on="click: $root.commitGist()"><img class="menu" src="/images/save-white.svg"></button>\n            <ul class="pure-menu-children">\n              <li class="pure-menu-item">\n                <span v-on="click: $root.commitGist()">Save to Cloud</span>\n              </li>\n              <li class="pure-menu-item">\n                <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>\n              </li>\n            </ul>\n          </li>\n\n        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">\n          <span id="profile-span" v-on="click: profileClicked()"></span>\n\n          <ul class="pure-menu-children">\n\n            <li class="pure-menu-item" v-if="!loggedIn" v-on="click: $root.authenticate()">\n              <span>Log in</span>\n            </li>\n\n            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.authenticate()">\n              <span class="username"> hello <b>{{currentUser.username}}</b> </span>!\n            </li>\n\n            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.logOut()">\n              <span>Log Out</span>\n            </li>\n\n          </ul>\n        </li>\n\n      </ul>\n    <!-- </div> -->\n\n\n  </div> <!-- end pure-menu-->\n\n\n\n  <!-- <div id="toolbar"> -->\n\n  <!-- </div> -->\n\n</div>';
 },{}],13:[function(require,module,exports){
 var $ = require('jquery');
 var Vue = require('vue');

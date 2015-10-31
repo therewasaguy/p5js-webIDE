@@ -54,6 +54,19 @@ $transitiontimeshort: 0.1s;
  float: right;
 }
 
+#new-window-button {
+ width: 33px;
+ height: 34px;
+ background: none;
+ margin-top: -15px;
+ background-image: url('/images/browser.svg');
+ display: inline;
+ cursor: pointer;
+ outline: 0; 
+ float: right;
+ filter:invert(100%)
+}
+
 #play {
  background: none;
  background-image: url('/images/play-pink.svg');

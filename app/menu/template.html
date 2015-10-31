@@ -35,6 +35,11 @@
             <button v-on="click: goFullScreen" id="fullscreenbutton"><img src="/images/browser.svg"></button>
           </li>
 
+          <li class="pure-menu-item">
+            <button v-on="click: openInNewWindow" id="new-window-button"><img src="/images/browser.svg"></button>
+          </li>
+
+
           <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover pure-menu-allow-mousedown">
             <button id="save" v-on="click: $root.commitGist()"><img class="menu" src="/images/save-white.svg"></button>
             <ul class="pure-menu-children">

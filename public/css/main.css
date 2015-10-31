@@ -314,6 +314,18 @@ li.filemenu {
   outline: 0;
   float: right; }
 
+#new-window-button {
+  width: 33px;
+  height: 34px;
+  background: none;
+  margin-top: -15px;
+  background-image: url("/images/browser.svg");
+  display: inline;
+  cursor: pointer;
+  outline: 0;
+  float: right;
+  filter: invert(100%); }
+
 #play {
   background: none;
   background-image: url("/images/play-pink.svg");
@@ -790,28 +802,6 @@ img.menu {
 #sidebarButton.hide {
   display: none; }
 
-#sketchframe-container {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  z-index: 0; }
-
-#sketchPane, #editorPane {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  height: 100%; }
-
-#sketchPane {
-  width: 100%;
-  height: 100%;
-  right: 0; }
-
-#sketchFrame {
-  width: 100%;
-  height: 100%; }
-
 #tab-container {
   display: flex;
   flex: 1;
@@ -869,6 +859,28 @@ img.menu {
 
 #minimize a:hover {
   color: yellow; }
+
+#sketchframe-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  z-index: 0; }
+
+#sketchPane, #editorPane {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%; }
+
+#sketchPane {
+  width: 100%;
+  height: 100%;
+  right: 0; }
+
+#sketchFrame {
+  width: 100%;
+  height: 100%; }
 
 @font-face {
   font-family: karla;
