@@ -58,8 +58,19 @@ module.exports = {
 		// open the current code in a new window
 		openInNewWindow: function(e) {
 
-			// this only works if a project is saved
+			// view draft -->
+			if (this.newWindowOpen) {
+				// the open tab will know to refresh
+				this.newWindowOpen.location.reload();
+				this.newWindowOpen.focus();
+			} else {
+				this.newWindowOpen = window.open('http://' + window.location.host + '/view/draft'); 
+			}
+			return;
 
+			/*** open saved project: ***/
+
+			// this only works if a project is saved
 			var pathname = window.location.pathname.split('/');
 			var username = pathname[1];
 			var projectID = pathname[2];
@@ -72,6 +83,8 @@ module.exports = {
 			// TO DO: open without fetching code from server
 
 			// TO DO: refresh if a window is already open (is this possible?)
+
+			// this opens saved project
 			if (this.newWindowOpen) {
 				// the open tab will know to refresh
 				this.newWindowOpen.postMessage('newcode', window.localStorage.fileObjects);
