@@ -10,6 +10,5 @@ exports.callback = function(req, res){
 };
 
 exports.error = function(req, res){
-	console.log(req);
   res.send('unable to login');
 };
