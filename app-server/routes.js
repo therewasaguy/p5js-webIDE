@@ -11,14 +11,12 @@ var examples;
 var Project = require('./models/project.js');
 var User = require('./models/user.js');
 
-var htmlparser = require('htmlparser2');
 var jsdom = require('jsdom');
 var jquery = require('jquery')(jsdom.jsdom().defaultView);
 
 require('./examples').fetchExamples( function(error, results) {
 	console.log('got examples');
 	examples = results;
-	// console.log(examples);
 });
 
 
@@ -127,6 +125,10 @@ module.exports = function(app, passport) {
 			}
 		});
 
+	});
+
+	app.get('/view/draft', function(req, res) {
+		res.render('fsdraft');
 	});
 
 	app.get('/editor', function(req, res) {

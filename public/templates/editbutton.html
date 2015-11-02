@@ -1,0 +1,25 @@
+<style>
+	.toppa {
+		z-index:100; position:absolute; opacity:0.8;margin:10px;padding:5px; background-color:rgba(20, 20, 20, 0.2);
+	}
+</style>
+
+<div class="toppa" style="left:0px; bottom:0px; background-color:(20,20,20,0.0);">
+	<img src="/images/temp/logo.png" style="width:25px; padding-left: 3px;
+		padding-top: 4.5px;
+		padding-right: 1.75px;"/>
+</div>
+
+<div class="toppa" style="right:0px; top:0px; ">
+	<input type="image" src="/images/code.svg" alt="edit code" style="width:25px;margin:auto;" onclick="__editCode()">
+</div>
+
+<script>
+	function __editCode() {
+		var pathname = window.location.pathname.split('/');
+		var username = pathname[2];
+		var projectID = pathname[3];
+
+		window.open('http://' + window.location.host + '/' + username + '/' + projectID); 
+	}
+</script>
