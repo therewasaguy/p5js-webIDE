@@ -1,11 +1,14 @@
-// inspiration from https://github.com/jrc03c/doodledoo/blob/gh-pages/p5js_sketch.html
+/**
+ *  Loads all code from localstorage and injects it into the page.
+ *  Inspired by doodledoo https://github.com/jrc03c/doodledoo/blob/gh-pages/p5js_sketch.html
+ */
+
 (function() {
 
 	var project = JSON.parse(localStorage['latestProject']);
 	var fileArr = project.fileObjects;
 
 	initCode(fileArr, window);
-
 
 	// parse stuff
 	// get all of the project files into a dictionary
