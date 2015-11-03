@@ -1392,11 +1392,14 @@ module.exports = {
 			// view draft -->
 			if (this.newWindowOpen) {
 				// the open tab will know to refresh
-				this.newWindowOpen.location.reload();
-				this.newWindowOpen.focus();
-			} else {
-				this.newWindowOpen = window.open('http://' + window.location.host + '/view/draft'); 
+				try {
+					this.newWindowOpen.location.reload();
+					this.newWindowOpen.focus();
+					return;
+				} catch(e) {}
 			}
+
+			this.newWindowOpen = window.open('http://' + window.location.host + '/view/draft'); 
 			return;
 
 			/*** open saved project: ***/

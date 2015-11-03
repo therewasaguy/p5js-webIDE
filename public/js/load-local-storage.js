@@ -39,12 +39,11 @@
 			frameBody.appendChild(elem);
 		}
 
-
 		// add some more code to the body
 		var ideCode = '';
 
 		// create a new p5 otherwise p5 wont be instantiated
-		ideCode += '\n try { new p5();} catch(e){console.log("no p5");} ';
+		// ideCode += '\n try { new p5();} catch(e){console.log("no p5");} ';
 
 		var elem = injectJS(ideCode, w);
 		frameBody.appendChild(elem);
