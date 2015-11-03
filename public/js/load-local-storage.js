@@ -68,8 +68,8 @@
 		var head = w.document.createElement('head');
 
 		// find if content belongs in the HEAD or the BODY, and append it there
-		var headTag = contents.match(/<head.*?>([\s\S]*?)<\/head>/gmi);
-		var bodyTag = contents.match(/<body.*?>([\s\S]*?)<\/body>/gmi);
+		var headTag = newContents.match(/<head.*?>([\s\S]*?)<\/head>/gmi);
+		var bodyTag = newContents.match(/<body.*?>([\s\S]*?)<\/body>/gmi);
 
 		// figure out contents of the Head and Body and add them to the new head and body
 		var regex = new RegExp('head', 'i');
@@ -272,7 +272,8 @@
 
 	function removeComments(contents) {
 		// remove comments
-		var htmlComments = contents.match(/<!--(.*)-->/);
+		var htmlComments = contents.match(/<!--(.|\s)*?-->/g);
+
 		if (htmlComments) {
 			htmlComments.forEach( function(comment) {
 				contents = contents.replace(comment, '');
