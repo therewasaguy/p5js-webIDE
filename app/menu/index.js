@@ -94,6 +94,11 @@ module.exports = {
 			} else {
 				this.newWindowOpen = window.open('http://' + window.location.host + '/view/' + username + '/' + projectID); 
 			}
+		},
+
+		// open dialog with share URL / embed code
+		openShareDialog: function(e) {
+			this.$root.openShareDialog();
 		}
 
 

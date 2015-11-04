@@ -43,31 +43,50 @@ $transitiontimeshort: 0.1s;
 
 
 #fullscreenbutton {
- width: 33px;
- height: 34px;
- background: none;
- margin-top: -15px;
- background-image: url('/images/browser.svg');
- display: inline;
- cursor: pointer;
- outline: 0; 
- float: right;
+  width: 33px;
+  height: 34px;
+  background: none;
+  margin-top: -15px;
+  background-image: url('/images/browser.svg');
+  display: inline;
+  cursor: pointer;
+  outline: 0; 
+  float: right;
 }
 
 #new-window-button {
- width: 33px;
- height: 34px;
- background: none;
- margin-top: -15px;
- background-image: url('/images/open-iconic-master/svg/monitor.svg');
- background-color:grey;
+  width: 33px;
+  height: 34px;
+  background: none;
+  margin-top: -15px;
+  background-image: url('/images/open-iconic-master/svg/monitor.svg');
+  background-color:white;
   background-size: 33px 34px;
   background-repeat: no-repeat;
- display: inline;
- cursor: pointer;
- outline: 0; 
- float: right;
- filter:invert(100%)
+  display: inline;
+  cursor: pointer;
+  outline: 0; 
+  float: right;
+  filter: invert(100%);
+  -webkit-filter: invert(100%);
+}
+
+#share-button {
+  width: 33px;
+  height: 34px;
+  background: none;
+  margin-top: -15px;
+  background-image: url('/images/open-iconic-master/svg/share-boxed.svg');
+  background-color:white;
+  background-size: 33px 34px;
+  background-repeat: no-repeat;
+  display: inline;
+  cursor: pointer;
+  outline: 0; 
+  float: right;
+  filter: invert(100%);
+  -webkit-filter: invert(100%);
+
 }
 
 #play {

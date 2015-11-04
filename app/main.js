@@ -31,7 +31,8 @@ var appConfig = {
 		sketchframe: require('./sketchframe/index'),
 		debug: require('./debug/index'),
 		menu: require('./menu/index'),
-		filemenu: require('./filemenu/index')
+		filemenu: require('./filemenu/index'),
+		dialog: require('./dialog/index'),
 	},
 
 	data: {
@@ -611,9 +612,13 @@ var appConfig = {
 					console.log('fail');
 				}
 			});
+		},
+
+		openShareDialog: function() {
+			this.$.dialog.open();
 		}
 
-	}
+	},
 
 };
 
