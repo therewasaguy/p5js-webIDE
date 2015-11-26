@@ -53,6 +53,9 @@ module.exports = {
 			 */
 			sketchFrame.onload = function() {
 
+				// only run in iframe if settings say to run in iframe
+				if (!self.$root.settings.runInFrame) return;
+
 				var indexHTMLFileObj;
 
 				// reset code

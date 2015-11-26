@@ -249,7 +249,6 @@ var appConfig = {
 		},
 
 		toggleSidebar: function() {
-			console.log('toggle!');
 			this.settings.showSidebar = !this.settings.showSidebar;
 		},
 
@@ -487,7 +486,8 @@ var appConfig = {
 				}
 			}
 
-			self.run();
+			// run on load?
+			// self.run();
 		},
 
 		// load project by our ID, not by the gistID

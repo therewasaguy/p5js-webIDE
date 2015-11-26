@@ -15,13 +15,19 @@ module.exports = {
 		},
 		loggedIn: function() {
 			return this.$root.currentUser && this.$root.currentUser.authenticated;
+		},
+		newWindowClass: function() {
+			if (this.$root.settings.runInFrame) {
+				return '';
+			} else {
+				return 'selected';
+			}
 		}
 
 	},
 
 	ready: function() {
 		this.toastSpan = document.getElementById('toast-msg');
-
 		this.setToastMsg('Hello World!');
 	},
 
@@ -55,9 +61,9 @@ module.exports = {
 			div.requestFullscreen();
 		},
 
-		// open the current code in a new window
-		openInNewWindow: function(e) {
-			this.$root.openInNewWindow();
+		// toggle setting to open the current code in a new window
+		toggleNewWindowSetting: function(e) {
+			this.$root.settings.runInFrame = !this.$root.settings.runInFrame;
 		},
 
 		// open dialog with share URL / embed code

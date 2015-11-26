@@ -337,13 +337,18 @@ module.exports = {
 
 	run: function() {
 
+		// run in page
 		if (this.settings.runInFrame) {
+			console.log('run in page');
 			var sketchFrame = document.getElementById('sketchFrame');
 			sketchFrame.src = sketchFrame.src;
-
 			this.$.debug.clearErrors();
-		} else {
-			
+		}
+
+		// run in new window
+		else {
+			console.log('run in new window');
+			this.openInNewWindow();
 		}
 
 		// focus to catch key and mouse events

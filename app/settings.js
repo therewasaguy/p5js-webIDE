@@ -2,12 +2,12 @@ var defaults = {
   fontSize: 14,
   tabSize: 2,
   tabType: "spaces",
-  theme: 'tomorrow',
-  consoleOrientation: 'horizontal',
+  theme: "tomorrow",
+  consoleOrientation: "horizontal",
   showSidebar: false,
   showEditor: true,
   wordWrap: false,
-  // runInFrame: false, // determines whether to run in iframe, or in newWindow
+  runInFrame: false, // determines whether to run in iframe, or in newWindow
   fullCanvas: false // automatically make canvas full width/height of screen
 };
 

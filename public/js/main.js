@@ -1034,7 +1034,6 @@ var appConfig = {
 		},
 
 		toggleSidebar: function() {
-			console.log('toggle!');
 			this.settings.showSidebar = !this.settings.showSidebar;
 		},
 
@@ -1272,7 +1271,8 @@ var appConfig = {
 				}
 			}
 
-			self.run();
+			// run on load?
+			// self.run();
 		},
 
 		// load project by our ID, not by the gistID
@@ -1499,13 +1499,19 @@ module.exports = {
 		},
 		loggedIn: function() {
 			return this.$root.currentUser && this.$root.currentUser.authenticated;
+		},
+		newWindowClass: function() {
+			if (this.$root.settings.runInFrame) {
+				return '';
+			} else {
+				return 'selected';
+			}
 		}
 
 	},
 
 	ready: function() {
 		this.toastSpan = document.getElementById('toast-msg');
-
 		this.setToastMsg('Hello World!');
 	},
 
@@ -1539,9 +1545,9 @@ module.exports = {
 			div.requestFullscreen();
 		},
 
-		// open the current code in a new window
-		openInNewWindow: function(e) {
-			this.$root.openInNewWindow();
+		// toggle setting to open the current code in a new window
+		toggleNewWindowSetting: function(e) {
+			this.$root.settings.runInFrame = !this.$root.settings.runInFrame;
 		},
 
 		// open dialog with share URL / embed code
@@ -1554,7 +1560,7 @@ module.exports = {
 
 };
 },{"./template.html":14}],14:[function(require,module,exports){
-module.exports = '<div id ="button_header">\n\n  <div class="pure-menu pure-menu-horizontal">\n    <ul class="pure-menu-list">\n\n      <li class="pure-menu-item" v-on="click: $root.toggleFilemenu()">\n        <button class="menuItem">\n          <img class="menu" src="/images/filemenu-white.svg">\n        </button>\n      </li>\n\n      <li class="pure-menu-item">\n        <div class="menuItem">\n        <img class="menu" src="/images/temp/logo.png">\n      </div>\n      </li>\n\n      <li class="pure-menu-item">\n        <button id="play"  v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>\n      </li>\n\n      <li class="pure-menu-item">\n        <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>\n      </li>\n\n    </ul>\n\n    <!-- display a message -->\n    <span id="toast-msg">{{toastMsg}}</span>\n\n      <!-- <div > -->\n        <ul class="pure-menu-list" id="custom-dropdown-menus">\n\n          <li class="pure-menu-item">\n            <button v-on="click: openShareDialog" id="share-button"></button>\n          </li>\n\n<!--           <li class="pure-menu-item">\n            <button v-on="click: goFullScreen" id="fullscreenbutton"><img src="/images/browser.svg"></button>\n          </li> -->\n\n          <li class="pure-menu-item">\n            <button v-on="click: openInNewWindow" id="new-window-button"></button>\n          </li>\n\n\n          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover pure-menu-allow-mousedown">\n            <button id="save" v-on="click: $root.commitGist()"><img class="menu" src="/images/save-white.svg"></button>\n            <ul class="pure-menu-children">\n              <li class="pure-menu-item">\n                <span v-on="click: $root.commitGist()">Save to Cloud</span>\n              </li>\n              <li class="pure-menu-item">\n                <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>\n              </li>\n            </ul>\n          </li>\n\n        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">\n          <span id="profile-span" v-on="click: profileClicked()"></span>\n\n          <ul class="pure-menu-children">\n\n            <li class="pure-menu-item" v-if="!loggedIn" v-on="click: $root.authenticate()">\n              <span>Log in</span>\n            </li>\n\n            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.authenticate()">\n              <span class="username"> hello <b>{{currentUser.username}}</b> </span>!\n            </li>\n\n            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.logOut()">\n              <span>Log Out</span>\n            </li>\n\n          </ul>\n        </li>\n\n      </ul>\n    <!-- </div> -->\n\n\n  </div> <!-- end pure-menu-->\n\n\n\n  <!-- <div id="toolbar"> -->\n\n  <!-- </div> -->\n\n</div>';
+module.exports = '<div id ="button_header">\n\n  <div class="pure-menu pure-menu-horizontal">\n    <ul class="pure-menu-list">\n\n      <li class="pure-menu-item" v-on="click: $root.toggleFilemenu()">\n        <button class="menuItem">\n          <img class="menu" src="/images/filemenu-white.svg">\n        </button>\n      </li>\n\n      <li class="pure-menu-item">\n        <div class="menuItem">\n        <img class="menu" src="/images/temp/logo.png">\n      </div>\n      </li>\n\n      <li class="pure-menu-item">\n        <button id="play"  v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>\n      </li>\n\n      <li class="pure-menu-item">\n        <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>\n      </li>\n\n    </ul>\n\n    <!-- display a message -->\n    <span id="toast-msg">{{toastMsg}}</span>\n\n      <!-- <div > -->\n        <ul class="pure-menu-list" id="custom-dropdown-menus">\n\n          <li class="pure-menu-item">\n            <button v-on="click: openShareDialog" id="share-button"></button>\n          </li>\n\n<!--           <li class="pure-menu-item">\n            <button v-on="click: goFullScreen" id="fullscreenbutton"><img src="/images/browser.svg"></button>\n          </li> -->\n\n          <li class="pure-menu-item">\n            <button v-on="click: toggleNewWindowSetting" class="{{newWindowClass}}" id="new-window-button"></button>\n          </li>\n\n\n          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover pure-menu-allow-mousedown">\n            <button id="save" v-on="click: $root.commitGist()"><img class="menu" src="/images/save-white.svg"></button>\n            <ul class="pure-menu-children">\n              <li class="pure-menu-item">\n                <span v-on="click: $root.commitGist()">Save to Cloud</span>\n              </li>\n              <li class="pure-menu-item">\n                <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>\n              </li>\n            </ul>\n          </li>\n\n        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">\n          <span id="profile-span" v-on="click: profileClicked()"></span>\n\n          <ul class="pure-menu-children">\n\n            <li class="pure-menu-item" v-if="!loggedIn" v-on="click: $root.authenticate()">\n              <span>Log in</span>\n            </li>\n\n            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.authenticate()">\n              <span class="username"> hello <b>{{currentUser.username}}</b> </span>!\n            </li>\n\n            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.logOut()">\n              <span>Log Out</span>\n            </li>\n\n          </ul>\n        </li>\n\n      </ul>\n    <!-- </div> -->\n\n\n  </div> <!-- end pure-menu-->\n\n\n\n  <!-- <div id="toolbar"> -->\n\n  <!-- </div> -->\n\n</div>';
 },{}],15:[function(require,module,exports){
 var $ = require('jquery');
 var Vue = require('vue');
@@ -2084,13 +2090,18 @@ module.exports = {
 
 	run: function() {
 
+		// run in page
 		if (this.settings.runInFrame) {
+			console.log('run in page');
 			var sketchFrame = document.getElementById('sketchFrame');
 			sketchFrame.src = sketchFrame.src;
-
 			this.$.debug.clearErrors();
-		} else {
-			
+		}
+
+		// run in new window
+		else {
+			console.log('run in new window');
+			this.openInNewWindow();
 		}
 
 		// focus to catch key and mouse events
@@ -2124,12 +2135,12 @@ var defaults = {
   fontSize: 14,
   tabSize: 2,
   tabType: "spaces",
-  theme: 'tomorrow',
-  consoleOrientation: 'horizontal',
+  theme: "tomorrow",
+  consoleOrientation: "horizontal",
   showSidebar: false,
   showEditor: true,
   wordWrap: false,
-  // runInFrame: false, // determines whether to run in iframe, or in newWindow
+  runInFrame: false, // determines whether to run in iframe, or in newWindow
   fullCanvas: false // automatically make canvas full width/height of screen
 };
 
@@ -2361,6 +2372,9 @@ module.exports = {
 			 *  Load all of the code and inject it into the iframe
 			 */
 			sketchFrame.onload = function() {
+
+				// only run in iframe if settings say to run in iframe
+				if (!self.$root.settings.runInFrame) return;
 
 				var indexHTMLFileObj;
 
