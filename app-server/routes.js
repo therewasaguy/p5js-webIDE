@@ -26,8 +26,17 @@ module.exports = function(app, passport) {
 		res.redirect('/editor');
 	});
 
+
+	app.get('/view/draft', function(req, res) {
+		res.render('fsdraft');
+	});
+
 	// view a project as its own html page
-	app.get('/view/:username/:projectID', function(req, res) {
+	app.get('/view/:username/:projectID', viewProject);
+
+	app.get('/view/:projectID', viewProject);
+
+	function viewProject(req, res) {
 		var username = req.params.username;
 		var projectID = req.params.projectID
 		var data = {
@@ -125,11 +134,7 @@ module.exports = function(app, passport) {
 			}
 		});
 
-	});
-
-	app.get('/view/draft', function(req, res) {
-		res.render('fsdraft');
-	});
+	}
 
 	app.get('/editor', function(req, res) {
 

@@ -49,7 +49,8 @@ var appConfig = {
 		currentUser: null,
 		recentProjects: [],
 		examples: [],
-		editorHidden: false
+		editorHidden: false,
+		newWindowOpen: -1
 	},
 
 	computed: {
@@ -81,6 +82,8 @@ var appConfig = {
 			var username = pathname[1];
 			var projectID = pathname[2];
 
+			self.updateCurrentProjectID(projectID);
+
 			// get sketch from server
 			$.ajax({
 				url: '/loadproject',
@@ -109,6 +112,7 @@ var appConfig = {
 					var proj = new Project(data);
 					proj.fileObjects = fileObjects;
 
+					self.updateCurrentProjectID(data._id);
 					self.openProject(proj);
 				}
 			});
@@ -196,6 +200,9 @@ var appConfig = {
 	},
 
 	ready: function() {
+		// might use this to re-open the window
+		window.name = 'p5webide';
+
 		this.setupSettings();
 
 		this.setupUser();
@@ -458,6 +465,7 @@ var appConfig = {
 		openProject: function(projObj, gistData) {
 			var self = this;
 			// self.closeProject();
+			console.log(projObj);
 
 			self.currentProject = new Project(projObj);
 
@@ -616,9 +624,71 @@ var appConfig = {
 
 		openShareDialog: function() {
 			this.$.dialog.open();
+
+		},
+
+		updateProjectInLocalStorage: function() {
+			// save project
+			localStorage.latestProject = JSON.stringify(this.currentProject);
+		},
+
+		openInNewWindow: function() {
+
+			// save latest code to localStorage, and a very short setTimeout to allow the code to finish saving
+			this.updateProjectInLocalStorage();
+
+			setTimeout(function() {
+
+				// view draft -->
+				if (this.newWindowOpen) {
+					// the open tab will know to refresh
+					try {
+						this.newWindowOpen.location.reload();
+						this.newWindowOpen.focus();
+						return;
+					} catch(e) {}
+				}
+
+				this.newWindowOpen = window.open('http://' + window.location.host + '/view/draft'); 
+				return;
+			}, 10);
+		},
+
+		// not currently used, was related to openInNewWindow
+		openSavedProjectInNewWindow: function() {
+			/*** open saved project: ***/
+
+			// this only works if a project is saved
+			var pathname = window.location.pathname.split('/');
+			var username = pathname[1];
+			var projectID = pathname[2];
+
+			if (!username || !projectID) {
+				alert('please save project before opening in a new window')
+				return false;
+			}
+
+			// TO DO: open without fetching code from server
+
+			// TO DO: refresh if a window is already open (is this possible?)
+
+			// this opens saved project
+			if (this.newWindowOpen) {
+				// the open tab will know to refresh
+				this.newWindowOpen.postMessage('newcode', window.localStorage.fileObjects);
+			} else {
+				this.newWindowOpen = window.open('http://' + window.location.host + '/view/' + username + '/' + projectID); 
+			}
+		},
+
+		// set project ID in localStorage for opening it in an iframe
+		updateCurrentProjectID: function(projectID) {
+			localStorage.projectID = projectID;
 		}
 
 	},
+
+
 
 };
 

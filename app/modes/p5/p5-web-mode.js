@@ -336,10 +336,15 @@ module.exports = {
 	},
 
 	run: function() {
-		var sketchFrame = document.getElementById('sketchFrame');
-		sketchFrame.src = sketchFrame.src;
 
-		this.$.debug.clearErrors();
+		if (this.settings.runInFrame) {
+			var sketchFrame = document.getElementById('sketchFrame');
+			sketchFrame.src = sketchFrame.src;
+
+			this.$.debug.clearErrors();
+		} else {
+			
+		}
 
 		// focus to catch key and mouse events
 		// setTimeout( sketchFrame.contentWindow.focus(), 1000 );

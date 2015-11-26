@@ -96,12 +96,12 @@ module.exports = {
 				return;
 			}
 
+			var that = this;
+
 			session.on('change', function() {
 				fileObject.contents = session.getValue();
 
-				// save project
-				localStorage.latestProject = JSON.stringify(self.$root.currentProject);
-
+				that.$root.updateProjectInLocalStorage();
 			});
 
 			// is this necessary or can it be stored from files?

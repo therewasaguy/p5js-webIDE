@@ -1,6 +1,12 @@
 module.exports = {
 	template: require('./template.html'),
 
+	data: {
+		projectID: localStorage.projectID,
+		permalink: '',
+		embedCode: '',
+	},
+
 	ready: function() {
 		this.container = document.getElementById('dialog-container');
 		this.container.className = 'hidden'
@@ -15,6 +21,10 @@ module.exports = {
 	methods: {
 
 		open: function() {
+			// update relevant data fields for template.html
+			this.projectID = localStorage.projectID;
+			this.permalink = window.location.origin  + '/view/' + this.projectID;
+			this.embedCode = '<iframe src="' + this.permalink + '"></iframe>';
 			this.openShareDialog();
 		},
 
@@ -29,24 +39,24 @@ module.exports = {
 			var username = "_anon";
 			var projectID = false;
 
-			// ./username/project
-			if (pathname.length >= 3) {
+			// // ./username/project
+			// if (pathname.length >= 3) {
 
-				username = pathname[1];
-				projectID = pathname[2];
-			}
+			// 	username = pathname[1];
+			// 	projectID = pathname[2];
+			// }
 
-			// if (username && username == JSON.parse(localStorage.user).username) {
-			if (projectID == JSON.parse(localStorage.latestProject)._id) {
+			// // if (username && username == JSON.parse(localStorage.user).username) {
+			// if (projectID == JSON.parse(localStorage.latestProject)._id) {
 				this.dialogShare.className = '';
 				this.dialogUnsaved.className = 'dialog-hidden';
-			}
+			// }
 
-			// otherwise,
-			else {
-				this.dialogShare.className = 'dialog-hidden';
-				this.dialogUnsaved.className = '';
-			}
+			// // otherwise,
+			// else {
+			// 	this.dialogShare.className = 'dialog-hidden';
+			// 	this.dialogUnsaved.className = '';
+			// }
 			this.container.className = '';
 			this.mainContainer.className = 'blurred';
 		},

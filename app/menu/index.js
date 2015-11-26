@@ -57,43 +57,7 @@ module.exports = {
 
 		// open the current code in a new window
 		openInNewWindow: function(e) {
-
-			// view draft -->
-			if (this.newWindowOpen) {
-				// the open tab will know to refresh
-				try {
-					this.newWindowOpen.location.reload();
-					this.newWindowOpen.focus();
-					return;
-				} catch(e) {}
-			}
-
-			this.newWindowOpen = window.open('http://' + window.location.host + '/view/draft'); 
-			return;
-
-			/*** open saved project: ***/
-
-			// this only works if a project is saved
-			var pathname = window.location.pathname.split('/');
-			var username = pathname[1];
-			var projectID = pathname[2];
-
-			if (!username || !projectID) {
-				alert('please save project before opening in a new window')
-				return false;
-			}
-
-			// TO DO: open without fetching code from server
-
-			// TO DO: refresh if a window is already open (is this possible?)
-
-			// this opens saved project
-			if (this.newWindowOpen) {
-				// the open tab will know to refresh
-				this.newWindowOpen.postMessage('newcode', window.localStorage.fileObjects);
-			} else {
-				this.newWindowOpen = window.open('http://' + window.location.host + '/view/' + username + '/' + projectID); 
-			}
+			this.$root.openInNewWindow();
 		},
 
 		// open dialog with share URL / embed code

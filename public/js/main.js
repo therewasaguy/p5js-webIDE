@@ -91,6 +91,12 @@ module.exports = '<div id="debug" class="{{className}}">\n	<div id="debugheader"
 module.exports = {
 	template: require('./template.html'),
 
+	data: {
+		projectID: localStorage.projectID,
+		permalink: '',
+		embedCode: '',
+	},
+
 	ready: function() {
 		this.container = document.getElementById('dialog-container');
 		this.container.className = 'hidden'
@@ -105,6 +111,10 @@ module.exports = {
 	methods: {
 
 		open: function() {
+			// update relevant data fields for template.html
+			this.projectID = localStorage.projectID;
+			this.permalink = window.location.origin  + '/view/' + this.projectID;
+			this.embedCode = '<iframe src="' + this.permalink + '"></iframe>';
 			this.openShareDialog();
 		},
 
@@ -119,24 +129,24 @@ module.exports = {
 			var username = "_anon";
 			var projectID = false;
 
-			// ./username/project
-			if (pathname.length >= 3) {
+			// // ./username/project
+			// if (pathname.length >= 3) {
 
-				username = pathname[1];
-				projectID = pathname[2];
-			}
+			// 	username = pathname[1];
+			// 	projectID = pathname[2];
+			// }
 
-			// if (username && username == JSON.parse(localStorage.user).username) {
-			if (projectID == JSON.parse(localStorage.latestProject)._id) {
+			// // if (username && username == JSON.parse(localStorage.user).username) {
+			// if (projectID == JSON.parse(localStorage.latestProject)._id) {
 				this.dialogShare.className = '';
 				this.dialogUnsaved.className = 'dialog-hidden';
-			}
+			// }
 
-			// otherwise,
-			else {
-				this.dialogShare.className = 'dialog-hidden';
-				this.dialogUnsaved.className = '';
-			}
+			// // otherwise,
+			// else {
+			// 	this.dialogShare.className = 'dialog-hidden';
+			// 	this.dialogUnsaved.className = '';
+			// }
 			this.container.className = '';
 			this.mainContainer.className = 'blurred';
 		},
@@ -154,7 +164,7 @@ module.exports = {
 
 };
 },{"./template.html":4}],4:[function(require,module,exports){
-module.exports = '\n<!-- share dialog -->\n\n	<div class="dialog">\n\n		<!-- if saved, show this ..-->\n		<div id="dialog-share" class="dialog-hidden">\n			<p class="dialog-title">Copy a link to share...</p>\n\n			<p id="dialog-content">\n			</p>\n\n			<label>embed code</label>\n			<input type="text" readonly="true" value="http://helloworld.com" onclick="select()">\n\n			<label>share link</label>\n			<input type="text" readonly="true" value="http://helloworld.com" onclick="select()">\n\n			<!--TO DO: add copy button\n				<input type="image" src="/images/open-iconic-master/svg/clipboard.svg" alt="Submit">\n			-->\n		</div>\n\n		<!-- if unsaved, show this -->\n		<div id="dialog-unsaved">\n			<p class="dialog-title">Unsaved Project</p>\n			<p id="dialog-content">\n				Please save your project before sharing.\n			</p>\n		</div>\n\n\n		<div id="dialog-button-container">\n			<button id="dialog-left" class="dialog-button" v-on="click: accept">OK</button>\n			<button id="dialog-right" class="dialog-button" v-on="click: cancel" style="display:none;">Cancel</button>\n		</div>\n\n	</div>\n\n</div>';
+module.exports = '\n<!-- share dialog -->\n\n	<div class="dialog">\n\n		<!-- if saved, show this ..-->\n		<div id="dialog-share" class="dialog-hidden">\n			<p class="dialog-title">Copy a link to share...</p>\n\n			<p id="dialog-content">\n			</p>\n\n			<label>embed code</label>\n			<input type="text" readonly="true" value="{{embedCode}}" onclick="select()">\n\n			<label>share link</label>\n			<input type="text" readonly="true" value="{{permalink}}" onclick="select()">\n\n			<!--TO DO: add copy button\n				<input type="image" src="/images/open-iconic-master/svg/clipboard.svg" alt="Submit">\n			-->\n		</div>\n\n		<!-- if unsaved, show this -->\n		<div id="dialog-unsaved">\n			<p class="dialog-title">Unsaved Project</p>\n			<p id="dialog-content">\n				Please save your project before sharing.\n			</p>\n		</div>\n\n\n		<div id="dialog-button-container">\n			<button id="dialog-left" class="dialog-button" v-on="click: accept">OK</button>\n			<button id="dialog-right" class="dialog-button" v-on="click: cancel" style="display:none;">Cancel</button>\n		</div>\n\n	</div>\n\n</div>';
 },{}],5:[function(require,module,exports){
 /**
  *  Editor
@@ -254,12 +264,12 @@ module.exports = {
 				return;
 			}
 
+			var that = this;
+
 			session.on('change', function() {
 				fileObject.contents = session.getValue();
 
-				// save project
-				localStorage.latestProject = JSON.stringify(self.$root.currentProject);
-
+				that.$root.updateProjectInLocalStorage();
 			});
 
 			// is this necessary or can it be stored from files?
@@ -824,7 +834,8 @@ var appConfig = {
 		currentUser: null,
 		recentProjects: [],
 		examples: [],
-		editorHidden: false
+		editorHidden: false,
+		newWindowOpen: -1
 	},
 
 	computed: {
@@ -856,6 +867,8 @@ var appConfig = {
 			var username = pathname[1];
 			var projectID = pathname[2];
 
+			self.updateCurrentProjectID(projectID);
+
 			// get sketch from server
 			$.ajax({
 				url: '/loadproject',
@@ -884,6 +897,7 @@ var appConfig = {
 					var proj = new Project(data);
 					proj.fileObjects = fileObjects;
 
+					self.updateCurrentProjectID(data._id);
 					self.openProject(proj);
 				}
 			});
@@ -971,6 +985,9 @@ var appConfig = {
 	},
 
 	ready: function() {
+		// might use this to re-open the window
+		window.name = 'p5webide';
+
 		this.setupSettings();
 
 		this.setupUser();
@@ -1233,6 +1250,7 @@ var appConfig = {
 		openProject: function(projObj, gistData) {
 			var self = this;
 			// self.closeProject();
+			console.log(projObj);
 
 			self.currentProject = new Project(projObj);
 
@@ -1391,9 +1409,71 @@ var appConfig = {
 
 		openShareDialog: function() {
 			this.$.dialog.open();
+
+		},
+
+		updateProjectInLocalStorage: function() {
+			// save project
+			localStorage.latestProject = JSON.stringify(this.currentProject);
+		},
+
+		openInNewWindow: function() {
+
+			// save latest code to localStorage, and a very short setTimeout to allow the code to finish saving
+			this.updateProjectInLocalStorage();
+
+			setTimeout(function() {
+
+				// view draft -->
+				if (this.newWindowOpen) {
+					// the open tab will know to refresh
+					try {
+						this.newWindowOpen.location.reload();
+						this.newWindowOpen.focus();
+						return;
+					} catch(e) {}
+				}
+
+				this.newWindowOpen = window.open('http://' + window.location.host + '/view/draft'); 
+				return;
+			}, 10);
+		},
+
+		// not currently used, was related to openInNewWindow
+		openSavedProjectInNewWindow: function() {
+			/*** open saved project: ***/
+
+			// this only works if a project is saved
+			var pathname = window.location.pathname.split('/');
+			var username = pathname[1];
+			var projectID = pathname[2];
+
+			if (!username || !projectID) {
+				alert('please save project before opening in a new window')
+				return false;
+			}
+
+			// TO DO: open without fetching code from server
+
+			// TO DO: refresh if a window is already open (is this possible?)
+
+			// this opens saved project
+			if (this.newWindowOpen) {
+				// the open tab will know to refresh
+				this.newWindowOpen.postMessage('newcode', window.localStorage.fileObjects);
+			} else {
+				this.newWindowOpen = window.open('http://' + window.location.host + '/view/' + username + '/' + projectID); 
+			}
+		},
+
+		// set project ID in localStorage for opening it in an iframe
+		updateCurrentProjectID: function(projectID) {
+			localStorage.projectID = projectID;
 		}
 
 	},
+
+
 
 };
 
@@ -1461,43 +1541,7 @@ module.exports = {
 
 		// open the current code in a new window
 		openInNewWindow: function(e) {
-
-			// view draft -->
-			if (this.newWindowOpen) {
-				// the open tab will know to refresh
-				try {
-					this.newWindowOpen.location.reload();
-					this.newWindowOpen.focus();
-					return;
-				} catch(e) {}
-			}
-
-			this.newWindowOpen = window.open('http://' + window.location.host + '/view/draft'); 
-			return;
-
-			/*** open saved project: ***/
-
-			// this only works if a project is saved
-			var pathname = window.location.pathname.split('/');
-			var username = pathname[1];
-			var projectID = pathname[2];
-
-			if (!username || !projectID) {
-				alert('please save project before opening in a new window')
-				return false;
-			}
-
-			// TO DO: open without fetching code from server
-
-			// TO DO: refresh if a window is already open (is this possible?)
-
-			// this opens saved project
-			if (this.newWindowOpen) {
-				// the open tab will know to refresh
-				this.newWindowOpen.postMessage('newcode', window.localStorage.fileObjects);
-			} else {
-				this.newWindowOpen = window.open('http://' + window.location.host + '/view/' + username + '/' + projectID); 
-			}
+			this.$root.openInNewWindow();
 		},
 
 		// open dialog with share URL / embed code
@@ -2039,10 +2083,15 @@ module.exports = {
 	},
 
 	run: function() {
-		var sketchFrame = document.getElementById('sketchFrame');
-		sketchFrame.src = sketchFrame.src;
 
-		this.$.debug.clearErrors();
+		if (this.settings.runInFrame) {
+			var sketchFrame = document.getElementById('sketchFrame');
+			sketchFrame.src = sketchFrame.src;
+
+			this.$.debug.clearErrors();
+		} else {
+			
+		}
 
 		// focus to catch key and mouse events
 		// setTimeout( sketchFrame.contentWindow.focus(), 1000 );
@@ -2080,7 +2129,7 @@ var defaults = {
   showSidebar: false,
   showEditor: true,
   wordWrap: false,
-  runInBrowser: false,
+  // runInFrame: false, // determines whether to run in iframe, or in newWindow
   fullCanvas: false // automatically make canvas full width/height of screen
 };
 
