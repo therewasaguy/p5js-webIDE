@@ -6,7 +6,7 @@ module.exports = {
 
 	computed: {
 		className: function() {
-			if (this.$root.running && this.$root.editorHidden) {
+			if (this.$root.running && this.$root.editorHidden && !this.$root.settings.runInFrame) {
 				return 'hidden';
 			} else {
 				return 'visible';

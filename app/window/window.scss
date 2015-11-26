@@ -54,3 +54,11 @@ body {
   min-width: 100px;
   height:100%;
 }
+
+
+#body-row-container {
+  display:flex;
+  flex-direction:row;
+  height:100%;
+  width:100%;
+}

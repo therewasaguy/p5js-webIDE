@@ -23,6 +23,17 @@ this.hasAttribute(b+"allowfullscreen")},set:function(a){var c=b+"AllowFullscreen
 module.exports = {
 	template: require('./template.html'),
 
+	computed: {
+		// hide sketch pane if not running in frame
+		sketchPaneClass: function() {
+			if (this.$root.settings.runInFrame) {
+				return '';
+			} else {
+				return 'hidden';
+			}
+		}
+	},
+
 	ready: function() {
 		var self = this;
 		self.presentationMode = false;

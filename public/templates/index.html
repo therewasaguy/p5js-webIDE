@@ -25,12 +25,12 @@
 			<div v-component="menu" class="{{className}}" v-ref="menu" id="menu-container"></div>
 			<div v-component="settings" v-with="settings" v-show="showSettings" id="settingsContainer"></div>
 
-			<div id="body-row-container" style="display:flex; flex-direction:row;">
+			<div id="body-row-container">
 
 				<div v-component="filemenu" v-show="showFilemenu" id="filemenu-container"></div>
 
 				<div v-component="sidebar" v-with="files : files" id="side-container"></div>
-				<div id="editor-container" class="{{editorClass}}">
+				<div id="editor-container" class="{{editorContainerClass}}">
 					<div v-component="tabs" v-ref="tabs" id="tab-container"></div>
 					<div v-component="editor" v-ref="editor" id="main"></div>
 				</div>

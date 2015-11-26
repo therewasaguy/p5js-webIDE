@@ -7,8 +7,9 @@ module.exports = {
 	template: require('./template.html'),
 
 	computed: {
+		// hide console if not running in frame or if editor is hidden
 		className: function() {
-			return this.$root.editorHidden ? 'console-hidden' : 'console-visible';
+			return this.$root.editorHidden || !this.$root.settings.runInFrame ? 'console-hidden' : 'console-visible';
 		}
 	},
 
@@ -847,8 +848,12 @@ var appConfig = {
 			var orientation = this.settings.consoleOrientation;
 		},
 
-		editorClass: function() {
-			return this.settings.showEditor ? 'editor-visible' : 'editor-hidden';
+		editorContainerClass: function() {
+			var c = this.settings.showEditor ? '' : 'editor-hidden';
+			if (c == '' && !this.settings.runInFrame) {
+				c = 'expanded';
+			}
+			return c;
 		}
 	},
 
@@ -1490,7 +1495,7 @@ module.exports = {
 
 	computed: {
 		className: function() {
-			if (this.$root.running && this.$root.editorHidden) {
+			if (this.$root.running && this.$root.editorHidden && !this.$root.settings.runInFrame) {
 				return 'hidden';
 			} else {
 				return 'visible';
@@ -2343,6 +2348,17 @@ this.hasAttribute(b+"allowfullscreen")},set:function(a){var c=b+"AllowFullscreen
 module.exports = {
 	template: require('./template.html'),
 
+	computed: {
+		// hide sketch pane if not running in frame
+		sketchPaneClass: function() {
+			if (this.$root.settings.runInFrame) {
+				return '';
+			} else {
+				return 'hidden';
+			}
+		}
+	},
+
 	ready: function() {
 		var self = this;
 		self.presentationMode = false;
@@ -2660,7 +2676,7 @@ function removeComments(contents) {
 	return contents;
 }
 },{"./template.html":27}],27:[function(require,module,exports){
-module.exports = '<div id="sketchPane">\n	<iframe id="sketchFrame"\nsrc="/sketch/output.html"\nallowfullscreen="" webkitallowfullscreen="" mozallowfullscreen="" oallowfullscreen="" msallowfullscreen="">\n	</iframe>\n</div>';
+module.exports = '<div id="sketchPane" class="{{sketchPaneClass}}">\n	<iframe id="sketchFrame"\nsrc="/sketch/output.html"\nallowfullscreen="" webkitallowfullscreen="" mozallowfullscreen="" oallowfullscreen="" msallowfullscreen="">\n	</iframe>\n</div>';
 },{}],28:[function(require,module,exports){
 /**
  *  tabs

@@ -62,8 +62,12 @@ var appConfig = {
 			var orientation = this.settings.consoleOrientation;
 		},
 
-		editorClass: function() {
-			return this.settings.showEditor ? 'editor-visible' : 'editor-hidden';
+		editorContainerClass: function() {
+			var c = this.settings.showEditor ? '' : 'editor-hidden';
+			if (c == '' && !this.settings.runInFrame) {
+				c = 'expanded';
+			}
+			return c;
 		}
 	},
 
