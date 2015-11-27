@@ -2137,7 +2137,7 @@ module.exports = {
 };
 },{"../../libs/FileSaver.js":11,"../../models/project":17,"jquery":50,"jszip":63,"timeago":94}],20:[function(require,module,exports){
 var defaults = {
-  fontSize: 14,
+  fontSize: 18,
   tabSize: 2,
   tabType: "spaces",
   theme: "tomorrow",

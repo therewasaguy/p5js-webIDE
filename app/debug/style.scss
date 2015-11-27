@@ -1,19 +1,26 @@
 $transitiontimelong: 1.75s;
 $transitiontimeshort: 0.25s;
 
+#debugContainer {
+	width:100%;
+	display:flex;
+	align-items: flex-end; 
+}
+
 #debug {
 	background-color: #F1F1F1;
 	width:100%;
-	display:block;
 	height:100px;
 	z-index:100;
-	position:absolute;
+	// position:absolute;
 	bottom:0px;
 	left:0px;
 	text-align:bottom;
-	flex: 1;
+	// flex: 1;
 	flex-direction: column;
 	display:flex;
+	align-items: flex-end; 
+
 }
 
 #debug.console-visible {

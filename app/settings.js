@@ -1,5 +1,5 @@
 var defaults = {
-  fontSize: 14,
+  fontSize: 18,
   tabSize: 2,
   tabType: "spaces",
   theme: "tomorrow",
