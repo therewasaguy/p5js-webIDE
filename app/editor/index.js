@@ -15,6 +15,9 @@ require('brace/mode/json');
 require('brace/mode/text');
 require('brace/theme/twilight');
 require('brace/theme/tomorrow');
+require('brace/theme/monokai');
+require('./custom-themes/p5-dark');
+require('./custom-themes/p5-light');
 require('brace/ext/searchbox');
 
 var modes = {
@@ -46,7 +49,8 @@ module.exports = {
 		this.editSessions = [];
 		this.ace = window.ace = ace.edit('editor');
 		this.ace.$blockScrolling = Infinity;
-		this.ace.setTheme('ace/theme/twilight');
+		// this.ace.setTheme('ace/theme/monokai');
+		this.ace.setTheme('ace/theme/p5-light');
 		this.ace.setReadOnly(true);
 
 		this.customizeCommands();

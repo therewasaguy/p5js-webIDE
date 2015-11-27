@@ -1,35 +1,38 @@
 @font-face {
-	font-family: karla;
-	src: url('/fonts/Karla/Karla-Regular.ttf');
-}
+  font-family: karla;
+  src: url("/fonts/Karla/Karla-Regular.ttf"); }
 
 @font-face {
-	font-family: karla-bold;
-	src: url('/fonts/Karla/Karla-Bold.ttf');
-}
+  font-family: karla-bold;
+  src: url("/fonts/Karla/Karla-Bold.ttf"); }
 
 @font-face {
-	font-family: source-code;
-	src: url('/fonts/Source_Code_Pro/SourceCodePro-Regular.ttf');
-}
+  font-family: source-code;
+  src: url("/fonts/Source_Code_Pro/SourceCodePro-Regular.ttf"); }
 
 @font-face {
   font-family: inconsolata;
-  src: url('/fonts/inconsolata/inconsolata.ttf');
-}
+  src: url("/fonts/inconsolata/inconsolata.ttf"); }
 
 @font-face {
   font-family: avenir-next-medium;
-  src: url('/fonts/Avenir_Next_Medium/AvenirNextLTW01-Medium.ttf');
-}
+  src: url("/fonts/Avenir_Next_Medium/AvenirNextLTW01-Medium.ttf"); }
+
+@font-face {
+  font-family: montserrat-regular;
+  src: url("/fonts/Montserrat/Montserrat-Regular.ttf"); }
+
+@font-face {
+  font-family: montserrat-bold;
+  src: url("/fonts/Montserrat/Montserrat-Bold.ttf"); }
 
 body, html {
-  // background: #AFAFAF; /* background handled by iframe instead*/
   color: #58595B;
   height: 100%;
   margin: 0;
   padding: 0;
   font: 14px karla, sans-serif;
+  background-color:#222;  
 }
 
 body {
@@ -37,28 +40,20 @@ body {
   flex-direction: row;
   justify-content: flex-start;
   align-items: stretch;
-  overflow: hidden;
-}
+  overflow: hidden; }
 
 .file-handler {
-  display: none;
-}
+  display: none; }
 
 #main-container {
-  // margin-top: 10px;
-  // margin-bottom: 10px;
-  // margin-right: 10px;
   flex: 1;
   display: flex;
   flex-direction: column;
   min-width: 100px;
-  height:100%;
-}
-
+  height: 100%; }
 
 #body-row-container {
-  display:flex;
-  flex-direction:row;
-  height:100%;
-  width:100%;
-}
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%; }

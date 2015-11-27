@@ -3,7 +3,8 @@ html, body {
   margin: 0;
   padding: 0;
   /*background: #c8c5c2;*/
-  background: #AFAFAF;
+  /*background: #AFAFAF;*/
+  background:#58585B;
 }
 
 #defaultCanvas {
