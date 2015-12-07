@@ -60,6 +60,7 @@ var appConfig = {
 
 		orientation: function() {
 			var orientation = this.settings.consoleOrientation;
+			return orientation;
 		},
 
 		editorContainerClass: function() {
@@ -68,6 +69,10 @@ var appConfig = {
 				c = 'expanded';
 			}
 			return c;
+		},
+
+		theme: function() {
+			return this.settings.editorTheme;
 		}
 	},
 
@@ -241,7 +246,7 @@ var appConfig = {
 				this.$broadcast('settings-changed', value);
 				// this.editorHidden = !this.settings.showEditor;
 				settings.save(value);
-			})
+			});
 		},
 
 		toggleSettingsPane: function() {
@@ -252,7 +257,7 @@ var appConfig = {
 			this.showFilemenu = !this.showFilemenu;
 		},
 
-		toggleSidebar: function() {
+		toggleSidebar: function(e) {
 			this.settings.showSidebar = !this.settings.showSidebar;
 		},
 

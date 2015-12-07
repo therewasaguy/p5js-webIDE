@@ -6,15 +6,19 @@
 		<!-- mobile recommendation from pure.css -->
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<!-- 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+ -->
+
+		<script src="/libs/jquery.min.js"></script>
+		<script src="/libs/jquery-ui.min.js"></script>
 
 		<title>{{currentProject.name}}</title>
 		<link rel="stylesheet" href="/css/main.css">
 		<link rel="stylesheet" href="/css/pure/menus.css">
 	</head>
 
-	<body class="{{orientation}}">
+	<body class="{{orientation}} {{theme}}">
 
 	<div v-component="dialog" v-ref="dialog" id="dialog-container"></div>
 
@@ -23,8 +27,6 @@
 			<div v-component="sketchframe" v-ref="sketchframe" id="sketchframe-container"></div>
 
 			<div v-component="menu" class="{{className}}" v-ref="menu" id="menu-container"></div>
-			<div v-component="settings" v-with="settings" v-show="showSettings" id="settingsContainer"></div>
-
 			<div id="body-row-container">
 
 				<div v-component="filemenu" v-show="showFilemenu" id="filemenu-container"></div>
@@ -32,7 +34,10 @@
 				<div v-component="sidebar" v-with="files : files" id="side-container"></div>
 				<div id="editor-container" class="{{editorContainerClass}}">
 					<div v-component="tabs" v-ref="tabs" id="tab-container"></div>
-					<div v-component="editor" v-ref="editor" id="main"></div>
+					<div v-component="editor" v-ref="editor" id="main">
+					</div>
+					<div v-component="settings" v-with="settings" v-show="showSettings" id="settingsContainer"></div>
+
 				</div>
 			</div>
 

@@ -27,12 +27,18 @@
   src: url("/fonts/Montserrat/Montserrat-Bold.ttf"); }
 
 body, html {
-  color: #58595B;
   height: 100%;
-  margin: 0;
-  padding: 0;
+  margin: 0px;
+  padding: 0px;
   font: 14px karla, sans-serif;
-  background-color:#222;  
+
+  &.dark-theme {
+    background-color:#414141;
+    color: #58595B;
+  }
+  &.light-theme {
+    background-color:#f4f4f4;      
+  }
 }
 
 body {
@@ -41,6 +47,24 @@ body {
   justify-content: flex-start;
   align-items: stretch;
   overflow: hidden; }
+
+
+
+::selection {
+// color: #e2e2e2;
+background-color: transparent;
+}  
+
+button{
+  -webkit-user-select: none !important;
+  -moz-user-select: none;
+  -ms-user-select: none;
+   user-select: none;
+
+   &:focus {
+     outline-width: 0;
+   }
+}
 
 .file-handler {
   display: none; }
@@ -57,3 +81,7 @@ body {
   flex-direction: row;
   height: 100%;
   width: 100%; }
+
+textarea:focus, input:focus{
+    outline: 0;
+}

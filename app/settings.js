@@ -8,7 +8,10 @@ var defaults = {
   showEditor: true,
   wordWrap: false,
   runInFrame: false, // determines whether to run in iframe, or in newWindow
-  fullCanvas: false // automatically make canvas full width/height of screen
+  editorTheme: 'dark-theme',
+
+  fullCanvas: false, // automatically make canvas full width/height of screen
+
 };
 
 var userSettings = {};

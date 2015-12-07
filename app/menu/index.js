@@ -62,10 +62,10 @@ module.exports = {
 		},
 
 		// toggle setting to open the current code in a new window
-		toggleNewWindowSetting: function(e) {
-			this.$root.stop();
-			this.$root.settings.runInFrame = !this.$root.settings.runInFrame;
-		},
+		// toggleNewWindowSetting: function(e) {
+		// 	this.$root.stop();
+		// 	this.$root.settings.runInFrame = !this.$root.settings.runInFrame;
+		// },
 
 		// open dialog with share URL / embed code
 		openShareDialog: function(e) {

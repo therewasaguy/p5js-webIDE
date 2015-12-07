@@ -9,6 +9,9 @@
 //   height:100%;
 // }
 
+$settings-color: rgba(153,153,153,0.80);
+
+
 #body-row-container{
   margin-top: 50px;
   padding:5px
@@ -59,13 +62,13 @@ div#editor-container.editor-hidden {
   box-shadow: 5px 5px 0px 0px rgba(76,76,76,0.20);
   // background: #333333;
 
-  // &.light-theme{
-
-  // }
+  &.light-theme{
+    background:#f4f4f4;
+  }
 }
 
 .ace-gutter {
-    min-width:52px !important;;
+  min-width:52px !important;
 }
 
 .ace_content, .ace_gutter {
@@ -156,32 +159,61 @@ div#editor-container.editor-hidden {
 // }
 
 #actions {
-  button {
+  div {
     border: 0;
     cursor: pointer;
-    background: none;
-    margin: 7px;
     padding: 0;
-    margin-left: -33px;
+    margin-left:-85px;
+    margin-top:-65px;
+    z-index: 3;
+    position: absolute;
+    background: $settings-color;
+  }
+
+  div, div img, div span {
+    // width: 20px;
+    opacity: 0.75;
+    transition: opacity 0.25s ease-in-out 0s;
+    &:hover {
+      opacity:1
+    }
+  }
+
+  .settings {
+    border: 0;
+    cursor: pointer;
+    padding: 0;
+    // margin-left: -33px;
     outline: 0;
     z-index: 3;
     position: absolute;
-  }
-
-  button, button img {
-    width: 20px;
-    opacity: 0.75;
+    background: $settings-color;
+    border-radius: 24px;
+    background-size: 150%;
     transition: opacity 0.25s ease-in-out 0s;
-  }
+    border: $settings-color 10px solid;
+    border-radius: 48px;
 
+    margin: auto;
+    font-size:25px;
+  }
   
-  button:hover {
+
+  .settings:hover button:hover {
     opacity: 1;
   }
 
   #add, #export {
     float: left;
   }
+
+}
+
+.button-border {
+  background: rgba(153,153,153,0.50);
+  border-radius: 24px;
+  margin-left:-60px;
+  margin-top:-22px;
 
 }
 

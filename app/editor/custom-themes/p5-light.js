@@ -1,6 +1,6 @@
 ace.define("ace/theme/p5-light",["require","exports","module","ace/lib/dom"], function(acequire, exports, module) {
 
-var varGold = '#b48318';
+var varGold = '#6C4D13';
 // var blueish = '#2d7BB6';
 var greenish = '#15cc35';
 var blueish = '#4a90e2';
@@ -11,14 +11,14 @@ var pinkishKeyword = '#f10046';
 var turqoisish = '#346E7D'; //#4a90e2';
 var greyish = '#b1b1b1';
 var selectionColor = 'rgba(21,204,54,0.1)';
-var offWhite = '#e8e8e8';
-
+var offWhite = '#B5B5B5';
+var selectedLine = 'rgba(207,207,207,0.20);';
 
 exports.isDark = false;
 exports.cssClass = "p5-light";
 exports.cssText = ".p5-light .ace_gutter {\
-background: #FDFDFD;\
-color: #333;\
+background:#f4f4f4;\
+color: #979797;\
 }\
 .p5-light .ace_print-margin {\
 }\
@@ -44,7 +44,7 @@ margin: -1px 0 0 -1px;\
 border: 1px solid #BFBFBF\
 }\
 .p5-light .ace_marker-layer .ace_active-line {\
-background: rgba(207,207,207,0.07);\
+background:"+selectedLine+";\
 }\
 .p5-light .ace_gutter-active-line {\
 background-color: rgba(207,207,207,0.20);\

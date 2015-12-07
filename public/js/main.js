@@ -295,7 +295,7 @@ dom.importCssString(exports.cssText, exports.cssClass);
 },{}],6:[function(require,module,exports){
 ace.define("ace/theme/p5-light",["require","exports","module","ace/lib/dom"], function(acequire, exports, module) {
 
-var varGold = '#b48318';
+var varGold = '#6C4D13';
 // var blueish = '#2d7BB6';
 var greenish = '#15cc35';
 var blueish = '#4a90e2';
@@ -306,14 +306,14 @@ var pinkishKeyword = '#f10046';
 var turqoisish = '#346E7D'; //#4a90e2';
 var greyish = '#b1b1b1';
 var selectionColor = 'rgba(21,204,54,0.1)';
-var offWhite = '#e8e8e8';
-
+var offWhite = '#B5B5B5';
+var selectedLine = 'rgba(207,207,207,0.20);';
 
 exports.isDark = false;
 exports.cssClass = "p5-light";
 exports.cssText = ".p5-light .ace_gutter {\
-background: #FDFDFD;\
-color: #333;\
+background:#f4f4f4;\
+color: #979797;\
 }\
 .p5-light .ace_print-margin {\
 }\
@@ -339,7 +339,7 @@ margin: -1px 0 0 -1px;\
 border: 1px solid #BFBFBF\
 }\
 .p5-light .ace_marker-layer .ace_active-line {\
-background: rgba(207,207,207,0.07);\
+background:"+selectedLine+";\
 }\
 .p5-light .ace_gutter-active-line {\
 background-color: rgba(207,207,207,0.20);\
@@ -479,6 +479,8 @@ module.exports = {
 
 		this.$on('clear-editor', this.clearEditor);
 
+		this.$on('settings-changed', this.settingsChanged);
+
 		// load and run the code that loaded is the file is the open file in the project
 		document.addEventListener('loaded-file', function(e) {
 			self.openFile(e.file);
@@ -580,10 +582,26 @@ module.exports = {
 
 		},
 
+		settingsChanged: function(settings) {
+			this.updateSettings(settings);
+		},
+
 		updateSettings: function(settings) {
 			this.ace.getSession().setTabSize(settings.tabSize);
-			this.ace.getSession().setUseSoftTabs(settings.tabType === 'spaces');
-			this.ace.getSession().setUseWrapMode(settings.wordWrap === true);
+			this.ace.getSession().setUseSoftTabs(settings.tabType);
+			this.ace.getSession().setUseWrapMode(settings.wordWrap);
+
+			var theme = settings.editorTheme;
+			switch(theme) {
+				case 'light-theme':
+					this.ace.setTheme('ace/theme/p5-light');
+					break;
+				case 'dark-theme':
+					this.ace.setTheme('ace/theme/p5-dark');
+					break;
+				default:
+					break;
+			}
 		},
 
 		clearEditor: function() {
@@ -602,7 +620,7 @@ module.exports = {
 };
 
 },{"./custom-themes/p5-dark":5,"./custom-themes/p5-light":6,"./template.html":8,"brace":35,"brace/ext/searchbox":34,"brace/mode/css":36,"brace/mode/html":37,"brace/mode/javascript":38,"brace/mode/json":39,"brace/mode/text":40,"brace/theme/monokai":41,"brace/theme/tomorrow":42,"brace/theme/twilight":43,"js-beautify":54,"underscore":98}],8:[function(require,module,exports){
-module.exports = '<div id="editor" style="font-size:{{$root.settings.fontSize}}px"></div>\n\n<div id="actions">\n  <button id="#settings-button" title="Preferences" v-on="click: $root.toggleSettingsPane()">\n    <img src="/images/options.svg">\n  </button>\n</div>';
+module.exports = '<div id="editor" style="font-size:{{$root.settings.fontSize}}px"></div>\n\n<div id="actions">\n  <div id="#settings-button" title="Preferences" v-on="click: $root.toggleSettingsPane()">\n    <!-- <img src="/images/options.svg"> -->\n    <!-- <div class="button-border"> -->\n	    <span class="oi iconic-lg settings" data-glyph="cog" title="settings" aria-hidden="true" style=""></span>  \n 		<!-- <div> -->\n  </div>\n</div>';
 },{}],9:[function(require,module,exports){
 module.exports = {
 	template: require('./template.html'),
@@ -1100,6 +1118,7 @@ var appConfig = {
 
 		orientation: function() {
 			var orientation = this.settings.consoleOrientation;
+			return orientation;
 		},
 
 		editorContainerClass: function() {
@@ -1108,6 +1127,10 @@ var appConfig = {
 				c = 'expanded';
 			}
 			return c;
+		},
+
+		theme: function() {
+			return this.settings.editorTheme;
 		}
 	},
 
@@ -1281,7 +1304,7 @@ var appConfig = {
 				this.$broadcast('settings-changed', value);
 				// this.editorHidden = !this.settings.showEditor;
 				settings.save(value);
-			})
+			});
 		},
 
 		toggleSettingsPane: function() {
@@ -1292,7 +1315,7 @@ var appConfig = {
 			this.showFilemenu = !this.showFilemenu;
 		},
 
-		toggleSidebar: function() {
+		toggleSidebar: function(e) {
 			this.settings.showSidebar = !this.settings.showSidebar;
 		},
 
@@ -1805,10 +1828,10 @@ module.exports = {
 		},
 
 		// toggle setting to open the current code in a new window
-		toggleNewWindowSetting: function(e) {
-			this.$root.stop();
-			this.$root.settings.runInFrame = !this.$root.settings.runInFrame;
-		},
+		// toggleNewWindowSetting: function(e) {
+		// 	this.$root.stop();
+		// 	this.$root.settings.runInFrame = !this.$root.settings.runInFrame;
+		// },
 
 		// open dialog with share URL / embed code
 		openShareDialog: function(e) {
@@ -1820,7 +1843,7 @@ module.exports = {
 
 };
 },{"./template.html":16}],16:[function(require,module,exports){
-module.exports = '<div id ="button_header">\n\n  <div class="pure-menu pure-menu-horizontal">\n    <ul class="pure-menu-list">\n\n      <li class="pure-menu-item" v-on="click: $root.toggleFilemenu()">\n        <button class="menuItem">\n          <img class="menu" src="/images/filemenu-white.svg">\n        </button>\n      </li>\n\n      <li class="pure-menu-item">\n        <div class="menuItem">\n        <img class="menu" src="/images/temp/logo.png">\n      </div>\n      </li>\n\n      <li class="pure-menu-item">\n        <button id="play"  v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>\n      </li>\n\n      <li class="pure-menu-item">\n        <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>\n      </li>\n\n    </ul>\n\n    <!-- display a message -->\n    <span id="toast-msg">{{toastMsg}}</span>\n\n      <!-- <div > -->\n        <ul class="pure-menu-list" id="custom-dropdown-menus">\n\n          <li class="pure-menu-item">\n            <button v-on="click: openShareDialog" id="share-button">\n<span class="oi iconic-lg" data-glyph="share-boxed" title="share" aria-hidden="true" style="font-size:25px;"></span>  \n            </button>\n          </li>\n\n<!--           <li class="pure-menu-item">\n            <button v-on="click: goFullScreen" id="fullscreenbutton"><img src="/images/browser.svg"></button>\n          </li> -->\n\n          <li class="pure-menu-item">\n            <button v-on="click: toggleNewWindowSetting" class="{{newWindowClass}}" id="new-window-button"></button>\n          </li>\n\n\n          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover pure-menu-allow-mousedown">\n            <button id="save" v-on="click: $root.commitGist()"><img class="menu" src="/images/save-white.svg"></button>\n            <ul class="pure-menu-children">\n              <li class="pure-menu-item">\n                <span v-on="click: $root.commitGist()">Save to Cloud</span>\n              </li>\n              <li class="pure-menu-item">\n                <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>\n              </li>\n            </ul>\n          </li>\n\n        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">\n          <span id="profile-span" v-on="click: profileClicked()"></span>\n\n          <ul class="pure-menu-children">\n\n            <li class="pure-menu-item" v-if="!loggedIn" v-on="click: $root.authenticate()">\n              <span>Log in</span>\n            </li>\n\n            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.authenticate()">\n              <span class="username"> hello <b>{{currentUser.username}}</b> </span>!\n            </li>\n\n            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.logOut()">\n              <span>Log Out</span>\n            </li>\n\n          </ul>\n        </li>\n\n      </ul>\n    <!-- </div> -->\n\n\n  </div> <!-- end pure-menu-->\n\n\n\n  <!-- <div id="toolbar"> -->\n\n  <!-- </div> -->\n\n</div>';
+module.exports = '<div id ="button_header">\n\n  <div class="pure-menu pure-menu-horizontal">\n    <ul class="pure-menu-list">\n\n      <li class="pure-menu-item" v-on="click: $root.toggleFilemenu()">\n        <button class="menuItem">\n          <img class="menu" src="/images/filemenu-white.svg">\n        </button>\n      </li>\n\n      <li class="pure-menu-item">\n        <div class="menuItem">\n        <img class="menu" src="/images/temp/logo.png">\n      </div>\n      </li>\n\n      <li class="pure-menu-item">\n        <button id="play"  v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>\n      </li>\n\n      <li class="pure-menu-item">\n        <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>\n      </li>\n\n    </ul>\n\n    <!-- display a message -->\n    <span id="toast-msg">{{toastMsg}}</span>\n\n      <!-- <div > -->\n        <ul class="pure-menu-list" id="custom-dropdown-menus">\n\n          <li class="pure-menu-item">\n            <button v-on="click: openShareDialog" id="share-button">\n<span class="oi iconic-lg" data-glyph="share-boxed" title="share" aria-hidden="true" style="font-size:25px;"></span>  \n            </button>\n          </li>\n\n<!--           <li class="pure-menu-item">\n            <button v-on="click: goFullScreen" id="fullscreenbutton"><img src="/images/browser.svg"></button>\n          </li> -->\n\n <!--          <li class="pure-menu-item">\n            <button v-on="click: toggleNewWindowSetting" class="{{newWindowClass}}" id="new-window-button"></button>\n          </li> -->\n\n\n          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover pure-menu-allow-mousedown">\n            <button id="save" v-on="click: $root.commitGist()"><img class="menu" src="/images/save-white.svg"></button>\n            <ul class="pure-menu-children">\n              <li class="pure-menu-item">\n                <span v-on="click: $root.commitGist()">Save to Cloud</span>\n              </li>\n              <li class="pure-menu-item">\n                <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>\n              </li>\n            </ul>\n          </li>\n\n        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">\n          <span id="profile-span" v-on="click: profileClicked()"></span>\n\n          <ul class="pure-menu-children">\n\n            <li class="pure-menu-item" v-if="!loggedIn" v-on="click: $root.authenticate()">\n              <span>Log in</span>\n            </li>\n\n            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.authenticate()">\n              <span class="username"> hello <b>{{currentUser.username}}</b> </span>!\n            </li>\n\n            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.logOut()">\n              <span>Log Out</span>\n            </li>\n\n          </ul>\n        </li>\n\n      </ul>\n    <!-- </div> -->\n\n\n  </div> <!-- end pure-menu-->\n\n\n\n  <!-- <div id="toolbar"> -->\n\n  <!-- </div> -->\n\n</div>';
 },{}],17:[function(require,module,exports){
 var $ = require('jquery');
 var Vue = require('vue');
@@ -2401,7 +2424,10 @@ var defaults = {
   showEditor: true,
   wordWrap: false,
   runInFrame: false, // determines whether to run in iframe, or in newWindow
-  fullCanvas: false // automatically make canvas full width/height of screen
+  editorTheme: 'dark-theme',
+
+  fullCanvas: false, // automatically make canvas full width/height of screen
+
 };
 
 var userSettings = {};
@@ -2452,7 +2478,21 @@ module.exports = {
 			self.tabSize = 1;
 		}
 		self.tabSizeDisplay = self.tabSize;
+	},
 
+	computed: {
+		hideSidebar: function() {
+			return !this.showSidebar;
+		},
+		runInNewWindow: function() {
+			return !this.runInFrame;
+		},
+		wordWrapOff: function() {
+			return !this.wordWrap;
+		},
+		tabSizeDisplay: function() {
+			return this.tabSize;
+		}
 	},
 
 	methods: {
@@ -2460,12 +2500,45 @@ module.exports = {
 			var parsed = parseInt(e.target.value);
 			this.tabSize = parsed >= 1 ? parsed : 1;
 			this.tabSizeDisplay = this.tabSize;
+		},
+		incText: function(e) {
+			this.$root.settings.fontSize++;
+		},
+		decText: function(e) {
+			if (this.$root.settings.fontSize > 4) {
+				this.$root.settings.fontSize--;
+			}
+		},
+		incTabs: function(e) {
+			if (this.$root.settings.tabSize < 4) {
+				this.$root.settings.tabSize++;
+			}
+		},
+		decTabs: function(e) {
+			if (this.$root.settings.tabSize > 1) {
+				this.$root.settings.tabSize--;
+			}
+		},
+
+		toggleWordWrap: function() {
+			this.wordWrap = !this.wordWrap;
+		},
+
+		toggleNewWindowSetting: function(e) {
+			this.$root.stop();
+			this.$root.settings.runInFrame = !this.$root.settings.runInFrame;
+		},
+
+		themeChanged: function() {
+			var theme = this.editorTheme;
+			console.log(theme);
 		}
+
 	}
 
 };
 },{"./template.html":24}],24:[function(require,module,exports){
-module.exports = '<div id="settingsPane">\n\n  <div id="titleBar">\n    <h2>Preferences</h2><div id="close" v-on="click: $root.toggleSettingsPane()">\n\n    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="x" x="0" y="0" viewBox="111.98 169.64 388.04 407.06" enable-background="new 111.982048 169.6423035 388.0419922 407.0557861" xml:space="preserve"><path d="M326.08 360.51L392.7 293.88c6.42-6.42 6.42-16.81 0-23.23 -6.42-6.42-16.81-6.42-23.23 0l-66.63 66.63 -66.63-66.63c-6.42-6.42-16.81-6.42-23.23 0s-6.42 16.81 0 23.23l66.63 66.63 -66.63 66.63c-6.42 6.42-6.42 16.81 0 23.23 3.21 3.21 7.41 4.81 11.61 4.81 4.2 0 8.41-1.6 11.61-4.81l66.63-66.63 66.63 66.63c3.21 3.21 7.41 4.81 11.61 4.81 4.2 0 8.41-1.6 11.61-4.81 6.42-6.42 6.42-16.81 0-23.23L326.08 360.51z" ></svg></div>\n\n  </div>\n  <div id="optionsZone">\n\n<!--     <div class="hiddenRadio">\n      <p id="consoleText">Console Orientation</p>\n\n      <input type="radio" name="consoleOrientation" id="consoleH" v-model="consoleOrientation" value="horizontal" >\n      <label for="consoleH" class="left">\n        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="console" id="consoleHorizontal" x="0px" y="0px" viewBox="111.982048 169.6423035 388.0419922 220.7826385" xml:space="preserve"><g><path d="M487.5209656 339.6809998H124.4851151c-6.9052582 0-2312.5030746-5.5978394-12.5030746-12.5030823V182.145401 c0-6.9052582 5.5978165-12.5030823 12.5030746-12.5030823h363.0358582c6.9052429 0 12.5 5.6 12.5 12.5 v145.0325165C500.0240173 334.1 494.4 339.7 487.5 339.6809998z"/><path d="M111.9820404 377.9217529v-18.2110291c0-6.9052429 5.5978165-12.5030518 12.5030746-12.5030518h363.0358582 c6.9052429 0 12.5 5.6 12.5 12.5030518v18.2110291c0 6.9052734-5.5978088 12.5030823-12.5030518 12.5 H124.4851151C117.5798569 390.4 112 384.8 112 377.9217529z"/></g></svg>\n      </label>\n\n      <input type="radio" name="consoleOrientation" id="consoleV" v-model="consoleOrientation" value="vertical" >\n      <label for="consoleV" class="right">\n        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="console" id="consoleVertical" x="0" y="0" viewBox="111.98 169.64 388.04 220.78" enable-background="new 111.982048 169.6423035 388.0419922 220.7826385" xml:space="preserve"><path d="M400.55 390.42H124.49c-6.91 0-12.5-5.6-12.5-12.5V182.15c0-6.91 5.6-12.5 12.5-12.5H400.55c6.91 0 12.5 5.6 12.5 12.5V377.92C413.05 384.83 407.45 390.42 400.55 390.42z"/><path d="M487.52 390.42h-54.44c-6.91 0-12.5-5.6-12.5-12.5V182.15c0-6.91 5.6-12.5 12.5-12.5h54.44c6.91 0 12.5 5.6 12.5 12.5V377.92C500.02 384.83 494.43 390.42 487.52 390.42z"/></svg>\n      </label>\n    </div> -->\n\n    <div class="hiddenCheckbox" id="libs">\n      <img id="libraryIcon" src="/images/sidebar.svg">\n      <input id="showSidebar" type="checkbox" v-model="showSidebar">\n      <label class="highlight fade" for="showSidebar">Show Sidebar</label>\n    </div>\n\n    <div>\n      <img id="textAdjust" src="/images/textAdjust.svg">\n      <input id="textAdjustInput" class="highlight" type="text" v-model="fontSize" size=3>\n    </div>\n\n    <div id="indentation">\n      <label for="tabSize">Indentation Amount</label><input id="tabSize" class="highlight" type="text"  v-model="tabSizeDisplay" size=3 v-on="change: updateTabSize">\n    </div>\n\n    <div id="indentOptions" class="hiddenRadio">\n      <input type="radio" name="tabType" value="spaces" id="tabTypeS" v-model="tabType">\n      <label class="indentSelection" id="spaceBox" for="tabTypeS">\n        <span>\n          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="space" x="0" y="0" viewBox="111.98 169.64 394.28 116.59" enable-background="new 111.982048 169.6423035 394.276123 116.5872803" xml:space="preserve"><path d="M495.71 169.64h-50.1c-5.85 0-10.58 4.74-10.58 10.58v34.74H183.25v-34.74c0-5.84-4.74-10.58-10.58-10.58h-50.1c-5.84 0-10.58 4.74-10.58 10.58v45.32 50.1c0 5.84 4.74 10.58 10.58 10.58h50.1 272.95 36.41 13.69c5.85 0 10.58-4.74 10.58-10.58v-95.42C506.3 174.38 501.56 169.64 495.71 169.64z"/></svg>\n        </span>\n        spaces\n      </label>\n      <input type="radio" name="tabType" value="tabs" id="tabTypeT" v-model="tabType">\n      <label class="indentSelection" id="tabBox" for="tabTypeT">\n        <span>\n          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="tab" x="0" y="0" viewBox="111.98 169.64 394.28 196.29" enable-background="new 111.982048 169.6423035 394.276123 196.2901306" xml:space="preserve"><path d="M292.69 348.7v-47.75H123.92c-6.53 0-11.94-5.41-11.94-11.94v-47.75c0-6.53 5.41-11.94 11.94-11.94h168.77v-47.75c0-4.85 2.98-9.14 7.46-11 4.29-1.87 9.51-0.94 12.86 2.61l83.56 83.56c2.43 2.23 3.55 5.41 3.55 8.39 0 2.98-1.12 6.16-3.55 8.39l-83.56 83.56c-3.35 3.55-8.58 4.48-12.86 2.61C295.67 357.84 292.69 353.55 292.69 348.7z"/><path d="M435 355.35v-175.13c0-5.84 4.74-10.58 10.58-10.58h50.09c5.84 0 10.58 4.74 10.58 10.58v175.13c0 5.84-4.74 10.58-10.58 10.58h-50.09C439.74 365.93 435 361.19 435 355.35z"/></svg>\n        </span>\n        tabs\n      </label>\n\n    </div>\n\n<!--     <div class="hiddenCheckbox" id="setPresentationMode">\n      <img id="browserIcon" src="/images/browser.svg">\n      <input id="presentationMode" type="checkbox" >\n      <label class="highlight fade" v-on="click: goFullScreen">Presentation</label>\n    </div> -->\n\n<!--     <div class="hiddenCheckbox" id="setfullCanvas">\n      <img id="browserIcon" src="images/browser.svg">\n      <input id="fullCanvas" type="checkbox" v-model="fullCanvas">\n      <label class="highlight fade" for="fullCanvas">Full Canvas</label>\n    </div> -->\n\n    <div class="hiddenCheckbox" id="ww">\n      <img id="wordWrapIcon" src="/images/wordWrap.svg">\n      <input id="wordWrap" type="checkbox" v-model="wordWrap">\n      <label class="highlight fade" for="wordWrap">Word Wrap</label>\n    </div>\n\n<!--     <div class="hiddenCheckbox" id="runInBrowserContainer">\n      <img id="browserIcon" src="/images/browser.svg">\n      <input type="checkbox" id="runInBrowser" v-model="runInBrowser">\n      <label class="highlight fade" for="runInBrowser">Run In-Page</label>\n    </div> -->\n  </div>\n</div>';
+module.exports = '<div id="settingsPane">\n\n  <div id="titleBar">\n    <h2 class="pref-title">Preferences</h2>\n\n    <div id="close" v-on="click: $root.toggleSettingsPane()">\n      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="x" x="0" y="0" viewBox="111.98 169.64 388.04 407.06" enable-background="new 111.982048 169.6423035 388.0419922 407.0557861" xml:space="preserve"><path d="M326.08 360.51L392.7 293.88c6.42-6.42 6.42-16.81 0-23.23 -6.42-6.42-16.81-6.42-23.23 0l-66.63 66.63 -66.63-66.63c-6.42-6.42-16.81-6.42-23.23 0s-6.42 16.81 0 23.23l66.63 66.63 -66.63 66.63c-6.42 6.42-6.42 16.81 0 23.23 3.21 3.21 7.41 4.81 11.61 4.81 4.2 0 8.41-1.6 11.61-4.81l66.63-66.63 66.63 66.63c3.21 3.21 7.41 4.81 11.61 4.81 4.2 0 8.41-1.6 11.61-4.81 6.42-6.42 6.42-16.81 0-23.23L326.08 360.51z" ></svg>\n    </div>\n\n  </div>\n\n  <div class="optionsZone">\n\n    <!-- <img id="textAdjust" src="/images/textAdjust.svg"> -->\n    <div class="row-container">\n      <div class="settings-subhead">Text size</div>\n    </div>\n\n    <div class="row-container">\n      <div class="split-container">\n        <div class="bg-button">\n          <button class="bg-button" v-on="click: decText">\n            <span class="minus"> - </span>\n          </button>\n        </div>\n        <div>\n          <span class="small-grey-label">Decrease</span>\n        </div>\n      </div>\n\n      <div class="split-container">\n        <div class="input-rect">\n          <input class="input-field" id="textAdjustInput" type="text" v-model="fontSize" size="3">\n        </div>\n        <div style="height:20px;"></div>\n      </div>\n\n      <div class="split-container">\n        <div class="bg-button">\n          <button class="bg-button" v-on="click: incText">\n            <span class="plus"> + </span>\n          </button>\n        </div>\n        <div>\n          <span class="small-grey-label">Increase</span>\n        </div>\n      </div>\n    </div> <!-- end flexrow -->\n\n    <hr>\n\n    <!-- indentation area -->\n    <div class="row-container">\n      <div class="settings-subhead">Indentation amount</div>\n    </div>\n\n    <div class="row-container">\n      <div class="split-container">\n        <div class="bg-button">\n          <button class="bg-button" v-on="click: decTabs">\n            <span class="minus"> - </span>\n          </button>\n        </div>\n        <div>\n          <span class="small-grey-label">Decrease</span>\n        </div>\n      </div>\n\n      <div class="split-container">\n        <div class="input-rect">\n          <!-- <input class="input-field" id="textAdjustInput" type="text" v-model="fontSize" size="3"> -->\n          <input id="tabSize" class="input-field" type="text" v-model="tabSize" size="3" v-on="change: updateTabSize">\n\n        </div>\n        <div style="height:20px;"></div>\n      </div>\n\n      <div class="split-container">\n        <div class="bg-button">\n          <button class="bg-button" v-on="click: incTabs">\n            <span class="plus"> + </span>\n          </button>\n        </div>\n        <div>\n          <span class="small-grey-label">Increase</span>\n        </div>\n      </div>\n\n      <div class="split-container hiddenRadio">\n        <input type="radio" name="tabType" value="spaces" id="tabTypeS" v-model="tabType">\n        <label class="text-option fade" for="tabTypeS">Spaces</label>\n\n        <input type="radio" name="tabType" value="tabs" id="tabTypeT" v-model="tabType">\n        <label class="text-option fade" for="tabTypeT">Tabs</label>\n      </div>\n\n    </div>\n    <!-- end indentation area -->\n\n    <!-- run in new window -->\n    <hr>\n    <div class="row-container">\n      <div class="settings-subhead">Run in new window</div>\n    </div>\n    <div class="row-container">\n      <span class="text-option hiddenCheckbox">\n        <input id="runInNewWindow" type="checkbox" v-model="runInNewWindow">\n        <label v-on="click: toggleNewWindowSetting" class="text-option fade" for="runInNewWindow">On</label>\n      </span>\n\n      <span class="text-option hiddenCheckbox">\n        <input id="runInFrame" type="checkbox" v-model="runInFrame">\n        <label v-on="click: toggleNewWindowSetting" class="text-option fade" for="runInFrame">Off</label>\n      </span>\n    </div>\n\n    <!-- show sidebar -->\n    <hr>\n    <div class="row-container">\n      <div class="settings-subhead">Show sidebar</div>\n    </div>\n    <div class="row-container">\n      <span class="text-option hiddenCheckbox">\n        <input id="showSidebar" type="checkbox" v-model="showSidebar">\n        <label class="text-option fade" for="showSidebar">On</label>\n      </span>\n      <span class="text-option hiddenCheckbox">\n        <input id="hideSidebar" type="checkbox" v-model="hideSidebar">\n        <label v-on="click: toggleSidebar" class="text-option fade" for="hideSidebar">Off</label>\n      </span>\n    </div>\n\n    <!-- Word Wrap -->\n    <hr>\n    <div class="row-container">\n      <div class="settings-subhead">Word wrap</div>\n    </div>\n    <div class="row-container">\n      <span class="text-option hiddenCheckbox">\n        <input id="wordWrap" type="checkbox" v-model="wordWrap">\n        <label class="text-option fade" for="wordWrap">On</label>\n      </span>\n      <span class="text-option hiddenCheckbox">\n        <input id="wordWrapOff" type="checkbox" v-model="wordWrapOff">\n        <label v-on="click: toggleWordWrap" class="text-option fade" for="wordWrapOff">Off</label>\n      </span>\n    </div>\n\n    <!-- theme -->\n    <hr>\n    <div class="row-container">\n      <div class="settings-subhead">Theme</div>\n    </div>\n    <div class="hiddenRadio row-container">\n      <input type="radio" name="editorTheme" value="light-theme" id="themeLight" v-model="editorTheme">\n      <label class="text-option fade" for="themeLight">Light</label>\n\n      <input type="radio" name="editorTheme" value="dark-theme" id="themeDark" v-model="editorTheme">\n      <label class="text-option fade" for="themeDark">Dark</label>\n    </div>\n\n\n\n<!--     <div class="hiddenCheckbox" id="setPresentationMode">\n      <img id="browserIcon" src="/images/browser.svg">\n      <input id="presentationMode" type="checkbox" >\n      <label class="highlight fade" v-on="click: goFullScreen">Presentation</label>\n    </div> -->\n\n<!--     <div class="hiddenCheckbox" id="setfullCanvas">\n      <img id="browserIcon" src="images/browser.svg">\n      <input id="fullCanvas" type="checkbox" v-model="fullCanvas">\n      <label class="highlight fade" for="fullCanvas">Full Canvas</label>\n    </div> -->\n\n\n<!--     <div class="hiddenCheckbox" id="runInBrowserContainer">\n      <img id="browserIcon" src="/images/browser.svg">\n      <input type="checkbox" id="runInBrowser" v-model="runInBrowser">\n      <label class="highlight fade" for="runInBrowser">Run In-Page</label>\n    </div> -->\n  </div>\n</div>';
 },{}],25:[function(require,module,exports){
 module.exports = '<div class="{{className}}" v-show="!hidden" v-on="click: openFile(this.name), contextmenu: popupMenu(this, $event)">\n  <span class="icon {{icon}}"></span>\n  {{name}}\n</div>';
 },{}],26:[function(require,module,exports){
@@ -2953,6 +3026,10 @@ module.exports = {
 					if (this.$root.currentFile == this.file) {
 						c += 'selected';
 					}
+
+					// themes:
+					c += ' light-theme';
+
 					return c;
 				}
 			},
@@ -3027,9 +3104,9 @@ module.exports = {
 	}
 };
 },{"./tab.html":31,"./template.html":32,"underscore":98}],31:[function(require,module,exports){
-module.exports = '<div class="{{className}}"><a href="#" v-show="!hidden" v-on="click: $root.openFile(this.name)">{{name}}{{file.contents !== file.originalContents ? \'*\' : \'\'}}</a>&nbsp\n	<a class="delete" href="#" v-show="!hidden" v-on="click: $root.closeTab(this.name)">x</a>\n</div>';
+module.exports = '<div class="{{className}}"><a href="#" class="{{className}}" v-show="!hidden" v-on="click: $root.openFile(this.name)">{{name}}{{file.contents !== file.originalContents ? \'*\' : \'\'}}</a>&nbsp\n	<a class="{{className}} delete" href="#" v-show="!hidden" v-on="click: $root.closeTab(this.name)">x</a>\n</div>';
 },{}],32:[function(require,module,exports){
-module.exports = '  <div id="tabs"> \n    <ul id="tab-list"> \n      <li v-repeat="tabs | orderBy \'name\'" v-component="tab"></li>\n\n      <li id = "add">\n        <a href="#" v-on="click: $root.newFile()">+</a>\n      </li>\n\n      <li id="minimize">\n        <!-- <div> -->\n          <a href="#" v-on="click: $root.hideEditor()"> <span class="oi" data-glyph="chevron-top" title="show/hide" aria-hidden="true"></span></a>\n        <!-- </div> -->\n      </li>\n\n\n    </ul>\n\n  </div>';
+module.exports = '  <div id="tabs"> \n    <ul id="tab-list"> \n      <li v-repeat="tabs | orderBy \'name\'" v-component="tab"></li>\n\n      <li id = "add">\n        <a href="#" v-on="click: $root.newFile()">+</a>\n      </li>\n\n      <li id="minimize">\n        <!-- <div> -->\n          <a href="#" v-on="click: $root.hideEditor()"> <span class="oi show-hide-editor" data-glyph="chevron-top" title="show/hide" aria-hidden="true"></span></a>\n        <!-- </div> -->\n      </li>\n\n\n    </ul>\n\n  </div>';
 },{}],33:[function(require,module,exports){
 /**
  * Copyright 2012 Craig Campbell

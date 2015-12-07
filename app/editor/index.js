@@ -60,6 +60,8 @@ module.exports = {
 
 		this.$on('clear-editor', this.clearEditor);
 
+		this.$on('settings-changed', this.settingsChanged);
+
 		// load and run the code that loaded is the file is the open file in the project
 		document.addEventListener('loaded-file', function(e) {
 			self.openFile(e.file);
@@ -161,10 +163,26 @@ module.exports = {
 
 		},
 
+		settingsChanged: function(settings) {
+			this.updateSettings(settings);
+		},
+
 		updateSettings: function(settings) {
 			this.ace.getSession().setTabSize(settings.tabSize);
-			this.ace.getSession().setUseSoftTabs(settings.tabType === 'spaces');
-			this.ace.getSession().setUseWrapMode(settings.wordWrap === true);
+			this.ace.getSession().setUseSoftTabs(settings.tabType);
+			this.ace.getSession().setUseWrapMode(settings.wordWrap);
+
+			var theme = settings.editorTheme;
+			switch(theme) {
+				case 'light-theme':
+					this.ace.setTheme('ace/theme/p5-light');
+					break;
+				case 'dark-theme':
+					this.ace.setTheme('ace/theme/p5-dark');
+					break;
+				default:
+					break;
+			}
 		},
 
 		clearEditor: function() {

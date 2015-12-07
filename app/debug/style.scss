@@ -7,7 +7,7 @@ $transitiontimeshort: 0.25s;
 	align-items: flex-end;
 
 	background: #4F4F4F;
-	box-shadow: 0px -20px 0px 0px rgba(76,76,76,0.50);
+	box-shadow: 0px -3px 0px 0px rgba(76,76,76,0.50);
 }
 
 #debug {
@@ -111,6 +111,10 @@ $transitiontimeshort: 0.25s;
 
 #cleardebug:hover{
 	background-color:yellow;
+}
+
+#consolename {
+	padding-left:10px;
 }
 
 .resizehandle {
