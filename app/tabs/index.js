@@ -20,7 +20,7 @@ module.exports = {
 					}
 
 					// themes:
-					c += ' light-theme';
+					c += ' ' + this.$root.theme;
 
 					return c;
 				}

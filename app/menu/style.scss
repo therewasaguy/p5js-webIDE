@@ -88,6 +88,7 @@ $transitiontimeshort: 0.1s;
   width: 33px;
   height: 34px;
   background: none;
+  padding:0px;
   margin-top: -15px;
   background-image: url('/images/open-iconic-master/svg/share-boxed.svg');
   background-color:white;
@@ -249,17 +250,18 @@ img.menu{
 
 .pure-menu-item span {
   background: white;
-  color: #ed225d;
+  color: #333333;
   padding:5px;
+
 }
 
 .pure-menu-item span:hover {
-  background: #ed225d;
+  background: #222;
   color:white;
 }
 
 .pure-menu-item span:active {
-  background: yellow;
+  background: #666;
   color:pink;
 }
 
