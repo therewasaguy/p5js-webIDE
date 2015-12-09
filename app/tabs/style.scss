@@ -45,12 +45,17 @@
     text-align: center;
     background-color: #4e4e4e;
     color: #7D7D7D;
-    &.light-theme {
 
-      background-color: #cfcfcf;
-      color: #C2C2C2;
+    &.light-theme {
+      background-color: #F4F4F4;
+      color: #979797;
+
       filter:brightness(100%);
       -webkit-filter: brightness(100%);
+    }
+
+    &.dark-theme {
+      color: #fff;
     }
 
   }
@@ -69,13 +74,21 @@
     background-color: #737373;
     color:#f4f4f4;
     &.light-theme {
+      background-color: #cfcfcf;
+      color: #C2C2C2;
+
       // background-color: #F4F4F4;
-      background-color: #F4F4F4;
-      color: #979797;
     }
+
+
   }
   div.selected a{
-    color: #5B5B5B;
+    &.light-theme {
+      color: #5B5B5B;
+    }
+    &.dark-theme {
+      color: #fff;
+    }
   }
   a{
     text-decoration: none;
@@ -92,8 +105,9 @@
       padding-left:5px;
     }
     &.light-theme{
+      color: #C2C2C2;
       // color: #bfbfbf;
-      color: #828384;
+      // color: #828384;
     }
 
   }
@@ -104,6 +118,7 @@
     &.light-theme{
       // color: #5B5B5B;
       color: #C2C2C2
+
     }
     &:before {
       padding:0px;

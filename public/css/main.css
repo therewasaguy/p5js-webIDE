@@ -154,6 +154,78 @@ p.dialog-title {
   filter: blur(2px);
   pointer-events: none; }
 
+#filemenu-container {
+  margin: -5px;
+  margin-top: -7px;
+  padding-right: 29px;
+  font: 14px karla,sans-serif;
+  display: inline-block;
+  width: 200px;
+  z-index: 1; }
+
+ul.a {
+  list-style-type: circle; }
+
+p.filemenu {
+  font: 16px;
+  color: #5D75C5;
+  line-height: 100%;
+  width: 180px;
+  padding-left: 20px;
+  outline: none; }
+
+#filemenu {
+  background-color: #202020;
+  width: 220px;
+  height: 100vh;
+  box-shadow: 0px 0px 6px #999;
+  color: #B3B3B3;
+  cursor: default;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden; }
+
+li.filemenu:hover {
+  background-color: white; }
+
+li.filemenu:active {
+  background-color: yellow; }
+
+#newProject {
+  background-color: #2D2D2D;
+  padding: 1px; }
+
+#examples {
+  line-height: 150%; }
+
+#myProjects {
+  line-height: 150%; }
+
+.buttonIcon {
+  position: relative;
+  clear: none;
+  float: right;
+  width: 15px;
+  margin-right: 20px; }
+
+.projectList {
+  margin-left: 10px;
+  line-height: 150%;
+  max-height: 300px;
+  overflow: scroll; }
+
+.accordion {
+  margin-bottom: 20px; }
+
+.timeago {
+  font-size: 10px;
+  color: #646464; }
+
+li.filemenu {
+  list-style-type: none;
+  padding-left: 2em;
+  line-height: 150%; }
+
 #body-row-container {
   margin-top: 50px;
   padding: 5px; }
@@ -264,78 +336,6 @@ div#editor-container.editor-hidden {
 
 #settings-button {
   float: right; }
-
-#filemenu-container {
-  margin: -5px;
-  margin-top: -7px;
-  padding-right: 29px;
-  font: 14px karla,sans-serif;
-  display: inline-block;
-  width: 200px;
-  z-index: 1; }
-
-ul.a {
-  list-style-type: circle; }
-
-p.filemenu {
-  font: 16px;
-  color: #5D75C5;
-  line-height: 100%;
-  width: 180px;
-  padding-left: 20px;
-  outline: none; }
-
-#filemenu {
-  background-color: #202020;
-  width: 220px;
-  height: 100vh;
-  box-shadow: 0px 0px 6px #999;
-  color: #B3B3B3;
-  cursor: default;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden; }
-
-li.filemenu:hover {
-  background-color: white; }
-
-li.filemenu:active {
-  background-color: yellow; }
-
-#newProject {
-  background-color: #2D2D2D;
-  padding: 1px; }
-
-#examples {
-  line-height: 150%; }
-
-#myProjects {
-  line-height: 150%; }
-
-.buttonIcon {
-  position: relative;
-  clear: none;
-  float: right;
-  width: 15px;
-  margin-right: 20px; }
-
-.projectList {
-  margin-left: 10px;
-  line-height: 150%;
-  max-height: 300px;
-  overflow: scroll; }
-
-.accordion {
-  margin-bottom: 20px; }
-
-.timeago {
-  font-size: 10px;
-  color: #646464; }
-
-li.filemenu {
-  list-style-type: none;
-  padding-left: 2em;
-  line-height: 150%; }
 
 #menu-container {
   display: flex;
@@ -1002,10 +1002,12 @@ img.menu {
     background-color: #4e4e4e;
     color: #7D7D7D; }
     #tabs div.light-theme {
-      background-color: #cfcfcf;
-      color: #C2C2C2;
+      background-color: #F4F4F4;
+      color: #979797;
       filter: brightness(100%);
       -webkit-filter: brightness(100%); }
+    #tabs div.dark-theme {
+      color: #fff; }
   #tabs div:hover.light-theme {
     filter: brightness(96%);
     -webkit-filter: brightness(96%); }
@@ -1013,10 +1015,12 @@ img.menu {
     background-color: #737373;
     color: #f4f4f4; }
     #tabs div.selected.light-theme {
-      background-color: #F4F4F4;
-      color: #979797; }
-  #tabs div.selected a {
+      background-color: #cfcfcf;
+      color: #C2C2C2; }
+  #tabs div.selected a.light-theme {
     color: #5B5B5B; }
+  #tabs div.selected a.dark-theme {
+    color: #fff; }
   #tabs a {
     text-decoration: none;
     line-height: 2.4;
@@ -1030,7 +1034,7 @@ img.menu {
       content: "";
       padding-left: 5px; }
     #tabs a.light-theme {
-      color: #828384; }
+      color: #C2C2C2; }
   #tabs a.delete {
     color: #aaa;
     padding: 0; }
@@ -1106,7 +1110,7 @@ body, html {
     background-color: #414141;
     color: #58595B; }
   body.light-theme, html.light-theme {
-    background-color: #f4f4f4; }
+    background-color: #fbfbfb; }
 
 body {
   display: flex;
