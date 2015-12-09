@@ -35,14 +35,24 @@ module.exports = db = {
 			});
 		});
 
-
+		// get 10 project title, id, dateModified
 		app.get('/recentuserprojects', function(req, res) {
 			var userID = req.query.userID;
 
 			Project.find( {'owner_id': userID}, function(err, data) {
-				console.log(data);
-				res.send(data);
-			});
+				var returnObject = data.map(function(obj) {
+					var ret = {
+						_id: obj._id,
+						name: obj.name,
+						owner_username: obj.owner_username,
+						updated_at: obj.updated_at,
+						created_at: obj.created_at
+					}
+					return ret
+				});
+				console.log(returnObject);
+				res.send(returnObject);
+			}).limit(10);
 
 		});
 

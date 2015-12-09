@@ -34,15 +34,21 @@ gulp.task('injected-js', function(){
 
 // concat all CSS files into main.css
 gulp.task('css', function() {
-	console.log('css');
+	// console.log('css');
   gulp.src(cssPath)
-    .pipe(plumber())
+    .pipe(plumber({
+      errorHandler: onError
+    }))
     .pipe(concat('main.css'))
     .pipe(sass({
-      //outputStyle: 'compressed'
-    }))
+      // outputStyle: 'compressed'
+    }).on('error', onError))
     .pipe(gulp.dest('./public/css/'));
 });
+
+var onError = function (err) {  
+  console.log(err);
+};
 
 
 // watch for changes to JS and CSS files

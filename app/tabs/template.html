@@ -3,15 +3,13 @@
       <li v-repeat="tabs | orderBy 'name'" v-component="tab"></li>
 
       <li id = "add">
-        <div>
-          <a href="#" v-on="click: $root.newFile()">+</a>
-        </div>
+        <a href="#" v-on="click: $root.newFile()">+</a>
       </li>
 
       <li id="minimize">
-        <div>
-          <a href="#" v-on="click: $root.hideEditor()"> < </a>
-        </div>
+        <!-- <div> -->
+          <a href="#" v-on="click: $root.hideEditor()"> <span class="oi show-hide-editor" data-glyph="chevron-top" title="show/hide" aria-hidden="true"></span></a>
+        <!-- </div> -->
       </li>
 
 

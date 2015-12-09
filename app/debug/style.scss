@@ -1,19 +1,42 @@
 $transitiontimelong: 1.75s;
 $transitiontimeshort: 0.25s;
 
-#debug {
-	background-color: #F1F1F1;
+#debugContainer {
 	width:100%;
-	display:block;
+	display:flex;
+	align-items: flex-end;
+
+	background: #4F4F4F;
+	box-shadow: 0px -3px 0px 0px rgba(76,76,76,0.50);
+}
+
+#debug {
+	// background-color: #F1F1F1;
+
+	background: #646464;
+	// box-shadow: 0px -20px 0px 0px rgba(76,76,76,0.50);
+
+	width:100%;
 	height:100px;
 	z-index:100;
-	position:absolute;
+	// position:absolute;
 	bottom:0px;
 	left:0px;
 	text-align:bottom;
-	flex: 1;
+	// flex: 1;
 	flex-direction: column;
 	display:flex;
+	align-items: flex-end; 
+
+
+  font-family: montserrat-regular;
+	font-size: 12px;
+  color: #B5B5B5;
+  line-height: 20px;
+
+  &.light-theme {
+		background: #646464;
+	}
 }
 
 #debug.console-visible {
@@ -41,7 +64,6 @@ $transitiontimeshort: 0.25s;
   transition: opacity $transitiontimeshort ease-in-out;
    -moz-transition: opacity $transitiontimeshort ease-in-out;
    -webkit-transition: opacity $transitiontimeshort ease-in-out;
-
 }
 
 #debugText {
@@ -49,10 +71,16 @@ $transitiontimeshort: 0.25s;
 	// bottom:20px;
 	// left:10px;
 	// background-color: #F1F1F1;
+
 	width:100%;
 	bottom: 0px;
 	left: 10px;
 	overflow:scroll;
+
+	font-family: Montserrat-Regular;
+	font-size: 12px;
+	color: #B1B1B1;
+	line-height: 15px;
 }
 
 #debugText.console-hidden {
@@ -60,10 +88,16 @@ $transitiontimeshort: 0.25s;
 }
 
 #debugheader {
-	position:relative;
+	// position:relative;
 	top:0px;
 	width:100%;
-	background-color: #9C9C9C; /* #B7B7B7; */
+	// background-color: #9C9C9C; /* #B7B7B7; */
+
+	background: #444444;
+	border: 0px solid #949494;
+	box-shadow: 0px 12px 12px 0px rgba(0,0,0,0.16);
+	border-radius: 2px;
+
 	// color:red;
 }
 
@@ -77,6 +111,10 @@ $transitiontimeshort: 0.25s;
 
 #cleardebug:hover{
 	background-color:yellow;
+}
+
+#consolename {
+	padding-left:10px;
 }
 
 .resizehandle {

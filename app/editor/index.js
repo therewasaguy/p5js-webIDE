@@ -15,6 +15,9 @@ require('brace/mode/json');
 require('brace/mode/text');
 require('brace/theme/twilight');
 require('brace/theme/tomorrow');
+require('brace/theme/monokai');
+require('./custom-themes/p5-dark');
+require('./custom-themes/p5-light');
 require('brace/ext/searchbox');
 
 var modes = {
@@ -46,7 +49,8 @@ module.exports = {
 		this.editSessions = [];
 		this.ace = window.ace = ace.edit('editor');
 		this.ace.$blockScrolling = Infinity;
-		this.ace.setTheme('ace/theme/twilight');
+		// this.ace.setTheme('ace/theme/monokai');
+		this.ace.setTheme('ace/theme/p5-light');
 		this.ace.setReadOnly(true);
 
 		this.customizeCommands();
@@ -55,6 +59,8 @@ module.exports = {
 		this.$on('close-file', this.closeFile);
 
 		this.$on('clear-editor', this.clearEditor);
+
+		this.$on('settings-changed', this.settingsChanged);
 
 		// load and run the code that loaded is the file is the open file in the project
 		document.addEventListener('loaded-file', function(e) {
@@ -96,12 +102,12 @@ module.exports = {
 				return;
 			}
 
+			var that = this;
+
 			session.on('change', function() {
 				fileObject.contents = session.getValue();
 
-				// save project
-				localStorage.latestProject = JSON.stringify(self.$root.currentProject);
-
+				that.$root.updateProjectInLocalStorage();
 			});
 
 			// is this necessary or can it be stored from files?
@@ -157,10 +163,26 @@ module.exports = {
 
 		},
 
+		settingsChanged: function(settings) {
+			this.updateSettings(settings);
+		},
+
 		updateSettings: function(settings) {
 			this.ace.getSession().setTabSize(settings.tabSize);
-			this.ace.getSession().setUseSoftTabs(settings.tabType === 'spaces');
-			this.ace.getSession().setUseWrapMode(settings.wordWrap === true);
+			this.ace.getSession().setUseSoftTabs(settings.tabType);
+			this.ace.getSession().setUseWrapMode(settings.wordWrap);
+
+			var theme = settings.editorTheme;
+			switch(theme) {
+				case 'light-theme':
+					this.ace.setTheme('ace/theme/p5-light');
+					break;
+				case 'dark-theme':
+					this.ace.setTheme('ace/theme/p5-dark');
+					break;
+				default:
+					break;
+			}
 		},
 
 		clearEditor: function() {

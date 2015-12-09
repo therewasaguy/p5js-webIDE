@@ -49,7 +49,8 @@ var appConfig = {
 		currentUser: null,
 		recentProjects: [],
 		examples: [],
-		editorHidden: false
+		editorHidden: false,
+		newWindowOpen: -1
 	},
 
 	computed: {
@@ -59,10 +60,19 @@ var appConfig = {
 
 		orientation: function() {
 			var orientation = this.settings.consoleOrientation;
+			return orientation;
 		},
 
-		editorClass: function() {
-			return this.settings.showEditor ? 'editor-visible' : 'editor-hidden';
+		editorContainerClass: function() {
+			var c = this.settings.showEditor ? '' : 'editor-hidden';
+			if (c == '' && !this.settings.runInFrame) {
+				c = 'expanded';
+			}
+			return c;
+		},
+
+		theme: function() {
+			return this.settings.editorTheme;
 		}
 	},
 
@@ -80,6 +90,8 @@ var appConfig = {
 
 			var username = pathname[1];
 			var projectID = pathname[2];
+
+			self.updateCurrentProjectID(projectID);
 
 			// get sketch from server
 			$.ajax({
@@ -109,6 +121,7 @@ var appConfig = {
 					var proj = new Project(data);
 					proj.fileObjects = fileObjects;
 
+					self.updateCurrentProjectID(data._id);
 					self.openProject(proj);
 				}
 			});
@@ -196,6 +209,9 @@ var appConfig = {
 	},
 
 	ready: function() {
+		// might use this to re-open the window
+		window.name = 'p5webide';
+
 		this.setupSettings();
 
 		this.setupUser();
@@ -230,7 +246,7 @@ var appConfig = {
 				this.$broadcast('settings-changed', value);
 				// this.editorHidden = !this.settings.showEditor;
 				settings.save(value);
-			})
+			});
 		},
 
 		toggleSettingsPane: function() {
@@ -241,8 +257,7 @@ var appConfig = {
 			this.showFilemenu = !this.showFilemenu;
 		},
 
-		toggleSidebar: function() {
-			console.log('toggle!');
+		toggleSidebar: function(e) {
 			this.settings.showSidebar = !this.settings.showSidebar;
 		},
 
@@ -458,6 +473,7 @@ var appConfig = {
 		openProject: function(projObj, gistData) {
 			var self = this;
 			// self.closeProject();
+			console.log(projObj);
 
 			self.currentProject = new Project(projObj);
 
@@ -479,7 +495,8 @@ var appConfig = {
 				}
 			}
 
-			self.run();
+			// run on load?
+			// self.run();
 		},
 
 		// load project by our ID, not by the gistID
@@ -616,9 +633,71 @@ var appConfig = {
 
 		openShareDialog: function() {
 			this.$.dialog.open();
+
+		},
+
+		updateProjectInLocalStorage: function() {
+			// save project
+			localStorage.latestProject = JSON.stringify(this.currentProject);
+		},
+
+		openInNewWindow: function() {
+
+			// save latest code to localStorage, and a very short setTimeout to allow the code to finish saving
+			this.updateProjectInLocalStorage();
+
+			setTimeout(function() {
+
+				// view draft -->
+				if (this.newWindowOpen) {
+					// the open tab will know to refresh
+					try {
+						this.newWindowOpen.location.reload();
+						this.newWindowOpen.focus();
+						return;
+					} catch(e) {}
+				}
+
+				this.newWindowOpen = window.open('http://' + window.location.host + '/view/draft'); 
+				return;
+			}, 10);
+		},
+
+		// not currently used, was related to openInNewWindow
+		openSavedProjectInNewWindow: function() {
+			/*** open saved project: ***/
+
+			// this only works if a project is saved
+			var pathname = window.location.pathname.split('/');
+			var username = pathname[1];
+			var projectID = pathname[2];
+
+			if (!username || !projectID) {
+				alert('please save project before opening in a new window')
+				return false;
+			}
+
+			// TO DO: open without fetching code from server
+
+			// TO DO: refresh if a window is already open (is this possible?)
+
+			// this opens saved project
+			if (this.newWindowOpen) {
+				// the open tab will know to refresh
+				this.newWindowOpen.postMessage('newcode', window.localStorage.fileObjects);
+			} else {
+				this.newWindowOpen = window.open('http://' + window.location.host + '/view/' + username + '/' + projectID); 
+			}
+		},
+
+		// set project ID in localStorage for opening it in an iframe
+		updateCurrentProjectID: function(projectID) {
+			localStorage.projectID = projectID;
 		}
 
 	},
+
+
 
 };
 

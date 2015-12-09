@@ -6,7 +6,7 @@ module.exports = {
 
 	computed: {
 		className: function() {
-			if (this.$root.running && this.$root.editorHidden) {
+			if (this.$root.running && this.$root.editorHidden && !this.$root.settings.runInFrame) {
 				return 'hidden';
 			} else {
 				return 'visible';
@@ -15,13 +15,19 @@ module.exports = {
 		},
 		loggedIn: function() {
 			return this.$root.currentUser && this.$root.currentUser.authenticated;
+		},
+		newWindowClass: function() {
+			if (this.$root.settings.runInFrame) {
+				return '';
+			} else {
+				return 'selected';
+			}
 		}
 
 	},
 
 	ready: function() {
 		this.toastSpan = document.getElementById('toast-msg');
-
 		this.setToastMsg('Hello World!');
 	},
 
@@ -55,46 +61,11 @@ module.exports = {
 			div.requestFullscreen();
 		},
 
-		// open the current code in a new window
-		openInNewWindow: function(e) {
-
-			// view draft -->
-			if (this.newWindowOpen) {
-				// the open tab will know to refresh
-				try {
-					this.newWindowOpen.location.reload();
-					this.newWindowOpen.focus();
-					return;
-				} catch(e) {}
-			}
-
-			this.newWindowOpen = window.open('http://' + window.location.host + '/view/draft'); 
-			return;
-
-			/*** open saved project: ***/
-
-			// this only works if a project is saved
-			var pathname = window.location.pathname.split('/');
-			var username = pathname[1];
-			var projectID = pathname[2];
-
-			if (!username || !projectID) {
-				alert('please save project before opening in a new window')
-				return false;
-			}
-
-			// TO DO: open without fetching code from server
-
-			// TO DO: refresh if a window is already open (is this possible?)
-
-			// this opens saved project
-			if (this.newWindowOpen) {
-				// the open tab will know to refresh
-				this.newWindowOpen.postMessage('newcode', window.localStorage.fileObjects);
-			} else {
-				this.newWindowOpen = window.open('http://' + window.location.host + '/view/' + username + '/' + projectID); 
-			}
-		},
+		// toggle setting to open the current code in a new window
+		// toggleNewWindowSetting: function(e) {
+		// 	this.$root.stop();
+		// 	this.$root.settings.runInFrame = !this.$root.settings.runInFrame;
+		// },
 
 		// open dialog with share URL / embed code
 		openShareDialog: function(e) {

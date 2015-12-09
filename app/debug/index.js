@@ -6,8 +6,9 @@ module.exports = {
 	template: require('./template.html'),
 
 	computed: {
+		// hide console if not running in frame or if editor is hidden
 		className: function() {
-			return this.$root.editorHidden ? 'console-hidden' : 'console-visible';
+			return this.$root.editorHidden || !this.$root.settings.runInFrame ? 'console-hidden' : 'console-visible';
 		}
 	},
 

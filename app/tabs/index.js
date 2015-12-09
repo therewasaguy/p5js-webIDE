@@ -18,6 +18,10 @@ module.exports = {
 					if (this.$root.currentFile == this.file) {
 						c += 'selected';
 					}
+
+					// themes:
+					c += ' light-theme';
+
 					return c;
 				}
 			},
