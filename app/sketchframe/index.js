@@ -26,8 +26,10 @@ module.exports = {
 	computed: {
 		// hide sketch pane if not running in frame
 		sketchPaneClass: function() {
-			if (this.$root.settings.runInFrame) {
+			if (this.$root.settings.runInFrame && this.$root.running) {
 				return '';
+			} else if (this.$root.running && !this.$root.settings.runInFrame){
+				return 'hidden';
 			} else {
 				return 'hidden';
 			}

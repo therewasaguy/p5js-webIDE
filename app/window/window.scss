@@ -33,7 +33,7 @@ body, html {
   font: 14px karla, sans-serif;
 
   &.dark-theme {
-    background-color:#414141;
+    background-color:#333333;
     color: #58595B;
   }
   &.light-theme {
@@ -80,7 +80,10 @@ button{
   display: flex;
   flex-direction: row;
   height: 100%;
-  width: 100%; }
+  width: 100%;
+  margin-top: 75px;
+  padding:5px;
+}
 
 textarea:focus, input:focus{
     outline: 0;

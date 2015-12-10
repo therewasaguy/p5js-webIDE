@@ -31,6 +31,7 @@ var appConfig = {
 		sketchframe: require('./sketchframe/index'),
 		debug: require('./debug/index'),
 		menu: require('./menu/index'),
+		floatingMenu: require('./floatingmenu/index'),
 		filemenu: require('./filemenu/index'),
 		dialog: require('./dialog/index'),
 	},
@@ -69,6 +70,12 @@ var appConfig = {
 				c = 'expanded';
 			}
 			return c;
+		},
+
+		floatingMenuClass: function() {
+			var showHide = this.settings.showEditor ? 'expanded' : 'collapsed';
+			var draggable = this.settings.runInFrame && this.running ? 'draggable' : 'prevent-drag';
+			return showHide + ' ' + draggable;
 		},
 
 		theme: function() {

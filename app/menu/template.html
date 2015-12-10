@@ -1,4 +1,48 @@
-<div id ="button_header">
+<nav class="{{theme}}">
+
+  <div class="top-nav-left">
+    <ul>
+      <li>
+        <a href="#">New</a>
+      </li>
+      <li>
+        <a href="#">Open Project</a>
+      </li>
+      <li>
+        <a href="#">Save</a>
+      </li>
+      <li>
+        <a href="#" v-on="click: openShareDialog">Share</a>
+      </li>
+    </ul>
+    <hr>
+  </div>
+
+  <div class="top-nav-center">
+    <!-- display a message -->
+    <span id="toast-msg">{{toastMsg}}</span>
+  </div>
+
+  <div class="top-nav-right">
+    <ul>
+      <li>
+        <a href="#">Gallery</a>
+      </li>
+      <li>
+        <a href="#">Profile</a>
+      </li>
+    </ul>
+    <hr>
+  </div>
+
+</nav>
+
+
+<div>
+</div>
+
+
+<div id ="button_header" style="display:none;">
 
   <div class="pure-menu pure-menu-horizontal">
     <ul class="pure-menu-list">
@@ -25,25 +69,10 @@
 
     </ul>
 
-    <!-- display a message -->
-    <span id="toast-msg">{{toastMsg}}</span>
+
 
       <!-- <div > -->
         <ul class="pure-menu-list" id="custom-dropdown-menus">
-
-          <li class="pure-menu-item">
-            <button v-on="click: openShareDialog" id="share-button">
-<span class="oi iconic-lg" data-glyph="share-boxed" title="share" aria-hidden="true" style="font-size:25px;"></span>  
-            </button>
-          </li>
-
-<!--           <li class="pure-menu-item">
-            <button v-on="click: goFullScreen" id="fullscreenbutton"><img src="/images/browser.svg"></button>
-          </li> -->
-
- <!--          <li class="pure-menu-item">
-            <button v-on="click: toggleNewWindowSetting" class="{{newWindowClass}}" id="new-window-button"></button>
-          </li> -->
 
 
           <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover pure-menu-allow-mousedown">
@@ -80,14 +109,8 @@
 
       </ul>
     <!-- </div> -->
-
-
   </div> <!-- end pure-menu-->
 
-
-
   <!-- <div id="toolbar"> -->
-
   <!-- </div> -->
-
 </div>

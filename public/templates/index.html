@@ -21,6 +21,7 @@
 
 	<div v-component="dialog" v-ref="dialog" id="dialog-container"></div>
 
+	<div v-component="floatingMenu" id="floating-menu" class="ui-widget-content collapsed {{theme}} {{floatingMenuClass}}"></div>
 
 		<div id="main-container" class="blurred">
 			<div v-component="sketchframe" v-ref="sketchframe" id="sketchframe-container"></div>
@@ -35,10 +36,10 @@
 					<div v-component="tabs" v-ref="tabs" id="tab-container"></div>
 					<div v-component="editor" v-ref="editor" id="main">
 					</div>
-					<div v-component="settings" v-with="settings" v-show="showSettings" id="settingsContainer"></div>
-
 				</div>
 			</div>
+
+			<div v-component="settings" v-with="settings" v-show="showSettings" id="settingsContainer"></div>
 
 			<div id="footer-row-container" style="display:flex; flex-direction:row;">
 				<div v-component="debug" v-ref="debug" id="debugContainer"></div>
