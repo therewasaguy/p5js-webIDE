@@ -1,0 +1,30 @@
+
+<div class="logo"></div>
+
+<div id="actions">
+
+  <!-- play button -->
+  <div class="btn" v-class="running: $root.running" v-on="click: $root.run()">
+    <?xml version="1.0" standalone="no"?>
+    <svg class="svg-play" v-class="running: $root.running" version="1.0" xmlns="http://www.w3.org/2000/svg"
+     width="50" height="50" viewBox="-25.0 -25 100.000000 100.000000"
+     preserveAspectRatio="xMidYMid meet">
+      <polygon points="6,3 53,25 6,47"/>
+    </svg>
+  </div>
+
+  <!-- stop button -->
+  <div class="btn" v-class="running: $root.running" v-on="click: $root.stop()">
+    <?xml version="1.0" standalone="no"?>
+    <svg class="svg-stop" v-class="running: $root.running" version="1.0" xmlns="http://www.w3.org/2000/svg"
+     width="50" height="50" viewBox="-25.0 -25 100.000000 100.000000"
+     preserveAspectRatio="xMidYMid meet">
+      <polygon points="3,3 3,47 47,47 47, 3"/>
+    </svg>
+  </div>
+
+  <div id="#settings-button" title="Preferences" v-on="click: $root.toggleSettingsPane()">
+      <span class="oi iconic-lg settings" data-glyph="cog" title="settings" aria-hidden="true" style=""></span>
+  </div>
+
+</div>
