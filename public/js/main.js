@@ -765,6 +765,11 @@ module.exports = {
 	template: require('./template.html'),
 
 	computed: {
+		showEditorClass: function() {
+			// return this.$root.editorHidden ? 'show' : 'hide';
+			return this.$root.settings.showEditor ? 'hide' : 'show';
+
+		},
 	},
 
 	ready: function() {
@@ -780,7 +785,7 @@ module.exports = {
 
 };
 },{"./template.html":13}],13:[function(require,module,exports){
-module.exports = '\n<div class="logo"></div>\n\n<div id="actions">\n\n  <!-- play button -->\n  <div class="btn" v-class="running: $root.running" v-on="click: $root.run()">\n    <?xml version="1.0" standalone="no"?>\n    <svg class="svg-play" v-class="running: $root.running" version="1.0" xmlns="http://www.w3.org/2000/svg"\n     width="50" height="50" viewBox="-25.0 -25 100.000000 100.000000"\n     preserveAspectRatio="xMidYMid meet">\n      <polygon points="6,3 53,25 6,47"/>\n    </svg>\n  </div>\n\n  <!-- stop button -->\n  <div class="btn" v-class="running: $root.running" v-on="click: $root.stop()">\n    <?xml version="1.0" standalone="no"?>\n    <svg class="svg-stop" v-class="running: $root.running" version="1.0" xmlns="http://www.w3.org/2000/svg"\n     width="50" height="50" viewBox="-25.0 -25 100.000000 100.000000"\n     preserveAspectRatio="xMidYMid meet">\n      <polygon points="3,3 3,47 47,47 47, 3"/>\n    </svg>\n  </div>\n\n  <div id="#settings-button" title="Preferences" v-on="click: $root.toggleSettingsPane()">\n      <span class="oi iconic-lg settings" data-glyph="cog" title="settings" aria-hidden="true" style=""></span>\n  </div>\n\n</div>';
+module.exports = '\n<div class="logo"></div>\n\n<div id="actions">\n\n  <!-- play button -->\n  <div class="btn" v-class="running: $root.running" v-on="click: $root.run()">\n    <?xml version="1.0" standalone="no"?>\n    <svg class="svg-play" v-class="running: $root.running" version="1.0" xmlns="http://www.w3.org/2000/svg"\n     width="50" height="50" viewBox="-25.0 -25 100.000000 100.000000"\n     preserveAspectRatio="xMidYMid meet">\n      <polygon points="6,3 53,25 6,47"/>\n    </svg>\n  </div>\n\n  <!-- stop button -->\n  <div class="btn" v-class="running: $root.running" v-on="click: $root.stop()">\n    <?xml version="1.0" standalone="no"?>\n    <svg class="svg-stop" v-class="running: $root.running" version="1.0" xmlns="http://www.w3.org/2000/svg"\n     width="50" height="50" viewBox="-25.0 -25 100.000000 100.000000"\n     preserveAspectRatio="xMidYMid meet">\n      <polygon points="3,3 3,47 47,47 47, 3"/>\n    </svg>\n  </div>\n\n  <!-- show editor button -->\n  <div id="show-editor-btn" class="btn settings-button settings {{showEditorClass}}" v-on="click: this.$root.showEditor()"> \n    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"\n       viewBox="111.982048 169.6423035 388.0419922 452.7156067"\n       enable-background="new 111.982048 169.6423035 388.0419922 452.7156067" xml:space="preserve">\n    <g>\n      <path fill="#58595B" d="M500.0240784,307.0675659v291.0314941c0,13.3963013-10.8625488,24.2589111-24.2588806,24.2589111\n        H136.2410126c-13.3963242,0-24.2588882-10.8626099-24.2588882-24.2589111v-404.197876\n        c0-13.3963165,10.8625641-24.2588959,24.2588882-24.2588959h226.3578339c13.3837585,0,32.0733948,7.8270721,41.4307556,17.184433\n        l78.8100586,78.8100433C492.1970215,274.9941406,500.0240784,293.6837769,500.0240784,307.0675659z M467.6872559,331.3264771\n        H362.5988464c-13.3963318,0-24.2589111-10.8625793-24.2589111-24.2589111V201.9791412H144.3189545v388.0419922h323.3682861\n        V331.3264771z M244.6158142,362.1455383l12.8820496,9.5957031c3.5372314,2.7846069,4.2898254,7.8395996,1.5177307,11.3768311\n        l-45.9840088,61.3872986l45.9840088,61.3872986c2.7720947,3.5372314,2.0195007,8.5921936-1.5177307,11.3768616\n        l-12.8820496,9.5956421c-3.5372314,2.7720947-8.5922241,2.0195312-11.3643036-1.5177002l-57.0974579-76.0379944\n        c-2.0194855-2.7846375-2.0194855-6.8235779,0-9.6082153l57.0974579-76.0379639\n        C236.0235901,360.1260681,241.0785828,359.3734741,244.6158142,362.1455383z M272.6502686,546.8217163l34.870575-209.9385376\n        c0.7526245-4.5407104,5.0549927-7.3253174,9.3448181-6.5727234l15.917572,2.5337524\n        c4.5406799,0.752594,7.3253174,5.0549927,6.5727234,9.3448181l-34.8706055,209.9385376\n        c-0.752594,4.5407104-5.0549622,7.3253174-9.3448181,6.5727539l-15.9175415-2.5338135\n        C274.6822815,555.4139404,271.8976746,551.1115723,272.6502686,546.8217163z M435.8521729,449.3094788l-57.0974731,76.0379944\n        c-2.7720947,3.5372314-7.8270569,4.2897949-11.3642883,1.5177002l-12.8820496-9.5956421\n        c-3.5372314-2.784668-4.289856-7.8396301-1.5177612-11.3768616l45.9840393-61.3872986l-45.9840393-61.3872986\n        c-2.7720947-3.5372314-2.0194702-8.5922241,1.5177612-11.3768311l12.8820496-9.5957031\n        c3.5372314-2.7720642,8.5921936-2.0194702,11.3642883,1.5177612l57.0974731,76.0379639\n        C437.8716431,442.4859009,437.8716431,446.5248413,435.8521729,449.3094788z M370.6767578,298.989624h94.9910278\n        c-1.5177612-4.2898254-3.7881165-8.5921936-5.5567322-10.3608093l-79.0734558-79.0734711\n        c-1.7686157-1.7686157-6.0709839-4.0389709-10.3608398-5.5567169V298.989624z"/>\n    </g>\n    </svg>\n\n  </div>\n\n  <!-- settings button -->\n  <div class="settings-button" title="Preferences" v-on="click: $root.toggleSettingsPane()">\n      <span class="oi iconic-lg settings" data-glyph="cog" title="settings" aria-hidden="true" style=""></span>\n  </div>\n\n</div>';
 },{}],14:[function(require,module,exports){
 var $ = require('jquery');
 
@@ -2638,12 +2643,6 @@ module.exports = {
 			}
 		},
 
-		showEditorClass: function() {
-			// return this.$root.editorHidden ? 'show' : 'hide';
-			return this.$root.settings.showEditor ? 'hide' : 'show';
-
-		},
-
 		sidebarIconClass: function() {
 			return this.$root.settings.showEditor ? 'show' : 'hide';
 		}
@@ -2680,7 +2679,7 @@ module.exports = {
 
 
 },{"./file.html":27,"./sidebar.html":29,"jquery":55}],29:[function(require,module,exports){
-module.exports = '<div id="sidebar-container" class = "{{className}}"  v-on="contextmenu: popupMenu(this, $event)">\n\n\n	<div id="sidebar">\n		<div id="filetree">\n			<div id="sidebarButton" class="{{sidebarIconClass}}" v-on="click: this.$root.toggleSidebar()">\n				<label style="display: inline-flex;">\n					<img  id="sidebarIcon" class="{{sidebarIconClass}}" style="cursor: pointer;" src="/images/sidebar-handle.svg">\n \n				</label>\n			</div>\n			<ul>\n				<li v-repeat="currentProject.fileObjects | orderBy \'name\'" v-component="file"></li>\n			</ul>\n		</div>\n	</div>\n\n\n	<div id="show-editor-button" class = "{{showEditorClass}}" v-on="click: this.$root.showEditor()"> \n	  <a href="#"> > </a> \n	</div>\n\n\n	</div>\n\n\n	<!-- <div id="sidebar-drag" v-on="mousedown: startDrag"></div>\n</div> -->\n\n';
+module.exports = '<div id="sidebar-container" class = "{{className}}"  v-on="contextmenu: popupMenu(this, $event)">\n\n\n	<div id="sidebar">\n		<div id="filetree">\n			<div id="sidebarButton" class="{{sidebarIconClass}}" v-on="click: this.$root.toggleSidebar()">\n				<label style="display: inline-flex;">\n					<img  id="sidebarIcon" class="{{sidebarIconClass}}" style="cursor: pointer;" src="/images/sidebar-handle.svg">\n \n				</label>\n			</div>\n			<ul>\n				<li v-repeat="currentProject.fileObjects | orderBy \'name\'" v-component="file"></li>\n			</ul>\n		</div>\n	</div>\n\n\n	</div>\n\n\n	<!-- <div id="sidebar-drag" v-on="mousedown: startDrag"></div>\n</div> -->\n\n';
 },{}],30:[function(require,module,exports){
 /**
  *  sketchframe holds the iframe that runs the sketch.

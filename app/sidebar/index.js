@@ -63,12 +63,6 @@ module.exports = {
 			}
 		},
 
-		showEditorClass: function() {
-			// return this.$root.editorHidden ? 'show' : 'hide';
-			return this.$root.settings.showEditor ? 'hide' : 'show';
-
-		},
-
 		sidebarIconClass: function() {
 			return this.$root.settings.showEditor ? 'show' : 'hide';
 		}

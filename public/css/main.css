@@ -1,3 +1,66 @@
+#dialog-container {
+  z-index: 1000;
+  width: 240px;
+  position: absolute;
+  margin: auto;
+  left: 0;
+  right: 0;
+  top: 20%; }
+
+#dialog-container.hidden {
+  display: none; }
+
+.dialog-hidden {
+  display: none; }
+
+.dialog {
+  /*position: relative;*/
+  width: 240px;
+  text-align: left;
+  /*line-height: 25px;*/
+  background-color: #F4F4F4;
+  border: 1px solid #CBDBE7;
+  padding: 20px;
+  padding-top: 2px;
+  font-size: 14px;
+  -webkit-border-radius: 30px;
+  -moz-border-radius: 30px;
+  border-radius: 1px;
+  box-shadow: 2px 2px 20px #C8C8C8; }
+
+p.dialog-title {
+  text-align: left;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 100%; }
+
+.dialog-button {
+  margin-right: 5px;
+  margin-left: 5px;
+  border: 1px solid #C8C8C8;
+  background-color: #F4F4F4;
+  width: 45%;
+  line-height: 200%;
+  cursor: pointer;
+  outline: none; }
+
+.dialog-button:hover {
+  background-color: #ED225D;
+  border: 1px solid #ED225D;
+  color: white; }
+
+#dialog-right {
+  float: right; }
+
+/* class to add to the rest of the container */
+.blurred {
+  -webkit-filter: blur(2px);
+  -moz-filter: blur(2px);
+  -o-filter: blur(2px);
+  -ms-filter: blur(2px);
+  filter: blur(2px);
+  pointer-events: none; }
+
 #debugContainer {
   width: 100%;
   display: flex;
@@ -90,69 +153,6 @@
 
 .handle-down.console-hidden {
   display: none; }
-
-#dialog-container {
-  z-index: 1000;
-  width: 240px;
-  position: absolute;
-  margin: auto;
-  left: 0;
-  right: 0;
-  top: 20%; }
-
-#dialog-container.hidden {
-  display: none; }
-
-.dialog-hidden {
-  display: none; }
-
-.dialog {
-  /*position: relative;*/
-  width: 240px;
-  text-align: left;
-  /*line-height: 25px;*/
-  background-color: #F4F4F4;
-  border: 1px solid #CBDBE7;
-  padding: 20px;
-  padding-top: 2px;
-  font-size: 14px;
-  -webkit-border-radius: 30px;
-  -moz-border-radius: 30px;
-  border-radius: 1px;
-  box-shadow: 2px 2px 20px #C8C8C8; }
-
-p.dialog-title {
-  text-align: left;
-  font-size: 18px;
-  font-weight: bold;
-  line-height: 100%; }
-
-.dialog-button {
-  margin-right: 5px;
-  margin-left: 5px;
-  border: 1px solid #C8C8C8;
-  background-color: #F4F4F4;
-  width: 45%;
-  line-height: 200%;
-  cursor: pointer;
-  outline: none; }
-
-.dialog-button:hover {
-  background-color: #ED225D;
-  border: 1px solid #ED225D;
-  color: white; }
-
-#dialog-right {
-  float: right; }
-
-/* class to add to the rest of the container */
-.blurred {
-  -webkit-filter: blur(2px);
-  -moz-filter: blur(2px);
-  -o-filter: blur(2px);
-  -ms-filter: blur(2px);
-  filter: blur(2px);
-  pointer-events: none; }
 
 body.horizontal div#editor-container {
   flex-direction: column; }
@@ -285,6 +285,78 @@ div#editor-container.editor-hidden {
   right: -5px;
   top: -5px; }
 
+#filemenu-container {
+  margin: -5px;
+  margin-top: -7px;
+  padding-right: 29px;
+  font: 14px karla,sans-serif;
+  display: inline-block;
+  width: 200px;
+  z-index: 1; }
+
+ul.a {
+  list-style-type: circle; }
+
+p.filemenu {
+  font: 16px;
+  color: #5D75C5;
+  line-height: 100%;
+  width: 180px;
+  padding-left: 20px;
+  outline: none; }
+
+#filemenu {
+  background-color: #202020;
+  width: 220px;
+  height: 100vh;
+  box-shadow: 0px 0px 6px #999;
+  color: #B3B3B3;
+  cursor: default;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden; }
+
+li.filemenu:hover {
+  background-color: white; }
+
+li.filemenu:active {
+  background-color: yellow; }
+
+#newProject {
+  background-color: #2D2D2D;
+  padding: 1px; }
+
+#examples {
+  line-height: 150%; }
+
+#myProjects {
+  line-height: 150%; }
+
+.buttonIcon {
+  position: relative;
+  clear: none;
+  float: right;
+  width: 15px;
+  margin-right: 20px; }
+
+.projectList {
+  margin-left: 10px;
+  line-height: 150%;
+  max-height: 300px;
+  overflow: scroll; }
+
+.accordion {
+  margin-bottom: 20px; }
+
+.timeago {
+  font-size: 10px;
+  color: #646464; }
+
+li.filemenu {
+  list-style-type: none;
+  padding-left: 2em;
+  line-height: 150%; }
+
 #floating-menu {
   z-index: 1000;
   top: 50px;
@@ -293,6 +365,9 @@ div#editor-container.editor-hidden {
   border: 0px solid #949494; }
   #floating-menu div {
     display: inline-block; }
+  #floating-menu.expanded {
+    background: #444444;
+    box-shadow: 0px 12px 12px 0px rgba(0, 0, 0, 0.16); }
   #floating-menu.collapsed {
     width: 80%;
     height: 50px;
@@ -369,80 +444,14 @@ div#editor-container.editor-hidden {
   #floating-menu .button-border {
     background: rgba(153, 153, 153, 0.5);
     border-radius: 24px; }
-  #floating-menu #settings-button {
+  #floating-menu .settings-button {
     float: right; }
-
-#filemenu-container {
-  margin: -5px;
-  margin-top: -7px;
-  padding-right: 29px;
-  font: 14px karla,sans-serif;
-  display: inline-block;
-  width: 200px;
-  z-index: 1; }
-
-ul.a {
-  list-style-type: circle; }
-
-p.filemenu {
-  font: 16px;
-  color: #5D75C5;
-  line-height: 100%;
-  width: 180px;
-  padding-left: 20px;
-  outline: none; }
-
-#filemenu {
-  background-color: #202020;
-  width: 220px;
-  height: 100vh;
-  box-shadow: 0px 0px 6px #999;
-  color: #B3B3B3;
-  cursor: default;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden; }
-
-li.filemenu:hover {
-  background-color: white; }
-
-li.filemenu:active {
-  background-color: yellow; }
-
-#newProject {
-  background-color: #2D2D2D;
-  padding: 1px; }
-
-#examples {
-  line-height: 150%; }
-
-#myProjects {
-  line-height: 150%; }
-
-.buttonIcon {
-  position: relative;
-  clear: none;
-  float: right;
-  width: 15px;
-  margin-right: 20px; }
-
-.projectList {
-  margin-left: 10px;
-  line-height: 150%;
-  max-height: 300px;
-  overflow: scroll; }
-
-.accordion {
-  margin-bottom: 20px; }
-
-.timeago {
-  font-size: 10px;
-  color: #646464; }
-
-li.filemenu {
-  list-style-type: none;
-  padding-left: 2em;
-  line-height: 150%; }
+  #floating-menu #show-editor-btn {
+    width: 18px;
+    height: 18px;
+    right: 48px !important; }
+    #floating-menu #show-editor-btn.hide {
+      opacity: 0 !important; }
 
 #menu-container {
   display: flex;
@@ -1041,42 +1050,6 @@ nav hr {
     height: 16px; }
   #filetree .icon.image {
     background-image: url("../images/image.svg"); }
-
-#show-editor-button {
-  position: relative;
-  flex: 1;
-  top: -195px;
-  width: 30px;
-  height: 30px;
-  opacity: 0.4;
-  transition: opacity 0.25s ease-in-out;
-  -moz-transition: opacity 0.25s ease-in-out;
-  -webkit-transition: opacity 0.25s ease-in-out;
-  background-color: #DCDCDC;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  padding: 0 5px 0 5px;
-  margin-right: 2px;
-  text-align: center;
-  z-index: 100; }
-  #show-editor-button a {
-    width: 100%;
-    display: block;
-    line-height: 2.4;
-    text-decoration: none; }
-  #show-editor-button a:hover {
-    color: white;
-    display: block;
-    line-height: 2.4;
-    text-align: center; }
-
-#show-editor-button.show:hover {
-  opacity: 1.0;
-  background-color: black; }
-
-#show-editor-button.hide {
-  opacity: 0;
-  display: none; }
 
 #sidebarButton {
   background-color: black;
