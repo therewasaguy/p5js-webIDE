@@ -68,6 +68,9 @@ module.exports = {
 			self.$parent.modeFunction('run');
 		});
 
+		// resize editor and editor-container
+		$( "#editor" ).resizable({alsoResize: '#editor-container'});
+
 		// to do: initialize differently
 		// this.openFile();
 	},
