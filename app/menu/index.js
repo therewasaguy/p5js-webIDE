@@ -35,8 +35,9 @@ module.exports = {
 
 	data: {
 		toastMsg: '',
-		openDialogClass: 'hidden',
-		saveDialogClass: 'hidden'
+		openDropdownClass: 'hidden',
+		userDropdownClass: 'hidden',
+		saveDropdownClass: 'hidden'
 	},
 
 	methods: {
@@ -76,23 +77,31 @@ module.exports = {
 			this.$root.openShareDialog();
 		},
 
-		openOpenDialog: function(e) {
+		openOpenDropdown: function(e) {
 			console.log('open');
-			this.openDialogClass = '';
+			this.openDropdownClass = '';
 		},
 
-		closeOpenDialog: function(e) {
+		closeOpenDropdown: function(e) {
 			console.log('close');
 			if (inSub) return;
-			this.openDialogClass = 'hidden';
+			this.openDropdownClass = 'hidden';
 		},
 
-		openSaveDialog: function(e) {
-			this.saveDialogClass = '';
+		openSaveDropdown: function(e) {
+			this.saveDropdownClass = '';
 		},
 
-		closeSaveDialog: function(e) {
-			this.saveDialogClass = 'hidden'
+		closeSaveDropdown: function(e) {
+			this.saveDropdownClass = 'hidden'
+		},
+
+		openUserDropdown: function(e) {
+			this.userDropdownClass = '';
+		},
+
+		closeUserDropdown: function(e) {
+			this.userDropdownClass = 'hidden'
 		},
 
 		prevDef: function(e) {

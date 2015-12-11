@@ -357,6 +357,125 @@ li.filemenu {
   padding-left: 2em;
   line-height: 150%; }
 
+#floating-menu {
+  z-index: 1;
+  top: 50px;
+  left: 7.5%;
+  border-radius: 2px;
+  padding: 10px;
+  border: 0px solid #949494; }
+  #floating-menu div {
+    display: inline-block; }
+  #floating-menu.expanded {
+    background: #444444;
+    box-shadow: 0px 12px 12px 0px rgba(0, 0, 0, 0.16); }
+  #floating-menu.collapsed {
+    width: 50%;
+    height: 45px;
+    position: absolute;
+    margin: 0px auto; }
+  #floating-menu.draggable {
+    cursor: move;
+    box-shadow: 0px 12px 12px 0px rgba(0, 0, 0, 0.16); }
+    #floating-menu.draggable.dark-theme {
+      background: #444444; }
+    #floating-menu.draggable.light-theme {
+      background: #fbfbfb; }
+  #floating-menu.prevent-drag {
+    cursor: default;
+    background: none;
+    box-shadow: none; }
+  #floating-menu .btn {
+    padding: 0;
+    outline: 0;
+    z-index: 3;
+    display: inline-block;
+    margin: 0px 10px;
+    width: 42px;
+    height: 42px;
+    background: #424242;
+    background-size: 150%;
+    transition: opacity 0.25s ease-in-out 0s;
+    border-radius: 48px; }
+  #floating-menu .svg-play, #floating-menu .svg-stop {
+    stroke: none;
+    width: 100%;
+    height: 100%; }
+  #floating-menu .svg-play {
+    fill: #ACACAC; }
+    #floating-menu .svg-play.running {
+      fill: #EC245E; }
+  #floating-menu .svg-stop.running {
+    fill: #EC245E; }
+  #floating-menu .btn-stop {
+    display: none !important; }
+    #floating-menu .btn-stop.running {
+      display: inline-block !important; }
+  #floating-menu .logo {
+    width: 80px;
+    height: 40px;
+    background: url("/images/p5js.svg");
+    background-size: 80px 40px;
+    background-repeat: no-repeat; }
+  #floating-menu #actions div {
+    border: 0;
+    cursor: pointer;
+    padding: 0;
+    z-index: 3;
+    display: inline-block; }
+  #floating-menu #actions div, #floating-menu #actions div img, #floating-menu #actions div span {
+    opacity: 0.75;
+    transition: opacity 0.25s ease-in-out 0s; }
+    #floating-menu #actions div:hover, #floating-menu #actions div img:hover, #floating-menu #actions div span:hover {
+      opacity: 1; }
+  #floating-menu #actions .settings {
+    border: 0;
+    cursor: pointer;
+    padding: 0;
+    outline: 0;
+    z-index: 3;
+    background: #424242;
+    transition: opacity 0.25s ease-in-out 0s;
+    border: #424242 10px solid;
+    border-radius: 48px;
+    position: absolute;
+    right: 8px;
+    top: 15px;
+    font-size: 18px; }
+  #floating-menu #actions .settings:hover button:hover {
+    opacity: 1; }
+  #floating-menu .button-border {
+    background: rgba(153, 153, 153, 0.5);
+    border-radius: 24px; }
+  #floating-menu .settings-button {
+    float: right; }
+  #floating-menu #show-editor-btn {
+    width: 18px;
+    height: 18px;
+    right: 48px !important; }
+    #floating-menu #show-editor-btn.hide {
+      opacity: 0 !important; }
+  #floating-menu .project-name-container {
+    height: 45px;
+    display: inline-block; }
+  #floating-menu .project-name {
+    position: absolute;
+    top: 40%;
+    font-family: Montserrat-Regular;
+    font-size: 12px;
+    color: #B1B1B1;
+    line-height: 15px;
+    padding-left: 20px; }
+    #floating-menu .project-name:before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      border-left: 2px dotted #444;
+      /*change these values to suit your liking*/ }
+
 #menu-container {
   display: flex;
   flex: 1;
@@ -896,6 +1015,144 @@ nav {
     #settingsPane .text-option.selected {
       color: #333333; }
 
+#side-container {
+  flex-direction: column;
+  display: flex; }
+
+#sidebar-container {
+  -webkit-user-select: none;
+  position: relative;
+  width: 14px;
+  margin-top: 65px;
+  flex: 1; }
+
+#sidebar-container.expanded {
+  width: 160px;
+  visibility: visible;
+  min-width: 40px; }
+
+#sidebar {
+  flex: 1;
+  display: flex;
+  flex-direction: column; }
+
+.runfile {
+  position: absolute;
+  margin-left: -30px;
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 14px solid #38B449;
+  top: 4px;
+  display: none;
+  cursor: pointer;
+  opacity: .4; }
+
+.runfile.mainfile {
+  opacity: 1;
+  display: block; }
+
+#sidebar-drag {
+  flex: none;
+  cursor: col-resize;
+  background-color: none;
+  position: absolute;
+  width: 7px;
+  height: 100%;
+  right: 0;
+  top: 0; }
+
+#filetree {
+  flex: 1;
+  overflow: hidden;
+  padding-left: 14px; }
+  #filetree ul {
+    list-style: none;
+    margin-top: 1px;
+    padding: 0;
+    background-color: #969696; }
+    #filetree ul li {
+      margin: 0;
+      padding: 0;
+      position: relative; }
+      #filetree ul li div {
+        padding: 3px;
+        padding-left: 40px;
+        cursor: pointer;
+        color: #333333;
+        min-width: 60px; }
+      #filetree ul li div.selected {
+        background-color: #f6f6f6;
+        border-radius: 5px 0px 0px 5px; }
+      #filetree ul li ul li div {
+        padding-left: 85px; }
+      #filetree ul li ul li ul li div {
+        padding-left: 106px; }
+      #filetree ul li ul li ul li ul li div {
+        padding-left: 127px; }
+  #filetree .toggle {
+    top: 1px;
+    left: 13px;
+    position: absolute;
+    width: 24px;
+    margin-top: -2px;
+    height: 24px; }
+    #filetree .toggle.open {
+      background-image: url("../images/expanded.svg"); }
+    #filetree .toggle.closed {
+      background-image: url("../images/collapsed.svg"); }
+  #filetree .icon {
+    width: 13px;
+    height: 15px;
+    position: absolute;
+    top: 4px;
+    margin-left: -20px;
+    background-size: 13px auto;
+    background-repeat: no-repeat; }
+  #filetree .icon.file {
+    background-image: url("../images/file1.svg"); }
+  #filetree .icon.db {
+    background-image: url("../images/database.svg"); }
+  #filetree .icon.folder {
+    background-image: url("../images/folder.svg");
+    background-size: 17px auto;
+    top: 5px;
+    margin-left: -22px;
+    width: 17px;
+    height: 16px; }
+  #filetree .icon.image {
+    background-image: url("../images/image.svg"); }
+
+#sidebarButton {
+  background-color: black;
+  height: 100%;
+  width: 14px;
+  float: left;
+  overflow: hidden;
+  margin-left: -14px;
+  vertical-align: middle;
+  cursor: pointer; }
+
+.sidebarButtonItem {
+  background: none;
+  border: 0;
+  height: 20px;
+  padding: 0px;
+  display: inline;
+  cursor: pointer;
+  outline: 0;
+  float: left; }
+
+#sidebarIcon {
+  max-width: 100%; }
+
+#sidebarIcon.hide {
+  display: none; }
+
+#sidebarButton.hide {
+  display: none; }
+
 #sketchframe-container {
   width: 100%;
   height: 100%;
@@ -1110,263 +1367,6 @@ textarea:focus, input:focus {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none; }
-
-#side-container {
-  flex-direction: column;
-  display: flex; }
-
-#sidebar-container {
-  -webkit-user-select: none;
-  position: relative;
-  width: 14px;
-  margin-top: 65px;
-  flex: 1; }
-
-#sidebar-container.expanded {
-  width: 160px;
-  visibility: visible;
-  min-width: 40px; }
-
-#sidebar {
-  flex: 1;
-  display: flex;
-  flex-direction: column; }
-
-.runfile {
-  position: absolute;
-  margin-left: -30px;
-  width: 0;
-  height: 0;
-  border-top: 6px solid transparent;
-  border-bottom: 6px solid transparent;
-  border-left: 14px solid #38B449;
-  top: 4px;
-  display: none;
-  cursor: pointer;
-  opacity: .4; }
-
-.runfile.mainfile {
-  opacity: 1;
-  display: block; }
-
-#sidebar-drag {
-  flex: none;
-  cursor: col-resize;
-  background-color: none;
-  position: absolute;
-  width: 7px;
-  height: 100%;
-  right: 0;
-  top: 0; }
-
-#filetree {
-  flex: 1;
-  overflow: hidden;
-  padding-left: 14px; }
-  #filetree ul {
-    list-style: none;
-    margin-top: 1px;
-    padding: 0;
-    background-color: #969696; }
-    #filetree ul li {
-      margin: 0;
-      padding: 0;
-      position: relative; }
-      #filetree ul li div {
-        padding: 3px;
-        padding-left: 40px;
-        cursor: pointer;
-        color: #333333;
-        min-width: 60px; }
-      #filetree ul li div.selected {
-        background-color: #f6f6f6;
-        border-radius: 5px 0px 0px 5px; }
-      #filetree ul li ul li div {
-        padding-left: 85px; }
-      #filetree ul li ul li ul li div {
-        padding-left: 106px; }
-      #filetree ul li ul li ul li ul li div {
-        padding-left: 127px; }
-  #filetree .toggle {
-    top: 1px;
-    left: 13px;
-    position: absolute;
-    width: 24px;
-    margin-top: -2px;
-    height: 24px; }
-    #filetree .toggle.open {
-      background-image: url("../images/expanded.svg"); }
-    #filetree .toggle.closed {
-      background-image: url("../images/collapsed.svg"); }
-  #filetree .icon {
-    width: 13px;
-    height: 15px;
-    position: absolute;
-    top: 4px;
-    margin-left: -20px;
-    background-size: 13px auto;
-    background-repeat: no-repeat; }
-  #filetree .icon.file {
-    background-image: url("../images/file1.svg"); }
-  #filetree .icon.db {
-    background-image: url("../images/database.svg"); }
-  #filetree .icon.folder {
-    background-image: url("../images/folder.svg");
-    background-size: 17px auto;
-    top: 5px;
-    margin-left: -22px;
-    width: 17px;
-    height: 16px; }
-  #filetree .icon.image {
-    background-image: url("../images/image.svg"); }
-
-#sidebarButton {
-  background-color: black;
-  height: 100%;
-  width: 14px;
-  float: left;
-  overflow: hidden;
-  margin-left: -14px;
-  vertical-align: middle;
-  cursor: pointer; }
-
-.sidebarButtonItem {
-  background: none;
-  border: 0;
-  height: 20px;
-  padding: 0px;
-  display: inline;
-  cursor: pointer;
-  outline: 0;
-  float: left; }
-
-#sidebarIcon {
-  max-width: 100%; }
-
-#sidebarIcon.hide {
-  display: none; }
-
-#sidebarButton.hide {
-  display: none; }
-
-#floating-menu {
-  z-index: 1;
-  top: 50px;
-  left: 7.5%;
-  border-radius: 2px;
-  padding: 10px;
-  border: 0px solid #949494; }
-  #floating-menu div {
-    display: inline-block; }
-  #floating-menu.expanded {
-    background: #444444;
-    box-shadow: 0px 12px 12px 0px rgba(0, 0, 0, 0.16); }
-  #floating-menu.collapsed {
-    width: 50%;
-    height: 45px;
-    position: absolute;
-    margin: 0px auto; }
-  #floating-menu.draggable {
-    cursor: move;
-    box-shadow: 0px 12px 12px 0px rgba(0, 0, 0, 0.16); }
-    #floating-menu.draggable.dark-theme {
-      background: #444444; }
-    #floating-menu.draggable.light-theme {
-      background: #fbfbfb; }
-  #floating-menu.prevent-drag {
-    cursor: default;
-    background: none;
-    box-shadow: none; }
-  #floating-menu .btn {
-    padding: 0;
-    outline: 0;
-    z-index: 3;
-    display: inline-block;
-    margin: 0px 10px;
-    width: 42px;
-    height: 42px;
-    background: #424242;
-    background-size: 150%;
-    transition: opacity 0.25s ease-in-out 0s;
-    border-radius: 48px; }
-  #floating-menu .svg-play, #floating-menu .svg-stop {
-    stroke: none;
-    width: 100%;
-    height: 100%; }
-  #floating-menu .svg-play {
-    fill: #ACACAC; }
-    #floating-menu .svg-play.running {
-      fill: #EC245E; }
-  #floating-menu .svg-stop.running {
-    fill: #EC245E; }
-  #floating-menu .btn-stop {
-    display: none !important; }
-    #floating-menu .btn-stop.running {
-      display: inline-block !important; }
-  #floating-menu .logo {
-    width: 80px;
-    height: 40px;
-    background: url("/images/p5js.svg");
-    background-size: 80px 40px;
-    background-repeat: no-repeat; }
-  #floating-menu #actions div {
-    border: 0;
-    cursor: pointer;
-    padding: 0;
-    z-index: 3;
-    display: inline-block; }
-  #floating-menu #actions div, #floating-menu #actions div img, #floating-menu #actions div span {
-    opacity: 0.75;
-    transition: opacity 0.25s ease-in-out 0s; }
-    #floating-menu #actions div:hover, #floating-menu #actions div img:hover, #floating-menu #actions div span:hover {
-      opacity: 1; }
-  #floating-menu #actions .settings {
-    border: 0;
-    cursor: pointer;
-    padding: 0;
-    outline: 0;
-    z-index: 3;
-    background: #424242;
-    transition: opacity 0.25s ease-in-out 0s;
-    border: #424242 10px solid;
-    border-radius: 48px;
-    position: absolute;
-    right: 8px;
-    top: 15px;
-    font-size: 18px; }
-  #floating-menu #actions .settings:hover button:hover {
-    opacity: 1; }
-  #floating-menu .button-border {
-    background: rgba(153, 153, 153, 0.5);
-    border-radius: 24px; }
-  #floating-menu .settings-button {
-    float: right; }
-  #floating-menu #show-editor-btn {
-    width: 18px;
-    height: 18px;
-    right: 48px !important; }
-    #floating-menu #show-editor-btn.hide {
-      opacity: 0 !important; }
-  #floating-menu .project-name-container {
-    height: 45px;
-    display: inline-block; }
-  #floating-menu .project-name {
-    position: absolute;
-    top: 40%;
-    font-family: Montserrat-Regular;
-    font-size: 12px;
-    color: #B1B1B1;
-    line-height: 15px;
-    padding-left: 20px; }
-    #floating-menu .project-name:before {
-      content: "";
-      position: absolute;
-      z-index: -1;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      border-left: 2px dotted #444;
-      /*change these values to suit your liking*/ }
 
 /* Bootstrap */
 /* Override Bootstrap default variable */

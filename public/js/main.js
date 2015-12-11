@@ -1841,8 +1841,9 @@ module.exports = {
 
 	data: {
 		toastMsg: '',
-		openDialogClass: 'hidden',
-		saveDialogClass: 'hidden'
+		openDropdownClass: 'hidden',
+		userDropdownClass: 'hidden',
+		saveDropdownClass: 'hidden'
 	},
 
 	methods: {
@@ -1882,23 +1883,31 @@ module.exports = {
 			this.$root.openShareDialog();
 		},
 
-		openOpenDialog: function(e) {
+		openOpenDropdown: function(e) {
 			console.log('open');
-			this.openDialogClass = '';
+			this.openDropdownClass = '';
 		},
 
-		closeOpenDialog: function(e) {
+		closeOpenDropdown: function(e) {
 			console.log('close');
 			if (inSub) return;
-			this.openDialogClass = 'hidden';
+			this.openDropdownClass = 'hidden';
 		},
 
-		openSaveDialog: function(e) {
-			this.saveDialogClass = '';
+		openSaveDropdown: function(e) {
+			this.saveDropdownClass = '';
 		},
 
-		closeSaveDialog: function(e) {
-			this.saveDialogClass = 'hidden'
+		closeSaveDropdown: function(e) {
+			this.saveDropdownClass = 'hidden'
+		},
+
+		openUserDropdown: function(e) {
+			this.userDropdownClass = '';
+		},
+
+		closeUserDropdown: function(e) {
+			this.userDropdownClass = 'hidden'
 		},
 
 		prevDef: function(e) {
@@ -1915,7 +1924,7 @@ module.exports = {
 
 };
 },{"./template.html":18}],18:[function(require,module,exports){
-module.exports = '<nav class="{{theme}}">\n\n  <div class="top-nav-left">\n    <ul>\n      <li>\n        <a href="#" v-on="click: $root.newProject()">New</a>\n      </li>\n\n      <li class="dropdown-menu" v-on="mouseenter:openOpenDialog, mouseleave:closeOpenDialog"><a href="#">Open</a>\n\n        <div class="dropdown-content {{openDialogClass}}" v-on="mouseleave: closeOpenDialog">\n          <div class="has-submenu" v-on="mouseenter: prevDef, mouseleave: clearDef"><a href="#">Examples</a>\n            <div class="submenu-container">\n              <ul class="submenu" style="display:none;" >\n                  <li v-repeat="$root.examples" class="filemenu" data-path="{{path}}" v-on="click: $root.loadExample(this)">\n                    <span>{{name}}</span>\n                  </li>\n              </ul>\n            </div>\n          </div>\n\n          <div class="has-submenu"><a href="#">Recent</a>\n            <div class="submenu-container">\n              <ul class="submenu" style="display:none;">\n                <li v-repeat="$root.recentProjects">\n                  <span data-projectid="{{id}}"  v-on="click: selectRecentProject(this)">\n                    <span data-projectid="{{id}}">{{name}}</span> &nbsp;<span class="timeago" data-projectid="{{id}}"> {{timeago}}</span>\n                  </span>\n                </li>\n              </ul>\n            </div>\n          </div>\n\n          <div><a href="#">Upload</a>\n\n        </div>\n      </li>\n\n      <li class="dropdown-menu" v-on="mouseenter:openSaveDialog, mouseleave:closeSaveDialog"><a href="#" >Save</a>\n        <span class="dropdown-content {{saveDialogClass}}" v-on="mouseleave: closeSaveDialog">\n          <span><a href="#" v-on="click: $root.commitGist()">Save to Cloud</a></span>\n          <span><a href="#" v-on="click: $root.downloadZip()">Download Zip</a></span>\n        </span>\n      </li>\n\n      <li>\n        <a  href="#" v-on="click: openShareDialog">Share</a>\n      </li>\n    </ul>\n    <hr>\n  </div>\n\n  <div class="top-nav-center">\n    <!-- display a message -->\n    <span id="toast-msg">{{toastMsg}}</span>\n  </div>\n\n  <div class="top-nav-right">\n    <ul>\n      <li>\n        <a href="#">Gallery</a>\n      </li>\n      <li>\n        <a href="#">Profile</a>\n      </li>\n    </ul>\n    <hr>\n  </div>\n\n</nav>\n\n\n<div>\n</div>\n\n\n<div id ="button_header" style="display:none;">\n\n  <div class="pure-menu pure-menu-horizontal">\n    <ul class="pure-menu-list">\n\n      <li class="pure-menu-item" v-on="click: $root.toggleFilemenu()">\n        <button class="menuItem">\n          <img class="menu" src="/images/filemenu-white.svg">\n        </button>\n      </li>\n\n      <li class="pure-menu-item">\n        <div class="menuItem">\n        <img class="menu" src="/images/temp/logo.png">\n      </div>\n      </li>\n\n      <li class="pure-menu-item">\n        <button id="play"  v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>\n      </li>\n\n      <li class="pure-menu-item">\n        <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>\n      </li>\n\n    </ul>\n\n\n\n      <!-- <div > -->\n        <ul class="pure-menu-list" id="custom-dropdown-menus">\n\n\n          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover pure-menu-allow-mousedown">\n            <button id="save" v-on="click: $root.commitGist()"><img class="menu" src="/images/save-white.svg"></button>\n            <ul class="pure-menu-children">\n              <li class="pure-menu-item">\n                <span v-on="click: $root.commitGist()">Save to Cloud</span>\n              </li>\n              <li class="pure-menu-item">\n                <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>\n              </li>\n            </ul>\n          </li>\n\n        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">\n          <span id="profile-span" v-on="click: profileClicked()"></span>\n\n          <ul class="pure-menu-children">\n\n            <li class="pure-menu-item" v-if="!loggedIn" v-on="click: $root.authenticate()">\n              <span>Log in</span>\n            </li>\n\n            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.authenticate()">\n              <span class="username"> hello <b>{{currentUser.username}}</b> </span>!\n            </li>\n\n            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.logOut()">\n              <span>Log Out</span>\n            </li>\n\n          </ul>\n        </li>\n\n      </ul>\n    <!-- </div> -->\n  </div> <!-- end pure-menu-->\n\n  <!-- <div id="toolbar"> -->\n  <!-- </div> -->\n</div>';
+module.exports = '<nav class="{{theme}}">\n\n  <div class="top-nav-left">\n    <ul>\n      <li>\n        <a href="#" v-on="click: $root.newProject()">New</a>\n      </li>\n\n      <li class="dropdown-menu" v-on="mouseenter:openOpenDropdown, mouseleave:closeOpenDropdown"><a href="#">Open</a>\n\n        <div class="dropdown-content {{openDropdownClass}}" v-on="mouseleave: closeOpenDropdown">\n          <div class="has-submenu" v-on="mouseenter: prevDef, mouseleave: clearDef"><a href="#">Examples</a>\n            <div class="submenu-container">\n              <ul class="submenu" style="display:none;" >\n                  <li v-repeat="$root.examples" class="filemenu" data-path="{{path}}" v-on="click: $root.loadExample(this)">\n                    <span>{{name}}</span>\n                  </li>\n              </ul>\n            </div>\n          </div>\n\n          <div class="has-submenu"><a href="#">Recent</a>\n            <div class="submenu-container">\n              <ul class="submenu" style="display:none;">\n                <li v-repeat="$root.recentProjects">\n                  <span data-projectid="{{id}}"  v-on="click: selectRecentProject(this)">\n                    <span data-projectid="{{id}}">{{name}}</span> &nbsp;<span class="timeago" data-projectid="{{id}}"> {{timeago}}</span>\n                  </span>\n                </li>\n              </ul>\n            </div>\n          </div>\n\n          <div><a href="#">Upload</a>\n\n        </div>\n      </li>\n\n      <li class="dropdown-menu" v-on="mouseenter:openSaveDropdown, mouseleave:closeSaveDropdown"><a href="#" >Save</a>\n        <span class="dropdown-content {{saveDropdownClass}}" v-on="mouseleave: closeSaveDropdown">\n          <span><a href="#" v-on="click: $root.commitGist()">Save to Cloud</a></span>\n          <span><a href="#" v-on="click: $root.downloadZip()">Download Zip</a></span>\n        </span>\n      </li>\n\n      <li>\n        <a  href="#" v-on="click: openShareDialog">Share</a>\n      </li>\n    </ul>\n    <hr>\n  </div>\n\n  <div class="top-nav-center">\n    <!-- display a message -->\n    <span id="toast-msg">{{toastMsg}}</span>\n  </div>\n\n  <div class="top-nav-right">\n    <ul>\n      <li>\n        <a href="#">Gallery</a>\n      </li>\n\n      <!-- login / profile -->\n      <li v-if="!loggedIn" v-on="click: $root.authenticate()">\n        <a href="#">Log in</a>\n      </li>\n\n<!--       <li v-if="loggedIn" v-on="click: $root.authenticate()">\n        <a href="#"> Hello <b>{{currentUser.username}}</b> !</a>\n      </li>\n -->\n      <li v-if="loggedIn" class="dropdown-menu" v-on="mouseenter:openUserDropdown, mouseleave:closeUserDropdown"><a href="#"> Hello <b>{{currentUser.username}}</b> !</a>\n        <span class="dropdown-content {{userDropdownClass}}" v-on="mouseleave: closeUserDropdown">\n          <span><a href="#" v-on="click: $root.logOut()">Log Out</a></span>\n        </span>\n      </li>\n\n\n    </ul>\n    <hr>\n  </div>\n\n</nav>\n\n\n<div>\n</div>\n\n\n<div id ="button_header" style="display:none;">\n\n  <div class="pure-menu pure-menu-horizontal">\n    <ul class="pure-menu-list">\n\n      <li class="pure-menu-item" v-on="click: $root.toggleFilemenu()">\n        <button class="menuItem">\n          <img class="menu" src="/images/filemenu-white.svg">\n        </button>\n      </li>\n\n      <li class="pure-menu-item">\n        <div class="menuItem">\n        <img class="menu" src="/images/temp/logo.png">\n      </div>\n      </li>\n\n      <li class="pure-menu-item">\n        <button id="play"  v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>\n      </li>\n\n      <li class="pure-menu-item">\n        <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>\n      </li>\n\n    </ul>\n\n\n\n      <!-- <div > -->\n        <ul class="pure-menu-list" id="custom-dropdown-menus">\n\n\n          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover pure-menu-allow-mousedown">\n            <button id="save" v-on="click: $root.commitGist()"><img class="menu" src="/images/save-white.svg"></button>\n            <ul class="pure-menu-children">\n              <li class="pure-menu-item">\n                <span v-on="click: $root.commitGist()">Save to Cloud</span>\n              </li>\n              <li class="pure-menu-item">\n                <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>\n              </li>\n            </ul>\n          </li>\n\n        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">\n          <span id="profile-span" v-on="click: profileClicked()"></span>\n\n          <ul class="pure-menu-children">\n\n            <li class="pure-menu-item" v-if="!loggedIn" v-on="click: $root.authenticate()">\n              <span>Log in</span>\n            </li>\n\n            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.authenticate()">\n              <span class="username"> hello <b>{{currentUser.username}}</b> </span>!\n            </li>\n\n            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.logOut()">\n              <span>Log Out</span>\n            </li>\n\n          </ul>\n        </li>\n\n      </ul>\n    <!-- </div> -->\n  </div> <!-- end pure-menu-->\n\n  <!-- <div id="toolbar"> -->\n  <!-- </div> -->\n</div>';
 },{}],19:[function(require,module,exports){
 var $ = require('jquery');
 var Vue = require('vue');

@@ -6,9 +6,9 @@
         <a href="#" v-on="click: $root.newProject()">New</a>
       </li>
 
-      <li class="dropdown-menu" v-on="mouseenter:openOpenDialog, mouseleave:closeOpenDialog"><a href="#">Open</a>
+      <li class="dropdown-menu" v-on="mouseenter:openOpenDropdown, mouseleave:closeOpenDropdown"><a href="#">Open</a>
 
-        <div class="dropdown-content {{openDialogClass}}" v-on="mouseleave: closeOpenDialog">
+        <div class="dropdown-content {{openDropdownClass}}" v-on="mouseleave: closeOpenDropdown">
           <div class="has-submenu" v-on="mouseenter: prevDef, mouseleave: clearDef"><a href="#">Examples</a>
             <div class="submenu-container">
               <ul class="submenu" style="display:none;" >
@@ -36,8 +36,8 @@
         </div>
       </li>
 
-      <li class="dropdown-menu" v-on="mouseenter:openSaveDialog, mouseleave:closeSaveDialog"><a href="#" >Save</a>
-        <span class="dropdown-content {{saveDialogClass}}" v-on="mouseleave: closeSaveDialog">
+      <li class="dropdown-menu" v-on="mouseenter:openSaveDropdown, mouseleave:closeSaveDropdown"><a href="#" >Save</a>
+        <span class="dropdown-content {{saveDropdownClass}}" v-on="mouseleave: closeSaveDropdown">
           <span><a href="#" v-on="click: $root.commitGist()">Save to Cloud</a></span>
           <span><a href="#" v-on="click: $root.downloadZip()">Download Zip</a></span>
         </span>
@@ -60,9 +60,23 @@
       <li>
         <a href="#">Gallery</a>
       </li>
-      <li>
-        <a href="#">Profile</a>
+
+      <!-- login / profile -->
+      <li v-if="!loggedIn" v-on="click: $root.authenticate()">
+        <a href="#">Log in</a>
       </li>
+
+<!--       <li v-if="loggedIn" v-on="click: $root.authenticate()">
+        <a href="#"> Hello <b>{{currentUser.username}}</b> !</a>
+      </li>
+ -->
+      <li v-if="loggedIn" class="dropdown-menu" v-on="mouseenter:openUserDropdown, mouseleave:closeUserDropdown"><a href="#"> Hello <b>{{currentUser.username}}</b> !</a>
+        <span class="dropdown-content {{userDropdownClass}}" v-on="mouseleave: closeUserDropdown">
+          <span><a href="#" v-on="click: $root.logOut()">Log Out</a></span>
+        </span>
+      </li>
+
+
     </ul>
     <hr>
   </div>
