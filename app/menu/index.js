@@ -1,3 +1,5 @@
+var inSub = false;
+
 module.exports = {
 	template: require('./template.html'),
 
@@ -32,7 +34,9 @@ module.exports = {
 	},
 
 	data: {
-		toastMsg: ''
+		toastMsg: '',
+		openDialogClass: 'hidden',
+		saveDialogClass: 'hidden'
 	},
 
 	methods: {
@@ -70,8 +74,36 @@ module.exports = {
 		// open dialog with share URL / embed code
 		openShareDialog: function(e) {
 			this.$root.openShareDialog();
-		}
+		},
 
+		openOpenDialog: function(e) {
+			console.log('open');
+			this.openDialogClass = '';
+		},
+
+		closeOpenDialog: function(e) {
+			console.log('close');
+			if (inSub) return;
+			this.openDialogClass = 'hidden';
+		},
+
+		openSaveDialog: function(e) {
+			this.saveDialogClass = '';
+		},
+
+		closeSaveDialog: function(e) {
+			this.saveDialogClass = 'hidden'
+		},
+
+		prevDef: function(e) {
+			inSub = true;
+			console.log('prev def');
+		},
+
+		clearDef: function() {
+			console.log('clear def');
+			inSub = false;
+		}
 
 	}
 

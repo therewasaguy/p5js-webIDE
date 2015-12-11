@@ -13,8 +13,8 @@ $transitiontime: .25s;
     /*position: absolute;*/
     left: 0px;
     top: 0px;
-
   position:absolute;
+  z-index:2000000;
   // background-color:black;
 
 }
@@ -336,6 +336,7 @@ nav {
   li {
     float: left;
   }
+
   a{
     display: inline-block;
     text-align: center;
@@ -344,7 +345,30 @@ nav {
     transition: color $transitiontime ease-in-out 0s;
      -moz-transition: color $transitiontime ease-in-out 0s;
      -webkit-transition: color $transitiontime ease-in-out 0s;
+  }
 
+  .dropdown-menu {
+      position: relative;
+      display: inline-block;
+  }
+
+  /* Dropdown Content (Hidden by Default) */
+  .dropdown-content {
+      // position:absolute; // this should work but doesn't
+      position: fixed;
+      background-color: #444444;
+  }
+
+  /* Links inside the dropdown */
+  .dropdown-content a {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align:right;
+    z-index:100000;
+  }
+
+  .dropdown-content span {
+    display:block;
   }
 
   .top-nav-left {
@@ -378,6 +402,77 @@ nav {
     .top-nav-right {
       position:inherit;
     }
+  }
+
+  .hidden {
+    display:none;
+  }
+
+  .submenu {
+    background-color:#383838;
+    color:#CBCBCB;
+  }
+
+  .submenu-container {
+    display:none;
+    position:absolute;
+    top:0px;
+    left:95px;
+    width:250px;
+    height:100px;
+    overflow:scroll;
+  }
+
+  .has-submenu > div ul {
+    // position:relative;
+    // top:-25px;
+    // left:120px;
+    position:absolute;
+    top:0px;
+    left:0px;
+    background-color:#383838;
+    color:#CBCBCB;
+    padding:0px;
+    overflow:scroll;
+    height:120px;
+  }
+
+  .has-submenu > div ul li {
+    float:none;
+    width:auto;
+    padding:5px;
+    margin-top:-5px;
+  }
+
+  .has-submenu > div ul li:hover {
+    background:#fff;
+  }
+
+  .has-submenu > div ul li span {
+    display:inline;
+    padding:0px;
+    // float:none;
+    // width:500px
+  }
+
+  .has-submenu ul a
+  {
+    line-height:120%;
+    padding:10px 15px
+  }
+
+  .has-submenu > ul {
+    // display:block;
+  }
+
+  .has-submenu:hover > div
+  {
+    display:block !important;
+  }
+
+  .has-submenu:hover > div ul
+  {
+    display:block !important;
   }
 
 }

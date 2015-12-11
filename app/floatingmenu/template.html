@@ -14,7 +14,7 @@
   </div>
 
   <!-- stop button -->
-  <div class="btn" v-class="running: $root.running" v-on="click: $root.stop()">
+  <div class="btn btn-stop" v-class="running: $root.running" v-on="click: $root.stop()">
     <?xml version="1.0" standalone="no"?>
     <svg class="svg-stop" v-class="running: $root.running" version="1.0" xmlns="http://www.w3.org/2000/svg"
      width="50" height="50" viewBox="-25.0 -25 100.000000 100.000000"
@@ -22,6 +22,10 @@
       <polygon points="3,3 3,47 47,47 47, 3"/>
     </svg>
   </div>
+
+  <span class="project-name-container">
+    <span class="project-name" v-text="projectName" v-on="click: $root.renameProject()"></span>
+  </span>
 
   <!-- show editor button -->
   <div id="show-editor-btn" class="btn settings-button settings {{showEditorClass}}" v-on="click: this.$root.showEditor()"> 

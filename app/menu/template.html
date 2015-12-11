@@ -3,16 +3,48 @@
   <div class="top-nav-left">
     <ul>
       <li>
-        <a href="#">New</a>
+        <a href="#" v-on="click: $root.newProject()">New</a>
       </li>
-      <li>
-        <a href="#">Open Project</a>
+
+      <li class="dropdown-menu" v-on="mouseenter:openOpenDialog, mouseleave:closeOpenDialog"><a href="#">Open</a>
+
+        <div class="dropdown-content {{openDialogClass}}" v-on="mouseleave: closeOpenDialog">
+          <div class="has-submenu" v-on="mouseenter: prevDef, mouseleave: clearDef"><a href="#">Examples</a>
+            <div class="submenu-container">
+              <ul class="submenu" style="display:none;" >
+                  <li v-repeat="$root.examples" class="filemenu" data-path="{{path}}" v-on="click: $root.loadExample(this)">
+                    <span>{{name}}</span>
+                  </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="has-submenu"><a href="#">Recent</a>
+            <div class="submenu-container">
+              <ul class="submenu" style="display:none;">
+                <li v-repeat="$root.recentProjects">
+                  <span data-projectid="{{id}}"  v-on="click: selectRecentProject(this)">
+                    <span data-projectid="{{id}}">{{name}}</span> &nbsp;<span class="timeago" data-projectid="{{id}}"> {{timeago}}</span>
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div><a href="#">Upload</a>
+
+        </div>
       </li>
-      <li>
-        <a href="#">Save</a>
+
+      <li class="dropdown-menu" v-on="mouseenter:openSaveDialog, mouseleave:closeSaveDialog"><a href="#" >Save</a>
+        <span class="dropdown-content {{saveDialogClass}}" v-on="mouseleave: closeSaveDialog">
+          <span><a href="#" v-on="click: $root.commitGist()">Save to Cloud</a></span>
+          <span><a href="#" v-on="click: $root.downloadZip()">Download Zip</a></span>
+        </span>
       </li>
+
       <li>
-        <a href="#" v-on="click: openShareDialog">Share</a>
+        <a  href="#" v-on="click: openShareDialog">Share</a>
       </li>
     </ul>
     <hr>

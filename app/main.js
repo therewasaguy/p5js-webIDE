@@ -54,6 +54,9 @@ var appConfig = {
 		newWindowOpen: -1
 	},
 
+	// maybe not necessary since it's already in data
+	running: false,
+
 	computed: {
 		projectName: function() {
 			return this.currentProject.name;
@@ -557,6 +560,7 @@ var appConfig = {
 		},
 
 		newProject: function(title, sketchContents) {
+			console.log('new project');
 			this.modeFunction('newProject', title, sketchContents);
 		},
 

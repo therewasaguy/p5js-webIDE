@@ -30,7 +30,7 @@
 
       <div class="split-container">
         <div class="input-rect">
-          <input class="input-field" id="textAdjustInput" type="text" v-model="fontSize" size="3">
+          <input class="input-field noselect" id="textAdjustInput" type="text" v-model="fontSize" size="3">
         </div>
         <div style="height:20px;"></div>
       </div>
@@ -69,7 +69,7 @@
       <div class="split-container">
         <div class="input-rect">
           <!-- <input class="input-field" id="textAdjustInput" type="text" v-model="fontSize" size="3"> -->
-          <input id="tabSize" class="input-field" type="text" v-model="tabSize" size="3" v-on="change: updateTabSize">
+          <input id="tabSize" class="input-field noselect" type="text" v-model="tabSize" size="3" v-on="change: updateTabSize">
 
         </div>
         <div style="height:20px;"></div>
