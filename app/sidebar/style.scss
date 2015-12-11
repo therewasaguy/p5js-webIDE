@@ -16,11 +16,14 @@
   #sidebar-container {
     -webkit-user-select: none;
     //visibility: hidden;
-    position: relative;
+    // position: relative;
+    position:absolute;
     width: 14px;  
     margin-top: 65px;
+    padding-right:5px;
     //margin-bottom: 30px;
     flex: 1;
+    overflow:hidden;
     //overflow-y: auto;
   }
 

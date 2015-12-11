@@ -1,3 +1,66 @@
+#dialog-container {
+  z-index: 1000;
+  width: 240px;
+  position: absolute;
+  margin: auto;
+  left: 0;
+  right: 0;
+  top: 20%; }
+
+#dialog-container.hidden {
+  display: none; }
+
+.dialog-hidden {
+  display: none; }
+
+.dialog {
+  /*position: relative;*/
+  width: 240px;
+  text-align: left;
+  /*line-height: 25px;*/
+  background-color: #F4F4F4;
+  border: 1px solid #CBDBE7;
+  padding: 20px;
+  padding-top: 2px;
+  font-size: 14px;
+  -webkit-border-radius: 30px;
+  -moz-border-radius: 30px;
+  border-radius: 1px;
+  box-shadow: 2px 2px 20px #C8C8C8; }
+
+p.dialog-title {
+  text-align: left;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 100%; }
+
+.dialog-button {
+  margin-right: 5px;
+  margin-left: 5px;
+  border: 1px solid #C8C8C8;
+  background-color: #F4F4F4;
+  width: 45%;
+  line-height: 200%;
+  cursor: pointer;
+  outline: none; }
+
+.dialog-button:hover {
+  background-color: #ED225D;
+  border: 1px solid #ED225D;
+  color: white; }
+
+#dialog-right {
+  float: right; }
+
+/* class to add to the rest of the container */
+.blurred {
+  -webkit-filter: blur(2px);
+  -moz-filter: blur(2px);
+  -o-filter: blur(2px);
+  -ms-filter: blur(2px);
+  filter: blur(2px);
+  pointer-events: none; }
+
 #debugContainer {
   width: 100%;
   display: flex;
@@ -91,73 +154,11 @@
 .handle-down.console-hidden {
   display: none; }
 
-#dialog-container {
-  z-index: 1000;
-  width: 240px;
-  position: absolute;
-  margin: auto;
-  left: 0;
-  right: 0;
-  top: 20%; }
-
-#dialog-container.hidden {
-  display: none; }
-
-.dialog-hidden {
-  display: none; }
-
-.dialog {
-  /*position: relative;*/
-  width: 240px;
-  text-align: left;
-  /*line-height: 25px;*/
-  background-color: #F4F4F4;
-  border: 1px solid #CBDBE7;
-  padding: 20px;
-  padding-top: 2px;
-  font-size: 14px;
-  -webkit-border-radius: 30px;
-  -moz-border-radius: 30px;
-  border-radius: 1px;
-  box-shadow: 2px 2px 20px #C8C8C8; }
-
-p.dialog-title {
-  text-align: left;
-  font-size: 18px;
-  font-weight: bold;
-  line-height: 100%; }
-
-.dialog-button {
-  margin-right: 5px;
-  margin-left: 5px;
-  border: 1px solid #C8C8C8;
-  background-color: #F4F4F4;
-  width: 45%;
-  line-height: 200%;
-  cursor: pointer;
-  outline: none; }
-
-.dialog-button:hover {
-  background-color: #ED225D;
-  border: 1px solid #ED225D;
-  color: white; }
-
-#dialog-right {
-  float: right; }
-
-/* class to add to the rest of the container */
-.blurred {
-  -webkit-filter: blur(2px);
-  -moz-filter: blur(2px);
-  -o-filter: blur(2px);
-  -ms-filter: blur(2px);
-  filter: blur(2px);
-  pointer-events: none; }
-
 body.horizontal div#editor-container {
   flex-direction: column; }
 
 div#editor-container {
+  margin-left: 140px;
   width: 50%;
   margin-top: 20px;
   display: flex;
@@ -1021,10 +1022,12 @@ nav {
 
 #sidebar-container {
   -webkit-user-select: none;
-  position: relative;
+  position: absolute;
   width: 14px;
   margin-top: 65px;
-  flex: 1; }
+  padding-right: 5px;
+  flex: 1;
+  overflow: hidden; }
 
 #sidebar-container.expanded {
   width: 160px;
