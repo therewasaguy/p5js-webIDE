@@ -1,6 +1,19 @@
 $settings-color: #424242;
+$settings-color-light: rgba(220,220,220, 0.8);
 $transitiontime: .25s;
 $height: 45px;
+$p5-color: #ED225D;
+
+// Light theme: Primary text color #333
+// Light theme: Background #fdfdfd
+// Light theme: Secondary text color #6b6b6b
+// Light theme: Inactive text color #b5b5b5
+// Dark theme: Primary text color #fff
+// Dark theme: Secondary text color #c2c2c2
+// Dark theme: Inactive text color #7d7d7d 
+// Dark theme: Background #333
+// p5.js pink #ED225D
+// pink-Active: #F10046
 
 #floating-menu {
   z-index:1;
@@ -59,7 +72,12 @@ $height: 45px;
     width: 42px;
     height: 42px;
     // background: rgba(153, 153, 153, 0.8);
-    background: $settings-color;
+    .light-theme & {
+      background: $settings-color-light;
+    }
+    .dark-theme & {
+      background: $settings-color;
+    }
     background-size: 150%;
     transition: opacity 0.25s ease-in-out 0s;
     border-radius: 48px;
@@ -77,10 +95,13 @@ $height: 45px;
   }
 
   .svg-play {
-    fill: #ACACAC;
+    fill: #EC245E;
+
+    // fill: #ACACAC;
 
     &.running {
       fill: #EC245E;
+      opacity:1.0;
     }
   }
   .svg-stop {
@@ -89,7 +110,7 @@ $height: 45px;
       // fill: #ACACAC;
     }
   }
-  
+
   .btn-stop {
     display:none !important;
     &.running {
@@ -115,9 +136,9 @@ $height: 45px;
       display:inline-block;
     }
 
-    div, div img, div span {
+    div, div img, div span svg {
       // width: 20px;
-      opacity: 0.75;
+      opacity: 0.5;
       transition: opacity 0.25s ease-in-out 0s;
       &:hover {
         opacity:1
@@ -131,11 +152,18 @@ $height: 45px;
 
       outline: 0;
       z-index: 3;
-      background: $settings-color;
+
+      .dark-theme & {
+        background: $settings-color;
+        border: $settings-color 10px solid;
+      }
+      .light-theme & {
+        background: $settings-color-light;
+        border: $settings-color-light 10px solid;
+      }
 
       // background-size: 150%;
       transition: opacity 0.25s ease-in-out 0s;
-      border: $settings-color 10px solid;
       border-radius: 48px;
 
 
@@ -151,10 +179,15 @@ $height: 45px;
       opacity: 1;
     }
 
+    .btn-play {
+      &.running {
+        opacity:1.0;
+      }
+    }
   }
 
   .button-border {
-    background: rgba(153,153,153,0.50);
+    background: $settings-color-light;
     border-radius: 24px;
     // margin-left:-60px;
     // margin-top:-22px;
@@ -163,6 +196,9 @@ $height: 45px;
 
   .settings-button{
     float: right;
+    color: $p5-color;
+    fill: $p5-color;
+
   }
 
   #show-editor-btn {
@@ -172,6 +208,7 @@ $height: 45px;
 
     &.hide {
       opacity:0 !important;
+      cursor:default;
     }
   }
 
@@ -201,6 +238,4 @@ $height: 45px;
 
   }
 }
-
-
 

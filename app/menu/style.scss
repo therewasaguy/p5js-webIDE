@@ -1,6 +1,12 @@
 $transitiontimelong: 1.75s;
 $transitiontimeshort: 0.1s;
 $transitiontime: .25s;
+$dark-theme-color: #737373;
+$dark-theme-hover: #C8C8C8;
+$dark-theme-background:#383838;
+$light-theme-color: #969696;
+$light-theme-hover: #333;
+$light-theme-background: #f4f4f4;
 
 #menu-container {
   display: flex;
@@ -311,19 +317,19 @@ img.menu{
 nav {
 
   &.light-theme a {
-    color: #CFCFCF;
+    color: $light-theme-color;
     &:hover {
-      color:#969696;
+      color:$light-theme-hover;
     }
   }
   &.dark-theme a{
-    color: #737373;
+    color: $dark-theme-color;
     &:hover {
-      color:#C8C8C8;
+      color:$dark-theme-hover;
     }
-    &:active{
-      color:#EC245E;
-    }
+  }
+  a:active{
+    color:#EC245E;
   }
 
   ul {
@@ -356,7 +362,12 @@ nav {
   .dropdown-content {
       // position:absolute; // this should work but doesn't
       position: fixed;
-      background-color: #444444;
+      .dark-theme & {
+        background-color: $dark-theme-background;
+      }
+      .light-theme & {
+        background-color: $light-theme-background;
+      }
   }
 
   /* Links inside the dropdown */
@@ -409,8 +420,14 @@ nav {
   }
 
   .submenu {
-    background-color:#383838;
-    color:#CBCBCB;
+    .dark-theme & {
+      background-color:$dark-theme-background;
+      color: $dark-theme-color;
+    }
+    .light-theme & {
+      background-color: $light-theme-background;
+      color: $light-theme-color;
+    }
   }
 
   .submenu-container {
@@ -430,7 +447,12 @@ nav {
     position:absolute;
     top:0px;
     left:0px;
-    background-color:#383838;
+    .dark-theme & {
+      background-color:$dark-theme-background;
+    }
+    .light-theme & {
+      background-color: $light-theme-background;
+    }
     color:#CBCBCB;
     padding:0px;
     overflow:scroll;
@@ -445,7 +467,15 @@ nav {
   }
 
   .has-submenu > div ul li:hover {
-    background:#fff;
+    // background:#fff;
+    .dark-theme & {
+      background: $dark-theme-hover;
+      color: $dark-theme-color;
+    }
+    .light-theme & {
+      background: $light-theme-hover;
+      color: $light-theme-color;
+    }
   }
 
   .has-submenu > div ul li span {

@@ -66,6 +66,12 @@ module.exports = {
 			div.requestFullscreen();
 		},
 
+
+		selectRecentProject: function(e) {
+			var projectID = e.$event.target.getAttribute('data-projectid');
+			this.$root.loadProjectByOurID(projectID);
+		},
+
 		// toggle setting to open the current code in a new window
 		// toggleNewWindowSetting: function(e) {
 		// 	this.$root.stop();
@@ -102,16 +108,16 @@ module.exports = {
 
 		closeUserDropdown: function(e) {
 			this.userDropdownClass = 'hidden'
-		},
+		// },
 
-		prevDef: function(e) {
-			inSub = true;
-			console.log('prev def');
-		},
+		// prevDef: function(e) {
+		// 	inSub = true;
+		// 	console.log('prev def');
+		// },
 
-		clearDef: function() {
-			console.log('clear def');
-			inSub = false;
+		// clearDef: function() {
+		// 	console.log('clear def');
+		// 	inSub = false;
 		}
 
 	}

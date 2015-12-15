@@ -18,6 +18,11 @@ var modes = {
 Vue.config.debug = true;
 Vue.config.silent = true;
 
+/**
+ *  this is the app config
+ *  
+ *  @type {Object}
+ */
 var appConfig = {
 	el: '#app',
 
@@ -181,6 +186,12 @@ var appConfig = {
 		}
 
 		// on fail, go to blank editor
+
+		/**
+		 *  callback if there is an error getting sketch data
+		 *  
+		 *  @param  {Error} e The error
+		 */
 		function sketchdataerror(e) {
 			console.log('error with sketch data');
 			console.log(e)

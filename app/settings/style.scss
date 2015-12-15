@@ -1,6 +1,14 @@
 $transitiontime: .25s;
 
-$selectedcolor: #333333;
+$selectedcolor-light: #333333;
+$selectedcolor-dark: #DADADA;
+$lightbg: #F4F4F4;
+$darkbg: #444444;
+$textcolor-light: #B4B4B4;
+$textcolor-dark: #727272;
+$headingcolor-light: #333333;
+$headingcolor-dark: #CACACA; //#FDFDFD;
+
 // $hovercolor:
 // $notselectedcolor: #333333;
 
@@ -22,15 +30,17 @@ $selectedcolor: #333333;
    -moz-transition: opacity $transitiontime ease-in-out;
    -webkit-transition: opacity $transitiontime ease-in-out;
 
-
-   background-color: #F4F4F4
-
 }
 
 .settings-subhead {
   font-family: montserrat-regular;
   font-size: 14px;
-  color: #333333;
+  .light-theme & {
+    color: $headingcolor-light;
+  }
+  .dark-theme & {
+    color: $headingcolor-dark;
+  }
   line-height: 20px;
 }
 
@@ -40,7 +50,16 @@ $selectedcolor: #333333;
 
 #settingsPane {
   // white theme
-  background: #F4F4F4;
+  &.light-theme {
+    background: $lightbg;
+    // color: $headingcolor-light;
+  }
+
+  &.dark-theme {
+    background: $darkbg;
+    // color: $headingcolor-dark;
+  }
+
   border: 0px solid #B9D0E1;
   box-shadow: 0px 12px 12px 0px rgba(0,0,0,0.16);
   border-radius: 2px;
@@ -72,8 +91,14 @@ $selectedcolor: #333333;
     }
 
     input[type="radio"]:checked + label {
+
       // fill: #e1dedc;
-      color:$selectedcolor;
+      .light-theme & {
+        color:$selectedcolor-light;
+      }
+      .dark-theme & {
+        color:$selectedcolor-dark;
+      }
 
       &:hover {
         // fill: #fff;
@@ -207,6 +232,12 @@ $selectedcolor: #333333;
     input[type="checkbox"] + label {
       // background-color: #adacac;
       // color: #828384;
+      .light-theme & {
+        color:$textcolor-light;
+      }
+      .dark-theme & {
+        color:$textcolor-dark;
+      }
       cursor:pointer;
         &:hover {
           // color: #828384;
@@ -217,7 +248,16 @@ $selectedcolor: #333333;
 
     input[type="checkbox"]:checked + label {
       // background-color: #e1dedc;
-      color: #58585b;
+      .light-theme & {
+        color:$selectedcolor-light;
+      }
+      .dark-theme & {
+        color:$selectedcolor-dark;
+      }
+
+      &.light-theme {
+        color: #58585b;
+      }
         &:hover {
           // color: #747474;
         // background-color: #fefefc;
@@ -293,18 +333,25 @@ $selectedcolor: #333333;
   .input-field {
     font-family: Inconsolata;
     font-size: 16px;
-    color: #333333;
     line-height: 17px;
     display:inline-block;
     background:none;
-    border:none;
+    border:2px solid #ddd;
     width:100%;
+    color: $headingcolor-light;
+    background:$lightbg;
+
+    // .light-theme & {
+    // }
+    // .darkt-theme {
+    //   color:
+    // }
   }
 
   .input-rect {
     /* Rectangle 146: */
     // background: rgba(153,153,153,0.10);
-    border: 2px solid #ddd;
+    // border: 2px solid #ddd;
     padding-bottom:0px !important;
     display:inline-block;
     width:35px;
@@ -326,7 +373,12 @@ $selectedcolor: #333333;
   }
 
   label {
-    color: #58585b;
+    &.light-theme {
+      color: #58585b;
+    }
+    &.dark-theme {
+      color: #727272;
+    }
     font-size: 13px;
     position: relative;
     top: 5px;
@@ -383,25 +435,29 @@ $selectedcolor: #333333;
     line-height: 11px;
   }
 
-  .plus {
+  .plusminus {
     font-family: Montserrat-Regular;
     font-size: 21px;
-    color: #333333;
     line-height: 20px;
-  }
-
-  .minus {
-    font-family: Montserrat-Regular;
-    font-size: 21px;
-    color: #333333;
-    line-height: 20px;
+    .dark-theme & {
+      color: $headingcolor-dark;
+    }
+    .light-theme & {
+      color: $headingcolor-light;
+    }
   }
 
 
   .pref-title {
     font-family: Montserrat-Bold;
     font-size: 21px;
-    color: rgba(51,51,51,0.87);
+    .dark-theme & {
+      color: $headingcolor-dark;
+    }
+    .light-theme & {
+      color: $headingcolor-light;
+    }
+    // color: rgba(51,51,51,0.87);
     line-height: 25px;
   }
 
@@ -424,20 +480,43 @@ $selectedcolor: #333333;
   }
 
   hr {
-    border: 1px dashed #B5B5B5;
+    .light-theme & {
+      border: 1px dashed #B5B5B5;
+    }
+    .dark-theme & {
+      border: 1px dashed #676767;
+    }
   }
 
   .text-option {
     font-family: Montserrat-Regular;
     font-size: 12px;
-    color: #B4B4B4;
     line-height: 20px;
     margin-bottom:7px;
     width:60px;
 
-    &.selected {
-      color: #333333;
+    .light-theme & {
+      color:$textcolor-light;
+    }
+    .dark-theme & {
+      color:$textcolor-dark;
     }
   }
+
+
+  // &.light-theme .text-option{
+  //   color: #B4B4B4;
+  // }
+
+  // &.light-theme .text-option.selected{
+  //   color: #333333;
+  // }
+
+  // &.dark-theme .text-option{
+  //   color: #727272;
+  //   &.selected {
+  //     color: #DADADA;
+  //   }
+  // }
 }
 

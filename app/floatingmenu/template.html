@@ -4,7 +4,7 @@
 <div id="actions">
 
   <!-- play button -->
-  <div class="btn" v-class="running: $root.running" v-on="click: $root.run()">
+  <div class="btn btn-play" v-class="running: $root.running" v-on="click: $root.run()">
     <?xml version="1.0" standalone="no"?>
     <svg class="svg-play" v-class="running: $root.running" version="1.0" xmlns="http://www.w3.org/2000/svg"
      width="50" height="50" viewBox="-25.0 -25 100.000000 100.000000"
@@ -29,11 +29,11 @@
 
   <!-- show editor button -->
   <div id="show-editor-btn" class="btn settings-button settings {{showEditorClass}}" v-on="click: this.$root.showEditor()"> 
-    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
        viewBox="111.982048 169.6423035 388.0419922 452.7156067"
        enable-background="new 111.982048 169.6423035 388.0419922 452.7156067" xml:space="preserve">
     <g>
-      <path fill="#58595B" d="M500.0240784,307.0675659v291.0314941c0,13.3963013-10.8625488,24.2589111-24.2588806,24.2589111
+      <path d="M500.0240784,307.0675659v291.0314941c0,13.3963013-10.8625488,24.2589111-24.2588806,24.2589111
         H136.2410126c-13.3963242,0-24.2588882-10.8626099-24.2588882-24.2589111v-404.197876
         c0-13.3963165,10.8625641-24.2588959,24.2588882-24.2588959h226.3578339c13.3837585,0,32.0733948,7.8270721,41.4307556,17.184433
         l78.8100586,78.8100433C492.1970215,274.9941406,500.0240784,293.6837769,500.0240784,307.0675659z M467.6872559,331.3264771

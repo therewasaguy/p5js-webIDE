@@ -9,7 +9,8 @@
       <li class="dropdown-menu" v-on="mouseenter:openOpenDropdown, mouseleave:closeOpenDropdown"><a href="#">Open</a>
 
         <div class="dropdown-content {{openDropdownClass}}" v-on="mouseleave: closeOpenDropdown">
-          <div class="has-submenu" v-on="mouseenter: prevDef, mouseleave: clearDef"><a href="#">Examples</a>
+          <!-- v-on="mouseenter: prevDef, mouseleave: clearDef" -->
+          <div class="has-submenu"><a href="#">Examples</a>
             <div class="submenu-container">
               <ul class="submenu" style="display:none;" >
                   <li v-repeat="$root.examples" class="filemenu" data-path="{{path}}" v-on="click: $root.loadExample(this)">
