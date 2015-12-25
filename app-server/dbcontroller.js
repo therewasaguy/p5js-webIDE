@@ -38,22 +38,10 @@ module.exports = db = {
 		// get 10 project title, id, dateModified
 		app.get('/recentuserprojects', function(req, res) {
 			var userID = req.query.userID;
-
-			Project.find( {'owner_id': userID}, function(err, data) {
-				var returnObject = data.map(function(obj) {
-					var ret = {
-						_id: obj._id,
-						name: obj.name,
-						owner_username: obj.owner_username,
-						updated_at: obj.updated_at,
-						created_at: obj.created_at
-					}
-					return ret
-				});
-				console.log(returnObject);
-				res.send(returnObject);
-			}).limit(10);
-
+			var limit = req.query.limit || 10;
+			Project.find( {'owner_id': userID},  {'name': 1, 'owner_username': 1, 'updated_at':1, 'created_at':1 }, function(err, data) {
+				res.send(data);
+			}).limit(limit);
 		});
 
 
