@@ -14,7 +14,7 @@
             <div class="submenu-container">
               <ul class="submenu" style="display:none;" >
                   <li v-repeat="$root.examples" class="filemenu" data-path="{{path}}" v-on="click: $root.loadExample(this)">
-                    <span>{{name}}</span>
+                    <span>{{folder}} - {{name}}</span>
                   </li>
               </ul>
             </div>

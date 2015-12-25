@@ -147,18 +147,18 @@ var appConfig = {
 			url: '/fetchexamples',
 			type: 'GET',
 			success: function(data) {
-				var examples = [];
+				// var examples = [];
 
-				for (var i = 0; i < data.length; i++) {
+				// for (var i = 0; i < data.length; i++) {
 
-					var example = {
-						'name': data[i].split('/').pop(),
-						'path': data[i].slice(1,data[i].length)
-					}
-					examples.push(example);
-				}
-
-				self.examples = examples;
+				// 	var example = {
+				// 		'name': data[i].split('/').pop(),
+				// 		'path': data[i].slice(1,data[i].length)
+				// 	}
+				// 	examples.push(example);
+				// }
+				console.log(data);
+				self.examples = data;
 			}
 		});
 

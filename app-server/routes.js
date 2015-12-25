@@ -15,10 +15,9 @@ var jsdom = require('jsdom');
 var jquery = require('jquery')(jsdom.jsdom().defaultView);
 
 require('./examples').fetchExamples( function(error, results) {
-	console.log('got examples');
 	examples = results;
+	console.log(examples);
 });
-
 
 module.exports = function(app, passport) {
 
