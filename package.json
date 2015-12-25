@@ -27,6 +27,7 @@
     "gulp-plumber": "~1.0.1",
     "gulp-rename": "~1.2.2",
     "gulp-sass": "~2.0.3",
+    "gulp-uglify": "^1.5.1",
     "jade": "~1.11.0",
     "jquery": "~2.1.4",
     "js-beautify": "~1.5.10",

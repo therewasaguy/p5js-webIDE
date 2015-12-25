@@ -1,5 +1,8 @@
 var gulp = require('gulp');
-var browserify = require('gulp-browserify');
+
+var uglify = require('gulp-uglify');
+
+var gulpBrowserify = require('gulp-browserify');
 var plumber = require('gulp-plumber');
 var partialify = require('partialify');
 var notify = require('gulp-notify');
@@ -15,9 +18,10 @@ var debugClientPath = './app/debug/debug-console.js';
 gulp.task('browserify', function() {
   gulp.src('./app/main.js', { read: false })
     .pipe(plumber())
-    .pipe(browserify({
+    .pipe(gulpBrowserify({
       transform: [partialify],
     }))
+    .pipe(uglify())
     .on("error", notify.onError({
       message: "<%= error.message %>",
       title: "Error"
@@ -41,7 +45,8 @@ gulp.task('css', function() {
     }))
     .pipe(concat('main.css'))
     .pipe(sass({
-      // outputStyle: 'compressed'
+      'compass':true,
+      'style': 'compressed'
     }).on('error', onError))
     .pipe(gulp.dest('./public/css/'));
 });
