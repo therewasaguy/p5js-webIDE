@@ -2,6 +2,8 @@ var gulp = require('gulp');
 
 var uglify = require('gulp-uglify');
 
+var gulpMerge = require('gulp-merge');
+
 var gulpBrowserify = require('gulp-browserify');
 var plumber = require('gulp-plumber');
 var partialify = require('partialify');
@@ -16,7 +18,13 @@ var debugClientPath = './app/debug/debug-console.js';
 
 // concat all JS files into main.js
 gulp.task('browserify', function() {
-  gulp.src('./app/main.js', { read: false })
+
+  gulpMerge(
+
+    gulp.src(['./app/libs/jquery.min.js', './app/libs/jquery-ui.min.js'], { read: true })
+    .pipe(uglify()),
+
+    gulp.src('./app/main.js', { read: false })
     .pipe(plumber())
     .pipe(gulpBrowserify({
       transform: [partialify],
@@ -26,8 +34,10 @@ gulp.task('browserify', function() {
       message: "<%= error.message %>",
       title: "Error"
     }))
-    .pipe(rename('main.js'))
-    .pipe(gulp.dest('./public/js/'));
+  )
+  .pipe(concat('main.js'))
+  // .pipe(rename('main.js'))
+  .pipe(gulp.dest('./public/js/'))
 });
 
 gulp.task('injected-js', function(){

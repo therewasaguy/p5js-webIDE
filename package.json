@@ -23,6 +23,7 @@
     "gulp": "~3.9.0",
     "gulp-browserify": "~0.5.1",
     "gulp-concat": "~2.6.0",
+    "gulp-merge": "^0.1.1",
     "gulp-notify": "~2.2.0",
     "gulp-plumber": "~1.0.1",
     "gulp-rename": "~1.2.2",
