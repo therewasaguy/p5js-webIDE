@@ -11,6 +11,9 @@ var notify = require('gulp-notify');
 var rename = require('gulp-rename');
 var concat = require('gulp-concat');
 var sass = require('gulp-sass');
+// var compass = require('gulp-compass');
+
+var inline_base64 = require('gulp-inline-base64');
 
 var cssPath = './app/**/*.scss';
 var jsPath = ['./app/*.js', './app/**/*.js', './app/**/*.html', './public/index.html'];
@@ -55,13 +58,19 @@ gulp.task('css', function() {
     }))
     .pipe(concat('main.css'))
     .pipe(sass({
-      'compass':true,
-      'style': 'compressed'
-    }).on('error', onError))
+      outputStyle: 'compressed'
+    })
+      .on('error', onError)
+    )
+    .pipe(inline_base64({
+            baseDir: './public',
+            maxSize: 14 * 1024,
+            debug: true
+        }))
     .pipe(gulp.dest('./public/css/'));
 });
 
-var onError = function (err) {  
+var onError = function (err) {
   console.log(err);
 };
 

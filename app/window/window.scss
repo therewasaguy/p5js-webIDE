@@ -9,6 +9,15 @@
 // p5.js pink #ED225D
 // pink-Active: #F10046
 
+// @import "compass/css3/font-face"
+// @include font-face(
+//   "karla",
+//   inline-font-files(
+//     '/fonts/Karla/Karla-Regular.ttf', ttf),
+//   normal, // font-weight
+//   normal  // font-style
+// );
+
 @font-face {
   font-family: karla;
   src: url("/fonts/Karla/Karla-Regular.ttf"); }
@@ -17,9 +26,9 @@
   font-family: karla-bold;
   src: url("/fonts/Karla/Karla-Bold.ttf"); }
 
-@font-face {
-  font-family: source-code;
-  src: url("/fonts/Source_Code_Pro/SourceCodePro-Regular.ttf"); }
+// @font-face {
+//   font-family: source-code;
+//   src: url("/fonts/Source_Code_Pro/SourceCodePro-Regular.ttf"); }
 
 @font-face {
   font-family: inconsolata;
