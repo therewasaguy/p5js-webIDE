@@ -30,7 +30,7 @@ module.exports = {
 
 	ready: function() {
 		this.toastSpan = document.getElementById('toast-msg');
-		this.setToastMsg('Hello World!');
+		this.setToastMsg('Hello, welcome to p5!');
 	},
 
 	data: {
@@ -47,7 +47,6 @@ module.exports = {
 
 		setToastMsg: function(msg) {
 			this.toastMsg = msg;
-			console.log(msg);
 
 			var toastSpan = this.toastSpan;
 
@@ -57,7 +56,7 @@ module.exports = {
 			// fade out
 			setTimeout(function() {
 				toastSpan.className = 'hidden';
-			}, 200);
+			}, 500);
 
 		},
 

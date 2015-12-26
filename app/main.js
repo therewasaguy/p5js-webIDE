@@ -53,6 +53,11 @@ var appConfig = {
 		currentFile: null,
 		currentProject: null,
 		currentUser: null,
+
+		// redundant, but helps watch computed userOwnsProject property
+		currentUserID: null,
+		currentProjectOwnerID: null,
+
 		recentProjects: [],
 		examples: [],
 		editorHidden: false,
@@ -63,6 +68,7 @@ var appConfig = {
 	running: false,
 
 	computed: {
+
 		projectName: function() {
 			return this.currentProject.name;
 		},
@@ -88,6 +94,15 @@ var appConfig = {
 
 		theme: function() {
 			return this.settings.editorTheme;
+		},
+
+		// redundant, but helps watch computed userOwnsProject property
+		userOwnsProject: function() {
+			if (this.currentUserID !== null && this.currentProjectOwnerID !== null && this.currentUserID === this.currentProjectOwnerID) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 	},
 
@@ -332,6 +347,7 @@ var appConfig = {
 					var id = res._id;
 					self.currentUser.username = username;
 					self.currentUser._id = id;
+					self.currentUserID = id; // redundant but necessary for watching property?
 
 					self.currentUser.authenticated = username && username.length > 0 ? true : false;
 					console.log('user authenticated? ' + self.currentUser.authenticated);
@@ -489,6 +505,8 @@ var appConfig = {
 			var self = this;
 
 			self.currentProject = new Project(projObj);
+			self.currentProjectOwnerID = projObj.owner_id; // redundant but necessary for watching properties?
+			self.currentUserID = self.currentUser._id; // redundant?
 
 			var curFileName = self.currentProject.openFileName;
 			self.currentFile = self.currentProject.findFile(curFileName);

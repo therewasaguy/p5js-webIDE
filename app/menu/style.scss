@@ -1,5 +1,5 @@
 $transitiontimelong: 1.75s;
-$transitiontimeshort: 0.1s;
+$transitiontimeshort: 0.3s;
 $transitiontime: .25s;
 $dark-theme-color: #737373;
 $dark-theme-hover: #C8C8C8;
@@ -8,6 +8,7 @@ $light-theme-color: #969696;
 $light-theme-hover: #333;
 $light-theme-background: #f4f4f4;
 
+// old
 #menu-container {
   display: flex;
   flex: 1;
@@ -22,278 +23,6 @@ $light-theme-background: #f4f4f4;
   position:absolute;
   z-index:2000000;
   // background-color:black;
-
-}
-
-#menu-container.hidden {
-    opacity: 0.0;
-    // transition: opacity $transitiontimelong 0.1s ease-out;
-    //  -moz-transition: opacity $transitiontimelong 0.1s ease-out;
-    //  -webkit-transition: opacity $transitiontimelong 0.1s ease-out;
-}
-
-#menu-container.visible {
-  opacity:1;
-  transition: opacity $transitiontimeshort 0s ease-in;
-   -moz-transition: opacity $transitiontimeshort 0s ease-in;
-   -webkit-transition: opacity $transitiontimeshort 0s ease-in;
-}
-
-#menu-container:hover {
-  opacity: 1;
-
-  transition: opacity $transitiontimeshort 0s ease-in;
-   -moz-transition: opacity $transitiontimeshort 0s ease-in;
-   -webkit-transition: opacity $transitiontimeshort 0s ease-in;
-
-}
-
-
-#fullscreenbutton {
-  width: 33px;
-  height: 34px;
-  background: none;
-  margin-top: -15px;
-  background-image: url('/images/browser.svg');
-  display: inline;
-  cursor: pointer;
-  outline: 0; 
-  float: right;
-}
-
-#new-window-button {
-  width: 33px;
-  height: 34px;
-  background: none;
-  margin-top: -15px;
-  // background-image: url('/images/open-iconic-master/svg/monitor.svg');
-  background-image: url('/images/browser.svg');
-  background-color:white;
-  background-size: 33px 34px;
-  background-repeat: no-repeat;
-  display: inline;
-  cursor: pointer;
-  outline: 0; 
-  float: right;
-  filter: invert(100%);
-  -webkit-filter: invert(100%);
-
-  &.selected {
-    opacity:1;
-    background-color:rgba(0,0,0,0);
-    filter: invert(0%) brightness(100%) saturate(10000);
-    -webkit-filter: invert(0%) brightness(100%) saturate(10000);
-  }
-  &:active {
-    filter: invert(100%) sepia(100%) brightness(100%) saturate(50);
-    -webkit-filter: invert(100%) sepia(100%) brightness(100%) saturate(50);
-    opacity:1;
-  }
-}
-
-#share-button {
-  width: 33px;
-  height: 34px;
-  background: none;
-  padding:0px;
-  margin-top: -15px;
-  background-image: url('/images/open-iconic-master/svg/share-boxed.svg');
-  background-color:white;
-  background-size: 33px 34px;
-  background-repeat: no-repeat;
-  display: inline;
-  cursor: pointer;
-  outline: 0; 
-  float: right;
-  filter: invert(100%);
-  -webkit-filter: invert(100%);
-
-}
-
-#play {
- background: none;
- background-image: url('/images/play-pink.svg');
- border: 0;
- width: 33px;
- height: 34px;
- font-size: 25px;
- display: inline;
- cursor: pointer;
- outline: 0; 
- float: right;
- // margin-top: -22px;
- margin-right: 10px;
- padding:10px;
- &:hover {
-  background-image: url('/images/play-gray.svg');
-}
-
-&.running {
-  background-image: url('/images/stop-orange.svg');
-
-  &:hover {
-    background-image: url('/images/stop-gray.svg');
-  }
-}
-}
-
-#save {
- background: none;
- border: 0;
- //width: 33px;
- height: 40px;
- font-size: 25px;
- display: inline;
- cursor: pointer;
- outline: 0; 
- float: right;
- margin-top: -18px;
- margin-right: 20px;
-}
-
-// #dropDown {
-//  background: none;
-//  border: 0;
-//  //width: 33px;
-//  height: 20px;
-//  display: inline;
-//  cursor: default;
-//  float: right;
-//  margin-top: -18px;
-//  margin-right: 20px;
-// }
-
-.menuItem {
-  background: none;
-  border: 0;
-  height: 20px;
-  padding: 0px;
-  padding-right: 20px;
-  display: inline;
-  cursor: pointer;
-  outline: 0; 
-  float: left;
-}
-
-// #filemenu-burger {
-//   background: none;
-//   border: 0;
-//   height: 20px;
-//   padding: 0px;
-//   display: inline;
-//   cursor: pointer;
-//   outline: 0; 
-//   float: left;
-// }
-
-// #actions {
-//   button {
-//     border: 0;
-//     cursor: pointer;
-//     z-index: 3;
-//     position: absolute;
-//   }
-
-//   button, button img {
-//     width: 20px;
-//     opacity: 0.5;
-//     transition: opacity 0.25s ease-in-out 0s;
-//   }
-
-//   button:hover {
-//     opacity: 1;
-//   }
-// }
-
-img.menu{
-  max-height: 100%;
-}
-
-#button_header {
-  // margin-left: 0px;
-  height: 50px;
-  margin: 0px;
-  padding-left:10px;
-  width:100%;
-
-  button {
-    border: 0;
-    cursor: pointer;
-    z-index: 3;
-  }
-
-  button, button img {
-    opacity: 0.75;
-    transition: opacity .25s ease-in-out 0s;
-  }
-
-  button:hover {
-    opacity: 1;
-  }
-}
-
-#project-name {
-  //padding-left: 20px;
-  padding-right: 20px;
-  margin-right: 10px;
-  font-size: 24px;
-  // color: #58585b;
-  //color: #ed225d;
-  // font-weight: bold;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  cursor: default; 
-  float:left;
-}
-
-
-// #toolbar {
-//   height: 60px;
-//   width: 100%;
-//   right: 0px;
-//   top:0px;
-// }
-
-
-.pure-menu-item span {
-  background: white;
-  color: #333333;
-  padding:5px;
-
-}
-
-.pure-menu-item span:hover {
-  background: #222;
-  color:white;
-}
-
-.pure-menu-item span:active {
-  background: #666;
-  color:pink;
-}
-
-
-#custom-dropdown-menus {
-  float:right;
-  margin-top: 13px;
-  // margin-right: 5px;
-}
-
-#profile-span {
-  margin-top:0px;
-  right: 0px;
-  margin-top:-20px;
-  display:block;
-  background:url('/images/temp/profile.png') no-repeat top left;
-  background-size:100%;
-  width:50px;
-  height:50px;
-}
-
-.username {
-  position: fixed;
-  right:5px;
-  margin-top:-15px;
 }
 
 #toast-msg {
@@ -302,18 +31,30 @@ img.menu{
   left: 25%;
   position: relative;
   opacity: 1;
+  filter: brightness(150%);
+  -webkit-filter: brightness(150%);
+
+  // short transition when un-hiding
+  transition: opacity $transitiontimeshort ease-in-out;
+   -moz-transition: opacity $transitiontimeshort ease-in-out;
+   -webkit-transition: opacity $transitiontimeshort ease-in-out;
+
+   &.hidden {
+    opacity:0;
+    display:inline-block;
+
+    // override for long transition when hiding
+    transition: opacity $transitiontimelong ease-out;
+     -moz-transition: opacity $transitiontimelong ease-out;
+     -webkit-transition: opacity $transitiontimelong ease-out;
+
+   }
 }
 
-#toast-msg.hidden {
-  opacity:0;
-  transition: opacity $transitiontimelong 1.5s ease-out;
-   -moz-transition: opacity $transitiontimelong 1.5s ease-out;
-   -webkit-transition: opacity $transitiontimelong 1.5s ease-out;
-
-}
 
 
 /** new CSS **/
+
 nav {
 
   &.light-theme a {
@@ -395,6 +136,8 @@ nav {
   .top-nav-center {
     position: absolute;
     left: 50%;
+    // height: 100%;
+    // width: 50%;
   }
 
   hr {

@@ -39,7 +39,8 @@
 
       <li class="dropdown-menu" v-on="mouseenter:openSaveDropdown, mouseleave:closeSaveDropdown"><a href="#" >Save</a>
         <span class="dropdown-content {{saveDropdownClass}}" v-on="mouseleave: closeSaveDropdown">
-          <span><a href="#" v-on="click: $root.commitGist()">Save to Cloud</a></span>
+          <span><a href="#" v-on="click: $root.saveToCloud()">Save to Cloud</a></span>
+          <span><a href="#">User Owns Project: {{userOwnsProject}}</a></span>
           <span><a href="#" v-on="click: $root.downloadZip()">Download Zip</a></span>
         </span>
       </li>
@@ -53,7 +54,7 @@
 
   <div class="top-nav-center">
     <!-- display a message -->
-    <span id="toast-msg">{{toastMsg}}</span>
+    <span id="toast-msg" class="hidden">{{toastMsg}}</span>
   </div>
 
   <div class="top-nav-right">
@@ -83,81 +84,3 @@
   </div>
 
 </nav>
-
-
-<div>
-</div>
-
-
-<div id ="button_header" style="display:none;">
-
-  <div class="pure-menu pure-menu-horizontal">
-    <ul class="pure-menu-list">
-
-      <li class="pure-menu-item" v-on="click: $root.toggleFilemenu()">
-        <button class="menuItem">
-          <img class="menu" src="/images/filemenu-white.svg">
-        </button>
-      </li>
-
-      <li class="pure-menu-item">
-        <div class="menuItem">
-        <img class="menu" src="/images/temp/logo.png">
-      </div>
-      </li>
-
-      <li class="pure-menu-item">
-        <button id="play"  v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>
-      </li>
-
-      <li class="pure-menu-item">
-        <h1 id="project-name" v-text="projectName" v-on="click: $root.renameProject()"></h1>
-      </li>
-
-    </ul>
-
-
-
-      <!-- <div > -->
-        <ul class="pure-menu-list" id="custom-dropdown-menus">
-
-
-          <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover pure-menu-allow-mousedown">
-            <button id="save" v-on="click: $root.commitGist()"><img class="menu" src="/images/save-white.svg"></button>
-            <ul class="pure-menu-children">
-              <li class="pure-menu-item">
-                <span v-on="click: $root.commitGist()">Save to Cloud</span>
-              </li>
-              <li class="pure-menu-item">
-                <span v-on="click: $root.downloadZip()" class="pure-menu-link">Download Zip</span>
-              </li>
-            </ul>
-          </li>
-
-        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
-          <span id="profile-span" v-on="click: profileClicked()"></span>
-
-          <ul class="pure-menu-children">
-
-            <li class="pure-menu-item" v-if="!loggedIn" v-on="click: $root.authenticate()">
-              <span>Log in</span>
-            </li>
-
-            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.authenticate()">
-              <span class="username"> hello <b>{{currentUser.username}}</b> </span>!
-            </li>
-
-            <li class="pure-menu-item" v-if="loggedIn" v-on="click: $root.logOut()">
-              <span>Log Out</span>
-            </li>
-
-          </ul>
-        </li>
-
-      </ul>
-    <!-- </div> -->
-  </div> <!-- end pure-menu-->
-
-  <!-- <div id="toolbar"> -->
-  <!-- </div> -->
-</div>
