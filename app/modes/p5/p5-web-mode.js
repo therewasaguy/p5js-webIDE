@@ -131,15 +131,13 @@ module.exports = {
 		var data = {
 			owner_username: this.currentUser.username,
 			owner_id: this.currentUser._id,
-			gistID: proj.gistID,
+			// gistID: proj.gistID,
 			name: proj.name,
 			_id: proj._id,
 			fileObjects: proj.fileObjects,
 			openFileName: proj.openFileName,
 			openTabNames: proj.openTabNames
 		};
-
-		console.log(data);
 
 		$.ajax({
 			url: '/saveproject',
@@ -214,7 +212,6 @@ module.exports = {
 	// sort by object, as stored in localStorage
 	sortRecentProjects: function(projects) {
 		var self = this;
-		console.log('sorting...');
 
 		var recentUserProjects = [];
 		var projIDs = Object.keys(projects);
@@ -252,11 +249,7 @@ module.exports = {
 			console.log('fetch user projects for user id: ' + user._id);
 
 			$.ajax({
-				url: '/recentuserprojects',
-				data: {
-					'userID' : user._id,
-					'username' : user.username
-				},
+				url: '/api/projects?userID=' + user._id,
 				type: 'GET',
 				success: function(projArray) {
 
@@ -273,8 +266,6 @@ module.exports = {
 							id: id,
 							timeago: dateAgo
 						});
-
-						console.log('add a proj');
 					}
 
 					window.localStorage.removeItem('recentProjects');

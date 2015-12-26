@@ -49,59 +49,14 @@ module.exports = function(app, passport) {
 	);
 
 	// api routes
-	app.get('/api/user/:username', function(req, res) {
-		User.findOne({'username': req.params.username}, function(err, userdata) {
-			if (err) {
-				console.log('no project found');
-				res.send('Error: No project found');
-				return;
-			}
-			else if (userdata) {
-				res.send(userdata);
-			}
-			else {
-				console.log('no user found :(');
-				res.send('Error: No user found');
-				return;
-
-			}
-		});
-	});
-
-	app.get('/api/projects', function(req, res) {
-		console.log('loading projects');
-
-		Project.find(function(err, data) {
-			if (err) {
-				console.log('no project found');
-				res.send('Error: No project found');
-				return;
-			}
-			else if (data) {
-				res.send(data);
-			}
-			else {
-				console.log('no data found :(');
-				res.send('Error: No user found');
-				return;
-
-			}
-		})
-		.limit( 10 )
-		.sort( '-created_at' );
-	});
+	// app.get('/api/user/:username', db.getUser);
+	app.get('/api/user', db.getUser);
+	app.get('/api/users', db.getUsers);
 
 
-	app.get('/auth-logout', function(req, res) {
-		console.log('source: ' + req.headers.referer);
+	app.get('/api/projects', db.getProjects)
 
-		req.session.destroy();
-		req.logout();
-
-		// res.redirect(req.headers.referer);
-		res.clearCookie('userid');
-		res.redirect('/');
-	});
+	app.get('/auth-logout', logOut);
 
 	app.get('/profile', ensureAuthenticated, function(req, res) {
 		res.send('hi ' + req.user.username + ' you are logged in');
@@ -118,22 +73,10 @@ module.exports = function(app, passport) {
 		if (url.parse(req.url).path.indexOf('.') === -1) {
 			res.render('default');
 		};
-
-		// if (url.parse(req.url).path.indexOf('.js') > -1) {
-		// 	console.log('hey');
-		// 	next();
-		// }
-		// parse username / projID --> this should actually happen clientside so it does nothing now.
-		// var pathname = url.parse(req.url).path;
-		// var args = pathname.split('/');
-		// console.log(args);
-		// var username = args[1];
-		// var projectID = args[2];
-		// console.log('username: ' + username);
-		// console.log('projectID: ' + projectID);
-
-		// res.send(username +','+ projectID);
 	});
+
+
+	//============================== AUTH =============================================
 
 	// Simple route middleware to ensure user is authenticated.
 	//   Use this route middleware on any resource that needs to be protected.  If
@@ -147,9 +90,7 @@ module.exports = function(app, passport) {
 
 
 	function doAuthentication(req, res, next) {
-
 		var resp = {};
-
 		if (req.isAuthenticated()) { 
 			resp.username = req.user.username; 	// req.session.passport.user.profile.username;
 			resp._id = req.user._id; 	// req.session.passport.user.profile.username;
@@ -158,11 +99,20 @@ module.exports = function(app, passport) {
 		else {
 			// not authenticated
 			res.send();
-			// next();
 		}
-
 	}
 
+	function logOut(req, res) {
+		req.session.destroy();
+		req.logout();
+
+		// res.redirect(req.headers.referer);
+		res.clearCookie('userid');
+		res.redirect('/');
+	};
+
+
+	// ============================== PROJECT =============================================
 
 	// view/(user)/projectID as its own html page
 	function viewProject(req, res) {

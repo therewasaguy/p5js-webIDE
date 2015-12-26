@@ -21,19 +21,19 @@ module.exports = db = {
 
 		mongoose.connect(dbURL);
 
-		app.get('/users', function(req, res) {
-			User.find({}, function(err, users) {
-				res.send(users);
-			});
-		});
+		// app.get('/users', function(req, res) {
+		// 	User.find({}, function(err, users) {
+		// 		res.send(users);
+		// 	});
+		// });
 
-		app.get('/projects', function(req, res) {
-			var limit = req.query.limit || 10;
+		// app.get('/projects', function(req, res) {
+		// 	var limit = req.query.limit || 10;
 
-			Project.find({}, function(err, projects) {
-				res.send(projects);
-			}).limit(limit);
-		});
+		// 	Project.find({}, function(err, projects) {
+		// 		res.send(projects);
+		// 	}).limit(limit);
+		// });
 
 		// get 10 project title, id, dateModified
 		app.get('/recentuserprojects', function(req, res) {
@@ -94,6 +94,72 @@ module.exports = db = {
 			self.createOrUpdateProject(req.body, callback);
 		});
 
+	},
+
+	// api routes
+
+	// /api/user?username=therewasaguy
+	getUser: function(req, res) {
+		User.findOne({'username': req.query.username}, function(err, userdata) {
+			if (err) {
+				console.log('no user found');
+				res.send('Error: No project found');
+				return;
+			}
+			else if (userdata) {
+				res.send(userdata);
+			}
+			else {
+				console.log('no user found :(');
+				res.send('Error: No user found');
+				return;
+
+			}
+		});
+	},
+
+	// ?limit=&page=
+	getUsers: function(req, res) {
+		var limit = req.query.limit || 10;
+		var pageNumber = req.query.page;
+		var skipCount = pageNumber > 0 ? (pageNumber-1) * limit : 1;
+
+		User.find({},{}, gotData)
+		.skip(skipCount)
+		.limit(limit)
+		.sort('-updated_at');
+
+		// callback
+		function gotData(err, data) {
+			if (err) res.send(err);
+			else if (data) res.send(data);
+			else res.send('Error: No users found');
+		}
+	},
+
+	// /api/projects ?limit=&page=
+	getProjects: function(req, res) {
+		var userID = req.query.userID || false;
+		var limit = req.query.limit || 10;
+		var pageNumber = req.query.page;
+		var skipCount = pageNumber > 0 ? (pageNumber-1) * limit : 1;
+
+		// to avoid limit Executor error until old projects are removed from database
+		// Overflow sort stage buffered data usage exceeds internal limit of 33554432 bytes
+		if (limit > 80) limit = 80;
+
+		var dataFields = {'name': 1, 'owner_username': 1, 'updated_at':1, 'created_at':1 };
+		var searchFields = userID ? {'owner_id': userID} : {};
+
+		Project.find(searchFields, dataFields, gotData)
+			.skip(skipCount).limit(limit).sort( '-created_at' );
+
+		// callback
+		function gotData(err, data) {
+			if (err) res.send(err);
+			else if (data) res.send(data);
+			else res.send('Error: No projects found');
+		}
 	},
 
 	createOrUpdateProject: function(data, callback) {
