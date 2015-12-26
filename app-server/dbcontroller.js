@@ -22,17 +22,17 @@ module.exports = db = {
 		mongoose.connect(dbURL);
 
 		app.get('/users', function(req, res) {
-
 			User.find({}, function(err, users) {
 				res.send(users);
 			});
 		});
 
 		app.get('/projects', function(req, res) {
+			var limit = req.query.limit || 10;
 
 			Project.find({}, function(err, projects) {
 				res.send(projects);
-			});
+			}).limit(limit);
 		});
 
 		// get 10 project title, id, dateModified
@@ -216,7 +216,6 @@ module.exports = db = {
 
 		});
 
-
 	},
 
 	createOrFindUser: function(accessToken, refreshToken, profile, done) {
@@ -264,6 +263,11 @@ module.exports = db = {
 			console.log('added project to user!');
 		});
 	},
+
+
+	saveOrUpdateFile: function(req, res) {
+
+	}
 
 };
 

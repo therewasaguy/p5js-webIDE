@@ -42,35 +42,36 @@ module.exports = {
 
 		// thank you http://stackoverflow.com/questions/5827612/node-js-fs-readdir-recursive-directory-search
 		var walk = function(dir, done) {
-		  var results = [];
-		  fs.readdir(dir, function(err, list) {
+			var results = [];
+			fs.readdir(dir, function(err, list) {
 
-		  	//
-		  	var prefix = directoryAlias[dir];
+				var prefix = directoryAlias[dir];
 
-		    if (err) return done(err);
-		    var i = 0;
-		    (function next() {
-		      var filePath = list[i++];
-		      if (!filePath) return done(null, results);
-		      filePath = dir + '/' + filePath;
-		      fs.stat(filePath, function(err, stat) {
-		        if (stat && stat.isDirectory()) {
-		          walk(filePath, function(err, res) {
-		            results = results.concat(res);
-		            next();
-		          });
-		        } else {
-		          results.push({
-		          	'folder' : prefix,
-								'name': filePath.split('/').pop().split('.js')[0].split(/_(.+)?/)[1].replace(/_/g, ' '),
-								'path': filePath.slice(1,filePath.length) // <-- necessary to chop off . ?
-		          });
-		          next();
-		        }
-		      });
-		    })();
-		  });
+				if (err) return done(err);
+				var i = 0;
+				(function next() {
+					var filePath = list[i++];
+					if (!filePath) return done(null, results);
+					filePath = dir + '/' + filePath;
+					fs.stat(filePath, function(err, stat) {
+						if (stat && stat.isDirectory()) {
+							walk(filePath, function(err, res) {
+								results = results.concat(res);
+								next();
+							});
+						} else {
+							if (prefix) {
+								results.push({
+									'folder' : prefix,
+									'name': filePath.split('/').pop().split('.js')[0].split(/_(.+)?/)[1].replace(/_/g, ' '),
+									'path': filePath.slice(1,filePath.length) // <-- necessary to chop off . ?
+								});
+							}
+							next();
+						}
+					});
+				})();
+			});
 		};
 
 		walk(exampleDir, callback);
