@@ -83,12 +83,10 @@ module.exports = {
 		},
 
 		openOpenDropdown: function(e) {
-			console.log('open');
 			this.openDropdownClass = '';
 		},
 
 		closeOpenDropdown: function(e) {
-			console.log('close');
 			if (inSub) return;
 			this.openDropdownClass = 'hidden';
 		},

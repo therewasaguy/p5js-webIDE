@@ -354,7 +354,6 @@ var appConfig = {
 
 					// load user recent projects if user is authenticated
 					if (self.currentUser.authenticated) {
-						console.log('recentProjects');
 						self.recentProjects = self.findRecentUserProjects(self.currentUser);
 
 						// set toast message
@@ -398,7 +397,6 @@ var appConfig = {
 
 		// returns an array of recent user projects by ID
 		findRecentUserProjects: function(user) {
-			console.log(user);
 			this.modeFunction('findRecentUserProjects', user);
 		},
 
@@ -672,7 +670,9 @@ var appConfig = {
 
 						var newProj = new Project(projectOptions);
 						self.closeProject();
-						self.openProject(newProj)
+						console.log('closing old');
+
+						self.openProject(newProj);
 					}
 
 				},

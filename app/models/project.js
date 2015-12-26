@@ -39,6 +39,9 @@ var Project = function(options) {
 		 *  @property {String} gistID 	a unique ID for GitHub API
 		 */
 		this.gistID = null;
+		this.owner_id = null;
+		this.owner_username = null;
+
 	}
 
 
@@ -50,6 +53,9 @@ var Project = function(options) {
 		this.dateModified = options.dateModified;
 		this._id = options._id || null;
 		this.gistID = options.gistID || null;
+		this.owner_id = options.owner_id || null,
+		this.owner_username = options.owner_username || null
+
 	}
 
 	this.findFile = function(name) {

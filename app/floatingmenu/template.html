@@ -24,7 +24,7 @@
   </div>
 
   <span class="project-name-container">
-    <span class="project-name" v-text="projectName" v-on="click: $root.renameProject()"></span>
+    <span class="project-name" v-on="click: $root.renameProject()">{{projectName}} <span v-if="currentProject.owner_username != undefined"> by {{currentProject.owner_username}}</span>
   </span>
 
   <!-- show editor button -->

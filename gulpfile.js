@@ -32,7 +32,7 @@ gulp.task('browserify', function() {
     .pipe(gulpBrowserify({
       transform: [partialify],
     }))
-    .pipe(uglify())
+    // .pipe(uglify())
     .on("error", notify.onError({
       message: "<%= error.message %>",
       title: "Error"
@@ -64,7 +64,7 @@ gulp.task('css', function() {
     )
     .pipe(inline_base64({
             baseDir: './public',
-            maxSize: 14 * 1024,
+            maxSize: 18 * 1024,
             debug: true
         }))
     .pipe(gulp.dest('./public/css/'));

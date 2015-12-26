@@ -39,8 +39,20 @@
 
       <li class="dropdown-menu" v-on="mouseenter:openSaveDropdown, mouseleave:closeSaveDropdown"><a href="#" >Save</a>
         <span class="dropdown-content {{saveDropdownClass}}" v-on="mouseleave: closeSaveDropdown">
-          <span><a href="#" v-on="click: $root.saveToCloud()">Save to Cloud</a></span>
-          <span><a href="#">User Owns Project: {{userOwnsProject}}</a></span>
+
+          <!-- if user owns project... -->
+          <span v-if="userOwnsProject" ><a href="#" v-on="click: $root.saveToCloud()">Save</a></span>
+          <span v-if="userOwnsProject" ><a href="#" v-on="click: $root.saveToCloud()">Save As</a></span>
+
+          <!-- if user does not own project... -->
+          <span v-if="!userOwnsProject">
+
+            <a v-if="currentUserID" href="#" v-on="click: $root.saveToCloud()">Remix as {{currentUser.username}}</a>
+            <a v-if="!currentUserID" href="#" v-on="click: $root.saveToCloud()">Remix as Anonymous User (not logged in)</a>
+
+          </span>
+
+
           <span><a href="#" v-on="click: $root.downloadZip()">Download Zip</a></span>
         </span>
       </li>

@@ -2,9 +2,6 @@
  *  sidebar
  */
 
-var $ = require('jquery');
-
-
 module.exports = {
 	template: require('./sidebar.html'),
 
@@ -70,27 +67,12 @@ module.exports = {
 	},
 
 	ready: function() {
-		this.container = $('#sidebar-container');
+		// this.container = $('#sidebar-container');
 		//this.sidebarUI();
 	}
 
-
 	// methods: {
-
-		// sidebarUI: function() {
-			
-
-		// 	$(function(){ 
-		// 	   $("#sidebarIcon").click(function(){ 
-		// 	   $("#sidebarIcon").attr('src',  
-		// 	                ($("#sidebarIcon").attr('src') == 'images/arrow-right.svg'  
-		// 	                    ? 'images/arrow-left.svg'  
-		// 	                    : 'images/arrow-right.svg' 
-		// 	                     ) 
-		// 	                )  
-		// 	    }); 
-		// 	}); 
- 
+		// sidebarUI: function() { 
 		// }
 	//}
 

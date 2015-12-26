@@ -5,7 +5,7 @@
   // $dark-gray: #58585b;
   $dark-gray: #333333;
 
-  $transitiontime: .25s;
+  $transitiontime: .2s;
 
 
   #side-container {
@@ -136,11 +136,11 @@
 
 
       &.open {
-        background-image: url('../images/expanded.svg');
+        background-image: url('/images/expanded.svg');
       }
 
       &.closed {
-        background-image: url('../images/collapsed.svg');
+        background-image: url('/images/collapsed.svg');
       }
     }
 
@@ -155,15 +155,15 @@
     }
 
     .icon.file {
-      background-image: url('../images/file1.svg');
+      background-image: url('/images/file1.svg');
     }
 
     .icon.db {
-      background-image: url('../images/database.svg');
+      background-image: url('/images/database.svg');
     }
 
     .icon.folder {
-      background-image: url('../images/folder.svg');
+      background-image: url('/images/folder.svg');
       background-size: 17px auto;
       top: 5px;
       margin-left: -22px;
@@ -172,21 +172,36 @@
     }
 
     .icon.image {
-      background-image: url('../images/image.svg');
+      background-image: url('/images/image.svg');
     }
   }
 
 
 
 #sidebarButton {
-  background-color: black;
-  height: 100%;
+  background: #1a1a1a url('/images/sidebar-handle.svg') no-repeat center;
   width: 14px;
+  height: 100px;
   float: left;
   overflow: hidden;
   margin-left: -14px;
   vertical-align: middle;
   cursor: pointer;
+  background-size: contain;
+  transition: filter $transitiontime linear;
+  -webkit-transition: -webkit-filter $transitiontime linear;
+  filter: brightness(100%);
+  -webkit-filter: brightness(100%);
+
+  &:hover {
+    filter: brightness(133%);
+    -webkit-filter: brightness(133%);
+  }
+
+  &:active {
+    filter: brightness(200%);
+    -webkit-filter: brightness(200%);
+  }
 }
 
 .sidebarButtonItem {
