@@ -37,7 +37,7 @@ var appConfig = {
 		debug: require('./debug/index'),
 		menu: require('./menu/index'),
 		floatingMenu: require('./floatingmenu/index'),
-		filemenu: require('./filemenu/index'),
+		// filemenu: require('./filemenu/index'),
 		dialog: require('./dialog/index'),
 	},
 
@@ -147,17 +147,11 @@ var appConfig = {
 			url: '/fetchexamples',
 			type: 'GET',
 			success: function(data) {
-				// var examples = [];
-
-				// for (var i = 0; i < data.length; i++) {
-
-				// 	var example = {
-				// 		'name': data[i].split('/').pop(),
-				// 		'path': data[i].slice(1,data[i].length)
-				// 	}
-				// 	examples.push(example);
+				// exampleObj: {
+				// 	'folder' : 'dom',
+				// 	'name': 'friendly name'
+				// 	'path': filePath
 				// }
-				console.log(data);
 				self.examples = data;
 			}
 		});
@@ -241,7 +235,7 @@ var appConfig = {
 			this.initProject();
 		}
 
-		this.updateCurrentProject();
+		// this.updateCurrentProject();
 
 		this.$on('updateCurrentProject', this.updateCurrentProject);
 
@@ -493,8 +487,6 @@ var appConfig = {
 
 		openProject: function(projObj, gistData) {
 			var self = this;
-			// self.closeProject();
-			console.log(projObj);
 
 			self.currentProject = new Project(projObj);
 
@@ -516,8 +508,7 @@ var appConfig = {
 				}
 			}
 
-			// run on load?
-			// self.run();
+			self.updateProjectInLocalStorage();
 		},
 
 		// load project by our ID, not by the gistID
@@ -558,7 +549,28 @@ var appConfig = {
 			// 	});
 		},
 
+		saveToCloud: function() {
+			var filesToSave = [];
+			var projectData = JSON.parse(localStorage.latestProject);
+			var fileArray = projectData.fileObjects;
+
+			for (var i = 0; i < fileArray.length; i++) {
+				var f = fileArray[i];
+
+				// only save files if they dont have an ID or if their content was modified
+				if (f.contents !== f.originalContents || !f.id) {
+					filesToSave.push(f);
+				}
+			}
+
+			
+			// this.saveProjectToDatabase()
+		},
+
+
 		saveProjectToDatabase: function(proj) {
+			console.log('save proj to database');
+			console.log(proj);
 			this.modeFunction('saveProjectToDatabase', proj);
 		},
 
@@ -571,7 +583,6 @@ var appConfig = {
 		},
 
 		newProject: function(title, sketchContents) {
-			console.log('new project');
 			this.modeFunction('newProject', title, sketchContents);
 		},
 
