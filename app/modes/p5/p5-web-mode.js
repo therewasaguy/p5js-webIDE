@@ -17,7 +17,7 @@ module.exports = {
 		var name = title ? title : prompt('Project Name', 'Cool Sketch');
 		proj = new Project();
 		proj.name = name;
-
+		console.log(proj.fileObjects);
 		// close existing project
 		this.closeProject();
 
@@ -37,6 +37,7 @@ module.exports = {
 
 		// set current project
 		this.currentProject = proj;
+		this.updateProjectInLocalStorage();
 	},
 
 	// getUserProjects: function() {
@@ -65,65 +66,65 @@ module.exports = {
 
 
 	// commit as a gist --> TO DO: move this to server side
-	commitGist: function() {
-		var self = this;
+	// commitGist: function() {
+	// 	var self = this;
 
-		var gistID = this.currentProject.gistID;
+	// 	var gistID = this.currentProject.gistID;
 
-		var theFiles = {};
-		var url = 'https://api.github.com/gists';
-		var reqType = 'POST';
+	// 	var theFiles = {};
+	// 	var url = 'https://api.github.com/gists';
+	// 	var reqType = 'POST';
 
-		// authenticate the user. If user is anonymous, use our default account.
-		// var oa = this.currentUser.gh_oa || GHOAUTH;
+	// 	// authenticate the user. If user is anonymous, use our default account.
+	// 	// var oa = this.currentUser.gh_oa || GHOAUTH;
 
-		var commitMessage = prompt('Describe what you changed', 'update');
+	// 	var commitMessage = prompt('Describe what you changed', 'update');
 
-		// save
-		self.currentProject.state = 'syncing';
+	// 	// save
+	// 	self.currentProject.state = 'syncing';
 
-		for (var i = 0; i < this.currentProject.fileObjects.length; i++) {
-			var f = this.currentProject.fileObjects[i];
-			theFiles[f.name] = {"content": f.contents};
-		}
+	// 	for (var i = 0; i < this.currentProject.fileObjects.length; i++) {
+	// 		var f = this.currentProject.fileObjects[i];
+	// 		theFiles[f.name] = {"content": f.contents};
+	// 	}
 
-		var data = {
-			"description": commitMessage,
-			"public": true,
-			"theFiles": theFiles,
-			"gistID": gistID,
-		}
+	// 	var data = {
+	// 		"description": commitMessage,
+	// 		"public": true,
+	// 		"theFiles": theFiles,
+	// 		"gistID": gistID,
+	// 	}
 
-		$.ajax({
-			url: '/savegist',
-			type: 'POST',
-			data: data,
-			dataType: 'json'
-		})
-		.success( function(res) {
+	// 	$.ajax({
+	// 		url: '/savegist',
+	// 		type: 'POST',
+	// 		data: data,
+	// 		dataType: 'json'
+	// 	})
+	// 	.success( function(res) {
 
-			// save gistID
-			self.currentProject.gistID = res.id;
-			self.currentProject.state = 'syncSuccess';
+	// 		// save gistID
+	// 		self.currentProject.gistID = res.id;
+	// 		self.currentProject.state = 'syncSuccess';
 
-			self.$.menu.setToastMsg('Gist Saved Successfully');
+	// 		self.$.menu.setToastMsg('Gist Saved Successfully');
 
-			self.saveProjectToDatabase(self.currentProject);
-		})
-		.error( function(e) {
-			console.log(e);
-			self.currentProject.state = 'syncError';
+	// 		self.saveProjectToDatabase(self.currentProject);
+	// 	})
+	// 	.error( function(e) {
+	// 		console.log(e);
+	// 		self.currentProject.state = 'syncError';
 
-			self.$.menu.setToastMsg('Error Saving Gist. Please Try Again');
+	// 		self.$.menu.setToastMsg('Error Saving Gist. Please Try Again');
 
-			console.warn('gist save error');
+	// 		console.warn('gist save error');
 
-			// save anyway...
-			self.saveProjectToDatabase(self.currentProject);
+	// 		// save anyway...
+	// 		self.saveProjectToDatabase(self.currentProject);
 
-		});
+	// 	});
 
-	},
+	// },
 
 	saveProjectToDatabase: function(proj) {
 		var self = this;

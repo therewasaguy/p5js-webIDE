@@ -55,7 +55,6 @@ var Project = function(options) {
 		this.gistID = options.gistID || null;
 		this.owner_id = options.owner_id || null,
 		this.owner_username = options.owner_username || null
-
 	}
 
 	this.findFile = function(name) {

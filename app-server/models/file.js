@@ -1,5 +1,6 @@
 /**
  *  not currently in use, 8/20/2015
+ *  bringing back 12/26/2015
  */
 
 var mongoose = require('mongoose');
@@ -7,11 +8,18 @@ var Schema = mongoose.Schema;
 
 var fileSchema = new Schema({
   name: String,
-  projectid: Number,
+  project_ids: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Project'
+  }],
   created_at: Date,
   updated_at: Date,
-  contents: String
-});
+  contents: String,
+
+  // TO DO:
+  is_library: { type: Boolean, default: false },
+  library_name: String
+}, { collection: 'pfiles' });
 
 
 fileSchema.pre('save', function(next) {
@@ -28,6 +36,6 @@ fileSchema.pre('save', function(next) {
   next();
 });
 
-var File = mongoose.model('File', fileSchema);
+var PFile = mongoose.model('PFile', fileSchema);
 
-module.exports = File;
+module.exports = PFile;

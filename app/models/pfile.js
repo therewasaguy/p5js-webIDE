@@ -9,7 +9,7 @@ var pFile = function(name, contents) {
 	this.contents = contents || '';
 
 	// original contents is the last committed version of the file
-	this.originalContents = '';
+	this.originalContents = contents || '';
 
 	this.session = null;
 

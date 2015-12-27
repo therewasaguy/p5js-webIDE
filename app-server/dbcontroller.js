@@ -10,6 +10,8 @@ var assert = require('assert');
 
 var User = require('./models/user.js');
 var Project = require('./models/project.js');
+var PFile = require('./models/file.js');
+
 
 module.exports = db = {
 
@@ -36,18 +38,17 @@ module.exports = db = {
 		// });
 
 		// get 10 project title, id, dateModified
-		app.get('/recentuserprojects', function(req, res) {
-			var userID = req.query.userID;
-			var limit = req.query.limit || 10;
-			Project.find( {'owner_id': userID},  {'name': 1, 'owner_username': 1, 'updated_at':1, 'created_at':1 }, function(err, data) {
-				res.send(data);
-			}).limit(limit);
-		});
+		// app.get('/recentuserprojects', function(req, res) {
+		// 	var userID = req.query.userID;
+		// 	var limit = req.query.limit || 10;
+		// 	Project.find( {'owner_id': userID},  {'name': 1, 'owner_username': 1, 'updated_at':1, 'created_at':1 }, function(err, data) {
+		// 		res.send(data);
+		// 	}).limit(limit);
+		// });
 
 
 		app.get('/loadproject', function(req, res, next) {
 			var username = req.query.username;
-			console.log('username: ' + username);
 			var projectID = req.query.projectID;
 
 			// res.send('hi');
@@ -57,7 +58,6 @@ module.exports = db = {
 					res.send('Error: No project found');
 					return;
 				}
-
 				// TO DO: ensure that owner === user...if not?
 				// if (proj && proj.owner_username !== username) {
 				// 	console.log('project does not belong to this user');
@@ -73,25 +73,9 @@ module.exports = db = {
 					console.log('no project found :(');
 					res.send('Error: No project found');
 					return;
-
 				}
 			});
 
-		});
-
-		// save project to database
-		app.post('/saveproject', function(req, res) {
-
-			console.log(req.body.owner_username);
-
-			var callback = function(error, successData) {
-				if (error) {
-					res.send(error)
-				} else {
-					res.send(successData);
-				}
-			}
-			self.createOrUpdateProject(req.body, callback);
 		});
 
 	},
@@ -148,7 +132,7 @@ module.exports = db = {
 		// Overflow sort stage buffered data usage exceeds internal limit of 33554432 bytes
 		if (limit > 80) limit = 80;
 
-		var dataFields = {'name': 1, 'owner_username': 1, 'updated_at':1, 'created_at':1 };
+		var dataFields = {'name': 1, 'owner_username': 1, 'updated_at':1, 'created_at':1, 'fileIDs': 1, 'forkedFrom': 1 };
 		var searchFields = userID ? {'owner_id': userID} : {};
 
 		Project.find(searchFields, dataFields, gotData)
@@ -162,6 +146,212 @@ module.exports = db = {
 		}
 	},
 
+
+	// NEW Dec 2015
+	saveProject: function (req, res) {
+		var returnData = {
+			owner_username : req.body.currentUsername || undefined,
+			owner_id : req.body.currentUserID || undefined,
+			name : req.body.name,
+			forkedFrom : req.body.forkedFrom,
+			openFileName : req.body.openFileName,
+			openTabNames : req.body.openTabNames,
+		};
+
+		var newProjData = returnData;
+
+		var filesClean = req.body.filesClean;
+		var projID = req.body._id;
+
+		// var postData = {
+		// 	_id: projectData._id,
+		// 	name: projectData.name,
+		// 	openFileName: projectData.openFileName,
+		// 	openTabNames: projectData.openTabNames,
+		// 	owner_id: projectData.owner_id,
+		// 	owner_username: projectData.owner_username,
+		// 	currentUserID: this.currentUserID,
+		// 	currentUsername: this.currentUser.username,
+		// 	filesClean: filesClean
+		// 	// fileObjects: Array[6],
+		// 	// gistID: null,
+		// };
+
+
+		// if no project ID...
+		if (!req.body._id) {
+			returnData.msg = 'creating new project bc this one has no ID. User: '+ req.body.currentUserID;
+			// create new proj, get ID
+			var newProj = new Project(newProjData);
+			projID = newProj._id;
+
+			saveProject(newProj);
+		}
+
+		else if (req.body.currentUserID !== req.body.owner_id) {
+			returnData.msg = 'fork project to ' + req.body.currentUserID;
+
+			// create a new project
+			var newProj = new Project(newProjData);
+			// save reference to forkedFrom ID
+			newProj.forkedFrom = projID;
+			returnData.forkedFrom = projID;
+
+			// new ID
+			projID = newProj._id;
+			saveProject(newProj);
+		}
+
+		else {
+			returnData.msg = 'Project already exists. Just updating files';
+
+			// find and update
+			Project.findOne({'_id' : projID}, function(err, doc) {
+				if (err) console.log(err);
+				saveProject(doc);
+			});
+		}
+
+		// if req.body.currentUserID !== 'null'
+		// --> add project to User
+		// for (var i = 0; i < filesClean.length; i++) {
+
+		// }
+
+		function saveProject(newProj) {
+
+			newProj.save( function(err, data) {
+				if (err) console.log(err);
+
+				console.log('no error!');
+				console.log(data);
+
+				// if user exists, save
+				if (newProj.owner_id) {
+					db.addProjectToUser(newProj.owner_id, newProj._id);
+				}
+
+				// update list of document id's for this project
+				saveProjectFiles( function(newFileIDs) {
+					newProj.set({'pFiles' : newFileIDs});
+					newProj.save( function(err) {
+						if (err) {
+							res.send(err)
+						}
+						else {
+							returnData._id = projID;
+							returnData.pFiles = newFileIDs;
+							res.send(returnData);
+						}
+					});
+				});
+			});
+		}
+
+		function saveProjectFiles(callback, err) {
+			// make sure we have the new project ID at this point...!
+			db.updateFiles(filesClean, projID, function(newFileIDs) {
+				callback(newFileIDs);
+			});
+		}
+
+		console.log(returnData.msg);
+
+	},
+
+	// TO DO
+	// saveProjectAs: function() { },
+
+	/**
+	 *  Save, fork and/or update a list of files recursively.
+	 *  Called by saveProject.
+	 *  
+	 *  @method  updateFiles
+	 *  @param  {Array}   fileArray Array of files with contentsChanged
+	 *                              if their content was changed.
+	 *  @param  {String}   projectID ID for this project
+	 *  @param  {Function} callback Callback with array of new file ID's
+	 */
+	updateFiles: function(fileArray, projectID, callback) {
+		var total = fileArray.length;
+		var result = []; // array of file ID's
+		console.log('update files for project id: ' + projectID);
+
+		// via http://stackoverflow.com/a/10266852/2994108
+		function saveAll() {
+			var fileData = fileArray.pop();
+			var fileObj = {
+				'_id' : fileData._id,
+				'name' : fileData.name
+			};
+
+			// if (fileData has ID and was not changed)
+			if (fileData._id && !fileData.contentsChanged) {
+				result.push(fileObj);
+				saveNext();
+			}
+			// if file doesnt have ID
+			else if (!fileData._id) {
+				// TO DO:
+				// check to see if any other files in the database have the same content
+				// else:
+				saveNewFile();
+			}
+
+			// if file has id but content was changed
+			else {
+				PFile.findOne({'_id' : fileData._id}, function(err, doc) {
+					if (err) throw err; //handle error
+
+					// if file belongs to projects other than this one, save a new one
+					var proj_ids = doc.project_ids;
+					if (proj_ids.length > 1 && doc.project_ids.indexOf(projectID > -1)) {
+						saveNewFile();
+					}
+					// otherwise, update with contents & add project ID (is that necessary?)
+					else {
+						doc.contents = fileData.contentsChanged;
+
+						// necessary?
+						if ( doc.project_ids.indexOf(projectID > -1) ) {
+							doc.project_ids.push(projectID);
+						}
+						saveDoc();
+					}
+				});
+			}
+
+			// helper to save new file
+			function saveNewFile() {
+				doc = new PFile({
+					name : fileData.name,
+					contents : fileData.contentsChanged,
+					project_ids : [projectID]
+				});
+				saveDoc();
+			}
+
+			// helper to save existing file
+			function saveDoc() {
+				doc.save(function(err, saved) {
+					if (err) throw err; //handle error
+					fileObj._id = saved._id;
+					result.push(fileObj);
+					saveNext();
+				});
+			}
+		}
+
+		function saveNext() {
+			console.log(total);
+			if (--total) saveAll();
+			else callback(result);
+		}
+
+		saveAll();
+	},
+
+	// OLD dec 2015
 	createOrUpdateProject: function(data, callback) {
 		var self = this;
 
@@ -237,7 +427,7 @@ module.exports = db = {
 
 						// if user exists, save
 						if (newProj.owner_id) {
-							self.addProjectToUser(data.owner_id, project._id);
+							db.addProjectToUser(data.owner_id, project._id);
 						}
 						return callback(null, newProj);
 					});
@@ -268,16 +458,13 @@ module.exports = db = {
 
 				project.save(function(err) {
 					if (err) console.log( err );
-
 					console.log('project save successfully!');
-
 					// if user exists, save
 					if (data.owner_id) {
-						self.addProjectToUser(data.owner_id, project._id);
+						db.addProjectToUser(data.owner_id, project._id);
 					}
 					return callback(null, project);
 				});
-
 			}
 
 		});

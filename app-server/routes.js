@@ -75,6 +75,7 @@ module.exports = function(app, passport) {
 		};
 	});
 
+	app.post('/save/project', db.saveProject);
 
 	//============================== AUTH =============================================
 

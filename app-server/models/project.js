@@ -9,26 +9,45 @@ var projectSchema = new Schema({
   owner_username: String,
   owner_id: Schema.Types.ObjectId,
 
-  gist_id: String,
+  // gist_id: String,
 
   created_at: {
     type: Date,
     default: Date.now
   },
+
   updated_at: {
     type: Date,
     default: Date.now
   },
 
-  files: [{
-    name: String,
-    contents: String
+  // user
+  forkedFrom: Schema.Types.ObjectId,
+
+  // new
+  // fileIDs: [{
+  //   type: Schema.Types.ObjectId,
+  //   ref: 'PFile'
+  // }],
+
+  pFiles: [{
+    id: {type: Schema.Types.ObjectId, ref: 'PFile'},
+    name: String
   }],
 
+  // openFileID: Schema.Types.ObjectId,
+  // openTabIDs: [Schema.Types.ObjectId],
+
+  // keep instead of unique id's?
   openFileName: String,
   openTabNames: [String],
 
-  forkedFrom: Schema.Types.ObjectId
+
+  // old
+  files: [{
+    name: String,
+    contents: String
+  }]
 });
 
 // on every save, add the date

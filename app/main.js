@@ -11,6 +11,9 @@ var User = require('./models/user');
 
 require('./keybindings');
 
+var AJAX = require('./ajax');
+console.log(AJAX);
+
 var modes = {
   p5web: require('./modes/p5/p5-web-mode')
 };
@@ -109,17 +112,24 @@ var appConfig = {
 	created: function() {
 		var self = this;
 
+		// ?user=username&sketch=173892103213
+		var projectID = getQueryVariable('sketch');
+		var username = getQueryVariable('username');
+
 		// parse path and make ajax calls
 		var pathname = window.location.pathname.split('/');
 
 		// ./username/project
 		if (pathname.length >= 3) {
+			username = pathname[1];
+			projectID = pathname[2];
+		}
+
+		if (projectID) {
+			console.log('found project: ' + projectID);
 
 			// do not init a blank one, or one from local storage. We are loading one from db instead
 			this.shouldLoadExistingProject = true;
-
-			var username = pathname[1];
-			var projectID = pathname[2];
 
 			self.updateCurrentProjectID(projectID);
 
@@ -131,9 +141,10 @@ var appConfig = {
 				success: function(data) {
 					var fileObjects = [];
 
+					// error
 					if (typeof(data) === 'string') {
 						// alert(data);
-						window.open('/', '_self');
+						// window.open('/', '_self');
 					}
 
 					else {
@@ -174,26 +185,6 @@ var appConfig = {
 		// for testing
 		window._app = this;
 
-		// parse username and sketch ID
-
-		// if (sketchID.length > 12) {
-		// 	// get sketch from server
-		// 	$.ajax({
-		// 	  url: '/loadprojectbygistid',
-		// 	  data: {'gistID': sketchID},
-		// 	  success: gotsketchdata,
-		// 		timeout: 8000,
-		// 	  error: sketchdataerror
-		// 	});
-		// }
-
-		// on success, load sketch
-		function gotsketchdata(data) {
-
-			newProjectFromGist( JSON.parse(data) );
-
-		}
-
 		// on fail, go to blank editor
 
 		/**
@@ -204,36 +195,6 @@ var appConfig = {
 		function sketchdataerror(e) {
 			console.log('error with sketch data');
 			console.log(e)
-		}
-
-		function newProjectFromGist(data) {
-			var fileArray = [];
-			var opentabnames = [];
-			var openfile = '';
-
-			var fileNames = Object.keys(data.files);
-
-			for (var i = 0; i < fileNames.length; i++) {
-				var key = fileNames[i];
-				var f = data.files[key];
-				console.log(f);
-
-				fileArray.push(new pFile(f.filename, f.content) );
-				opentabnames.push(f.filename);
-				openfile = f.filename;
-			}
-
-			var options = {
-				'fileObjects': fileArray,
-				'name': data.id,
-				'gistID': data.gistID,
-				'openFileName': openfile,
-				'openTabNames': opentabnames
-			}
-
-			var projObj = new Project(options);
-			self.openProject(projObj)
-
 		}
 
 	},
@@ -537,59 +498,65 @@ var appConfig = {
 
 			// change url
 			return;
-
-			// // find project in the database (localStorage if offline...)
-			// var projects = JSON.parse( localStorage.getItem('p5projects') );
-			// var projObj = projects[ourID];
-			// var gistID = projObj.gistID;
-
-			// // open the project now
-			// self.openProject(projObj)
-
-			// // meanwhile, tell the server to fetch the gist data
-			// $.ajax({
-			// 	url: '/loadprojectbygistid',
-			// 	type: 'get',
-			// 	dataType: 'json',
-			// 	data: {
-			// 			'gistID': gistID,
-			// 			'gh_oa': this.currentUser.gh_oa
-			// 		}
-			// 	})
-			// 	.success(function(res) {
-			// 		var gistData = res;
-			// 		self.gotGistData(gistData);
-			// 	})
-			// 	.fail(function(res) {
-			// 		console.log('error loading project' + res);
-			// 	});
 		},
 
 		saveToCloud: function() {
-			var filesToSave = [];
-			var projectData = JSON.parse(localStorage.latestProject);
-			var fileArray = projectData.fileObjects;
+			console.log('save to cloud');
 
-			for (var i = 0; i < fileArray.length; i++) {
-				var f = fileArray[i];
+			var projectData = JSON.parse(localStorage.latestProject);
+
+			var filesClean = [];
+			var filesRaw = projectData.fileObjects;
+
+
+			for (var i = 0; i < filesRaw.length; i++) {
+				// original file data
+				var fRaw = filesRaw[i];
+
+				// file date necessary to send to server
+				var fClean = {};
 
 				// only save files if they dont have an ID or if their content was modified
-				if (f.contents !== f.originalContents || !f.id) {
-					filesToSave.push(f);
+				if (fRaw.contents !== fRaw.originalContents || fRaw.id != undefined) {
+					// TO DO: only apply diff instead of all contents
+					// fClean.contents = fRaw.contents;
+					fClean.contentsChanged = fRaw.contents;
 				}
+					fClean._id = fRaw._id;
+					fClean.name = fRaw.name;
+					filesClean.push(fClean);
 			}
 
-			
+			var postData = {
+				_id: projectData._id,
+				name: projectData.name,
+				openFileName: projectData.openFileName,
+				openTabNames: projectData.openTabNames,
+				owner_id: projectData.owner_id,
+				owner_username: projectData.owner_username,
+				currentUserID: this.currentUser._id,
+				currentUsername: this.currentUser.username,
+				filesClean: filesClean
+				// fileObjects: Array[6],
+				// gistID: null,
+			};
+
+			// saveAs vs Save...
+			// save files...
+
+			AJAX.saveProject(postData, this);
 			// this.saveProjectToDatabase()
 		},
 
 
+		// not used Dec 2015?
 		saveProjectToDatabase: function(proj) {
 			console.log('save proj to database');
 			console.log(proj);
 			this.modeFunction('saveProjectToDatabase', proj);
 		},
 
+		// not used Dec 2015?
 		gotGistData: function(gistData) {
 			console.log('got gist data!');
 		},
@@ -659,7 +626,6 @@ var appConfig = {
 						// except for a custom sketch and name
 
 						var sketchFile = new pFile('sketch.js', sketchContents);
-						console.log(sketchFile);
 
 						var projectOptions = {
 							'name': name,
@@ -670,7 +636,6 @@ var appConfig = {
 
 						var newProj = new Project(projectOptions);
 						self.closeProject();
-						console.log('closing old');
 
 						self.openProject(newProj);
 					}
@@ -688,8 +653,12 @@ var appConfig = {
 		},
 
 		updateProjectInLocalStorage: function() {
-			// save project
-			localStorage.latestProject = JSON.stringify(this.currentProject);
+			var self = this;
+
+			// not sure why but this has been necessary to avoid empty 'content' for files
+			setTimeout( function() {
+				localStorage.latestProject = JSON.stringify(self.currentProject);
+			}, 100);
 		},
 
 		openInNewWindow: function() {
@@ -751,6 +720,19 @@ var appConfig = {
 
 
 };
+
+// http://stackoverflow.com/a/2091331/2994108
+function getQueryVariable(variable) {
+    var query = window.location.search.substring(1);
+    var vars = query.split('&');
+    for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split('=');
+        if (decodeURIComponent(pair[0]) == variable) {
+            return decodeURIComponent(pair[1]);
+        }
+    }
+    console.log('Query variable %s not found', variable);
+}
 
 // init Vue
 window.onload = function() {
