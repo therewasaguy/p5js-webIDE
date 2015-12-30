@@ -6,7 +6,7 @@
 module.exports = {
 
 	saveProject: function(postData, self) {
-		console.log('AJAX.saveProject ');
+
 		$.ajax({
 			url: '/save/project',
 			type: 'POST',
@@ -33,10 +33,8 @@ module.exports = {
 				pFile.originalContents = pFile.contents;
 			}
 
-			self.updateProjectInLocalStorage();
-
-			// if we are not on the page, open the page
-			console.log(res);
+			console.log('update local storage');
+			self.updateProjectInLocalStorage(oldProjID);
 
 /**
 			// -- or -- redirect?

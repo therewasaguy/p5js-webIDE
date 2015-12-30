@@ -128,8 +128,10 @@ var appConfig = {
 		// or #?sketch=567fa42b489845b161b3c11a (preferred)
 		projectID = projectID ? projectID : window.location.hash.split('#')[1];
 		if (projectID && projectID.indexOf('sketch') > -1) {
-			projectID = getQueryVariable('sketch', projectID);
+			projectID = getQueryVariable('sketch', projectID.split('?')[1]);
 		}
+
+		alert('projectID ' + projectID);
 
 		// 3. parse path and make ajax calls
 		var pathname = window.location.pathname.split('/');
@@ -190,6 +192,7 @@ var appConfig = {
 		// this.updateCurrentProject();
 
 		this.$on('updateCurrentProject', this.updateCurrentProject);
+		this.updatePageHash();
 
 	},
 
@@ -474,7 +477,9 @@ var appConfig = {
 
 			// if not logged in, open via '_'
 			var username = this.currentUser.username ? this.currentUser.username : '_';
-			window.open('/' + username + '/' + projID, '_self');
+			// window.open('/' + username + '/' + projID, '_self');
+			window.open('/#?sketch=' + projID, '_self');
+
 
 			// change url
 			return;
@@ -689,13 +694,23 @@ var appConfig = {
 				localStorage.latestProject = JSON.stringify(self.currentProject);
 			}, 1);
 
+			console.log(self.currentProject._id);
+			console.log(oldID);
 			self.updatePageHash(oldID);
 		},
 
+		/**
+		 *  Update page hash i.e. #?sketch=newProjectID
+		 *  @param  {String} [oldProjID] oldProjectID if there was one.
+		 */
 		updatePageHash: function(oldProjID) {
 			var self = this;
-			if (!self.currentProjectID) return;
-			if (window.location.hash.length == 0 || self.currentProject._id !== oldProjID) {
+			console.log('update page hash');
+			if (!self.currentProject || self.currentProject._id == undefined) {
+				window.location.hash = '';
+				return;
+			}
+			if (window.location.hash.length == 0 || self.currentProject._id != oldProjID) {
 				window.location.hash = '?sketch=' + self.currentProject._id;
 			}
 		},
