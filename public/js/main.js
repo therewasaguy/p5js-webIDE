@@ -1350,8 +1350,6 @@ var appConfig = {
 			projectID = getQueryVariable('sketch', projectID.split('?')[1]);
 		}
 
-		alert('projectID ' + projectID);
-
 		// 3. parse path and make ajax calls
 		var pathname = window.location.pathname.split('/');
 
