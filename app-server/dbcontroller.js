@@ -132,7 +132,7 @@ module.exports = db = {
 		// Overflow sort stage buffered data usage exceeds internal limit of 33554432 bytes
 		if (limit > 80) limit = 80;
 
-		var dataFields = {'name': 1, 'owner_username': 1, 'updated_at':1, 'created_at':1, 'fileIDs': 1, 'forkedFrom': 1 };
+		var dataFields = {'name': 1, 'owner_username': 1, 'updated_at':1, 'created_at':1, 'pFiles': 1, 'forkedFrom': 1 };
 		var searchFields = userID ? {'owner_id': userID} : {};
 
 		Project.find(searchFields, dataFields, gotData)
@@ -146,6 +146,16 @@ module.exports = db = {
 		}
 	},
 
+	// /api/files ?ids=[id,id,id]
+	getFiles: function(req, res) {
+		var fileIDs = req.query.ids || [];
+
+		// find multiple pfiles
+		PFile.find({'_id': { $in: fileIDs} }, function(err, docs) {
+			if (err) throw err;
+			res.send(docs);
+		});
+	},
 
 	// NEW Dec 2015
 	saveProject: function (req, res) {
@@ -316,23 +326,26 @@ module.exports = db = {
 						if ( doc.project_ids.indexOf(projectID > -1) ) {
 							doc.project_ids.push(projectID);
 						}
-						saveDoc();
+						saveDoc(doc);
 					}
 				});
 			}
 
 			// helper to save new file
 			function saveNewFile() {
-				doc = new PFile({
+				console.log('save new file');
+				var doc = new PFile({
 					name : fileData.name,
 					contents : fileData.contentsChanged,
 					project_ids : [projectID]
 				});
-				saveDoc();
+				saveDoc(doc);
 			}
 
 			// helper to save existing file
-			function saveDoc() {
+			function saveDoc(doc) {
+				console.log('save doc file');
+				// if (doc == undefined) saveNext();
 				doc.save(function(err, saved) {
 					if (err) throw err; //handle error
 					fileObj._id = saved._id;

@@ -9,13 +9,11 @@ module.exports = {
 
 	ready: function() {
 		this.container = document.getElementById('dialog-container');
-		this.container.className = 'hidden'
-
-		this.mainContainer = document.getElementById('main-container');
-		this.mainContainer.className = '';
+		this.container.classList.add('hidden');
 
 		this.dialogShare = document.getElementById('dialog-share');
 		this.dialogUnsaved = document.getElementById('dialog-unsaved');
+		this.mainContainer = document.getElementById('main-container');
 	},
 
 	methods: {
@@ -29,8 +27,8 @@ module.exports = {
 		},
 
 		close: function() {
-			this.container.className = 'hidden';
-			this.mainContainer.className = '';
+			this.container.classList.add('hidden');
+			this.mainContainer.classList.remove('blurred');
 		},
 
 		openShareDialog: function() {
@@ -57,8 +55,8 @@ module.exports = {
 			// 	this.dialogShare.className = 'dialog-hidden';
 			// 	this.dialogUnsaved.className = '';
 			// }
-			this.container.className = '';
-			this.mainContainer.className = 'blurred';
+			this.container.classList.remove('hidden');
+			this.mainContainer.classList.add('blurred');
 		},
 
 		accept: function() {

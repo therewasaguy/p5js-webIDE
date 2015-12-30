@@ -54,7 +54,8 @@ module.exports = function(app, passport) {
 	app.get('/api/users', db.getUsers);
 
 
-	app.get('/api/projects', db.getProjects)
+	app.get('/api/projects', db.getProjects);
+	app.get('/api/files', db.getFiles);
 
 	app.get('/auth-logout', logOut);
 

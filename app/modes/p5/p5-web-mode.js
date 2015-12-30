@@ -154,12 +154,13 @@ module.exports = {
 				window.open('/' + username + '/' + res._id, '_self');
 			}
 			else {
+
+				console.log(res);
+
 				// otherwise, just notify the user that it worked
 				self.currentProject._id = res._id;
 				self.$.menu.setToastMsg('Project Saved Successfully');
-
 				self.$emit('updateCurrentProject');
-				console.log(res);
 			}
 		})
 		.error( function(res) {

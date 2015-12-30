@@ -106,17 +106,32 @@ var appConfig = {
 			} else {
 				return false;
 			}
+		},
+
+		isLoading: function() {
+			return this.$root.shouldLoadExistingProject ? 'content-loading' : '';
 		}
+
 	},
 
 	created: function() {
 		var self = this;
 
-		// ?user=username&sketch=173892103213
-		var projectID = getQueryVariable('sketch');
-		var username = getQueryVariable('username');
+		// 3 ways to get projectID (should choose 1)
 
-		// parse path and make ajax calls
+		// 1. ?user=username&sketch=173892103213
+		var username = getQueryVariable('username');
+		var projectID = getQueryVariable('sketch');
+
+		// 2. get projectID based on hash,
+		// either #567fa42b489845b161b3c11a (deprecate)
+		// or #?sketch=567fa42b489845b161b3c11a (preferred)
+		projectID = projectID ? projectID : window.location.hash.split('#')[1];
+		if (projectID && projectID.indexOf('sketch') > -1) {
+			projectID = getQueryVariable('sketch', projectID);
+		}
+
+		// 3. parse path and make ajax calls
 		var pathname = window.location.pathname.split('/');
 
 		// ./username/project
@@ -126,46 +141,7 @@ var appConfig = {
 		}
 
 		if (projectID) {
-			console.log('found project: ' + projectID);
-
-			// do not init a blank one, or one from local storage. We are loading one from db instead
-			this.shouldLoadExistingProject = true;
-
-			self.updateCurrentProjectID(projectID);
-
-			// get sketch from server
-			$.ajax({
-				url: '/loadproject',
-				data: {username: username, projectID: projectID},
-				type: 'GET',
-				success: function(data) {
-					var fileObjects = [];
-
-					// error
-					if (typeof(data) === 'string') {
-						// alert(data);
-						// window.open('/', '_self');
-					}
-
-					else {
-						// // create files
-						for (var i = 0; i < data.files.length; i++) {
-							var dbFile = data.files[i];
-							var newFile = new pFile(dbFile.name, dbFile.contents);
-							fileObjects.push(newFile);
-						}
-
-						data.files = undefined;  // clear
-						data.fileObjects = fileObjects;
-					}
-
-					var proj = new Project(data);
-					proj.fileObjects = fileObjects;
-
-					self.updateCurrentProjectID(data._id);
-					self.openProject(proj);
-				}
-			});
+			AJAX.loadProject(projectID, username, self);
 		}
 
 		// get all example paths from server
@@ -462,6 +438,7 @@ var appConfig = {
 
 		openProject: function(projObj, gistData) {
 			var self = this;
+			console.log('open project');
 
 			self.currentProject = new Project(projObj);
 			self.currentProjectOwnerID = projObj.owner_id; // redundant but necessary for watching properties?
@@ -484,6 +461,9 @@ var appConfig = {
 					console.log('error loading file ' + tabName);
 				}
 			}
+
+			// in case loading bar was visible, hide it:
+			self.shouldLoadExistingProject = false;
 
 			self.updateProjectInLocalStorage();
 		},
@@ -548,6 +528,55 @@ var appConfig = {
 			// this.saveProjectToDatabase()
 		},
 
+		// parse pre-December 2015 projects
+		parseProjectOld: function(data) {
+			var fileObjects = [];
+			for (var i = 0; i < data.files.length; i++) {
+				var dbFile = data.files[i];
+				var newFile = new pFile(dbFile.name, dbFile.contents);
+				fileObjects.push(newFile);
+			}
+
+			data.files = undefined;  // clear
+			data.fileObjects = fileObjects;
+
+			var proj = new Project(data);
+			this.openProject(proj);
+		},
+
+		parseProject: function(data, callback) {
+			var self = this;
+			var fileObjects = [];
+			var filesToGet = []; // array of file IDs w/o content
+			console.log('parse new project');
+
+			for (var i = 0; i < data.pFiles.length; i++) {
+				console.log(data.pFiles[i]);
+
+				// TO DO: if we already have the file id locally,
+				// dont load it
+
+				// update current files and count down load count
+				filesToGet.push(data.pFiles[i]._id);
+			}
+
+			AJAX.getFiles(filesToGet, gotFiles);
+
+			function gotFiles(filesWeGot) {
+
+				filesWeGot.forEach(function(dbFile) {
+					var newFile = new pFile(dbFile.name, dbFile.contents, dbFile._id);
+					fileObjects.push(newFile);
+				})
+
+				data.files = undefined;  // clear
+				data.fileObjects = fileObjects;
+
+				// once all files have loaded, open sketch...
+				var proj = new Project(data);
+				self.openProject(proj);
+			}
+		},
 
 		// not used Dec 2015?
 		saveProjectToDatabase: function(proj) {
@@ -652,13 +681,23 @@ var appConfig = {
 
 		},
 
-		updateProjectInLocalStorage: function() {
+		updateProjectInLocalStorage: function(oldID) {
 			var self = this;
 
 			// not sure why but this has been necessary to avoid empty 'content' for files
 			setTimeout( function() {
 				localStorage.latestProject = JSON.stringify(self.currentProject);
-			}, 100);
+			}, 1);
+
+			self.updatePageHash(oldID);
+		},
+
+		updatePageHash: function(oldProjID) {
+			var self = this;
+			if (!self.currentProjectID) return;
+			if (window.location.hash.length == 0 || self.currentProject._id !== oldProjID) {
+				window.location.hash = '?sketch=' + self.currentProject._id;
+			}
 		},
 
 		openInNewWindow: function() {
@@ -710,10 +749,10 @@ var appConfig = {
 			}
 		},
 
-		// set project ID in localStorage for opening it in an iframe
-		updateCurrentProjectID: function(projectID) {
-			localStorage.projectID = projectID;
-		}
+		// set project ID in localStorage (no longer necessary ?)
+		// updateCurrentProjectID: function(projectID) {
+		// 	localStorage.projectID = projectID;
+		// }
 
 	},
 
@@ -722,8 +761,8 @@ var appConfig = {
 };
 
 // http://stackoverflow.com/a/2091331/2994108
-function getQueryVariable(variable) {
-    var query = window.location.search.substring(1);
+function getQueryVariable(variable, str) {
+    var query = str || window.location.search.substring(1);
     var vars = query.split('&');
     for (var i = 0; i < vars.length; i++) {
         var pair = vars[i].split('=');
@@ -731,7 +770,6 @@ function getQueryVariable(variable) {
             return decodeURIComponent(pair[1]);
         }
     }
-    console.log('Query variable %s not found', variable);
 }
 
 // init Vue

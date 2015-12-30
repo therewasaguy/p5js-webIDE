@@ -2,8 +2,8 @@ var $ = require('jquery');
 var Vue = require('vue');
 var Path = require('path');
 
-var pFile = function(name, contents) {
-	this.id = null;
+var pFile = function(name, contents, _id) {
+	this._id = _id || null;
 
 	// contents is the version of the file with any modifications
 	this.contents = contents || '';
@@ -19,6 +19,7 @@ var pFile = function(name, contents) {
 
 	this.name = name || 'untitled';
 
+	// TO DO: if files have no id but one of these names, load default
 	var defaultFiles = ['index.html', 'p5.js', 'p5.sound.js', 'p5.dom.js', 'sketch.js', 'style.css'];
 
 	if (defaultFiles.indexOf(name) > -1 && !this.contents) {

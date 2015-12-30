@@ -15,12 +15,17 @@
 
 	<div v-component="dialog" v-ref="dialog" id="dialog-container"></div>
 
+	<div v-component="menu" class="{{className}}" v-ref="menu" id="menu-container"></div>
+
 	<div v-component="floatingMenu" id="floating-menu" class="ui-widget-content collapsed {{theme}} {{floatingMenuClass}}"></div>
 
-		<div id="main-container" class="blurred">
+		<div class="loading-bar {{isLoading}}">
+			Loading Sketch...
+		</div>
+
+		<div id="main-container" class="{{isLoading}}">
 			<div v-component="sketchframe" v-ref="sketchframe" id="sketchframe-container"></div>
 
-			<div v-component="menu" class="{{className}}" v-ref="menu" id="menu-container"></div>
 			<div id="body-row-container">
 
 				<!-- <div v-component="filemenu" v-show="showFilemenu" id="filemenu-container"></div> -->
