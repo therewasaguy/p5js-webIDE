@@ -32,7 +32,7 @@ gulp.task('browserify', function() {
     .pipe(gulpBrowserify({
       transform: [partialify],
     }))
-    // .pipe(uglify())
+    .pipe(uglify())
     .on("error", notify.onError({
       message: "<%= error.message %>",
       title: "Error"
