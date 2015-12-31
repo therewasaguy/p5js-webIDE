@@ -124,6 +124,10 @@ textarea:focus, input:focus{
     outline: 0;
 }
 
+/* because not using href="#" */
+a {
+  cursor: pointer;
+}
 
 
 .noselect {

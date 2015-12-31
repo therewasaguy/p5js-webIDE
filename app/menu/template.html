@@ -3,14 +3,14 @@
   <div class="top-nav-left">
     <ul>
       <li>
-        <a href="#" v-on="click: $root.newProject()">New</a>
+        <a v-on="click: $root.newProject()">New</a>
       </li>
 
-      <li class="dropdown-menu" v-on="mouseenter:openOpenDropdown, mouseleave:closeOpenDropdown"><a href="#">Open</a>
+      <li class="dropdown-menu" v-on="mouseenter:openOpenDropdown, mouseleave:closeOpenDropdown"><a>Open</a>
 
         <div class="dropdown-content {{openDropdownClass}}" v-on="mouseleave: closeOpenDropdown">
           <!-- v-on="mouseenter: prevDef, mouseleave: clearDef" -->
-          <div class="has-submenu"><a href="#">Examples</a>
+          <div class="has-submenu"><a>Examples</a>
             <div class="submenu-container">
               <ul class="submenu" style="display:none;" >
                   <li v-repeat="$root.examples" class="filemenu" data-path="{{path}}" v-on="click: $root.loadExample(this)">
@@ -20,7 +20,7 @@
             </div>
           </div>
 
-          <div class="has-submenu"><a href="#">Recent</a>
+          <div class="has-submenu"><a>Recent</a>
             <div class="submenu-container">
               <ul class="submenu" style="display:none;">
                 <li v-repeat="$root.recentProjects">
@@ -32,33 +32,33 @@
             </div>
           </div>
 
-          <div><a href="#">Upload</a>
+          <div><a >Upload</a>
 
         </div>
       </li>
 
-      <li class="dropdown-menu" v-on="mouseenter:openSaveDropdown, mouseleave:closeSaveDropdown"><a href="#" >Save</a>
+      <li class="dropdown-menu" v-on="mouseenter:openSaveDropdown, mouseleave:closeSaveDropdown"><a >Save</a>
         <span class="dropdown-content {{saveDropdownClass}}" v-on="mouseleave: closeSaveDropdown">
 
           <!-- if user owns project... -->
-          <span v-if="userOwnsProject" ><a href="#" v-on="click: $root.saveToCloud()">Save</a></span>
-          <span v-if="userOwnsProject" ><a href="#" v-on="click: $root.saveToCloud()">Save As</a></span>
+          <span v-if="userOwnsProject" ><a v-on="click: $root.saveToCloud()">Save</a></span>
+          <span v-if="userOwnsProject" ><a v-on="click: $root.saveToCloud()">Save As</a></span>
 
           <!-- if user does not own project... -->
           <span v-if="!userOwnsProject">
 
-            <a v-if="currentUserID" href="#" v-on="click: $root.saveToCloud()">Save as {{currentUser.username}}</a>
-            <a v-if="!currentUserID" href="#" v-on="click: $root.saveToCloud()">Save as Anonymous User (not logged in)</a>
+            <a v-if="currentUserID" v-on="click: $root.saveToCloud()">Save as {{currentUser.username}}</a>
+            <a v-if="!currentUserID" v-on="click: $root.saveToCloud()">Save as Anonymous User (not logged in)</a>
 
           </span>
 
 
-          <span><a href="#" v-on="click: $root.downloadZip()">Download Zip</a></span>
+          <span><a v-on="click: $root.downloadZip()">Download Zip</a></span>
         </span>
       </li>
 
       <li>
-        <a  href="#" v-on="click: openShareDialog">Share</a>
+        <a  v-on="click: openShareDialog">Share</a>
       </li>
     </ul>
     <hr>
@@ -72,21 +72,21 @@
   <div class="top-nav-right">
     <ul>
       <li>
-        <a href="#">Gallery</a>
+        <a>Gallery</a>
       </li>
 
       <!-- login / profile -->
       <li v-if="!loggedIn" v-on="click: $root.authenticate()">
-        <a href="#">Log in</a>
+        <a>Log in</a>
       </li>
 
 <!--       <li v-if="loggedIn" v-on="click: $root.authenticate()">
-        <a href="#"> Hello <b>{{currentUser.username}}</b> !</a>
+        <a> Hello <b>{{currentUser.username}}</b> !</a>
       </li>
  -->
-      <li v-if="loggedIn" class="dropdown-menu" v-on="mouseenter:openUserDropdown, mouseleave:closeUserDropdown"><a href="#"> Hello <b>{{currentUser.username}}</b> !</a>
+      <li v-if="loggedIn" class="dropdown-menu" v-on="mouseenter:openUserDropdown, mouseleave:closeUserDropdown"><a> Hello <b>{{currentUser.username}}</b> !</a>
         <span class="dropdown-content {{userDropdownClass}}" v-on="mouseleave: closeUserDropdown">
-          <span><a href="#" v-on="click: $root.logOut()">Log Out</a></span>
+          <span><a v-on="click: $root.logOut()">Log Out</a></span>
         </span>
       </li>
 

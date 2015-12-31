@@ -1,3 +1,3 @@
-<div class="{{className}}"><a href="#" class="{{className}}" v-show="!hidden" v-on="click: $root.openFile(this.name)">{{name}}{{file.contents !== file.originalContents ? '*' : ''}}</a>&nbsp
-	<a class="{{className}} delete" href="#" v-show="!hidden" v-on="click: $root.closeTab(this.name)">x</a>
+<div class="{{className}}"><a class="{{className}}" v-show="!hidden" v-on="click: $root.openFile(this.name)">{{name}}{{file.contents !== file.originalContents ? '*' : ''}}</a>&nbsp
+	<a class="{{className}} delete" v-show="!hidden" v-on="click: $root.closeTab(this.name)">x</a>
 </div>

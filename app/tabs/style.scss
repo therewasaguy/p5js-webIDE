@@ -43,7 +43,6 @@
     min-width:120px;
     padding: 0 5px 5px 0px; 
     text-align: center;
-    background-color: #4e4e4e;
     color: #7D7D7D;
 
     &.light-theme {
@@ -56,18 +55,19 @@
 
     &.dark-theme {
       color: #fff;
+      background-color: #4e4e4e;
     }
 
   }
-  div:hover {
-    // filter:brightness(100%);
-    // -webkit-filter: brightness(100%);
+  li:hover,div:hover {
+
     &.light-theme {
       filter:brightness(96%);
       -webkit-filter: brightness(96%);
-
-      // background-color: #fbfbfb;
-      // color: #5B5B5B;
+    }
+    &.dark-theme {
+      filter:invert(5%);
+      -webkit-filter: invert(5%);
     }
   }
   div.selected{
@@ -130,16 +130,16 @@
 }
 
 #add {
-  width: 60px;
-  height: 30px; 
+  width: 30px;
+  height: 25px; 
 
   a {
     width: 50%;
     display:block;
   }
   a:hover {
-    color:#f4f4f4;
-;
+    // color:#f4f4f4;
+    // background-color:#222;
   }
 }
 
