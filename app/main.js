@@ -116,32 +116,27 @@ var appConfig = {
 
 	created: function() {
 		var self = this;
+		var projectID = undefined;
+		var username = undefined;
 
-		// 3 ways to get projectID (should choose #2)
-
-		// 1. ?user=username&sketch=173892103213
-		var username = getQueryVariable('username');
-		var projectID = getQueryVariable('sketch');
-
-		// 2. get projectID based on hash,
-		// either #567fa42b489845b161b3c11a (deprecate)
-		// or #?sketch=567fa42b489845b161b3c11a (preferred)
-		projectID = projectID ? projectID : window.location.hash.split('#')[1];
-		if (projectID && projectID.indexOf('sketch') > -1) {
-			projectID = getQueryVariable('sketch', projectID.split('?')[1]);
+		// get projectID
+		// #?sketch=567fa42b489845b161b3c11a (preferred)
+		var theHash = window.location.hash.split('#')[1];
+		if (theHash && theHash.indexOf('sketch') > -1) {
+			projectID = getQueryVariable('sketch', theHash.split('?')[1]);
+			username = getQueryVariable('user', theHash.split('?')[1]);
 		}
 
-		// 3. parse path and make ajax calls
-		var pathname = window.location.pathname.split('/');
+		// compare with localStorageID
+		var latestProj = localStorage.latestProject ? JSON.parse(localStorage.latestProject) : {_id:-1};
 
-		// ./username/project
-		if (pathname.length >= 3) {
-			username = pathname[1];
-			projectID = pathname[2];
-		}
+		console.log(projectID);
+		console.log(latestProj);
 
-		if (projectID) {
+		if (projectID && (projectID !== latestProj._id)) {
 			AJAX.loadProject(projectID, username, self);
+		} else if (projectID == latestProj._id) {
+			console.log('resuming recent project');
 		}
 
 		// get all example paths from server
@@ -414,6 +409,9 @@ var appConfig = {
 			self.$.dialog.promptRename( function(vars) {
 				var newName = vars.newName;
 				self.currentProject.name = newName;
+
+				// update project name in local storage
+				self.updateProjectInLocalStorage();
 			});
 		},
 
