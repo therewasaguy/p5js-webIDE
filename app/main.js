@@ -117,7 +117,7 @@ var appConfig = {
 	created: function() {
 		var self = this;
 
-		// 3 ways to get projectID (should choose 1)
+		// 3 ways to get projectID (should choose #2)
 
 		// 1. ?user=username&sketch=173892103213
 		var username = getQueryVariable('username');
@@ -500,7 +500,7 @@ var appConfig = {
 				var fClean = {};
 
 				// only save files if they dont have an ID or if their content was modified
-				if (fRaw.contents !== fRaw.originalContents || fRaw.id != undefined) {
+				if (fRaw.contents !== fRaw.originalContents || fRaw._id == undefined) {
 					// TO DO: only apply diff instead of all contents
 					// fClean.contents = fRaw.contents;
 					fClean.contentsChanged = fRaw.contents;
@@ -582,11 +582,11 @@ var appConfig = {
 		},
 
 		// not used Dec 2015?
-		saveProjectToDatabase: function(proj) {
-			console.log('save proj to database');
-			console.log(proj);
-			this.modeFunction('saveProjectToDatabase', proj);
-		},
+		// saveProjectToDatabase: function(proj) {
+		// 	console.log('save proj to database');
+		// 	console.log(proj);
+		// 	this.modeFunction('saveProjectToDatabase', proj);
+		// },
 
 		// not used Dec 2015?
 		gotGistData: function(gistData) {
@@ -628,7 +628,8 @@ var appConfig = {
 		},
 
 		updateCurrentProject: function() {
-			this.modeFunction('updateCurrentProject');
+			console.log('update current project was called (save now?)')
+			// this.modeFunction('updateCurrentProject');
 		},
 
 		loadExample: function(listItem) {
