@@ -58,11 +58,17 @@ $light-theme-background: #f4f4f4;
     box-shadow: 0px 12px 12px 0px rgba(0,0,0,0.16);
 
     &.dark-theme {
-      background:#444444;
+      // background:#444444;
+      &:hover {
+        background: rgba(68,68,68,0.3);
+      }
     }
 
     &.light-theme {
-      background:#fbfbfb;
+      // background:#fbfbfb;
+      &:hover {
+        background: rgba(251,251,251,0.1);
+      }
     }
 
   }
