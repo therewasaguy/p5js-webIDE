@@ -23,6 +23,7 @@ module.exports = function(app, passport, GithubStrategy, gh_clientID, gh_secret)
 
   passport.deserializeUser(function(id, done) {
 
+    console.log('id: ' + id);
     // If you are storing the whole user on session we can just pass to the done method, 
     // But if you are storing the user id you need to query your db and get the user 
     //object and pass to done() 

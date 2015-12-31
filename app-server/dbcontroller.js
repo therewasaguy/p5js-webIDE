@@ -25,29 +25,7 @@ module.exports = db = {
 
 		mongoose.connect(dbURL);
 
-		// app.get('/users', function(req, res) {
-		// 	User.find({}, function(err, users) {
-		// 		res.send(users);
-		// 	});
-		// });
-
-		// app.get('/projects', function(req, res) {
-		// 	var limit = req.query.limit || 10;
-
-		// 	Project.find({}, function(err, projects) {
-		// 		res.send(projects);
-		// 	}).limit(limit);
-		// });
-
-		// get 10 project title, id, dateModified
-		// app.get('/recentuserprojects', function(req, res) {
-		// 	var userID = req.query.userID;
-		// 	var limit = req.query.limit || 10;
-		// 	Project.find( {'owner_id': userID},  {'name': 1, 'owner_username': 1, 'updated_at':1, 'created_at':1 }, function(err, data) {
-		// 		res.send(data);
-		// 	}).limit(limit);
-		// });
-
+		context.mongooseConnection = mongoose.connection;
 
 		app.get('/loadproject', function(req, res, next) {
 			var username = req.query.username;
@@ -67,7 +45,7 @@ module.exports = db = {
 				// 	return;
 				// }
 				else if (proj) {
-					console.log('found the project, it belongs to this user');
+					console.log('found the project');
 					res.send(proj);
 					return;
 				}
@@ -173,7 +151,7 @@ module.exports = db = {
 						return pF._id;
 					});
 
-					console.log(fileIDs);
+					// console.log(fileIDs);
 
 					// find multiple pfiles
 					PFile.find({'_id': { $in: fileIDs} }, function(err, docs) {
@@ -198,7 +176,6 @@ module.exports = db = {
 	// /api/files ?ids=[id,id,id]
 	getFiles: function(req, res) {
 		var fileIDs = req.query.ids || [];
-		console.log(fileIDs);
 
 		// find multiple pfiles
 		PFile.find({'_id': { $in: fileIDs} }, function(err, docs) {

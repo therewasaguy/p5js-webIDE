@@ -4,6 +4,8 @@ var express = require('express');
 var bodyParser = require('body-parser')
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
+
 var favicon = require('serve-favicon');
 
 var settings = require('./app-server/settings.js');
@@ -17,11 +19,18 @@ var GithubStrategy = require('passport-github').Strategy;
 
 var app = express();
 
+// set up db
+app.db = require('./app-server/dbcontroller.js'); // load our routes and pass in our app and fully configured passport
+app.db.init(app, function() {
+	console.log('db initted');
+});
+
 app.use(cookieParser());
 app.use(session({
 		secret: 'mysecret',
 		resave: true,
 		saveUninitialized: true,
+		store: new MongoStore({ mongooseConnection: app.mongooseConnection }),
 		cookie: { 
 			maxAge: 60000000000
 		}
@@ -45,11 +54,6 @@ app.use(express.static('public'));
 app.use(favicon(__dirname + '/public/images/favicon.ico'));
 
 // routes 
-app.db = require('./app-server/dbcontroller.js'); // load our routes and pass in our app and fully configured passport
-app.db.init(app, function() {
-	console.log('db initted');
-});
-
 require('./app-server/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
 require('./app-server/login.js')(app, passport, GithubStrategy, gh_clientID, gh_secret);
