@@ -45,8 +45,14 @@ module.exports = {
 			this.loggedIn ? window.open('/profile', '_self') : this.$root.authenticate();
 		},
 
+		openSketchbook: function() {
+			console.log('open sketchbook');
+			this.$dispatch('open-sketchbook');
+		},
+
 		/**
-		 *  [setToastMsg description]
+		 *  Display a message for the user.
+		 *  
 		 *  @param {String} msg    Message to display
 		 *  @param {Boolean} [noFade] fades after 500ms unless this is true
 		 */

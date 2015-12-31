@@ -33,8 +33,24 @@
 
 		<div id="save-as-view" class="dview">
 			<p id="save-as-title" class="dialog-title"></p>
-			<label>Project Name: </label>
-			<input type="text" id="newName" class="dialog-input" value="{{currentProject.name}}">
+			<div>
+				<label>Project Name: </label>
+				<input type="text" id="newName" class="dialog-input" value="{{currentProject.name}}">
+			</div>
+
+			<div>
+				<label>Tags (comma separated): </label>
+				<input type="text" id="tags" class="dialog-input" value="{{currentProject.tags}}">
+			</div>
+
+			<div>
+				<label>Public </label>
+				<input type="checkbox" id="public" class="dialog-input" checked="{{currentProject.public}}">
+			</div>
+		</div>
+
+		<div id="sketchbook-view" class="dview">
+			<div v-component="sketchbook"></div>
 		</div>
 
 		<div id="dialog-button-container">

@@ -1,3 +1,5 @@
+
+
 module.exports = {
 	template: require('./template.html'),
 
@@ -6,6 +8,7 @@ module.exports = {
 		permalink: '',
 		embedCode: '',
 		callback: function() {},
+		sketchbookview: false
 	},
 
 	computed: {
@@ -26,6 +29,11 @@ module.exports = {
 	},
 
 	ready: function() {
+		var self = this;
+		this.$on('open-sketchbook', function() {
+			console.log('got the message');
+			self.openSketchbook();
+		});
 
 		this.container = document.getElementById('dialog-container');
 		this.container.classList.add('hidden');
@@ -37,7 +45,7 @@ module.exports = {
 		// this.views = document.getElementsByClassName('dialog-view');
 		this.viewSave = document.getElementById('save-as-view');
 		this.viewShare = document.getElementById('share-view');
-
+		this.viewSketchbook = document.getElementById('sketchbook-view');
 
 		this._defaultCallback = function(val) {
 			console.log(val);
@@ -56,6 +64,13 @@ module.exports = {
 			this.openShareDialog();
 		},
 
+		// should be renamed "open"
+		show: function() {
+			this.container.classList.remove('hidden');
+			this.mainContainer.classList.add('blurred');
+			this.$broadcast('dialog-open');
+		},
+
 		close: function() {
 			this.container.classList.add('hidden');
 			this.mainContainer.classList.remove('blurred');
@@ -65,20 +80,20 @@ module.exports = {
 			var currentProj = this.$root.currentProject;
 
 			if ( currentProj.unsaved() ) {
-				this.dialogShare.className = 'dialog-hidden';
-				this.dialogUnsaved.className = '';
+				this.dialogShare.classList.add('hidden');
+				this.dialogUnsaved.classList.remove('hidden');
 			}
 			else {
-				this.dialogShare.className = '';
-				this.dialogUnsaved.className = 'dialog-hidden';
+				this.dialogShare.classList.remove('hidden');
+				this.dialogUnsaved.classList.add('hidden');
 			}
 
 
 			this.viewSave.classList.add('hidden');
+			this.viewSketchbook.classList.add('hidden');
 			this.viewShare.classList.remove('hidden');
 
-			this.container.classList.remove('hidden');
-			this.mainContainer.classList.add('blurred');
+			this.show();
 		},
 
 		promptSaveAs: function(callback) {
@@ -96,9 +111,9 @@ module.exports = {
 
 			this.viewSave.classList.remove('hidden');
 			this.viewShare.classList.add('hidden');
+			this.viewSketchbook.classList.add('hidden');
 
-			this.container.classList.remove('hidden');
-			this.mainContainer.classList.add('blurred');
+			this.show();
 		},
 
 		promptRename: function(callback) {
@@ -109,9 +124,18 @@ module.exports = {
 
 			this.viewSave.classList.remove('hidden');
 			this.viewShare.classList.add('hidden');
+			this.viewSketchbook.classList.add('hidden');
 
-			this.container.classList.remove('hidden');
-			this.mainContainer.classList.add('blurred');
+			this.show();
+		},
+
+		openSketchbook: function() {
+			console.log('open sketchbook');
+			this.show();
+
+			this.viewSave.classList.add('hidden');
+			this.viewShare.classList.add('hidden');
+			this.viewSketchbook.classList.remove('hidden');
 		},
 
 		accept: function() {

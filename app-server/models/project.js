@@ -25,22 +25,22 @@ var projectSchema = new Schema({
   forkedFrom: Schema.Types.ObjectId,
 
   // new
-  // fileIDs: [{
-  //   type: Schema.Types.ObjectId,
-  //   ref: 'PFile'
-  // }],
-
   pFiles: [{
     id: {type: Schema.Types.ObjectId, ref: 'PFile'},
     name: String
   }],
 
-  // openFileID: Schema.Types.ObjectId,
-  // openTabIDs: [Schema.Types.ObjectId],
-
   // keep instead of unique id's?
   openFileName: String,
   openTabNames: [String],
+
+  public: {type: Boolean, default: false},
+
+  tags: {type: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Tag'
+    }]
+  },
 
 
   // old

@@ -42,6 +42,8 @@ var Project = function(options) {
 		this.owner_id = null;
 		this.owner_username = null;
 
+		this.public = false,
+		this.tags = []
 	}
 
 
@@ -54,7 +56,10 @@ var Project = function(options) {
 		this._id = options._id || null;
 		this.gistID = options.gistID || null;
 		this.owner_id = options.owner_id || null,
-		this.owner_username = options.owner_username || null
+		this.owner_username = options.owner_username || null,
+
+		this.public = options.public,
+		this.tags = options.tags
 	}
 
 	this.findFile = function(name) {

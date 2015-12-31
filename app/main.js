@@ -1,4 +1,5 @@
 var Vue = require('vue');
+
 var ace = require('brace');
 var settings = require('./settings');
 var debugView = require('./debug');
@@ -40,8 +41,8 @@ var appConfig = {
 		debug: require('./debug/index'),
 		menu: require('./menu/index'),
 		floatingMenu: require('./floatingmenu/index'),
-		// filemenu: require('./filemenu/index'),
 		dialog: require('./dialog/index'),
+		sketchbook: require('./sketchbook/index')
 	},
 
 	data: {
@@ -149,7 +150,7 @@ var appConfig = {
 			}
 		});
 
-		// for testing
+		// // for testing
 		window._app = this;
 
 		// on fail, go to blank editor
@@ -181,6 +182,8 @@ var appConfig = {
 		// this.updateCurrentProject();
 
 		this.$on('updateCurrentProject', this.updateCurrentProject);
+		this.$on('open-sketchbook', this.openSketchbook);
+
 		this.updatePageHash();
 
 	},
@@ -784,6 +787,10 @@ var appConfig = {
 				this.newWindowOpen = window.open('http://' + window.location.host + '/view/' + username + '/' + projectID); 
 			}
 		},
+
+		openSketchbook: function() {
+			this.$broadcast('open-sketchbook');
+		}
 
 		// set project ID in localStorage (no longer necessary ?)
 		// updateCurrentProjectID: function(projectID) {

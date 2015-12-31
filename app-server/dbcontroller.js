@@ -103,6 +103,7 @@ module.exports = db = {
 
 	// /api/projects ?limit=&page=
 	getProjects: function(req, res) {
+		var max = 80;
 		var userID = req.query.userID || false;
 		var limit = req.query.limit || 10;
 		var pageNumber = req.query.page;
@@ -110,7 +111,7 @@ module.exports = db = {
 
 		// to avoid limit Executor error until old projects are removed from database
 		// Overflow sort stage buffered data usage exceeds internal limit of 33554432 bytes
-		if (limit > 80) limit = 80;
+		if (limit > max || limit === 'max') limit = max;
 
 		var dataFields = {'name': 1, 'owner_username': 1, 'updated_at':1, 'created_at':1, 'pFiles': 1, 'forkedFrom': 1 };
 		var searchFields = userID ? {'owner_id': userID} : {};
