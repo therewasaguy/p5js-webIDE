@@ -3,7 +3,7 @@ exports.callback = function(req, res){
   // whether the user exits and if exists redirect 
   // or if not you many need to create user.
 
-  // res.send('Login success');
+  // TO DO: use session to redirect to proper page
   res.redirect('/');
 	// res.redirect(req.headers.referer);
 
