@@ -12,6 +12,8 @@ var User = require('./models/user.js');
 var Project = require('./models/project.js');
 var PFile = require('./models/file.js');
 
+var ProjectBuilder = require('./projectBuilder');
+
 
 module.exports = db = {
 
@@ -146,13 +148,61 @@ module.exports = db = {
 		}
 	},
 
+
+	// view a project as its own html page
+	// '/view/:username/:projectID'
+	// '/view/:projectID'
+	viewProject: function(req, res) {
+		var username = req.params.username;
+		var projectID = req.params.projectID
+		var data = {
+			'username': username,
+			'projectname': projectID
+		}
+
+		// to do: render loading screen first
+
+		// load project from database
+		Project.findOne({'_id': projectID}, function(err, proj) {
+			if (err) { console.log('no project found'); res.send('Error: No project found'); return; }
+			else if (proj) {
+
+				// NEW DATABASE requires us to fetch files
+				if (proj.pFiles && (!proj.files || proj.files.length == 0) ){
+					var fileIDs = proj.pFiles.map(function(pF) {
+						return pF._id;
+					});
+
+					console.log(fileIDs);
+
+					// find multiple pfiles
+					PFile.find({'_id': { $in: fileIDs} }, function(err, docs) {
+						if (err) throw err;
+						proj.files = docs;
+						ProjectBuilder.build(data, proj, res);
+					});
+				} else {
+					ProjectBuilder.build(data, proj, res);
+				}
+
+
+			}
+			else {
+				console.log('no project found :(');
+				res.send('Error: No project found');
+				return;
+			}
+		});
+	},
+
 	// /api/files ?ids=[id,id,id]
 	getFiles: function(req, res) {
 		var fileIDs = req.query.ids || [];
+		console.log(fileIDs);
 
 		// find multiple pfiles
 		PFile.find({'_id': { $in: fileIDs} }, function(err, docs) {
-			if (err) throw err;
+			if (err) console.log( err );
 			res.send(docs);
 		});
 	},
