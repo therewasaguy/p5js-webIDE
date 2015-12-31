@@ -80,8 +80,15 @@ var Project = function(options) {
 
 	};
 
-	// return true if unsaved, false if saved
+	// return true if unsaved (user doesnt own proj, or files have changed)
+	// otherwise, false
 	this.unsaved = function() {
+		var currentUserID = localStorage.user ? JSON.parse(localStorage.user)._id : -1;
+
+		if (this.owner_id !== currentUserID) {
+			return true;
+		}
+
 		for (var i = 0; i < this.fileObjects.length; i++) {
 			var f = this.fileObjects[i];
 			if (f.contents !== f.originalContents) {

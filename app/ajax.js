@@ -5,7 +5,7 @@
 
 module.exports = {
 
-	saveProject: function(postData, self) {
+	saveProject: function(postData, main) {
 
 		$.ajax({
 			url: '/save/project',
@@ -14,47 +14,35 @@ module.exports = {
 			dataType: 'json'
 		})
 		.success( function(res) {
-			var oldProjID = self.currentProject._id;
+			var oldProjID = main.currentProject._id;
 
-			// update values in local storage AND self.currentProject
-			self.currentProject._id = res._id;
-			self.currentProject.owner_id = res.owner_id;
-			self.currentProject.owner_username = res.owner_username;
-			self.currentProject.forkedFrom = res.forkedFrom;
-			self.currentProject.pFiles = res.pFiles;
+			// update values in local storage AND main.currentProject
+			main.currentProject._id = res._id;
+			main.currentProject.owner_id = res.owner_id;
+			main.currentProject.owner_username = res.owner_username;
+			main.currentProject.forkedFrom = res.forkedFrom;
+			main.currentProject.pFiles = res.pFiles;
 
 			// update file ID's
 			for (var i = 0; i < res.pFiles.length; i++) {
 				var newF = res.pFiles[i];
-				var pFile = self.currentProject.findFile( newF.name );
+				var pFile = main.currentProject.findFile( newF.name );
 				pFile._id = newF._id;
 
 				// set original contents to show that the file saved successfull
 				pFile.originalContents = pFile.contents;
 			}
 
-			console.log('update local storage');
-			self.updateProjectInLocalStorage(oldProjID);
+			main.updateProjectInLocalStorage(oldProjID);
 
-/**
-			// -- or -- redirect?
-			if (window.location.pathname.indexOf( res._id ) === -1) {
-				var username = res.owner_username && res.owner_username.length > 0 ? res.owner_username : '_';
-				window.open('/' + username + '/' + res._id, '_self');
-			}
-
-			// otherwise, just notify the user that it worked
-			else {
-				self.currentProject._id = res._id;
-				self.$.menu.setToastMsg('Project Saved Successfully');
-				self.$emit('updateCurrentProject');
-			}
-**/
+			// notify the user that it worked
+			main.$.menu.setToastMsg('Project Saved Successfully');
+				// main.$emit('updateCurrentProject');
 		})
 		.error( function(res, error) {
 			console.log(res);
 			console.log(error);
-			self.$.menu.setToastMsg('There was an error saving. Please try again');
+			main.$.menu.setToastMsg('There was an error saving. Please try again');
 		});
 
 	},
@@ -124,66 +112,5 @@ module.exports = {
 			callback(res);
 		});
 	}
-	// old method
-	// oldLoad: function() {
-	// 		console.log('found project: ' + projectID);
-
-	// 		self.updateCurrentProjectID(projectID);
-
-	// 		// get sketch from server
-	// 		$.ajax({
-	// 			url: '/loadproject',
-	// 			data: {username: username, projectID: projectID},
-	// 			type: 'GET',
-	// 			success: function(data) {
-
-	// 				var fileObjects = [];
-
-	// 				console.log('got file data!');
-	// 				console.log(data);
-
-	// 				// NEW WAY TO LOAD PROJECTS FROM pFiles, Dec 2015
-	// 					// TO DO
-	// 				if (data.pFiles) {
-	// 					for (var i = 0; i < data.pFiles.length; i++) {
-
-	// 						// if we already have the file id locally, dont load it
-
-	// 						// update current files and count down load count
-
-	// 						// once all files have loaded, open sketch...
-
-	// 					}
-	// 				}
-
-	// 				// error
-	// 				if (typeof(data) === 'string') {
-	// 					// alert(data);
-	// 					// window.open('/', '_self');
-	// 				}
-
-
-	// 				// OLD WAY TO LOAD PROJECTS FROM FILES
-	// 				else {
-
-	// 					// // create files
-	// 					for (var i = 0; i < data.files.length; i++) {
-	// 						var dbFile = data.files[i];
-	// 						var newFile = new pFile(dbFile.name, dbFile.contents);
-	// 						fileObjects.push(newFile);
-	// 					}
-
-	// 					data.files = undefined;  // clear
-	// 					data.fileObjects = fileObjects;
-	// 				}
-
-	// 				var proj = new Project(data);
-	// 				proj.fileObjects = fileObjects;
-
-	// 				self.updateCurrentProjectID(data._id);
-	// 				self.openProject(proj);
-	// 			}
-	// 		});
-	// }
 
 };

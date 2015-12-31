@@ -289,6 +289,7 @@ var appConfig = {
 						self.$.menu.setToastMsg('Welcome back, ' + username);
 					}
 
+					localStorage.setItem('user', JSON.stringify(self.currentUser));
 
 				})
 				.fail(function(res) {
@@ -297,7 +298,7 @@ var appConfig = {
 					if (!this.currentUser) {
 
 						// current user remains annonymous
-						// self.currentUser = new User();
+						self.currentUser = new User();
 						localStorage.setItem('user', JSON.stringify(self.currentUser));
 					}
 
@@ -400,15 +401,16 @@ var appConfig = {
 
 		renameProject: function() {
 			var self = this;
+			self.saveAs();
 
-			// prompt dialog for new name, then update name
-			self.$.dialog.promptRename( function(vars) {
-				var newName = vars.newName;
-				self.currentProject.name = newName;
+			// // prompt dialog for new name, then update name
+			// self.$.dialog.promptRename( function(vars) {
+			// 	var newName = vars.newName;
+			// 	self.currentProject.name = newName;
 
-				// update project name in local storage
-				self.updateProjectInLocalStorage();
-			});
+			// 	// update project name in local storage
+			// 	self.updateProjectInLocalStorage();
+			// });
 		},
 
 		closeProject: function() {
@@ -500,6 +502,8 @@ var appConfig = {
 		saveToCloud: function(flag) {
 			console.log('save to cloud', flag);
 
+			this.$.menu.setToastMsg('Saving...', true);
+
 			// var projectData = JSON.parse(localStorage.latestProject);
 			var projectData = this.currentProject;
 
@@ -540,10 +544,14 @@ var appConfig = {
 				// gistID: null,
 			};
 
-			// save files...
-
-			AJAX.saveProject(postData, this);
-			// this.saveProjectToDatabase()
+			// save might not be necessary...
+			if (this.currentProject.unsaved() || flag == 'saveAs') {
+				// save files...
+				AJAX.saveProject(postData, this);
+			}
+			else {
+				this.$.menu.setToastMsg('Project is already up to date');
+			}
 		},
 
 		// parse pre-December 2015 projects

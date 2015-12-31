@@ -45,7 +45,12 @@ module.exports = {
 			this.loggedIn ? window.open('/profile', '_self') : this.$root.authenticate();
 		},
 
-		setToastMsg: function(msg) {
+		/**
+		 *  [setToastMsg description]
+		 *  @param {String} msg    Message to display
+		 *  @param {Boolean} [noFade] fades after 500ms unless this is true
+		 */
+		setToastMsg: function(msg, noFade) {
 			this.toastMsg = msg;
 
 			var toastSpan = this.toastSpan;
@@ -54,9 +59,11 @@ module.exports = {
 			toastSpan.className = '';
 
 			// fade out
-			setTimeout(function() {
-				toastSpan.className = 'hidden';
-			}, 500);
+			if (!noFade) {
+				setTimeout(function() {
+					toastSpan.className = 'hidden';
+				}, 500);
+			}
 
 		},
 
