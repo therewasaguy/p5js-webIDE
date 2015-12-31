@@ -73,6 +73,16 @@ nav {
     color:#EC245E;
   }
 
+  a{
+    display: inline-block;
+    text-align: center;
+    padding: 5px 16px 0px;
+    text-decoration: none;
+    transition: color $transitiontime ease-in-out 0s;
+     -moz-transition: color $transitiontime ease-in-out 0s;
+     -webkit-transition: color $transitiontime ease-in-out 0s;
+  }
+
   ul {
     list-style-type: none;
     margin: 0;
@@ -84,15 +94,7 @@ nav {
     float: left;
   }
 
-  a{
-    display: inline-block;
-    text-align: center;
-    padding: 5px 16px 0px;
-    text-decoration: none;
-    transition: color $transitiontime ease-in-out 0s;
-     -moz-transition: color $transitiontime ease-in-out 0s;
-     -webkit-transition: color $transitiontime ease-in-out 0s;
-  }
+
 
   .dropdown-menu {
       position: relative;

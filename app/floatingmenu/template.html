@@ -24,7 +24,14 @@
   </div>
 
   <span class="project-name-container">
-    <span class="project-name" v-on="click: $root.renameProject()">{{projectName}} <span v-if="currentProject.owner_username != undefined"> by {{currentProject.owner_username}}</span>
+    <span class="project-name {{theme}}">
+      <span class="proj-name link-text {{theme}}" v-on="click: $root.renameProject()"
+        title="click to rename project">{{projectName}}
+      </span>
+      <span v-if="currentProject.owner_username != undefined"> by 
+        <span class="proj-user link-text {{theme}}"> {{currentProject.owner_username}}</span>
+      </span>
+    </span>
   </span>
 
   <!-- show editor button -->

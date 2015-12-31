@@ -4,6 +4,16 @@ $transitiontime: .25s;
 $height: 45px;
 $p5-color: #ED225D;
 
+$transitiontimelong: 1.75s;
+$transitiontimeshort: 0.3s;
+$transitiontime: .25s;
+$dark-theme-color: #737373;
+$dark-theme-hover: #C8C8C8;
+$dark-theme-background:#383838;
+$light-theme-color: #969696;
+$light-theme-hover: #333;
+$light-theme-background: #f4f4f4;
+
 // Light theme: Primary text color #333
 // Light theme: Background #fdfdfd
 // Light theme: Secondary text color #6b6b6b
@@ -230,18 +240,65 @@ $p5-color: #ED225D;
     font-size: 12px;
     color: #B1B1B1;
     line-height: 15px;
-    padding-left:20px;
+    /* margin-left: 20px; */
+    padding: 2px 5px;
+    width: 80%;
+
+    &.dark-theme{
+      color: $dark-theme-color;
+    }
+    &.light-theme{
+      color: $light-theme-color;
+    }
+
+    .proj-name,.proj-user {
+      // cursor:pointer;
+      padding:2px 5px;
+      margin-right: -2px;
+      margin-left: -2px;
+      // &:hover {
+      //   background:rgba(250,250,100, 0.1);
+      // }
+    }
+
 
     &:before {
       content:"";
-      position: absolute;
+      // position: absolute;
       z-index: -1;
       top: 0;
       bottom: 0;
       left: 0;
+      padding: 0px 10px;
       border-left: 2px dotted #444; /*change these values to suit your liking*/
     }
 
   }
+
+
+  .link-text{
+    transition: color $transitiontime ease-in-out 0s;
+     -moz-transition: color $transitiontime ease-in-out 0s;
+     -webkit-transition: color $transitiontime ease-in-out 0s;
+    cursor:pointer;
+
+    &.light-theme {
+      color: $light-theme-color;
+      &:hover {
+        color:$light-theme-hover;
+      }
+    }
+    &.dark-theme {
+      color: $dark-theme-color;
+      &:hover {
+        color:$dark-theme-hover;
+      }
+    }
+    &:active{
+      color:#EC245E;
+    }
+  }
+
+
 }
 
