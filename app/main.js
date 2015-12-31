@@ -129,15 +129,11 @@ var appConfig = {
 
 		// compare with localStorageID
 		var latestProj = localStorage.latestProject ? JSON.parse(localStorage.latestProject) : {_id:-1};
-
-		console.log(projectID);
-		console.log(latestProj);
-
 		if (projectID && (projectID !== latestProj._id)) {
 			AJAX.loadProject(projectID, username, self);
-		} else if (projectID == latestProj._id) {
-			console.log('resuming recent project');
 		}
+		// otherwise, resume recent project
+
 
 		// get all example paths from server
 		$.ajax({
@@ -317,7 +313,6 @@ var appConfig = {
 		},
 
 		logOut: function() {
-			this.currentUser = new User();
 			this.clearLocalStorage();
 			window.open('/auth-logout', '_self');
 		},
@@ -326,6 +321,7 @@ var appConfig = {
 			window.localStorage.removeItem('recentProjects');
 			window.localStorage.removeItem('user');
 			window.localStorage.removeItem('latestProject');
+			window.localStorage.clear();
 		},
 
 		// returns an array of recent user projects by ID
@@ -749,7 +745,7 @@ var appConfig = {
 					} catch(e) {}
 				}
 
-				this.newWindowOpen = window.open('http://' + window.location.host + '/view/draft'); 
+				this.newWindowOpen = window.open('http://' + window.location.host + '/preview'); 
 				return;
 			}, 10);
 		},

@@ -6,6 +6,8 @@
 (function() {
 
 	var project = JSON.parse(localStorage['latestProject']);
+	var title = project.name;
+	window.document.title = 'Preview ' + project.name;
 	var fileArr = project.fileObjects;
 
 	initCode(fileArr, window);

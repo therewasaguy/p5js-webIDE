@@ -18,7 +18,7 @@ module.exports = function(app, passport) {
 		res.redirect('/editor');
 	});
 
-	app.get('/view/draft', function(req, res) {
+	app.get('/preview', function(req, res) {
 		res.render('fsdraft');
 	});
 
