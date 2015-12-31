@@ -2,12 +2,20 @@ module.exports = {
 	template: require('./template.html'),
 
 	data: {
-		projectID: localStorage.projectID,
+		projectID: '',
 		permalink: '',
 		embedCode: '',
 	},
 
+	computed: {
+		projectID: function() {
+			return this.$root.currentProject._id;
+		}
+	},
+
 	ready: function() {
+
+
 		this.container = document.getElementById('dialog-container');
 		this.container.classList.add('hidden');
 

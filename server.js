@@ -29,7 +29,6 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-
 app.use( bodyParser.json() );				// to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({			// to support URL-encoded bodies
 	limit: '50mb',

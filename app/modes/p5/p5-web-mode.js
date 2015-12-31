@@ -126,52 +126,52 @@ module.exports = {
 
 	// },
 
-	saveProjectToDatabase: function(proj) {
-		var self = this;
+	// saveProjectToDatabase: function(proj) {
+	// 	var self = this;
 
-		var data = {
-			owner_username: this.currentUser.username,
-			owner_id: this.currentUser._id,
-			// gistID: proj.gistID,
-			name: proj.name,
-			_id: proj._id,
-			fileObjects: proj.fileObjects,
-			openFileName: proj.openFileName,
-			openTabNames: proj.openTabNames
-		};
+	// 	var data = {
+	// 		owner_username: this.currentUser.username,
+	// 		owner_id: this.currentUser._id,
+	// 		// gistID: proj.gistID,
+	// 		name: proj.name,
+	// 		_id: proj._id,
+	// 		fileObjects: proj.fileObjects,
+	// 		openFileName: proj.openFileName,
+	// 		openTabNames: proj.openTabNames
+	// 	};
 
-		$.ajax({
-			url: '/saveproject',
-			type: 'POST',
-			data: data,
-			dataType: 'json'
-		})
-		.success( function(res) {
+	// 	$.ajax({
+	// 		url: '/saveproject',
+	// 		type: 'POST',
+	// 		data: data,
+	// 		dataType: 'json'
+	// 	})
+	// 	.success( function(res) {
 
-			// if we are not on the page, open the page
-			if (window.location.pathname.indexOf( res._id ) === -1) {
-				var username = res.owner_username && res.owner_username.length > 0 ? res.owner_username : '_';
-				window.open('/' + username + '/' + res._id, '_self');
-			}
-			else {
+	// 		// if we are not on the page, open the page
+	// 		if (window.location.pathname.indexOf( res._id ) === -1) {
+	// 			var username = res.owner_username && res.owner_username.length > 0 ? res.owner_username : '_';
+	// 			window.open('/' + username + '/' + res._id, '_self');
+	// 		}
+	// 		else {
 
-				console.log(res);
+	// 			console.log(res);
 
-				// otherwise, just notify the user that it worked
-				self.currentProject._id = res._id;
-				self.$.menu.setToastMsg('Project Saved Successfully');
-				self.$emit('updateCurrentProject');
-			}
-		})
-		.error( function(res) {
-			self.currentProject._id = res._id;
-			self.$emit('updateCurrentProject');
+	// 			// otherwise, just notify the user that it worked
+	// 			self.currentProject._id = res._id;
+	// 			self.$.menu.setToastMsg('Project Saved Successfully');
+	// 			self.$emit('updateCurrentProject');
+	// 		}
+	// 	})
+	// 	.error( function(res) {
+	// 		self.currentProject._id = res._id;
+	// 		self.$emit('updateCurrentProject');
 
-			self.$.menu.setToastMsg('There was an error saving. Please try again');
+	// 		self.$.menu.setToastMsg('There was an error saving. Please try again');
 
-			console.log(res);
-		})
-	},
+	// 		console.log(res);
+	// 	})
+	// },
 
 	// called when user hits 'save to cloud'
 	updateCurrentProject: function() {
