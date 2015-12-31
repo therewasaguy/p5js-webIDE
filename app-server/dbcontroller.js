@@ -233,8 +233,7 @@ module.exports = db = {
 		// 	currentUserID: this.currentUserID,
 		// 	currentUsername: this.currentUser.username,
 		// 	filesClean: filesClean
-		// 	// fileObjects: Array[6],
-		// 	// gistID: null,
+		// 	flag: 'saveAs' or undefined
 		// };
 
 
@@ -248,11 +247,13 @@ module.exports = db = {
 			saveProject(newProj);
 		}
 
-		else if (req.body.currentUserID !== req.body.owner_id) {
+		// saveAs or Fork
+		else if (req.body.flag == 'saveAs' || req.body.currentUserID !== req.body.owner_id) {
 			returnData.msg = 'fork project to ' + req.body.currentUserID;
 
 			// create a new project
 			var newProj = new Project(newProjData);
+
 			// save reference to forkedFrom ID
 			newProj.forkedFrom = projID;
 			returnData.forkedFrom = projID;

@@ -42,13 +42,13 @@
 
           <!-- if user owns project... -->
           <span v-if="userOwnsProject" ><a v-on="click: $root.saveToCloud()">Save</a></span>
-          <span v-if="userOwnsProject" ><a v-on="click: $root.saveToCloud()">Save As</a></span>
+          <span v-if="userOwnsProject" ><a v-on="click: $root.saveAs()">Save As</a></span>
 
           <!-- if user does not own project... -->
           <span v-if="!userOwnsProject">
 
-            <a v-if="currentUserID" v-on="click: $root.saveToCloud()">Save as {{currentUser.username}}</a>
-            <a v-if="!currentUserID" v-on="click: $root.saveToCloud()">Save as Anonymous User (not logged in)</a>
+            <a v-if="currentUserID" v-on="click: $root.saveToCloud(currentUser._id)">Save as {{currentUser.username}}</a>
+            <a v-if="!currentUserID" v-on="click: $root.saveToCloud('anon')">Save as Anonymous User (not logged in)</a>
 
           </span>
 

@@ -408,11 +408,13 @@ var appConfig = {
 		},
 
 		renameProject: function() {
-			// var oldName = String(this.projectName);
-			var newName = prompt('New project name:', this.projectName);
-			if (newName) {
-				this.currentProject.name = newName;
-			}
+			var self = this;
+
+			// prompt dialog for new name, then update name
+			self.$.dialog.promptRename( function(vars) {
+				var newName = vars.newName;
+				self.currentProject.name = newName;
+			});
 		},
 
 		closeProject: function() {
@@ -483,10 +485,29 @@ var appConfig = {
 			return;
 		},
 
-		saveToCloud: function() {
-			console.log('save to cloud');
+		saveAs: function() {
+			var self = this;
 
-			var projectData = JSON.parse(localStorage.latestProject);
+			// prompt dialog for new name, then saveToCloud
+			self.$.dialog.promptSaveAs( function(vars) {
+				var newName = vars.newName;
+				self.currentProject.name = newName;
+				self.saveToCloud('saveAs');
+			});
+		},
+
+		/**
+		 *  Save to DB. This method handles saving new versions of
+		 *  existing projects, forking, "save As" and saving new projects.
+		 *  
+		 *  @param  {String} flag Options: 'saveAs'
+		 *  @return {[type]}        [description]
+		 */
+		saveToCloud: function(flag) {
+			console.log('save to cloud', flag);
+
+			// var projectData = JSON.parse(localStorage.latestProject);
+			var projectData = this.currentProject;
 
 			var filesClean = [];
 			var filesRaw = projectData.fileObjects;
@@ -519,12 +540,12 @@ var appConfig = {
 				owner_username: projectData.owner_username,
 				currentUserID: this.currentUser._id,
 				currentUsername: this.currentUser.username,
-				filesClean: filesClean
+				filesClean: filesClean,
+				flag: flag // handle saveAs
 				// fileObjects: Array[6],
 				// gistID: null,
 			};
 
-			// saveAs vs Save...
 			// save files...
 
 			AJAX.saveProject(postData, this);
@@ -682,7 +703,6 @@ var appConfig = {
 
 		openShareDialog: function() {
 			this.$.dialog.open();
-
 		},
 
 		updateProjectInLocalStorage: function(oldID) {

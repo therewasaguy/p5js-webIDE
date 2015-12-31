@@ -3,36 +3,43 @@
 
 	<div class="dialog">
 
-		<!-- if saved, show this ..-->
-		<div id="dialog-share" class="dialog-hidden">
-			<p class="dialog-title">Copy a link to share...</p>
+		<div id="share-view" class="dview">
+			<!-- if saved, show this ..-->
+			<div id="dialog-share" class="dialog-hidden">
+				<p class="dialog-title">Copy a link to share...</p>
 
-			<p id="dialog-content">
-			</p>
+<!-- 				<p id="dialog-content">
+				</p> -->
 
-			<label>embed code</label>
-			<input type="text" readonly="true" value="{{embedCode}}" onclick="select()">
+				<label>embed code</label>
+				<input type="text" readonly="true" value="{{embedCode}}" onclick="select()">
 
-			<label>share link</label>
-			<input type="text" readonly="true" value="{{permalink}}" onclick="select()">
+				<label>share link</label>
+				<input type="text" readonly="true" value="{{permalink}}" onclick="select()">
 
-			<!--TO DO: add copy button
-				<input type="image" src="/images/open-iconic-master/svg/clipboard.svg" alt="Submit">
-			-->
+				<!--TO DO: add copy button
+					<input type="image" src="/images/open-iconic-master/svg/clipboard.svg" alt="Submit">
+				-->
+			</div>
+
+			<!-- if unsaved, show this -->
+			<div id="dialog-unsaved">
+				<p class="dialog-title">Unsaved Project</p>
+				<p id="dialog-content">
+					Please save your project before sharing.
+				</p>
+			</div>
 		</div>
 
-		<!-- if unsaved, show this -->
-		<div id="dialog-unsaved">
-			<p class="dialog-title">Unsaved Project</p>
-			<p id="dialog-content">
-				Please save your project before sharing.
-			</p>
+		<div id="save-as-view" class="dview">
+			<p id="save-as-title" class="dialog-title"></p>
+			<label>Project Name: </label>
+			<input type="text" id="newName" class="dialog-input" value="{{currentProject.name}}">
 		</div>
-
 
 		<div id="dialog-button-container">
 			<button id="dialog-left" class="dialog-button" v-on="click: accept">OK</button>
-			<button id="dialog-right" class="dialog-button" v-on="click: cancel" style="display:none;">Cancel</button>
+			<button id="dialog-right" class="dialog-button" v-on="click: cancel">Cancel</button>
 		</div>
 
 	</div>

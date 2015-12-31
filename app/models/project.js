@@ -80,6 +80,16 @@ var Project = function(options) {
 
 	};
 
+	// return true if unsaved, false if saved
+	this.unsaved = function() {
+		for (var i = 0; i < this.fileObjects.length; i++) {
+			var f = this.fileObjects[i];
+			if (f.contents !== f.originalContents) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 };
 

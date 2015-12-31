@@ -6,6 +6,10 @@
 	left: 0;
 	right: 0;
 	top:20%;
+
+	*.hidden {
+		display:none;
+	}
 }
 
 #dialog-container.hidden {
