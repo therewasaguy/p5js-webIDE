@@ -82,22 +82,24 @@ module.exports = {
 	sortRecentProjects: function(projects) {
 		var self = this;
 
-		var recentUserProjects = [];
-		var projIDs = Object.keys(projects);
+		// var recentUserProjects = [];
+		// var projIDs = Object.keys(projects);
 
-		for (var i = 0; i < projIDs.length; i++) {
-			var id = projIDs[i];
-			var name = projects[id].name;
-			var dateModified = projects[id].dateModified;
-			var dateAgo = timeago(dateModified);
-			recentUserProjects.push( {
-				name: name,
-				id: id,
-				timeago: dateAgo
-			});
-		}
+		// for (var i = 0; i < projIDs.length; i++) {
+		// 	var id = projIDs[i];
+		// 	var name = projects[id].name;
+		// 	var dateModified = projects[id].dateModified;
+		// 	var dateAgo = timeago(dateModified);
 
-		self.recentProjects = recentUserProjects;
+		// 	recentUserProjects.push( {
+		// 		name: name,
+		// 		id: id,
+		// 		timeago: dateAgo
+
+		// 	});
+		// }
+
+		self.recentProjects = projects;
 	},
 
 	// get recent projects of an authenticated user from the database and reset recentProjects
@@ -106,11 +108,6 @@ module.exports = {
 		var projects = [];
 
 		// start off with localstorage if it exists and user ID matches
-		// if (user.authenticated && localStorage.recentProjects && user._id === JSON.parse(localStorage.recentProjects)[0].owner_id) {
-		// 	projects = JSON.parse( localStorage.getItem('recentProjects') );
-		// 	sortRecentProjects(projects); 
-		// }
-
 		if (localStorage.recentProjects) {
 			projects = JSON.parse( localStorage.getItem('recentProjects') );
 			self.sortRecentProjects(projects); 
@@ -118,8 +115,6 @@ module.exports = {
 
 		// // if user is not logged in, get recentProjects array from local storage
 		if (!user.authenticated) {
-			// projects = JSON.parse( localStorage.getItem('recentProjects') );
-			// sortRecentProjects(projects); 
 			console.log('user not authenticated');
 			return;
 		}
@@ -131,6 +126,7 @@ module.exports = {
 				url: '/api/projects?userID=' + user._id + '&limit=max',
 				type: 'GET',
 				success: function(projArray) {
+					projects = [];
 
 					for (var i = 0; i < projArray.length; i++) {
 						var proj = projArray[i];
@@ -145,11 +141,12 @@ module.exports = {
 							name: name,
 							id: id,
 							dateModified: dateModified,
+							timestamp: new Date(dateModified).getTime(),
 							owner_id: ownerID,
 							timeago: dateAgo
 						});
 					}
-
+					console.log(projects[10].timestamp);
 					// update localStorage
 					window.localStorage.removeItem('recentProjects');
 					window.localStorage.setItem('recentProjects', JSON.stringify(projects));
