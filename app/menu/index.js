@@ -1,5 +1,8 @@
 var inSub = false;
 
+var $ = require('jquery');
+var timeago = require('timeago');
+
 module.exports = {
 	template: require('./template.html'),
 
@@ -97,6 +100,10 @@ module.exports = {
 
 		openOpenDropdown: function(e) {
 			this.openDropdownClass = '';
+
+			$('span.timeago').timeago();
+			$('abbr.timeago').timeago();
+			console.log('timeago open dropdown');
 		},
 
 		closeOpenDropdown: function(e) {

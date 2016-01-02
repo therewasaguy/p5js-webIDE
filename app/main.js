@@ -330,7 +330,8 @@ var appConfig = {
 
 		// returns an array of recent user projects by ID
 		findRecentUserProjects: function(user) {
-			this.modeFunction('findRecentUserProjects', user);
+			// this.modeFunction('findRecentUserProjects', user);
+			AJAX.findRecentUserProjects(user, this);
 		},
 
 		sortRecentProjects: function(projects) {

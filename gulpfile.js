@@ -11,7 +11,6 @@ var notify = require('gulp-notify');
 var rename = require('gulp-rename');
 var concat = require('gulp-concat');
 var sass = require('gulp-sass');
-// var compass = require('gulp-compass');
 
 var inline_base64 = require('gulp-inline-base64');
 
@@ -24,7 +23,7 @@ gulp.task('browserify', function() {
 
   gulpMerge(
 
-    gulp.src(['./app/libs/jquery.min.js', './app/libs/jquery-ui.min.js', './app/libs/list.js'], { read: true })
+    gulp.src(['./app/libs/jquery.min.js', './app/libs/jquery-ui.min.js'], { read: true })
     .pipe(uglify()),
 
     gulp.src('./app/main.js', { read: false })
@@ -47,7 +46,7 @@ gulp.task('browserify-dev', function() {
 
   gulpMerge(
 
-    gulp.src(['./app/libs/jquery.min.js', './app/libs/jquery-ui.min.js', './app/libs/list.js'], { read: true })
+    gulp.src(['./app/libs/jquery.min.js', './app/libs/jquery-ui.min.js'], { read: true })
     .pipe(uglify()),
 
     gulp.src('./app/main.js', { read: false })

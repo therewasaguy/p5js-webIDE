@@ -3,6 +3,8 @@
  *  from client
  */
 
+var timeago = require('timeago');
+
 module.exports = {
 
 	saveProject: function(postData, main) {
@@ -111,6 +113,73 @@ module.exports = {
 		.success( function(res) {
 			callback(res);
 		});
-	}
+	},
+
+	/**
+	 *  get recent projects of an authenticated user from the database and reset recentProjects
+	 *  @param  {Object} user current user object
+	 *  @param  {Object} main reference to main app
+	 *  @return {[type]}      [description]
+	 */
+	findRecentUserProjects: function(user, main) {
+		var projects = [];
+
+		// start off with localstorage if it exists and user ID matches
+		if (localStorage.recentProjects) {
+			projects = JSON.parse( localStorage.getItem('recentProjects') );
+			main.sortRecentProjects(projects); 
+		}
+
+		// // if user is not logged in, get recentProjects array from local storage
+		if (!user.authenticated) {
+			console.log('user not authenticated');
+			return;
+		}
+
+		else {
+			console.log('fetch user projects for user id: ' + user._id);
+
+			$.ajax({
+				url: '/api/projects?userID=' + user._id + '&limit=max',
+				type: 'GET',
+				success: function(projArray) {
+					projects = [];
+
+					for (var i = 0; i < projArray.length; i++) {
+						var proj = projArray[i];
+
+						var id = proj._id;
+						var name = proj.name;
+						var dateModified = proj.updated_at;
+						var dateCreated = proj.created_at;
+						var ownerID = proj.owner_id;
+
+						projects.push({
+							name: name,
+							id: id,
+							owner_id: ownerID,
+							dateModified: dateModified,
+							dateCreated: dateCreated,
+
+							// for sorting
+							timestampMod: new Date(dateModified).getTime(),
+							timestampCreated: new Date(dateCreated).getTime(),
+
+							forkedFrom: proj.forkedFrom,
+							pFiles_ids: proj.pFiles ? proj.pFiles.map(function(pf) {return pf._id}) : []
+						});
+					}
+					console.log(projects[10].timestamp);
+					// update localStorage
+					window.localStorage.removeItem('recentProjects');
+					window.localStorage.setItem('recentProjects', JSON.stringify(projects));
+
+					// reset recent projects
+					main.recentProjects = projects;
+
+				}
+			});
+		}
+	},
 
 };

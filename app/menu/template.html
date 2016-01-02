@@ -25,7 +25,8 @@
               <ul class="submenu" style="display:none;">
                 <li v-repeat="$root.recentProjects">
                   <span data-projectid="{{id}}"  v-on="click: selectRecentProject(this)">
-                    <span data-projectid="{{id}}">{{name}}</span> &nbsp;<span class="timeago" data-projectid="{{id}}"> {{timeago}}</span>
+                    <span data-projectid="{{id}}">{{name}}</span> &nbsp;
+                      <span class="timeago" data-projectid="{{id}}" title="{{dateModified}}">{{dateModified}}</span>
                   </span>
                 </li>
               </ul>

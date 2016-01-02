@@ -70,6 +70,7 @@ module.exports = {
 		close: function() {
 			this.container.classList.add('hidden');
 			this.mainContainer.classList.remove('blurred');
+			this.$broadcast('dialog-close');
 		},
 
 		openShareDialog: function() {

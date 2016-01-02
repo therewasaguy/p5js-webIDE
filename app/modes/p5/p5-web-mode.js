@@ -2,7 +2,6 @@ var Project = require('../../models/project');
 var $ = require('jquery');
 var JSZip = require('jszip');
 var FileSaver = require('../../libs/FileSaver.js');
-var timeago = require('timeago');
 
 module.exports = {
 
@@ -100,63 +99,6 @@ module.exports = {
 		// }
 
 		self.recentProjects = projects;
-	},
-
-	// get recent projects of an authenticated user from the database and reset recentProjects
-	findRecentUserProjects: function(user) {
-		var self = this;
-		var projects = [];
-
-		// start off with localstorage if it exists and user ID matches
-		if (localStorage.recentProjects) {
-			projects = JSON.parse( localStorage.getItem('recentProjects') );
-			self.sortRecentProjects(projects); 
-		}
-
-		// // if user is not logged in, get recentProjects array from local storage
-		if (!user.authenticated) {
-			console.log('user not authenticated');
-			return;
-		}
-
-		else {
-			console.log('fetch user projects for user id: ' + user._id);
-
-			$.ajax({
-				url: '/api/projects?userID=' + user._id + '&limit=max',
-				type: 'GET',
-				success: function(projArray) {
-					projects = [];
-
-					for (var i = 0; i < projArray.length; i++) {
-						var proj = projArray[i];
-
-						var id = proj._id;
-						var name = proj.name;
-						var dateModified = proj.updated_at;
-						var dateAgo = timeago(dateModified);
-						var ownerID = proj.owner_id;
-
-						projects.push({
-							name: name,
-							id: id,
-							dateModified: dateModified,
-							timestamp: new Date(dateModified).getTime(),
-							owner_id: ownerID,
-							timeago: dateAgo
-						});
-					}
-					console.log(projects[10].timestamp);
-					// update localStorage
-					window.localStorage.removeItem('recentProjects');
-					window.localStorage.setItem('recentProjects', JSON.stringify(projects));
-
-					// reset recent projects
-					self.recentProjects = projects;
-
-				}
-			});
-		}
 	},
 
 	// save latest version of files to local storage
