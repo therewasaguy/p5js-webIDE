@@ -43,6 +43,27 @@ gulp.task('browserify', function() {
   .pipe(gulp.dest('./public/js/'))
 });
 
+gulp.task('browserify-dev', function() {
+
+  gulpMerge(
+
+    gulp.src(['./app/libs/jquery.min.js', './app/libs/jquery-ui.min.js', './app/libs/list.js'], { read: true })
+    .pipe(uglify()),
+
+    gulp.src('./app/main.js', { read: false })
+    .pipe(plumber())
+    .pipe(gulpBrowserify({
+      transform: [partialify],
+    }))
+    .on("error", notify.onError({
+      message: "<%= error.message %>",
+      title: "Error"
+    }))
+  )
+  .pipe(concat('main.js'))
+  .pipe(gulp.dest('./public/js/'))
+});
+
 gulp.task('injected-js', function(){
   return gulp.src([debugClientPath])
     .pipe(concat('debug-console.js'))
@@ -70,6 +91,21 @@ gulp.task('css', function() {
     .pipe(gulp.dest('./public/css/'));
 });
 
+gulp.task('css-dev', function() {
+  // console.log('css');
+  gulp.src(cssPath)
+    .pipe(plumber({
+      errorHandler: onError
+    }))
+    .pipe(concat('main.css'))
+    .pipe(sass({
+      outputStyle: 'compressed'
+    })
+      .on('error', onError)
+    )
+    .pipe(gulp.dest('./public/css/'));
+});
+
 var onError = function (err) {
   console.log(err);
 };
@@ -82,4 +118,11 @@ gulp.task('watch', function() {
   gulp.watch(debugClientPath, ['injected-js']);
 });
 
+gulp.task('watch-dev', function() {
+  gulp.watch(jsPath, ['browserify-dev']);
+  gulp.watch(cssPath, ['css-dev']);
+  gulp.watch(debugClientPath, ['injected-js']);
+});
+
 gulp.task('default', ['css', 'browserify', 'watch']);
+gulp.task('dev', ['css-dev', 'browserify-dev', 'watch-dev']);
