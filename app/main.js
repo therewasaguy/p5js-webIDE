@@ -404,16 +404,15 @@ var appConfig = {
 
 		renameProject: function() {
 			var self = this;
-			self.saveAs();
 
-			// // prompt dialog for new name, then update name
-			// self.$.dialog.promptRename( function(vars) {
-			// 	var newName = vars.newName;
-			// 	self.currentProject.name = newName;
+			// prompt dialog for new name, then update name
+			self.$.dialog.promptRename( function(vars) {
+				var newName = vars.newName;
+				self.currentProject.name = newName;
 
-			// 	// update project name in local storage
-			// 	self.updateProjectInLocalStorage();
-			// });
+				// update project name in local storage
+				self.updateProjectInLocalStorage();
+			});
 		},
 
 		closeProject: function() {
@@ -707,20 +706,29 @@ var appConfig = {
 		},
 
 		openShareDialog: function() {
-			this.$.dialog.open();
+			this.$.dialog.openShareDialog();
 		},
 
+		/**
+		 *  Stringify the current project data and
+		 *  save it in local storage. This is useful
+		 *  for autosaving and for 
+		 *  
+		 *  @param  {String} [oldID] Previous ID of the project
+		 *                           if the hash should change
+		 *                           after saving. (optional)
+		 */
 		updateProjectInLocalStorage: function(oldID) {
 			var self = this;
 
 			// not sure why but this has been necessary to avoid empty 'content' for files
 			setTimeout( function() {
 				localStorage.latestProject = JSON.stringify(self.currentProject);
+				console.log(self.currentProject._id);
+				console.log(oldID);
+				self.updatePageHash(oldID);
 			}, 1);
 
-			console.log(self.currentProject._id);
-			console.log(oldID);
-			self.updatePageHash(oldID);
 		},
 
 		/**
@@ -739,6 +747,11 @@ var appConfig = {
 			}
 		},
 
+		/**
+		 *  Run current project in a new window at ./preview
+		 *  
+		 *  @method  openInNewWindow
+		 */
 		openInNewWindow: function() {
 
 			// save latest code to localStorage, and a very short setTimeout to allow the code to finish saving
@@ -756,7 +769,7 @@ var appConfig = {
 					} catch(e) {}
 				}
 
-				this.newWindowOpen = window.open('http://' + window.location.host + '/preview'); 
+				this.newWindowOpen = window.open(window.location.protocol + '//' + window.location.host + '/preview'); 
 				return;
 			}, 10);
 		},

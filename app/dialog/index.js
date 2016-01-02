@@ -57,11 +57,7 @@ module.exports = {
 	methods: {
 
 		open: function() {
-			// update relevant data fields for template.html
-			this.projectID = localStorage.projectID;
-			this.permalink = window.location.origin  + '/view/' + this.projectID;
-			this.embedCode = '<iframe src="' + this.permalink + '"></iframe>';
-			this.openShareDialog();
+			// this.show();
 		},
 
 		// should be renamed "open"
@@ -78,6 +74,11 @@ module.exports = {
 
 		openShareDialog: function() {
 			var currentProj = this.$root.currentProject;
+
+			// update relevant data fields for template.html
+			this.projectID = localStorage.projectID;
+			this.permalink = window.location.origin  + '/view/' + this.projectID;
+			this.embedCode = '<iframe src="' + this.permalink + '"></iframe>';
 
 			if ( currentProj.unsaved() ) {
 				this.dialogShare.classList.add('hidden');

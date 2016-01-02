@@ -118,6 +118,7 @@ gulp.task('watch', function() {
   gulp.watch(debugClientPath, ['injected-js']);
 });
 
+// does not compress fonts/images or uglify js/css
 gulp.task('watch-dev', function() {
   gulp.watch(jsPath, ['browserify-dev']);
   gulp.watch(cssPath, ['css-dev']);
