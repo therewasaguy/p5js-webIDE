@@ -1,183 +1,183 @@
-<div id="settingsPane" class="{{theme}}">
+<div id="settingsContainer">
+  <div id="settingsPane" class="{{$root.theme}}">
 
-  <div id="titleBar">
-    <h2 class="pref-title">Preferences</h2>
+    <div id="titleBar">
+      <h2 class="pref-title">Preferences</h2>
 
-    <div id="close" v-on="click: $root.toggleSettingsPane()">
-      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="x" x="0" y="0" viewBox="111.98 169.64 388.04 407.06" enable-background="new 111.982048 169.6423035 388.0419922 407.0557861" xml:space="preserve"><path d="M326.08 360.51L392.7 293.88c6.42-6.42 6.42-16.81 0-23.23 -6.42-6.42-16.81-6.42-23.23 0l-66.63 66.63 -66.63-66.63c-6.42-6.42-16.81-6.42-23.23 0s-6.42 16.81 0 23.23l66.63 66.63 -66.63 66.63c-6.42 6.42-6.42 16.81 0 23.23 3.21 3.21 7.41 4.81 11.61 4.81 4.2 0 8.41-1.6 11.61-4.81l66.63-66.63 66.63 66.63c3.21 3.21 7.41 4.81 11.61 4.81 4.2 0 8.41-1.6 11.61-4.81 6.42-6.42 6.42-16.81 0-23.23L326.08 360.51z" ></svg>
-    </div>
-
-  </div>
-
-  <div class="optionsZone">
-
-    <!-- <img id="textAdjust" src="/images/textAdjust.svg"> -->
-    <div class="row-container">
-      <div class="settings-subhead">Text size</div>
-    </div>
-
-    <div class="row-container">
-      <div class="split-container">
-        <div class="bg-button">
-          <button class="bg-button" v-on="click: decText">
-            <span class="plusminus"> - </span>
-          </button>
-        </div>
-        <div>
-          <span class="small-grey-label">Decrease</span>
-        </div>
-      </div>
-
-      <div class="split-container">
-        <div class="input-rect">
-          <input class="input-field noselect" id="textAdjustInput" type="text" v-model="fontSize" size="3">
-        </div>
-        <div style="height:20px;"></div>
-      </div>
-
-      <div class="split-container">
-        <div class="bg-button">
-          <button class="bg-button" v-on="click: incText">
-            <span class="plusminus"> + </span>
-          </button>
-        </div>
-        <div>
-          <span class="small-grey-label">Increase</span>
-        </div>
-      </div>
-    </div> <!-- end flexrow -->
-
-    <hr>
-
-    <!-- indentation area -->
-    <div class="row-container">
-      <div class="settings-subhead">Indentation amount</div>
-    </div>
-
-    <div class="row-container">
-      <div class="split-container">
-        <div class="bg-button">
-          <button class="bg-button" v-on="click: decTabs">
-            <span class="plusminus"> - </span>
-          </button>
-        </div>
-        <div>
-          <span class="small-grey-label">Decrease</span>
-        </div>
-      </div>
-
-      <div class="split-container">
-        <div class="input-rect">
-          <!-- <input class="input-field" id="textAdjustInput" type="text" v-model="fontSize" size="3"> -->
-          <input id="tabSize" class="input-field noselect" type="text" v-model="tabSize" size="3" v-on="change: updateTabSize">
-
-        </div>
-        <div style="height:20px;"></div>
-      </div>
-
-      <div class="split-container">
-        <div class="bg-button">
-          <button class="bg-button" v-on="click: incTabs">
-            <span class="plusminus"> + </span>
-          </button>
-        </div>
-        <div>
-          <span class="small-grey-label">Increase</span>
-        </div>
-      </div>
-
-      <div class="split-container hiddenRadio">
-        <input type="radio" name="tabType" value="spaces" id="tabTypeS" v-model="tabType">
-        <label class="text-option fade" for="tabTypeS">Spaces</label>
-
-        <input type="radio" name="tabType" value="tabs" id="tabTypeT" v-model="tabType">
-        <label class="text-option fade" for="tabTypeT">Tabs</label>
+      <div id="close" v-on:click="$root.toggleSettingsPane()">
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="x" x="0" y="0" viewBox="111.98 169.64 388.04 407.06" enable-background="new 111.982048 169.6423035 388.0419922 407.0557861" xml:space="preserve"><path d="M326.08 360.51L392.7 293.88c6.42-6.42 6.42-16.81 0-23.23 -6.42-6.42-16.81-6.42-23.23 0l-66.63 66.63 -66.63-66.63c-6.42-6.42-16.81-6.42-23.23 0s-6.42 16.81 0 23.23l66.63 66.63 -66.63 66.63c-6.42 6.42-6.42 16.81 0 23.23 3.21 3.21 7.41 4.81 11.61 4.81 4.2 0 8.41-1.6 11.61-4.81l66.63-66.63 66.63 66.63c3.21 3.21 7.41 4.81 11.61 4.81 4.2 0 8.41-1.6 11.61-4.81 6.42-6.42 6.42-16.81 0-23.23L326.08 360.51z" ></svg>
       </div>
 
     </div>
-    <!-- end indentation area -->
 
-    <!-- run in new window -->
-    <hr>
-    <div class="row-container">
-      <div class="settings-subhead">Run in new window</div>
+    <div class="optionsZone">
+
+      <!-- <img id="textAdjust" src="/images/textAdjust.svg"> -->
+      <div class="row-container">
+        <div class="settings-subhead">Text size</div>
+      </div>
+
+      <div class="row-container">
+        <div class="split-container">
+          <div class="bg-button">
+            <button class="bg-button" v-on:click=" decText">
+              <span class="plusminus"> - </span>
+            </button>
+          </div>
+          <div>
+            <span class="small-grey-label">Decrease</span>
+          </div>
+        </div>
+
+        <div class="split-container">
+          <div class="input-rect">
+            <input class="input-field noselect" id="textAdjustInput" type="text" v-model="settings.fontSize" size="3">
+          </div>
+          <div style="height:20px;"></div>
+        </div>
+
+        <div class="split-container">
+          <div class="bg-button">
+            <button class="bg-button" v-on:click="incText">
+              <span class="plusminus"> + </span>
+            </button>
+          </div>
+          <div>
+            <span class="small-grey-label">Increase</span>
+          </div>
+        </div>
+      </div> <!-- end flexrow -->
+
+      <hr>
+
+      <!-- indentation area -->
+      <div class="row-container">
+        <div class="settings-subhead">Indentation amount</div>
+      </div>
+
+      <div class="row-container">
+        <div class="split-container">
+          <div class="bg-button">
+            <button class="bg-button" v-on:click="decTabs">
+              <span class="plusminus"> - </span>
+            </button>
+          </div>
+          <div>
+            <span class="small-grey-label">Decrease</span>
+          </div>
+        </div>
+
+        <div class="split-container">
+          <div class="input-rect">
+            <!-- <input class="input-field" id="textAdjustInput" type="text" v-model="fontSize" size="3"> -->
+            <input id="tabSize" class="input-field noselect" type="text" v-model="settings.tabSize" size="3">
+
+          </div>
+          <div style="height:20px;"></div>
+        </div>
+
+        <div class="split-container">
+          <div class="bg-button">
+            <button class="bg-button" v-on:click="incTabs">
+              <span class="plusminus"> + </span>
+            </button>
+          </div>
+          <div>
+            <span class="small-grey-label">Increase</span>
+          </div>
+        </div>
+
+        <div class="split-container hiddenRadio">
+          <input type="radio" name="tabType" value="spaces" id="tabTypeS" v-model="settings.tabType">
+          <label class="text-option fade" for="tabTypeS">Spaces</label>
+
+          <input type="radio" name="tabType" value="tabs" id="tabTypeT" v-model="settings.tabType">
+          <label class="text-option fade" for="tabTypeT">Tabs</label>
+        </div>
+
+      </div>
+      <!-- end indentation area -->
+
+      <!-- run in new window -->
+      <hr>
+      <div class="row-container">
+        <div class="settings-subhead">Run in new window</div>
+      </div>
+      <div class="row-container">
+        <span class="text-option hiddenCheckbox">
+          <input id="runInNewWindow" type="checkbox" v-model="runInNewWindow">
+          <label v-on:click="toggleNewWindowSetting" class="text-option fade" for="!settings.runInFrame">On</label>
+        </span>
+
+        <span class="text-option hiddenCheckbox">
+          <input id="runInFrame" type="checkbox" v-model="settings.runInFrame">
+          <label v-on:click="toggleNewWindowSetting" class="text-option fade" for="settings.runInFrame">Off</label>
+        </span>
+      </div>
+
+      <!-- show sidebar -->
+      <hr>
+      <div class="row-container">
+        <div class="settings-subhead">Show sidebar</div>
+      </div>
+      <div class="row-container">
+        <span class="text-option hiddenCheckbox">
+          <input id="showSidebar" type="checkbox" v-model="settings.showSidebar">
+          <label class="text-option fade" for="showSidebar">On</label>
+        </span>
+        <span class="text-option hiddenCheckbox">
+          <input id="hideSidebar" type="checkbox" v-model="hideSidebar">
+          <label v-on:click="$root.toggleSidebar" class="text-option fade" for="!settings.showSidebar">Off</label>
+        </span>
+      </div>
+
+      <!-- Word Wrap -->
+      <hr>
+      <div class="row-container">
+        <div class="settings-subhead">Word wrap</div>
+      </div>
+      <div class="row-container">
+        <span class="text-option hiddenCheckbox">
+          <input id="wordWrap" type="checkbox" v-model="settings.wordWrap">
+          <label v-on:click="toggleWordWrap" class="text-option fade" for="settings.wordWrap">On</label>
+        </span>
+        <span class="text-option hiddenCheckbox">
+          <input id="wordWrapOff" type="checkbox" v-model="wordWrapOff">
+          <label v-on:click="toggleWordWrap" class="text-option fade" for="!settings.wordWrap">Off</label>
+        </span>
+      </div>
+
+      <!-- theme -->
+      <hr>
+      <div class="row-container">
+        <div class="settings-subhead">Theme</div>
+      </div>
+      <div class="hiddenRadio row-container">
+        <input type="radio" name="editorTheme" value="light-theme" id="themeLight" v-model="settings.editorTheme">
+        <label class="text-option fade" for="themeLight">Light</label>
+
+        <input type="radio" name="editorTheme" value="dark-theme" id="themeDark" v-model="settings.editorTheme">
+        <label class="text-option fade" for="themeDark">Dark</label>
+      </div>
+
+  <!--     <div class="hiddenCheckbox" id="setPresentationMode">
+        <img id="browserIcon" src="/images/browser.svg">
+        <input id="presentationMode" type="checkbox" >
+        <label class="highlight fade" v-on="click: goFullScreen">Presentation</label>
+      </div> -->
+
+  <!--     <div class="hiddenCheckbox" id="setfullCanvas">
+        <img id="browserIcon" src="images/browser.svg">
+        <input id="fullCanvas" type="checkbox" v-model="fullCanvas">
+        <label class="highlight fade" for="fullCanvas">Full Canvas</label>
+      </div> -->
+
+
+  <!--     <div class="hiddenCheckbox" id="runInBrowserContainer">
+        <img id="browserIcon" src="/images/browser.svg">
+        <input type="checkbox" id="runInBrowser" v-model="runInBrowser">
+        <label class="highlight fade" for="runInBrowser">Run In-Page</label>
+      </div> -->
     </div>
-    <div class="row-container">
-      <span class="text-option hiddenCheckbox">
-        <input id="runInNewWindow" type="checkbox" v-model="runInNewWindow">
-        <label v-on="click: toggleNewWindowSetting" class="text-option fade" for="runInNewWindow">On</label>
-      </span>
-
-      <span class="text-option hiddenCheckbox">
-        <input id="runInFrame" type="checkbox" v-model="runInFrame">
-        <label v-on="click: toggleNewWindowSetting" class="text-option fade" for="runInFrame">Off</label>
-      </span>
-    </div>
-
-    <!-- show sidebar -->
-    <hr>
-    <div class="row-container">
-      <div class="settings-subhead">Show sidebar</div>
-    </div>
-    <div class="row-container">
-      <span class="text-option hiddenCheckbox">
-        <input id="showSidebar" type="checkbox" v-model="showSidebar">
-        <label class="text-option fade" for="showSidebar">On</label>
-      </span>
-      <span class="text-option hiddenCheckbox">
-        <input id="hideSidebar" type="checkbox" v-model="hideSidebar">
-        <label v-on="click: toggleSidebar" class="text-option fade" for="hideSidebar">Off</label>
-      </span>
-    </div>
-
-    <!-- Word Wrap -->
-    <hr>
-    <div class="row-container">
-      <div class="settings-subhead">Word wrap</div>
-    </div>
-    <div class="row-container">
-      <span class="text-option hiddenCheckbox">
-        <input id="wordWrap" type="checkbox" v-model="wordWrap">
-        <label class="text-option fade" for="wordWrap">On</label>
-      </span>
-      <span class="text-option hiddenCheckbox">
-        <input id="wordWrapOff" type="checkbox" v-model="wordWrapOff">
-        <label v-on="click: toggleWordWrap" class="text-option fade" for="wordWrapOff">Off</label>
-      </span>
-    </div>
-
-    <!-- theme -->
-    <hr>
-    <div class="row-container">
-      <div class="settings-subhead">Theme</div>
-    </div>
-    <div class="hiddenRadio row-container">
-      <input type="radio" name="editorTheme" value="light-theme" id="themeLight" v-model="editorTheme">
-      <label class="text-option fade" for="themeLight">Light</label>
-
-      <input type="radio" name="editorTheme" value="dark-theme" id="themeDark" v-model="editorTheme">
-      <label class="text-option fade" for="themeDark">Dark</label>
-    </div>
-
-
-
-<!--     <div class="hiddenCheckbox" id="setPresentationMode">
-      <img id="browserIcon" src="/images/browser.svg">
-      <input id="presentationMode" type="checkbox" >
-      <label class="highlight fade" v-on="click: goFullScreen">Presentation</label>
-    </div> -->
-
-<!--     <div class="hiddenCheckbox" id="setfullCanvas">
-      <img id="browserIcon" src="images/browser.svg">
-      <input id="fullCanvas" type="checkbox" v-model="fullCanvas">
-      <label class="highlight fade" for="fullCanvas">Full Canvas</label>
-    </div> -->
-
-
-<!--     <div class="hiddenCheckbox" id="runInBrowserContainer">
-      <img id="browserIcon" src="/images/browser.svg">
-      <input type="checkbox" id="runInBrowser" v-model="runInBrowser">
-      <label class="highlight fade" for="runInBrowser">Run In-Page</label>
-    </div> -->
   </div>
 </div>

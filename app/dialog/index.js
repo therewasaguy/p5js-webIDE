@@ -1,14 +1,21 @@
 
+var Vue = require('vue');
 
-module.exports = {
+module.exports = Vue.extend({
 	template: require('./template.html'),
 
-	data: {
-		projectID: '',
-		permalink: '',
-		embedCode: '',
-		callback: function() {},
-		sketchbookview: false
+	data: function() {
+		return {
+			projectID: '',
+			permalink: '',
+			embedCode: '',
+			callback: function() {},
+			sketchbookview: false
+		}
+	},
+
+	components: {
+		sketchbook: require('../sketchbook/index')
 	},
 
 	computed: {
@@ -30,10 +37,15 @@ module.exports = {
 
 	ready: function() {
 		var self = this;
+
 		this.$on('open-sketchbook', function() {
 			console.log('got the message');
 			self.openSketchbook();
 		});
+
+		this.$on('open-share-dialog', this.openShareDialog);
+		this.$on('prompt-rename', this.promptRename);
+		this.$on('prompt-save-as', this.promptSaveAs);
 
 		this.container = document.getElementById('dialog-container');
 		this.container.classList.add('hidden');
@@ -152,4 +164,4 @@ module.exports = {
 		}
 	}
 
-};
+});

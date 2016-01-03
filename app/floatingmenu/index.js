@@ -1,4 +1,6 @@
-module.exports = {
+var Vue = require('vue');
+
+module.exports = Vue.extend({
 	template: require('./template.html'),
 
 	computed: {
@@ -13,11 +15,7 @@ module.exports = {
 		$('#floating-menu').draggable({ cancel: ".prevent-drag"} );
 	},
 
-	data: {
-		
-	},
-
 	methods: {
 	}
 
-};
+});

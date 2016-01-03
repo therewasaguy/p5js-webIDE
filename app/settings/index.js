@@ -1,32 +1,42 @@
 /**
  *  Settings
  */
+var Vue = require('vue');
 
-module.exports = {
+module.exports = Vue.extend({
 	template: require('./template.html'),
 
-	data: {
-		tabSizeDisplay: 1
-	},
+	// two-way data binding
+	props: ['settings'],
 
 	ready: function() {
 		var self = this;
-
-		if (parseInt(self.tabSize) < 1) {
-			self.tabSize = 1;
-		}
-		self.tabSizeDisplay = self.tabSize;
 	},
 
 	computed: {
-		hideSidebar: function() {
-			return !this.showSidebar;
+		hideSidebar: {
+			get: function() {
+				return !this.settings.showSidebar;
+			},
+			set: function() {
+				this.settings.showSidebar = !this.settings.showSidebar;
+			}
 		},
-		runInNewWindow: function() {
-			return !this.runInFrame;
+		runInNewWindow: {
+			get: function() {
+				return !this.settings.runInFrame;
+			},
+			set: function() {
+				this.settings.runInFrame = !this.settings.runInFrame;
+			}
 		},
-		wordWrapOff: function() {
-			return !this.wordWrap;
+		wordWrapOff: {
+			get: function() {
+				return !this.settings.wordWrap;
+			},
+			set: function() {
+				this.settings.wordWrap = !this.settings.wordWrap;
+			}
 		},
 		tabSizeDisplay: function() {
 			return this.tabSize;
@@ -34,11 +44,6 @@ module.exports = {
 	},
 
 	methods: {
-		updateTabSize: function(e) {
-			var parsed = parseInt(e.target.value);
-			this.tabSize = parsed >= 1 ? parsed : 1;
-			this.tabSizeDisplay = this.tabSize;
-		},
 		incText: function(e) {
 			this.$root.settings.fontSize++;
 		},
@@ -57,16 +62,13 @@ module.exports = {
 				this.$root.settings.tabSize--;
 			}
 		},
-
 		toggleWordWrap: function() {
-			this.wordWrap = !this.wordWrap;
+			this.settings.wordWrap = !this.settings.wordWrap;
 		},
-
 		toggleNewWindowSetting: function(e) {
+			this.settings.runInFrame = !this.settings.runInFrame;
 			this.$root.stop();
-			this.$root.settings.runInFrame = !this.$root.settings.runInFrame;
 		},
-
 		themeChanged: function() {
 			var theme = this.editorTheme;
 			console.log(theme);
@@ -74,4 +76,4 @@ module.exports = {
 
 	}
 
-};
+});

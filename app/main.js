@@ -19,6 +19,8 @@ var modes = {
   p5web: require('./modes/p5/p5-web-mode')
 };
 
+// extend Vue with custom components
+
 Vue.config.debug = true;
 Vue.config.silent = true;
 
@@ -39,42 +41,48 @@ var appConfig = {
 		sidebar: require('./sidebar/index'),
 		sketchframe: require('./sketchframe/index'),
 		debug: require('./debug/index'),
-		menu: require('./menu/index'),
-		floatingMenu: require('./floatingmenu/index'),
-		dialog: require('./dialog/index'),
+		pmenu: require('./menu/index'),
+		floatingmenu: require('./floatingmenu/index'),
+		pdialog: require('./dialog/index'),
 		sketchbook: require('./sketchbook/index')
 	},
 
-	data: {
-		shouldLoadExistingProject: false, // if url points to an existing project
-		settings: {},
-		showSettings: false,
-		showFilemenu: false,
-		tabs: [],
-		files: [],
-		running: false,
-		fileTypes: ['txt', 'html', 'css', 'js', 'json', 'scss', 'xml', 'csv', 'less'],
-		currentFile: null,
-		currentProject: null,
-		currentUser: null,
+	data: function() {
+		return {
+			shouldLoadExistingProject: false, // if url points to an existing project
+			settings: {},
+			showSettings: false,
+			showFilemenu: false,
+			tabs: [],
+			files: [],
+			running: false,
+			fileTypes: ['txt', 'html', 'css', 'js', 'json', 'scss', 'xml', 'csv', 'less'],
+			currentFile: null,
+			currentProject: null,
+			currentUser: null,
 
-		// redundant, but helps watch computed userOwnsProject property
-		currentUserID: null,
-		currentProjectOwnerID: null,
+			// redundant, but helps watch computed userOwnsProject property
+			currentUserID: null,
+			currentProjectOwnerID: null,
 
-		recentProjects: [],
-		examples: [],
-		editorHidden: false,
-		newWindowOpen: -1
+			recentProjects: [],
+			examples: [],
+			editorHidden: false,
+			newWindowOpen: -1
+		}
 	},
 
 	// maybe not necessary since it's already in data
 	running: false,
 
 	computed: {
-
-		projectName: function() {
-			return this.currentProject.name;
+		projectName: {
+			get: function() {
+				return this.currentProject != undefined ? this.currentProject.name : '';
+			},
+			set: function(newVal) {
+				this.currentProject.name = newVal;
+			}
 		},
 
 		orientation: function() {
@@ -289,7 +297,7 @@ var appConfig = {
 						self.recentProjects = self.findRecentUserProjects(self.currentUser);
 
 						// set toast message
-						self.$.menu.setToastMsg('Welcome back, ' + username);
+						self.$broadcast('toast-msg', 'Welcome back, ' + username);
 					}
 
 					localStorage.setItem('user', JSON.stringify(self.currentUser));
@@ -406,36 +414,42 @@ var appConfig = {
 		renameProject: function() {
 			var self = this;
 
-			// prompt dialog for new name, then update name
-			self.$.dialog.promptRename( function(vars) {
+			var callback = function(vars) {
 				var newName = vars.newName;
-				self.currentProject.name = newName;
+				self.projectName = newName;
 
 				// update project name in local storage
 				self.updateProjectInLocalStorage();
-			});
+			};
+
+			// prompt dialog for new name, then update name
+			self.$broadcast('prompt-rename', callback);
 		},
 
 		closeProject: function() {
 			var proj = this.currentProject;
-			var self = this;
-			var filesToClose = [];
-			this.editSessions = [];
+			if (proj != undefined) {
 
-			// populate the array of filesToClose
-			self.tabs.forEach(function(tab) {
-				var fileName = tab.name;
-				var fileObj = proj.findFile(fileName);
-				filesToClose.push(fileObj);
-			});
+				var self = this;
+				var filesToClose = [];
+				this.editSessions = [];
 
-			// close the files' tabs
-			filesToClose.forEach(function(fileObj) {
-				self.closeFile(fileObj.name);
-			});
+				// populate the array of filesToClose
+				self.tabs.forEach(function(tab) {
+					var fileName = tab.name;
+					var fileObj = proj.findFile(fileName);
+					filesToClose.push(fileObj);
+				});
 
-			proj.fileObjects = [];
-			this.stop();
+				// close the files' tabs
+				filesToClose.forEach(function(fileObj) {
+					self.closeFile(fileObj.name);
+				});
+
+
+				proj.fileObjects = [];
+				this.stop();
+			}
 		},
 
 		openProject: function(projObj, gistData) {
@@ -487,12 +501,14 @@ var appConfig = {
 		saveAs: function() {
 			var self = this;
 
-			// prompt dialog for new name, then saveToCloud
-			self.$.dialog.promptSaveAs( function(vars) {
+			var callback = function(vars) {
 				var newName = vars.newName;
-				self.currentProject.name = newName;
+				self.projectName = newName;
 				self.saveToCloud('saveAs');
-			});
+			};
+
+			// prompt dialog for new name, then saveToCloud
+			self.$broadcast('prompt-save-as', callback);
 		},
 
 		/**
@@ -505,7 +521,7 @@ var appConfig = {
 		saveToCloud: function(flag) {
 			console.log('save to cloud', flag);
 
-			this.$.menu.setToastMsg('Saving...', true);
+			this.$broadcast('toast-msg', 'Welcome back, ' + username, true);
 
 			// var projectData = JSON.parse(localStorage.latestProject);
 			var projectData = this.currentProject;
@@ -553,7 +569,7 @@ var appConfig = {
 				AJAX.saveProject(postData, this);
 			}
 			else {
-				this.$.menu.setToastMsg('Project is already up to date');
+				this.$broadcast('toast-msg', 'Project is already up to date');
 			}
 		},
 
@@ -640,7 +656,7 @@ var appConfig = {
 		},
 
 		clearEditor: function() {
-			this.$.editor.clearEditor();
+			this.$broadcast('clear-editor');
 		},
 
 		hideEditor: function() {
@@ -678,7 +694,7 @@ var appConfig = {
 					}
 
 					if (typeof (sketchContents) == 'undefined') {
-						self.$.menu.setToastMsg('Error loading sketch ' + name);
+						self.$broadcast('Error loading sketch ' + name);
 					} else {
 
 						// create a new project with default files
@@ -707,7 +723,7 @@ var appConfig = {
 		},
 
 		openShareDialog: function() {
-			this.$.dialog.openShareDialog();
+			this.$broadcast('open-share-dialog');
 		},
 
 		/**

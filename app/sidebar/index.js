@@ -1,21 +1,22 @@
 /**
  *  sidebar
  */
+var Vue = require('vue');
 
-module.exports = {
-	template: require('./sidebar.html'),
-
-	data: {
-		sidebarWidth: undefined
-	},
-
-	components: {
-
-		file: {
+var PFile = Vue.extend({
 			template: require('./file.html'),
+
+			props: ['data'],
+
 			computed: {
+				name : function() {
+					return this.data.name;
+				},
+				ext: function() {
+					return this.data.ext;
+				},
 				hidden: function() {
-					return this.name[0] === '.';
+					return this.name && this.name[0] === '.';
 				},
 				icon: function() {
 					if (this.ext.match(/(png|jpg|gif|svg|jpeg)$/i)) return 'image';
@@ -28,16 +29,39 @@ module.exports = {
 					return c;
 				}
 			},
-
 			methods: {
-				popupMenu: function(target, event) {
-					popupMenu.apply(this, arguments);
+				openFile: function(item) {
+					this.$root.openFile(item);
 				}
+				// popupMenu: function(target, event) {
+				// 	popupMenu.apply(this, arguments);
+				// }
+			},
+			ready: function() {
 			}
+		});
+
+module.exports = Vue.extend({
+	template: require('./sidebar.html'),
+
+	props: ['files'],
+
+	data: function() {
+		return {
+			sidebarWidth: undefined
 		}
 	},
 
+	components: {
+		pfile: PFile
+	},
+
 	computed: {
+
+		fileObjects: function() {
+			return this.$root.currentProject != undefined ? this.$root.currentProject.fileObjects : [];
+		},
+
 		className: function() {
 			var container = this.container || $('#sidebar-container');
 
@@ -76,6 +100,6 @@ module.exports = {
 		// }
 	//}
 
-};
+});
 
 

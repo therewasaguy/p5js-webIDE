@@ -29,15 +29,22 @@ var modes = {
   ".txt": "text"
 };
 
-module.exports = {
+var Vue = require('vue');
+
+
+module.exports = Vue.extend({
 	template: require('./template.html'),
 
-	data: {
-		newProject: true
+	data: function() {
+		return {
+			newProject: true
+		}
 	},
 
 	computed: {
-
+		fontSize: function() {
+			return this.$root.settings.fontSize + 'px';
+		}
 		// this is not used...
 		// isVisible: function() {
 		// 	return this.$root.editorHidden;
@@ -200,4 +207,4 @@ module.exports = {
 
 	}
 
-};
+});

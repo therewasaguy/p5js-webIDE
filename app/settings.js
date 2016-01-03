@@ -2,16 +2,13 @@ var defaults = {
   fontSize: 18,
   tabSize: 2,
   tabType: "spaces",
-  theme: "tomorrow",
   consoleOrientation: "horizontal",
   showSidebar: false,
   showEditor: true,
   wordWrap: false,
   runInFrame: false, // determines whether to run in iframe, or in newWindow
-  editorTheme: 'dark-theme',
-
+  editorTheme: 'light-theme',
   fullCanvas: false, // automatically make canvas full width/height of screen
-
 };
 
 var userSettings = {};

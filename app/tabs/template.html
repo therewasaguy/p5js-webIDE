@@ -1,14 +1,14 @@
   <div id="tabs"> 
     <ul id="tab-list"> 
-      <li v-repeat="tabs | orderBy 'name'" v-component="tab"></li>
+      <ptab v-for="tab in tabs | orderBy 'name'" :tab="tab" ></ptab>
 
-      <li id="add" class="{{theme}}">
-        <a v-on="click: $root.newFile()" class="{{theme}}">+</a>
+      <li id="add" class="{{$root.theme}}">
+        <a v-on:click="$root.newFile()" class="{{$root.theme}}">+</a>
       </li>
 
       <li id="minimize">
         <!-- <div> -->
-          <a v-on="click: $root.hideEditor()"> <span class="oi show-hide-editor" data-glyph="chevron-top" title="show/hide" aria-hidden="true"></span></a>
+          <a v-on:click="$root.hideEditor()"> <span class="oi show-hide-editor" data-glyph="chevron-top" title="show/hide" aria-hidden="true"></span></a>
         <!-- </div> -->
       </li>
 

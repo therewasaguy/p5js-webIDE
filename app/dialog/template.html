@@ -1,6 +1,6 @@
 
 <!-- share dialog -->
-
+<div id="dialog-container">
 	<div class="dialog">
 
 		<div id="share-view" class="dview">
@@ -8,7 +8,7 @@
 			<div id="dialog-share" class="dialog-hidden">
 				<p class="dialog-title">Copy a link to share...</p>
 
-<!-- 				<p id="dialog-content">
+	<!-- 				<p id="dialog-content">
 				</p> -->
 
 				<label>embed code</label>
@@ -35,10 +35,11 @@
 			<p id="save-as-title" class="dialog-title"></p>
 			<div>
 				<label>Project Name: </label>
-				<input type="text" id="newName" class="dialog-input" value="{{currentProject.name}}">
+				<input type="text" id="newName" class="dialog-input" value="{{projectName}}">
 			</div>
 
-			<div>
+<!--
+ 			<div>
 				<label>Tags (comma separated): </label>
 				<input type="text" id="tags" class="dialog-input" value="{{currentProject.tags}}">
 			</div>
@@ -47,17 +48,17 @@
 				<label>Public </label>
 				<input type="checkbox" id="public" class="dialog-input" checked="{{currentProject.public}}">
 			</div>
+-->
 		</div>
 
 		<div id="sketchbook-view" class="dview">
-			<div v-component="sketchbook"></div>
+			<sketchbook></sketchbook>
 		</div>
 
 		<div id="dialog-button-container">
-			<button id="dialog-left" class="dialog-button" v-on="click: accept">OK</button>
-			<button id="dialog-right" class="dialog-button" v-on="click: cancel">Cancel</button>
+			<button id="dialog-left" class="dialog-button" v-on:click="accept">OK</button>
+			<button id="dialog-right" class="dialog-button" v-on:click="cancel">Cancel</button>
 		</div>
 
 	</div>
-
 </div>
