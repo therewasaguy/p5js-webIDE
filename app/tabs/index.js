@@ -2,20 +2,21 @@
  *  tabs
  */
 var _ = require('underscore');
+var Vue = require('vue');
 
-module.exports = {
-	template: require('./template.html'),
+var PTab = Vue.extend({
 
-	components: {
-		tab: {
-			template: require('./tab.html'),
+	// two way binding
+	props: ['tab'],
+
+	template: require('./tab.html'),
 			computed: {
 				hidden: function() {
-					return this.name[0] === '.'
+					return this.tab.name[0] === '.'
 				},
 				className: function() {
 					var c = '';
-					if (this.$root.currentFile == this.file) {
+					if (this.$root.currentFile == this.tab.file) {
 						c += 'selected';
 					}
 
@@ -24,12 +25,18 @@ module.exports = {
 
 					return c;
 				}
-			},
-
-			methods: {
-
 			}
-		}
+		});
+
+
+module.exports = Vue.extend({
+	template: require('./template.html'),
+
+	// two-way binding
+	props: ['tabs'],
+
+	components: {
+		ptab: PTab
 	},
 
 	methods: {
@@ -94,4 +101,4 @@ module.exports = {
 		this.$on('add-tab', this.addTab);
 		this.$on('close-tab', this.closeTab);
 	}
-};
+});

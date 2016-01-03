@@ -2,7 +2,9 @@
  *  client debug console
  */
 
-module.exports = {
+var Vue = require('vue');
+
+module.exports = Vue.extend({
 	template: require('./template.html'),
 
 	computed: {
@@ -25,6 +27,8 @@ module.exports = {
 
 	methods: {
 		editorReceiveMsg: function(e) {
+			console.log(e);
+			return;
 			var msg = JSON.parse(e.data);
 
 			if (msg.type === 'error') {
@@ -84,4 +88,4 @@ module.exports = {
 
 	}
 
-};
+});

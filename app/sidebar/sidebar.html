@@ -1,23 +1,26 @@
-<div id="sidebar-container" class = "{{className}}"  v-on="contextmenu: popupMenu(this, $event)">
+<div id="side-container">
+	<div id="sidebar-container" class = "{{className}}">
+
+	<!-- v-on="contextmenu: popupMenu(this, $event)"> -->
 
 
-	<div id="sidebar">
-		<div id="filetree">
-			<div id="sidebarButton" class="{{sidebarIconClass}}" v-on="click: this.$root.toggleSidebar()">
-				<label style="display: inline-flex;">
-					<!-- <img  id="sidebarIcon" class="{{sidebarIconClass}}" style="cursor: pointer;"> -->
- 
-				</label>
+		<div id="sidebar">
+			<div id="filetree">
+				<div id="sidebarButton" class="{{sidebarIconClass}}" v-on:click="this.$root.toggleSidebar()">
+					<label style="display: inline-flex;">
+						<!-- <img  id="sidebarIcon" class="{{sidebarIconClass}}" style="cursor: pointer;"> -->
+	 
+					</label>
+				</div>
+				<ul>
+					<pfile v-for="f in fileObjects | orderBy 'name'" :data="f"></pfile>
+				</ul>
 			</div>
-			<ul>
-				<li v-repeat="currentProject.fileObjects | orderBy 'name'" v-component="file"></li>
-			</ul>
 		</div>
-	</div>
 
 
 	</div>
-
+</div>
 
 	<!-- <div id="sidebar-drag" v-on="mousedown: startDrag"></div>
 </div> -->

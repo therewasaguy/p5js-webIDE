@@ -6,42 +6,40 @@
 		<!-- mobile recommendation -->
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<title>{{currentProject.name}}</title>
+		<title>we.P5</title>
 		<link rel="stylesheet" href="/open-iconic/font/css/open-iconic.min.css">
 		<link rel="stylesheet" href="/css/main.css">
 	</head>
 
 	<body class="{{orientation}} {{theme}}">
 
-	<div v-component="dialog" v-ref="dialog" id="dialog-container"></div>
+	<pdialog v-ref:dialog></pdialog>
 
-	<div v-component="menu" class="{{className}}" v-ref="menu" id="menu-container"></div>
+	<pmenu class="{{className}}" :current-user="currentUser" :logged-in="authenticated" id="menu-container"></pmenu>
 
-	<div v-component="floatingMenu" id="floating-menu" class="ui-widget-content collapsed {{theme}} {{floatingMenuClass}}"></div>
+	<floatingmenu></floatingmenu>
 
 		<div class="loading-bar {{isLoading}}">
 			Loading Sketch...
 		</div>
 
 		<div id="main-container" class="{{isLoading}}">
-			<div v-component="sketchframe" v-ref="sketchframe" id="sketchframe-container"></div>
+			<sketchframe v-ref:sketchframe id="sketchframe-container"></sketchframe>
 
 			<div id="body-row-container">
 
-				<!-- <div v-component="filemenu" v-show="showFilemenu" id="filemenu-container"></div> -->
-
-				<div v-component="sidebar" v-with="files : files" id="side-container"></div>
+				<sidebar :files="files"></sidebar>
 				<div id="editor-container" class="{{editorContainerClass}}">
-					<div v-component="tabs" v-ref="tabs" id="tab-container"></div>
-					<div v-component="editor" v-ref="editor" id="main">
-					</div>
+					<tabs :tabs="tabs" v-ref:tabs id="tab-container"></tabs>
+					<editor v-ref:editor id="main">
+					</editor>
 				</div>
 			</div>
 
-			<div v-component="settings" v-with="settings" v-show="showSettings" id="settingsContainer"></div>
+			<settings :settings="settings" v-show="showSettings"></settings>
 
 			<div id="footer-row-container" style="display:flex; flex-direction:row;">
-				<div v-component="debug" v-ref="debug" id="debugContainer"></div>
+				<debug v-ref:debug id="debugContainer"></debug>
 			</div>
 		</div>
 

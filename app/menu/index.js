@@ -2,9 +2,12 @@ var inSub = false;
 
 var $ = require('jquery');
 var timeago = require('timeago');
+var Vue = require('vue');
 
-module.exports = {
+module.exports = Vue.extend({
 	template: require('./template.html'),
+
+	props: ['currentUser', 'loggedIn'],
 
 	// ref of most recently opened window, if there is one
 	newWindowOpen: -1,
@@ -18,9 +21,9 @@ module.exports = {
 			}
 			// return this.$root.running ? 'sketchrunning' : 'sketchstopped';
 		},
-		loggedIn: function() {
-			return this.$root.currentUser && this.$root.currentUser.authenticated;
-		},
+		// currentUserID : function() {
+		// 	return this.currentUser > 0 ? this.currentUser._id : false;
+		// },
 		newWindowClass: function() {
 			if (this.$root.settings.runInFrame) {
 				return '';
@@ -32,15 +35,26 @@ module.exports = {
 	},
 
 	ready: function() {
+		window._menu = this;
 		this.toastSpan = document.getElementById('toast-msg');
 		this.setToastMsg('Hello, welcome to p5!');
+
+		this.$on('toast-msg', this.setToastMsg);
 	},
 
-	data: {
-		toastMsg: '',
-		openDropdownClass: 'hidden',
-		userDropdownClass: 'hidden',
-		saveDropdownClass: 'hidden'
+	data: function() {
+		return {
+			toastMsg: '',
+			openDropdownClass: 'hidden',
+			userDropdownClass: 'hidden',
+			saveDropdownClass: 'hidden'
+		}
+	},
+
+	computed: {
+		userOwnsProject: function() {
+			return this.$root.userOwnsProject;
+		}
 	},
 
 	methods: {
@@ -49,7 +63,6 @@ module.exports = {
 		},
 
 		openSketchbook: function() {
-			console.log('open sketchbook');
 			this.$dispatch('open-sketchbook');
 		},
 
@@ -83,8 +96,12 @@ module.exports = {
 
 
 		selectRecentProject: function(e) {
-			var projectID = e.$event.target.getAttribute('data-projectid');
+			var projectID = e.target.getAttribute('data-projectid');
 			this.$root.loadProjectByOurID(projectID);
+		},
+
+		loadExample: function(item) {
+			this.$root.loadExample(item);
 		},
 
 		// toggle setting to open the current code in a new window
@@ -100,10 +117,8 @@ module.exports = {
 
 		openOpenDropdown: function(e) {
 			this.openDropdownClass = '';
-
 			$('span.timeago').timeago();
 			$('abbr.timeago').timeago();
-			console.log('timeago open dropdown');
 		},
 
 		closeOpenDropdown: function(e) {
@@ -139,4 +154,4 @@ module.exports = {
 
 	}
 
-};
+});

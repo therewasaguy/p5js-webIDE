@@ -20,7 +20,9 @@ this.hasAttribute(b+"allowfullscreen")},set:function(a){var c=b+"AllowFullscreen
 	 	- clean up this code!
  */
 
-module.exports = {
+var Vue = require('vue');
+
+module.exports = Vue.extend({
 	template: require('./template.html'),
 
 	computed: {
@@ -123,7 +125,7 @@ module.exports = {
 
 	}
 
-};
+});
 
 
 /**
