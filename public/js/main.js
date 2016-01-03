@@ -1437,8 +1437,11 @@ var appConfig = {
 
 		isLoading: function() {
 			return this.$root.shouldLoadExistingProject ? 'content-loading' : '';
-		}
+		},
 
+		authenticated: function() {
+			return this.currentUser && this.currentUser.authenticated;
+		},
 	},
 
 	created: function() {
@@ -1509,7 +1512,6 @@ var appConfig = {
 
 		this.$on('updateCurrentProject', this.updateCurrentProject);
 		this.$on('open-sketchbook', this.openSketchbook);
-		this.$on('settings-view-changed', this.broadcastSettingsChanged);
 		this.updatePageHash();
 
 	},
@@ -1530,14 +1532,11 @@ var appConfig = {
 
 		setupSettings: function() {
 			this.settings = settings.load();
-
-			// this.$on('settings-changed', function(value) {
-			// 	this.$broadcast('settings-changed');
-			// });
+			this.$on('settings-view-changed', this.broadcastSettingsChanged);
 		},
 
+		// when settings are updated via settings view
 		broadcastSettingsChanged: function(settings) {
-			console.log('yo');
 			this.$broadcast('settings-changed', settings);
 		},
 
@@ -2181,6 +2180,8 @@ var Vue = require('vue');
 module.exports = Vue.extend({
 	template: require('./template.html'),
 
+	props: ['currentUser', 'loggedIn'],
+
 	// ref of most recently opened window, if there is one
 	newWindowOpen: -1,
 
@@ -2193,20 +2194,9 @@ module.exports = Vue.extend({
 			}
 			// return this.$root.running ? 'sketchrunning' : 'sketchstopped';
 		},
-		loggedIn: function() {
-			return this.$root.currentUser && this.$root.currentUser.authenticated;
-		},
-		currentUser : function() {
-			if (this.$root.currentUser) {
-				return this.$root.currentUser;
-			} else {
-				return {};
-			}
-
-		},
-		currentUserID : function() {
-			return this.currentUser._id;
-		},
+		// currentUserID : function() {
+		// 	return this.currentUser > 0 ? this.currentUser._id : false;
+		// },
 		newWindowClass: function() {
 			if (this.$root.settings.runInFrame) {
 				return '';
@@ -2218,6 +2208,7 @@ module.exports = Vue.extend({
 	},
 
 	ready: function() {
+		window._menu = this;
 		this.toastSpan = document.getElementById('toast-msg');
 		this.setToastMsg('Hello, welcome to p5!');
 
@@ -2230,6 +2221,12 @@ module.exports = Vue.extend({
 			openDropdownClass: 'hidden',
 			userDropdownClass: 'hidden',
 			saveDropdownClass: 'hidden'
+		}
+	},
+
+	computed: {
+		userOwnsProject: function() {
+			return this.$root.userOwnsProject;
 		}
 	},
 
@@ -2293,10 +2290,8 @@ module.exports = Vue.extend({
 
 		openOpenDropdown: function(e) {
 			this.openDropdownClass = '';
-
 			$('span.timeago').timeago();
 			$('abbr.timeago').timeago();
-			console.log('timeago open dropdown');
 		},
 
 		closeOpenDropdown: function(e) {
@@ -2334,7 +2329,7 @@ module.exports = Vue.extend({
 
 });
 },{"./template.html":17,"jquery":54,"timeago":100,"vue":102}],17:[function(require,module,exports){
-module.exports = '<nav class="{{$root.theme}}">\n\n  <div class="top-nav-left">\n    <ul>\n      <li>\n        <a v-on:click="$root.newProject()">New</a>\n      </li>\n\n      <li class="dropdown-menu" v-on:mouseenter="openOpenDropdown" v-on:mouseleave:="closeOpenDropdown"><a>Open</a>\n\n        <div class="dropdown-content {{openDropdownClass}}" v-on:mouseleave=" closeOpenDropdown">\n          <!-- v-on="mouseenter: prevDef, mouseleave: clearDef" -->\n          <div class="has-submenu"><a>Examples</a>\n            <div class="submenu-container">\n              <ul class="submenu" style="display:none;" >\n                  <li v-for="ex in $root.examples" class="filemenu" data-path="{{ex.path}}" v-on:click="loadExample(ex)">\n                    <span >{{ex.folder}} - {{ex.name}}</span>\n                  </li>\n              </ul>\n            </div>\n          </div>\n\n          <div class="has-submenu"><a>Recent</a>\n            <div class="submenu-container">\n              <ul class="submenu" style="display:none;">\n                <li v-for="proj in $root.recentProjects">\n                  <span data-projectid="{{proj.id}}"  v-on:click="selectRecentProject">\n                    <span data-projectid="{{proj.id}}">{{proj.name}}</span> &nbsp;\n                      <span class="timeago" data-projectid="{{proj.id}}" title="{{proj.dateModified}}">{{proj.dateModified}}</span>\n                  </span>\n                </li>\n              </ul>\n            </div>\n          </div>\n\n          <div><a v-on:click="openSketchbook">Sketchbook</a></div>\n\n          <div><a >Upload</a></div>\n\n        </div>\n      </li>\n\n      <li class="dropdown-menu" v-on:mouseenter="openSaveDropdown" v-on:mouseleave="closeSaveDropdown"><a >Save</a>\n        <span class="dropdown-content {{saveDropdownClass}}" v-on:mouseleave=" closeSaveDropdown">\n\n          <!-- if user owns project... -->\n          <span v-if="userOwnsProject" ><a v-on:click="$root.saveToCloud()">Save</a></span>\n          <span v-if="userOwnsProject" ><a v-on:click="$root.saveAs()">Save As</a></span>\n\n          <!-- if user does not own project... -->\n          <span v-if="!userOwnsProject">\n\n            <a v-if="currentUserID" v-on:click="$root.saveToCloud(currentUser._id)">Save as {{currentUser.username}}</a>\n            <a v-if="!currentUserID" v-on:click="$root.saveToCloud(\'anon\')">Save as Anonymous User (not logged in)</a>\n\n          </span>\n\n\n          <span><a v-on:click="$root.downloadZip()">Download Zip</a></span>\n        </span>\n      </li>\n\n      <li>\n        <a  v-on:click="openShareDialog">Share</a>\n      </li>\n    </ul>\n    <hr>\n  </div>\n\n  <div class="top-nav-center">\n    <!-- display a message -->\n    <span id="toast-msg" class="hidden">{{toastMsg}}</span>\n  </div>\n\n  <div class="top-nav-right">\n    <ul>\n      <li>\n        <a>Gallery</a>\n      </li>\n\n      <!-- login / profile -->\n      <li v-if="!loggedIn" v-on:click="$root.authenticate()">\n        <a>Log in</a>\n      </li>\n\n<!--       <li v-if="loggedIn" v-on="click: $root.authenticate()">\n        <a> Hello <b>{{currentUser.username}}</b> !</a>\n      </li>\n -->\n      <li v-if="loggedIn" class="dropdown-menu" v-on:mouseenter="openUserDropdown" v-on:mouseleave="closeUserDropdown"><a> Hello <b>{{currentUser.username}}</b> !</a>\n        <span class="dropdown-content {{userDropdownClass}}" v-on:mouseleave="closeUserDropdown">\n          <span><a v-on:click="$root.logOut()">Log Out</a></span>\n        </span>\n      </li>\n\n\n    </ul>\n    <hr>\n  </div>\n\n</nav>\n';
+module.exports = '<nav class="{{$root.theme}}">\n\n  <div class="top-nav-left">\n    <ul>\n      <li>\n        <a v-on:click="$root.newProject()">New</a>\n      </li>\n\n      <li class="dropdown-menu" v-on:mouseenter="openOpenDropdown" v-on:mouseleave:="closeOpenDropdown"><a>Open</a>\n\n        <div class="dropdown-content {{openDropdownClass}}" v-on:mouseleave=" closeOpenDropdown">\n          <!-- v-on="mouseenter: prevDef, mouseleave: clearDef" -->\n          <div class="has-submenu"><a>Examples</a>\n            <div class="submenu-container">\n              <ul class="submenu" style="display:none;" >\n                  <li v-for="ex in $root.examples" class="filemenu" data-path="{{ex.path}}" v-on:click="loadExample(ex)">\n                    <span >{{ex.folder}} - {{ex.name}}</span>\n                  </li>\n              </ul>\n            </div>\n          </div>\n\n          <div class="has-submenu"><a>Recent</a>\n            <div class="submenu-container">\n              <ul class="submenu" style="display:none;">\n                <li v-for="proj in $root.recentProjects">\n                  <span data-projectid="{{proj.id}}"  v-on:click="selectRecentProject">\n                    <span data-projectid="{{proj.id}}">{{proj.name}}</span> &nbsp;\n                      <span class="timeago" data-projectid="{{proj.id}}" title="{{proj.dateModified}}">{{proj.dateModified}}</span>\n                  </span>\n                </li>\n              </ul>\n            </div>\n          </div>\n\n          <div><a v-on:click="openSketchbook">Sketchbook</a></div>\n\n          <div><a >Upload</a></div>\n\n        </div>\n      </li>\n\n      <li class="dropdown-menu" v-on:mouseenter="openSaveDropdown" v-on:mouseleave="closeSaveDropdown"><a >Save</a>\n        <span class="dropdown-content {{saveDropdownClass}}" v-on:mouseleave=" closeSaveDropdown">\n\n          <!-- if user owns project... -->\n          <span v-if="userOwnsProject" ><a v-on:click="$root.saveToCloud()">Save</a></span>\n          <span v-if="userOwnsProject" ><a v-on:click="$root.saveAs()">Save As</a></span>\n\n          <!-- if user does not own project... -->\n          <span v-if="!userOwnsProject">\n\n            <a v-if="loggedIn" v-on:click="$root.saveToCloud(currentUser._id)">Save as {{currentUser.username}}</a>\n            <a v-if="!loggedIn" v-on:click="$root.saveToCloud(\'anon\')">Save as Anonymous User (not logged in)</a>\n\n          </span>\n\n\n          <span><a v-on:click="$root.downloadZip()">Download Zip</a></span>\n        </span>\n      </li>\n\n      <li>\n        <a  v-on:click="openShareDialog">Share</a>\n      </li>\n    </ul>\n    <hr>\n  </div>\n\n  <div class="top-nav-center">\n    <!-- display a message -->\n    <span id="toast-msg" class="hidden">{{toastMsg}}</span>\n  </div>\n\n  <div class="top-nav-right">\n    <ul>\n      <li>\n        <a>Gallery</a>\n      </li>\n\n      <!-- login / profile -->\n      <li v-if="!loggedIn" v-on:click="$root.authenticate()">\n        <a>Log in</a>\n      </li>\n\n<!--       <li v-if="loggedIn" v-on="click: $root.authenticate()">\n        <a> Hello <b>{{currentUser.username}}</b> !</a>\n      </li>\n -->\n      <li v-if="loggedIn" class="dropdown-menu" v-on:mouseenter="openUserDropdown" v-on:mouseleave="closeUserDropdown"><a> Hello <b>{{currentUser.username}}</b> !</a>\n        <span class="dropdown-content {{userDropdownClass}}" v-on:mouseleave="closeUserDropdown">\n          <span><a v-on:click="$root.logOut()">Log Out</a></span>\n        </span>\n      </li>\n\n\n    </ul>\n    <hr>\n  </div>\n\n</nav>\n';
 },{}],18:[function(require,module,exports){
 var $ = require('jquery');
 var Vue = require('vue');
@@ -2772,15 +2767,6 @@ module.exports = Vue.extend({
 	props: ['settings'],
 
 	ready: function() {
-		var self = this;
-
-		// this.$watch('settings', function(value) {
-		// 	// this.$broadcast('settings-changed', value);
-		// 	console.log('settings changed');
-		// 	// this.editorHidden = !this.settings.showEditor;
-		// 	// settings.save(value);
-		// });
-
 	},
 
 	watch: {

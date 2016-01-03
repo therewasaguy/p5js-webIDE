@@ -10,15 +10,6 @@ module.exports = Vue.extend({
 	props: ['settings'],
 
 	ready: function() {
-		var self = this;
-
-		// this.$watch('settings', function(value) {
-		// 	// this.$broadcast('settings-changed', value);
-		// 	console.log('settings changed');
-		// 	// this.editorHidden = !this.settings.showEditor;
-		// 	// settings.save(value);
-		// });
-
 	},
 
 	watch: {
