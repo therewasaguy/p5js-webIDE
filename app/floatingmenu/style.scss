@@ -227,9 +227,15 @@ $light-theme-background: #f4f4f4;
     height: 18px;
     right: 48px !important;
 
-    &.hide {
-      opacity:0 !important;
-      cursor:default;
+    &.isviz {
+      opacity:0.9;
+
+      svg {
+        fill: #EC245E;
+        opacity:1.0;
+      }
+      // opacity:0 !important;
+      // cursor:default;
     }
   }
 

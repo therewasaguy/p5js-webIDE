@@ -662,6 +662,12 @@ var appConfig = {
 			this.$broadcast('clear-editor');
 		},
 
+		// toggle whether to show or hide the editor
+		toggleEditor: function() {
+			console.log('toggle editor');
+			this.editorHidden ? this.showEditor() : this.hideEditor();
+		},
+
 		hideEditor: function() {
 			this.editorHidden = true;
 			this.settings.showEditor = false;

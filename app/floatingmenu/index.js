@@ -6,8 +6,7 @@ module.exports = Vue.extend({
 	computed: {
 		showEditorClass: function() {
 			// return this.$root.editorHidden ? 'show' : 'hide';
-			return this.$root.settings.showEditor ? 'hide' : 'show';
-
+			return this.$root.settings.showEditor ? 'isviz' : 'show';
 		},
 	},
 
@@ -16,6 +15,10 @@ module.exports = Vue.extend({
 	},
 
 	methods: {
+		toggleEditor: function() {
+			console.log('toggle');
+			this.$root.toggleEditor();
+		}
 	}
 
 });
