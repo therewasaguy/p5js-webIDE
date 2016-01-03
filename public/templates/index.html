@@ -15,7 +15,7 @@
 
 	<pdialog v-ref:dialog></pdialog>
 
-	<pmenu class="{{className}}" v-ref:pmenu id="menu-container"></pmenu>
+	<pmenu class="{{className}}" :current-user="currentUser" :logged-in="authenticated" id="menu-container"></pmenu>
 
 	<floatingmenu></floatingmenu>
 

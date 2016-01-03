@@ -119,8 +119,11 @@ var appConfig = {
 
 		isLoading: function() {
 			return this.$root.shouldLoadExistingProject ? 'content-loading' : '';
-		}
+		},
 
+		authenticated: function() {
+			return this.currentUser && this.currentUser.authenticated;
+		},
 	},
 
 	created: function() {
@@ -191,7 +194,6 @@ var appConfig = {
 
 		this.$on('updateCurrentProject', this.updateCurrentProject);
 		this.$on('open-sketchbook', this.openSketchbook);
-		this.$on('settings-view-changed', this.broadcastSettingsChanged);
 		this.updatePageHash();
 
 	},
@@ -212,14 +214,11 @@ var appConfig = {
 
 		setupSettings: function() {
 			this.settings = settings.load();
-
-			// this.$on('settings-changed', function(value) {
-			// 	this.$broadcast('settings-changed');
-			// });
+			this.$on('settings-view-changed', this.broadcastSettingsChanged);
 		},
 
+		// when settings are updated via settings view
 		broadcastSettingsChanged: function(settings) {
-			console.log('yo');
 			this.$broadcast('settings-changed', settings);
 		},
 

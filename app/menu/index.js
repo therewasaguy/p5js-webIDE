@@ -7,6 +7,8 @@ var Vue = require('vue');
 module.exports = Vue.extend({
 	template: require('./template.html'),
 
+	props: ['currentUser', 'loggedIn'],
+
 	// ref of most recently opened window, if there is one
 	newWindowOpen: -1,
 
@@ -19,20 +21,9 @@ module.exports = Vue.extend({
 			}
 			// return this.$root.running ? 'sketchrunning' : 'sketchstopped';
 		},
-		loggedIn: function() {
-			return this.$root.currentUser && this.$root.currentUser.authenticated;
-		},
-		currentUser : function() {
-			if (this.$root.currentUser) {
-				return this.$root.currentUser;
-			} else {
-				return {};
-			}
-
-		},
-		currentUserID : function() {
-			return this.currentUser._id;
-		},
+		// currentUserID : function() {
+		// 	return this.currentUser > 0 ? this.currentUser._id : false;
+		// },
 		newWindowClass: function() {
 			if (this.$root.settings.runInFrame) {
 				return '';
@@ -44,6 +35,7 @@ module.exports = Vue.extend({
 	},
 
 	ready: function() {
+		window._menu = this;
 		this.toastSpan = document.getElementById('toast-msg');
 		this.setToastMsg('Hello, welcome to p5!');
 
@@ -56,6 +48,12 @@ module.exports = Vue.extend({
 			openDropdownClass: 'hidden',
 			userDropdownClass: 'hidden',
 			saveDropdownClass: 'hidden'
+		}
+	},
+
+	computed: {
+		userOwnsProject: function() {
+			return this.$root.userOwnsProject;
 		}
 	},
 
@@ -119,10 +117,8 @@ module.exports = Vue.extend({
 
 		openOpenDropdown: function(e) {
 			this.openDropdownClass = '';
-
 			$('span.timeago').timeago();
 			$('abbr.timeago').timeago();
-			console.log('timeago open dropdown');
 		},
 
 		closeOpenDropdown: function(e) {
