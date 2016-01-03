@@ -191,7 +191,7 @@ var appConfig = {
 
 		this.$on('updateCurrentProject', this.updateCurrentProject);
 		this.$on('open-sketchbook', this.openSketchbook);
-
+		this.$on('settings-view-changed', this.broadcastSettingsChanged);
 		this.updatePageHash();
 
 	},
@@ -212,11 +212,15 @@ var appConfig = {
 
 		setupSettings: function() {
 			this.settings = settings.load();
-			this.$watch('settings', function(value) {
-				this.$broadcast('settings-changed', value);
-				// this.editorHidden = !this.settings.showEditor;
-				settings.save(value);
-			});
+
+			// this.$on('settings-changed', function(value) {
+			// 	this.$broadcast('settings-changed');
+			// });
+		},
+
+		broadcastSettingsChanged: function(settings) {
+			console.log('yo');
+			this.$broadcast('settings-changed', settings);
 		},
 
 		toggleSettingsPane: function() {

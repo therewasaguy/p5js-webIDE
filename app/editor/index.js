@@ -173,6 +173,7 @@ module.exports = Vue.extend({
 		},
 
 		settingsChanged: function(settings) {
+			console.log('settings changed');
 			this.updateSettings(settings);
 		},
 

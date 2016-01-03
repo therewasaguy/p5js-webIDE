@@ -452,7 +452,7 @@ module.exports = Vue.extend({
 
 });
 },{"../sketchbook/index":29,"./template.html":5,"vue":102}],5:[function(require,module,exports){
-module.exports = '\n<!-- share dialog -->\n<div id="dialog-container">\n	<div class="dialog">\n\n		<div id="share-view" class="dview">\n			<!-- if saved, show this ..-->\n			<div id="dialog-share" class="dialog-hidden">\n				<p class="dialog-title">Copy a link to share...</p>\n\n	<!-- 				<p id="dialog-content">\n				</p> -->\n\n				<label>embed code</label>\n				<input type="text" readonly="true" value="{{embedCode}}" onclick="select()">\n\n				<label>share link</label>\n				<input type="text" readonly="true" value="{{permalink}}" onclick="select()">\n\n				<!--TO DO: add copy button\n					<input type="image" src="/images/open-iconic-master/svg/clipboard.svg" alt="Submit">\n				-->\n			</div>\n\n			<!-- if unsaved, show this -->\n			<div id="dialog-unsaved">\n				<p class="dialog-title">Unsaved Project</p>\n				<p id="dialog-content">\n					Please save your project before sharing.\n				</p>\n			</div>\n		</div>\n\n		<div id="save-as-view" class="dview">\n			<p id="save-as-title" class="dialog-title"></p>\n			<div>\n				<label>Project Name: </label>\n				<input type="text" id="newName" class="dialog-input" value="{{projectName}}">\n			</div>\n\n<!--\n 			<div>\n				<label>Tags (comma separated): </label>\n				<input type="text" id="tags" class="dialog-input" value="{{currentProject.tags}}">\n			</div>\n\n			<div>\n				<label>Public </label>\n				<input type="checkbox" id="public" class="dialog-input" checked="{{currentProject.public}}">\n			</div>\n-->\n		</div>\n\n		<div id="sketchbook-view" class="dview">\n			<sketchbook></sketchbook>\n		</div>\n\n		<div id="dialog-button-container">\n			<button id="dialog-left" class="dialog-button" v-on:click="accept">OK</button>\n			<button id="dialog-right" class="dialog-button" v-on:click="cancel">Cancel</button>\n		</div>\n\n	</div>\n</div>';
+module.exports = '\n<!-- share dialog -->\n<div id="dialog-container">\n	<div class="dialog">\n\n		<div id="share-view" class="dview">\n			<!-- if saved, show this ..-->\n			<div id="dialog-share" class="dialog-hidden">\n				<p class="dialog-title">Copy a link to share...</p>\n\n	<!-- 				<p id="dialog-content">\n				</p> -->\n				<div>\n					<label>embed code</label>\n					<input type="text" readonly="true" value="{{embedCode}}" onclick="select()">\n				</div>\n\n				<div>\n					<label>share link</label>\n					<input type="text" readonly="true" value="{{permalink}}" onclick="select()">\n				</div>\n				<!--TO DO: add copy button\n					<input type="image" src="/images/open-iconic-master/svg/clipboard.svg" alt="Submit">\n				-->\n			</div>\n\n			<!-- if unsaved, show this -->\n			<div id="dialog-unsaved">\n				<p class="dialog-title">Unsaved Project</p>\n				<p id="dialog-content">\n					Please save your project before sharing.\n				</p>\n			</div>\n		</div>\n\n		<div id="save-as-view" class="dview">\n			<p id="save-as-title" class="dialog-title"></p>\n			<div>\n				<label>Project Name: </label>\n				<input type="text" id="newName" class="dialog-input" value="{{projectName}}">\n			</div>\n\n<!--\n 			<div>\n				<label>Tags (comma separated): </label>\n				<input type="text" id="tags" class="dialog-input" value="{{currentProject.tags}}">\n			</div>\n\n			<div>\n				<label>Public </label>\n				<input type="checkbox" id="public" class="dialog-input" checked="{{currentProject.public}}">\n			</div>\n-->\n		</div>\n\n		<div id="sketchbook-view" class="dview">\n			<sketchbook></sketchbook>\n		</div>\n\n		<div id="dialog-button-container">\n			<button id="dialog-left" class="dialog-button" v-on:click="accept">OK</button>\n			<button id="dialog-right" class="dialog-button" v-on:click="cancel">Cancel</button>\n		</div>\n\n	</div>\n</div>';
 },{}],6:[function(require,module,exports){
 
 
@@ -879,6 +879,7 @@ module.exports = Vue.extend({
 		},
 
 		settingsChanged: function(settings) {
+			console.log('settings changed');
 			this.updateSettings(settings);
 		},
 
@@ -1508,7 +1509,7 @@ var appConfig = {
 
 		this.$on('updateCurrentProject', this.updateCurrentProject);
 		this.$on('open-sketchbook', this.openSketchbook);
-
+		this.$on('settings-view-changed', this.broadcastSettingsChanged);
 		this.updatePageHash();
 
 	},
@@ -1529,11 +1530,15 @@ var appConfig = {
 
 		setupSettings: function() {
 			this.settings = settings.load();
-			this.$watch('settings', function(value) {
-				this.$broadcast('settings-changed', value);
-				// this.editorHidden = !this.settings.showEditor;
-				settings.save(value);
-			});
+
+			// this.$on('settings-changed', function(value) {
+			// 	this.$broadcast('settings-changed');
+			// });
+		},
+
+		broadcastSettingsChanged: function(settings) {
+			console.log('yo');
+			this.$broadcast('settings-changed', settings);
 		},
 
 		toggleSettingsPane: function() {
@@ -2768,6 +2773,37 @@ module.exports = Vue.extend({
 
 	ready: function() {
 		var self = this;
+
+		// this.$watch('settings', function(value) {
+		// 	// this.$broadcast('settings-changed', value);
+		// 	console.log('settings changed');
+		// 	// this.editorHidden = !this.settings.showEditor;
+		// 	// settings.save(value);
+		// });
+
+	},
+
+	watch: {
+		// TO DO do this instead:
+		// https://github.com/vuejs/vue/issues/844#issuecomment-120104363
+		'settings.runInFrame' : function() {
+			this.emitSettingsChanged();
+		},
+		'settings.showSidebar' : function() {
+			this.emitSettingsChanged();
+		},
+		'settings.wordWrap' : function() {
+			this.emitSettingsChanged();
+		},
+		'settings.tabSize' : function() {
+			this.emitSettingsChanged();
+		},
+		'settings.fontSize' : function() {
+			this.emitSettingsChanged();
+		},
+		'settings.editorTheme' : function() {
+			this.emitSettingsChanged();
+		},
 	},
 
 	computed: {
@@ -2801,6 +2837,9 @@ module.exports = Vue.extend({
 	},
 
 	methods: {
+		emitSettingsChanged: function() {
+			this.$dispatch('settings-view-changed', this.settings);
+		},
 		incText: function(e) {
 			this.$root.settings.fontSize++;
 		},

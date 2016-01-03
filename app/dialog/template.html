@@ -10,13 +10,15 @@
 
 	<!-- 				<p id="dialog-content">
 				</p> -->
+				<div>
+					<label>embed code</label>
+					<input type="text" readonly="true" value="{{embedCode}}" onclick="select()">
+				</div>
 
-				<label>embed code</label>
-				<input type="text" readonly="true" value="{{embedCode}}" onclick="select()">
-
-				<label>share link</label>
-				<input type="text" readonly="true" value="{{permalink}}" onclick="select()">
-
+				<div>
+					<label>share link</label>
+					<input type="text" readonly="true" value="{{permalink}}" onclick="select()">
+				</div>
 				<!--TO DO: add copy button
 					<input type="image" src="/images/open-iconic-master/svg/clipboard.svg" alt="Submit">
 				-->

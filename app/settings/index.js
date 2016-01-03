@@ -11,6 +11,37 @@ module.exports = Vue.extend({
 
 	ready: function() {
 		var self = this;
+
+		// this.$watch('settings', function(value) {
+		// 	// this.$broadcast('settings-changed', value);
+		// 	console.log('settings changed');
+		// 	// this.editorHidden = !this.settings.showEditor;
+		// 	// settings.save(value);
+		// });
+
+	},
+
+	watch: {
+		// TO DO do this instead:
+		// https://github.com/vuejs/vue/issues/844#issuecomment-120104363
+		'settings.runInFrame' : function() {
+			this.emitSettingsChanged();
+		},
+		'settings.showSidebar' : function() {
+			this.emitSettingsChanged();
+		},
+		'settings.wordWrap' : function() {
+			this.emitSettingsChanged();
+		},
+		'settings.tabSize' : function() {
+			this.emitSettingsChanged();
+		},
+		'settings.fontSize' : function() {
+			this.emitSettingsChanged();
+		},
+		'settings.editorTheme' : function() {
+			this.emitSettingsChanged();
+		},
 	},
 
 	computed: {
@@ -44,6 +75,9 @@ module.exports = Vue.extend({
 	},
 
 	methods: {
+		emitSettingsChanged: function() {
+			this.$dispatch('settings-view-changed', this.settings);
+		},
 		incText: function(e) {
 			this.$root.settings.fontSize++;
 		},
