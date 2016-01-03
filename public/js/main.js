@@ -60,10 +60,9 @@ module.exports = {
 	 *  username and reference to main app.
 	 *  
 	 *  @param  {String} projectID [description]
-	 *  @param  {String} username  project username 
 	 *  @param  {Object} main      reference to vue.js app (main.js)
 	 */
-	loadProject: function(projectID, username, main) {
+	loadProject: function(projectID, main) {
 
 		// show loading and hide editor main-container
 		main.shouldLoadExistingProject = true;
@@ -71,7 +70,7 @@ module.exports = {
 		// get sketch from server
 		$.ajax({
 			url: '/loadproject',
-			data: {username: username, projectID: projectID},
+			data: {projectID: projectID},
 			type: 'GET',
 		})
 		.success( function(res) {
@@ -1463,7 +1462,7 @@ var appConfig = {
 		// compare with localStorageID
 		var latestProj = localStorage.latestProject ? JSON.parse(localStorage.latestProject) : {_id:-1};
 		if (projectID && (projectID !== latestProj._id)) {
-			AJAX.loadProject(projectID, username, self);
+			AJAX.loadProject(projectID, self);
 		}
 		// otherwise, resume recent project
 
@@ -1812,11 +1811,8 @@ var appConfig = {
 		loadProjectByOurID: function(projID) {
 			var self = this;
 
-			// if not logged in, open via '_'
-			var username = this.currentUser.username ? this.currentUser.username : '_';
-			// window.open('/' + username + '/' + projID, '_self');
-			window.open('/#?sketch=' + projID, '_self');
-
+			this.closeProject();
+			AJAX.loadProject(projID, self);
 
 			// change url
 			return;
@@ -3075,14 +3071,14 @@ module.exports = Vue.extend({
 			}
 		},
 
-		clickedOnProject: function(item) {
-			console.log(item);
+		clickedOnProject: function(projectID) {
+			this.$root.loadProjectByOurID(projectID);
 		}
 	}
 
 });
 },{"./template.html":30,"jquery":54,"timeago":100,"vue":102}],30:[function(require,module,exports){
-module.exports = '<div class="sketchbook-container">\n	<h1>Sketchbook</h1>\n\n	<!-- list container -->\n	<div id="projects">\n		<input id="project-search-term" class="search" placeholder="Search"\n		v-model="fkey" />\n\n		<div class="table-wrapper">\n		<div class="table-scroll">\n			<table>\n				<thead>\n					<tr>\n\n						<th v-for="key in columns"\n								@click="sortBy(key)">\n							<span class="th-content" \n										:class="{active: sortKey == key.slug}">\n								<span class="text">{{key.displayName}}</span>\n								<span class="arrow"\n										:class="sortOrders[key] > 0 ? \'asc\' : \'dsc\'">\n								</span>\n							</span>\n						</th>\n\n					</tr>\n\n				</thead>\n					<tbody class="list">\n						<tr v-for="\n							entry in projectList\n							| filterBy fkey\n							| orderBy sortKey reversed"\n							data-projectid="{{entry.id}}"\n							@click"clickedOnProject(this)">\n							<td class="proj-name">\n								<span class="text">\n									{{entry.name}}\n								</span>\n							</td>\n							<td class="timeago" title="{{entry.dateModified}}" data-projectid="{{entry.id}}"> \n								{{entry.dateModified}}\n							</td>\n							<td class="timestamp-mod" style="display:none;">{{entry.timestampMod}}</td>\n\n							<td class="timeago" title="{{entry.dateCreated}}" data-projectid="{{entry.id}}"> \n								{{entry.dateCreated}}\n							</td>\n							<td class="entry.timestamp-created" style="display:none;">{{entry.timestampCreated}}</td>\n						</tr>\n\n					</tbody>\n				</div>\n			</table>\n		</div>\n		</div>\n	</div>	<!-- end list container \n\n</div>';
+module.exports = '<div class="sketchbook-container">\n	<h1>Sketchbook</h1>\n\n	<!-- list container -->\n	<div id="projects">\n		<input id="project-search-term" class="search" placeholder="Search"\n		v-model="fkey" />\n\n		<div class="table-wrapper">\n		<div class="table-scroll">\n			<table>\n				<thead>\n					<tr>\n\n						<th v-for="key in columns"\n								@click="sortBy(key)">\n							<span class="th-content" \n										:class="{active: sortKey == key.slug}">\n								<span class="text">{{key.displayName}}</span>\n								<span class="arrow"\n										:class="sortOrders[key] > 0 ? \'asc\' : \'dsc\'">\n								</span>\n							</span>\n						</th>\n\n					</tr>\n\n				</thead>\n					<tbody class="list">\n						<tr v-for="\n							entry in projectList\n							| filterBy fkey\n							| orderBy sortKey reversed"\n							data-projectid="{{entry.id}}"\n							@click="clickedOnProject(entry.id)">\n							<td class="proj-name">\n								<span class="text">\n									{{entry.name}}\n								</span>\n							</td>\n							<td class="timeago" title="{{entry.dateModified}}" data-projectid="{{entry.id}}"> \n								{{entry.dateModified}}\n							</td>\n							<td class="timestamp-mod" style="display:none;">{{entry.timestampMod}}</td>\n\n							<td class="timeago" title="{{entry.dateCreated}}" data-projectid="{{entry.id}}"> \n								{{entry.dateCreated}}\n							</td>\n							<td class="entry.timestamp-created" style="display:none;">{{entry.timestampCreated}}</td>\n						</tr>\n\n					</tbody>\n				</div>\n			</table>\n		</div>\n		</div>\n	</div>	<!-- end list container \n\n</div>';
 },{}],31:[function(require,module,exports){
 /**
  *  sketchframe holds the iframe that runs the sketch.

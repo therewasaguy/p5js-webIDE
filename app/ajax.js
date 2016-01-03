@@ -54,10 +54,9 @@ module.exports = {
 	 *  username and reference to main app.
 	 *  
 	 *  @param  {String} projectID [description]
-	 *  @param  {String} username  project username 
 	 *  @param  {Object} main      reference to vue.js app (main.js)
 	 */
-	loadProject: function(projectID, username, main) {
+	loadProject: function(projectID, main) {
 
 		// show loading and hide editor main-container
 		main.shouldLoadExistingProject = true;
@@ -65,7 +64,7 @@ module.exports = {
 		// get sketch from server
 		$.ajax({
 			url: '/loadproject',
-			data: {username: username, projectID: projectID},
+			data: {projectID: projectID},
 			type: 'GET',
 		})
 		.success( function(res) {

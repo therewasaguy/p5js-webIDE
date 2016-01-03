@@ -142,7 +142,7 @@ var appConfig = {
 		// compare with localStorageID
 		var latestProj = localStorage.latestProject ? JSON.parse(localStorage.latestProject) : {_id:-1};
 		if (projectID && (projectID !== latestProj._id)) {
-			AJAX.loadProject(projectID, username, self);
+			AJAX.loadProject(projectID, self);
 		}
 		// otherwise, resume recent project
 
@@ -491,11 +491,8 @@ var appConfig = {
 		loadProjectByOurID: function(projID) {
 			var self = this;
 
-			// if not logged in, open via '_'
-			var username = this.currentUser.username ? this.currentUser.username : '_';
-			// window.open('/' + username + '/' + projID, '_self');
-			window.open('/#?sketch=' + projID, '_self');
-
+			this.closeProject();
+			AJAX.loadProject(projID, self);
 
 			// change url
 			return;
