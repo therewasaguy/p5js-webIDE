@@ -42,15 +42,16 @@ module.exports = {
 			}
 
 			main.updateProjectInLocalStorage(oldProjID);
+			main.updateRecentProjects(res);
 
 			// notify the user that it worked
-			main.$.menu.setToastMsg('Project Saved Successfully');
+			main.$broadcast('toast-msg', res.name + ' Saved Successfully');
 				// main.$emit('updateCurrentProject');
 		})
 		.error( function(res, error) {
 			console.log(res);
 			console.log(error);
-			main.$.menu.setToastMsg('There was an error saving. Please try again');
+			main.$broadcast('toast-msg', 'There was an error saving. Please try again');
 		});
 
 	},
@@ -1669,6 +1670,23 @@ var appConfig = {
 			this.modeFunction('sortRecentProjects', projects);
 		},
 
+		// add new project to recent projects if it does not exist
+		updateRecentProjects: function(newProj) {
+			var getIndexIfObjWithOwnAttr = function(array, attr, value) {
+				for(var i = 0; i < array.length; i++) {
+					if(array[i].hasOwnProperty(attr) && array[i][attr] === value) {
+						return i;
+					}
+				}
+				return -1;
+			};
+
+			var pos = getIndexIfObjWithOwnAttr(this.recentProjects, 'id', newProj.id);
+			if (pos === -1) {
+				this.recentProjects.push(newProj);
+			}
+		},
+
 		// HANDLE FILES
 
 		newFile: function() {
@@ -2055,7 +2073,7 @@ var appConfig = {
 		/**
 		 *  Stringify the current project data and
 		 *  save it in local storage. This is useful
-		 *  for autosaving and for 
+		 *  for autosaving and for saving new projects.
 		 *  
 		 *  @param  {String} [oldID] Previous ID of the project
 		 *                           if the hash should change

@@ -36,15 +36,16 @@ module.exports = {
 			}
 
 			main.updateProjectInLocalStorage(oldProjID);
+			main.updateRecentProjects(res);
 
 			// notify the user that it worked
-			main.$.menu.setToastMsg('Project Saved Successfully');
+			main.$broadcast('toast-msg', res.name + ' Saved Successfully');
 				// main.$emit('updateCurrentProject');
 		})
 		.error( function(res, error) {
 			console.log(res);
 			console.log(error);
-			main.$.menu.setToastMsg('There was an error saving. Please try again');
+			main.$broadcast('toast-msg', 'There was an error saving. Please try again');
 		});
 
 	},

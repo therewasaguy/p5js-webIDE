@@ -373,8 +373,8 @@ module.exports = db = {
 
 			// helper to save existing file
 			function saveDoc(doc) {
-				console.log('save doc file');
-				// if (doc == undefined) saveNext();
+				console.log('save doc file ' + doc.name);
+				if (doc.name == undefined) saveNext();
 				doc.save(function(err, saved) {
 					if (err) throw err; //handle error
 					fileObj._id = saved._id;
@@ -552,6 +552,7 @@ module.exports = db = {
 
 
 	addProjectToUser: function(ownerID, projectID) {
+		console.log('about to add project to user', ownerID, projectID);
 		User.update({_id: ownerID}, {$addToSet: {projects: projectID}}, function(err) {
 			if (err) console.log( err );
 
