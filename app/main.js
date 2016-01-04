@@ -756,9 +756,10 @@ var appConfig = {
 			// not sure why but this has been necessary to avoid empty 'content' for files
 			setTimeout( function() {
 				localStorage.latestProject = JSON.stringify(self.currentProject);
-				console.log(self.currentProject._id);
-				console.log(oldID);
-				self.updatePageHash(oldID);
+
+				if (oldID || window.location.hash == '') {
+					self.updatePageHash(oldID);
+				}
 			}, 1);
 
 		},
