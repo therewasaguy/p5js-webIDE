@@ -1,9 +1,11 @@
-<div id="debug" class="{{className}}">
-	<div id="debugheader">
-		<span class="resizehandle handle-up {{className}}" v-on:click="openConsole()">&#x25B2;</span>
-		<span class="resizehandle handle-down {{className}}" v-on:click="closeConsole()">&#x25BC;</span>
-		<span id="consolename"> >_  console</span>
-		<span id="cleardebug">X</span>
+<div id="debugContainer">
+	<div id="debug" class="{{className}}">
+		<div id="debugheader">
+			<span class="resizehandle handle-up {{className}}" v-on:click="openConsole()">&#x25B2;</span>
+			<span class="resizehandle handle-down {{className}}" v-on:click="closeConsole()">&#x25BC;</span>
+			<span id="consolename"> >_  console</span>
+			<span id="cleardebug">X</span>
+		</div>
+		<div id="debugText" class="{{className}}">
 	</div>
-	<div id="debugText" class="{{className}}">
 </div>

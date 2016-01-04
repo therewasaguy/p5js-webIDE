@@ -243,7 +243,7 @@ var appConfig = {
 
 		stop: function() {
 			this.modeFunction('stop');
-
+			// this.$broadcast('clearErrors');
 			// show editor
 			this.editorHidden = false;
 		},

@@ -239,12 +239,12 @@ module.exports = Vue.extend({
 		self.dbg = document.getElementById('debugText');
 		self.dbgArea = document.getElementById('debugContainer');
 
+		this.$on('clearErrors', this.clearErrors);
 	},
 
 	methods: {
 		editorReceiveMsg: function(e) {
-			console.log(e);
-			return;
+
 			var msg = JSON.parse(e.data);
 
 			if (msg.type === 'error') {
@@ -289,6 +289,7 @@ module.exports = Vue.extend({
 
 		clearErrors: function() {
 			var self = this;
+			console.log('clear errors');
 			self.dbgArea.style.opacity = 1.0;
 			self.dbg.innerHTML = '';
 			// to do: reset size
@@ -306,7 +307,7 @@ module.exports = Vue.extend({
 
 });
 },{"./template.html":3,"vue":102}],3:[function(require,module,exports){
-module.exports = '<div id="debug" class="{{className}}">\n	<div id="debugheader">\n		<span class="resizehandle handle-up {{className}}" v-on:click="openConsole()">&#x25B2;</span>\n		<span class="resizehandle handle-down {{className}}" v-on:click="closeConsole()">&#x25BC;</span>\n		<span id="consolename"> >_  console</span>\n		<span id="cleardebug">X</span>\n	</div>\n	<div id="debugText" class="{{className}}">\n</div>';
+module.exports = '<div id="debugContainer">\n	<div id="debug" class="{{className}}">\n		<div id="debugheader">\n			<span class="resizehandle handle-up {{className}}" v-on:click="openConsole()">&#x25B2;</span>\n			<span class="resizehandle handle-down {{className}}" v-on:click="closeConsole()">&#x25BC;</span>\n			<span id="consolename"> >_  console</span>\n			<span id="cleardebug">X</span>\n		</div>\n		<div id="debugText" class="{{className}}">\n	</div>\n</div>';
 },{}],4:[function(require,module,exports){
 
 var Vue = require('vue');
@@ -1630,7 +1631,7 @@ var appConfig = {
 
 		stop: function() {
 			this.modeFunction('stop');
-
+			// this.$broadcast('clearErrors');
 			// show editor
 			this.editorHidden = false;
 		},
@@ -2845,7 +2846,8 @@ module.exports = {
 			console.log('run in page');
 			var sketchFrame = document.getElementById('sketchFrame');
 			sketchFrame.src = sketchFrame.src;
-			this.$.debug.clearErrors();
+
+			this.$broadcast('clearErrors');
 		}
 
 		// run in new window

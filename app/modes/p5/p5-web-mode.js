@@ -148,7 +148,8 @@ module.exports = {
 			console.log('run in page');
 			var sketchFrame = document.getElementById('sketchFrame');
 			sketchFrame.src = sketchFrame.src;
-			this.$.debug.clearErrors();
+
+			this.$broadcast('clearErrors');
 		}
 
 		// run in new window

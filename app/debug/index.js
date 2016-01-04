@@ -23,12 +23,12 @@ module.exports = Vue.extend({
 		self.dbg = document.getElementById('debugText');
 		self.dbgArea = document.getElementById('debugContainer');
 
+		this.$on('clearErrors', this.clearErrors);
 	},
 
 	methods: {
 		editorReceiveMsg: function(e) {
-			console.log(e);
-			return;
+
 			var msg = JSON.parse(e.data);
 
 			if (msg.type === 'error') {
@@ -73,6 +73,7 @@ module.exports = Vue.extend({
 
 		clearErrors: function() {
 			var self = this;
+			console.log('clear errors');
 			self.dbgArea.style.opacity = 1.0;
 			self.dbg.innerHTML = '';
 			// to do: reset size
