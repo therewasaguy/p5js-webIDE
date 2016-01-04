@@ -35,7 +35,7 @@
 
           <div><a v-on:click="openSketchbook">Sketchbook</a></div>
 
-          <div><a >Upload</a></div>
+          <!-- <div><a >Upload</a></div> -->
 
         </div>
       </li>
@@ -74,10 +74,10 @@
 
   <div class="top-nav-right">
     <ul>
-      <li>
+<!--       <li>
         <a>Gallery</a>
       </li>
-
+ -->
       <!-- login / profile -->
       <li v-if="!loggedIn" v-on:click="$root.authenticate()">
         <a>Log in</a>

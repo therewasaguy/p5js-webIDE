@@ -475,7 +475,6 @@ var appConfig = {
 
 		openProject: function(projObj, gistData) {
 			var self = this;
-			console.log('open project');
 
 			self.currentProject = new Project(projObj);
 			self.currentProjectOwnerID = projObj.owner_id; // redundant but necessary for watching properties?
@@ -700,7 +699,6 @@ var appConfig = {
 
 		// toggle whether to show or hide the editor
 		toggleEditor: function() {
-			console.log('toggle editor');
 			this.editorHidden ? this.showEditor() : this.hideEditor();
 		},
 
