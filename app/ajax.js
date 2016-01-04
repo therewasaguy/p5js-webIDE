@@ -44,8 +44,6 @@ module.exports = {
 				// main.$emit('updateCurrentProject');
 		})
 		.error( function(res, error) {
-			console.log(res);
-			console.log(error);
 			main.$broadcast('toast-msg', 'There was an error saving. Please try again');
 		});
 
@@ -71,7 +69,6 @@ module.exports = {
 		})
 		.success( function(res) {
 			var proj;
-			console.log(res);
 
 			// load project the old way (with 'files')
 			// test example: therewasaguy/563ce6ca1bed2173b524889e
@@ -89,7 +86,6 @@ module.exports = {
 			// if no files, must be some error
 			// test example: therewasaguy/567f7f3ddce613cb5f78ea16
 			else {
-				console.log(res);
 				var e = new Error('Unable to parse project');
 				throw e;
 			}

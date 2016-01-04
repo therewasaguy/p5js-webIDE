@@ -50,8 +50,6 @@ module.exports = {
 				// main.$emit('updateCurrentProject');
 		})
 		.error( function(res, error) {
-			console.log(res);
-			console.log(error);
 			main.$broadcast('toast-msg', 'There was an error saving. Please try again');
 		});
 
@@ -77,7 +75,6 @@ module.exports = {
 		})
 		.success( function(res) {
 			var proj;
-			console.log(res);
 
 			// load project the old way (with 'files')
 			// test example: therewasaguy/563ce6ca1bed2173b524889e
@@ -95,7 +92,6 @@ module.exports = {
 			// if no files, must be some error
 			// test example: therewasaguy/567f7f3ddce613cb5f78ea16
 			else {
-				console.log(res);
 				var e = new Error('Unable to parse project');
 				throw e;
 			}
@@ -2471,21 +2467,21 @@ pFile.prototype.setDefaultContents = function(fileName) {
 	};
 
 	var latestID = latestIDs[fileName];
-	console.log('latest id ' + latestID);
 
 	// if we have project locally and file has this id, then use it.
-	var localFiles = localStorage.latestProject ? JSON.parse(localStorage.latestProject).fileObjects : [];
-	for (var i = 0; i < localFiles.length; i++) {
-		var f = localFiles[i];
-		if (f.name === fileName) {
-			if (f._id === latestID && f.originalContents == f.contents) {
-				console.log('found a copy of ' + fileName + ' locally.');
-
-				// duplicate props
-				for (var k in f) {
-					self[k]=f[k];
+	// unless it's sketch.js
+	if (fileName !== 'sketch.js') {
+		var localFiles = localStorage.latestProject ? JSON.parse(localStorage.latestProject).fileObjects : [];
+		for (var i = 0; i < localFiles.length; i++) {
+			var f = localFiles[i];
+			if (f.name === fileName) {
+				if (f._id === latestID && f.originalContents == f.contents) {
+					// duplicate props
+					for (var k in f) {
+						self[k]=f[k];
+					}
+					loadedFile();
 				}
-				loadedFile();
 			}
 		}
 	}

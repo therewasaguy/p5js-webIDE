@@ -54,21 +54,21 @@ pFile.prototype.setDefaultContents = function(fileName) {
 	};
 
 	var latestID = latestIDs[fileName];
-	console.log('latest id ' + latestID);
 
 	// if we have project locally and file has this id, then use it.
-	var localFiles = localStorage.latestProject ? JSON.parse(localStorage.latestProject).fileObjects : [];
-	for (var i = 0; i < localFiles.length; i++) {
-		var f = localFiles[i];
-		if (f.name === fileName) {
-			if (f._id === latestID && f.originalContents == f.contents) {
-				console.log('found a copy of ' + fileName + ' locally.');
-
-				// duplicate props
-				for (var k in f) {
-					self[k]=f[k];
+	// unless it's sketch.js
+	if (fileName !== 'sketch.js') {
+		var localFiles = localStorage.latestProject ? JSON.parse(localStorage.latestProject).fileObjects : [];
+		for (var i = 0; i < localFiles.length; i++) {
+			var f = localFiles[i];
+			if (f.name === fileName) {
+				if (f._id === latestID && f.originalContents == f.contents) {
+					// duplicate props
+					for (var k in f) {
+						self[k]=f[k];
+					}
+					loadedFile();
 				}
-				loadedFile();
 			}
 		}
 	}
