@@ -3272,7 +3272,19 @@ function parseIndexHTML(fileDict) {
 
 			var fileName = findFileNameInTag(tag, 'src');
 
-			if (fileName) {
+			// if filename is an external file, i.e. contains //,
+			// then do not replace its contents and load it async
+			if (fileName.indexOf('//') > -1) {
+				var n = document.createElement('script');
+				n.src = fileName;
+				n.async = true;
+				n.onload = function() {
+					console.log('script loaded');
+				}
+				body.appendChild(n);
+			}
+
+			else if (fileName) {
 
 				try {
 					var fileContents = fileDict[fileName].contents;
@@ -3404,10 +3416,10 @@ function findFileNameInTag(tag, tagType) {
 	fileName = splits[1];
 
 	// if filename is an external file, i.e. contains //, then do not replace its contents
-	if (fileName.indexOf('//') > -1) {
-		console.log('load external js file: ' + fileName);
-		return null;
-	}
+	// if (fileName.indexOf('//') > -1) {
+	// 	console.log('load external js file: ' + fileName);
+	// 	return fileName;
+	// }
 
 	// otherwise return the filename
 	return fileName;

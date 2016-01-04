@@ -100,7 +100,19 @@
 
 				var fileName = findFileNameInTag(tag, 'src');
 
-				if (fileName) {
+				// if filename is an external file, i.e. contains //,
+				// then do not replace its contents and load it async
+				if (fileName.indexOf('//') > -1) {
+					var n = document.createElement('script');
+					n.src = fileName;
+					n.async = true;
+					n.onload = function() {
+						console.log('script loaded');
+					}
+					body.appendChild(n);
+				}
+
+				else if (fileName) {
 
 					try {
 						var fileContents = fileDict[fileName].contents;
@@ -231,12 +243,6 @@
 
 		fileName = splits[1];
 
-		// if filename is an external file, i.e. contains //, then do not replace its contents
-		if (fileName.indexOf('//') > -1) {
-			console.log('load external js file: ' + fileName);
-			return null;
-		}
-
 		// otherwise return the filename
 		return fileName;
 	}
@@ -247,6 +253,7 @@
 		var w = w || window;
 		var userScript = w.document.createElement('script');
 		userScript.type = 'text/javascript';
+		userScript.defer = true;
 		userScript.text = someCode;
 		userScript.async = false;
 		return userScript;
@@ -286,4 +293,19 @@
 		}
 		return contents;
 	}
+
+	// via http://stackoverflow.com/a/9334894/2994108
+	function appendStringAsNodes(element, html) {
+				var frag = document.createDocumentFragment(),
+						tmp = document.createElement('body'), child;
+				tmp.innerHTML = html;
+				// Append elements in a loop to a DocumentFragment, so that the browser does
+				// not re-render the document for each node
+				while (child = tmp.firstChild) {
+						frag.appendChild(child);
+				}
+				element.appendChild(frag); // Now, append all elements at once
+				frag = tmp = null;
+				return frag;
+		}
 })();
