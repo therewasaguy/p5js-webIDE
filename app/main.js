@@ -350,25 +350,7 @@ var appConfig = {
 			this.modeFunction('sortRecentProjects', projects);
 		},
 
-		// add new project to recent projects if it does not exist
-		updateRecentProjects: function(newProj) {
-			var getIndexIfObjWithOwnAttr = function(array, attr, value) {
-				for(var i = 0; i < array.length; i++) {
-					if(array[i].hasOwnProperty(attr) && array[i][attr] === value) {
-						return i;
-					}
-				}
-				return -1;
-			};
-
-			var pos = getIndexIfObjWithOwnAttr(this.recentProjects, 'id', newProj.id);
-			if (pos === -1) {
-				this.recentProjects.push(newProj);
-			}
-		},
-
 		// HANDLE FILES
-
 		newFile: function() {
 			var title = prompt('Choose a file name and type: \nSupported types: ' + this.fileTypes.toString()).replace(/ /g,'');
 			var dotSplit = title.split(".");
