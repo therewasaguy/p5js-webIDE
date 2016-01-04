@@ -164,7 +164,43 @@ module.exports = Vue.extend({
 				exec: function(editor) {
 					self.$root.toggleSettingsPane();
 				}
-			}];
+			}, {
+				name: "save",
+				bindKey: {win: 'Ctrl-s,',  mac: 'Command-s'},
+				exec: function(editor) { 
+					console.log('trying to save?');
+					self.$root.saveToCloud();
+				},
+			},
+			{
+				name: "play",
+				bindKey: {win: 'Ctrl-p,',  mac: 'Command-p'},
+				exec: function(editor) { 
+					self.$root.run();
+				},
+			},
+			{
+				name: "run",
+				bindKey: {win: 'Ctrl-r,',  mac: 'Command-r'},
+				exec: function(editor) { 
+					self.$root.run();
+				},
+			},
+			{
+				name: "increase-font-size",
+				bindKey: {win: 'Ctrl-+,',  mac: 'Command-+'},
+				exec: function(editor) { 
+					console.log('trying to increase font?')
+				},
+			},
+			{
+				name: "decrease-font-size",
+				bindKey: {win: 'Ctrl--,',  mac: 'Command--'},
+				exec: function(editor) { 
+					console.log('trying to dec font?')
+				},
+			}
+			];
 
 			commands.forEach(function(command){
 			  this.ace.commands.addCommand(command);

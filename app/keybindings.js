@@ -1,20 +1,39 @@
 var $ = require('jquery');
+var editor = require('./editor');
 
 // mousetrap ~ https://craig.is/killing/mice
 var Mousetrap = require('br-mousetrap');
 
 module.exports = function(app) {
 
+	console.log(app);
 	Mousetrap.bind(['command+s', 'ctrl+s'], function(e) {
 		console.log('save!');
 
+		app.saveToCloud();
 		// prevent default
 		return false;
 	});
 
 	Mousetrap.bind(['command+n', 'ctrl+n'], function(e) {
 		console.log('new!');
+		app.newProject();
+		// prevent default
+		return false;
+	});
 
+	Mousetrap.bind(['command+r', 'ctrl+r'], function(e) {
+		console.log('run!');
+
+		app.run();
+		// prevent default
+		return false;
+	});
+
+	Mousetrap.bind(['command+p', 'ctrl+p'], function(e) {
+		console.log('play!');
+
+		app.run();
 		// prevent default
 		return false;
 	});
@@ -37,4 +56,4 @@ module.exports = function(app) {
 	// 	}
 
 	// });
-}();
+};

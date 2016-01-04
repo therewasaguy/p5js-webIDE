@@ -10,9 +10,9 @@ var pFile = require('./models/pfile');
 var Project = require('./models/project');
 var User = require('./models/user');
 
-require('./keybindings');
-
 var AJAX = require('./ajax');
+
+var Keybindings = require('./keybindings');
 
 var modes = {
   p5web: require('./modes/p5/p5-web-mode')
@@ -178,6 +178,10 @@ var appConfig = {
 	},
 
 	ready: function() {
+
+		// init keybindings
+		Keybindings(this);
+
 		// might use this to re-open the window
 		window.name = 'p5webide';
 
