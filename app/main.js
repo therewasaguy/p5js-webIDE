@@ -219,6 +219,9 @@ var appConfig = {
 		// when settings are updated via settings view
 		broadcastSettingsChanged: function(settings) {
 			this.$broadcast('settings-changed', settings);
+
+			// saveSettings
+			localStorage.userSettings = JSON.stringify(settings);
 		},
 
 		toggleSettingsPane: function() {

@@ -31,12 +31,4 @@ module.exports.load = function() {
   return settings;
 };
 
-module.exports.save = function(settings) {
-  localStorage.userSettings = JSON.stringify(userSettings);
-};
-
-// module.exports.write = function() {
-//   localStorage.userSettings = JSON.stringify(userSettings);
-// };
-
 module.exports.defaults = defaults;

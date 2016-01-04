@@ -1607,6 +1607,9 @@ var appConfig = {
 		// when settings are updated via settings view
 		broadcastSettingsChanged: function(settings) {
 			this.$broadcast('settings-changed', settings);
+
+			// saveSettings
+			localStorage.userSettings = JSON.stringify(settings);
 		},
 
 		toggleSettingsPane: function() {
@@ -2953,14 +2956,6 @@ module.exports.load = function() {
   return settings;
 };
 
-module.exports.save = function(settings) {
-  localStorage.userSettings = JSON.stringify(userSettings);
-};
-
-// module.exports.write = function() {
-//   localStorage.userSettings = JSON.stringify(userSettings);
-// };
-
 module.exports.defaults = defaults;
 },{}],24:[function(require,module,exports){
 /**
@@ -3061,7 +3056,6 @@ module.exports = Vue.extend({
 		},
 		themeChanged: function() {
 			var theme = this.editorTheme;
-			console.log(theme);
 		}
 
 	}

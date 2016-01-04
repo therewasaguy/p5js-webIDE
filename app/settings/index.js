@@ -96,7 +96,6 @@ module.exports = Vue.extend({
 		},
 		themeChanged: function() {
 			var theme = this.editorTheme;
-			console.log(theme);
 		}
 
 	}
