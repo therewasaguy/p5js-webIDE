@@ -107,13 +107,13 @@ module.exports = db = {
 		var userID = req.query.userID || false;
 		var limit = req.query.limit || 10;
 		var pageNumber = req.query.page;
-		var skipCount = pageNumber > 0 ? (pageNumber-1) * limit : 1;
+		var skipCount = pageNumber > 0 ? (pageNumber-1) * limit : 0;
 
 		// to avoid limit Executor error until old projects are removed from database
 		// Overflow sort stage buffered data usage exceeds internal limit of 33554432 bytes
 		if (limit > max || limit === 'max') limit = max;
 
-		var dataFields = {'name': 1, 'owner_username': 1, 'updated_at':1, 'created_at':1, 'pFiles': 1, 'forkedFrom': 1 };
+		var dataFields = {'name': 1, 'owner_id': 1, 'owner_username': 1, 'updated_at':1, 'created_at':1, 'pFiles': 1, 'forkedFrom': 1 };
 		var searchFields = userID ? {'owner_id': userID} : {};
 
 		Project.find(searchFields, dataFields, gotData)
@@ -265,7 +265,7 @@ module.exports = db = {
 				console.log('no error!');
 				console.log(data);
 
-				// if user exists, save
+				// if user exists, save to user
 				if (newProj.owner_id) {
 					db.addProjectToUser(newProj.owner_id, newProj._id);
 				}

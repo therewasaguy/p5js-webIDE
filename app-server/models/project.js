@@ -7,7 +7,10 @@ var projectSchema = new Schema({
   name: String,
 
   owner_username: String,
-  owner_id: Schema.Types.ObjectId,
+  owner_id: {
+    type: Schema.Types.ObjectId,
+    index: true
+  },
 
   // gist_id: String,
 
