@@ -1641,7 +1641,6 @@ var appConfig = {
 
 
 		initProject: function() {
-
 			// if there is a recent project in local storage, load it.
 			var latestProj = JSON.parse( localStorage.getItem('latestProject') );
 			if (latestProj) {
@@ -2459,10 +2458,12 @@ pFile.prototype.setDefaultContents = function(fileName) {
 	var latestIDs = {
 		'p5.sound.js' : '568a02317811bb374d421bbe',
 		'index.html' : '568a02317811bb374d421bbf',
-		'style.css' : '568a022f7811bb374d421bbc',
+		// 'style.css' : '568a022f7811bb374d421bbc',
+		'style.css' : '568a18e8c81a89fb4f3d06ab',
 		'p5.dom.js' : '568a022f7811bb374d421bbd',
 		'p5.js' : '568a02317811bb374d421bc1',
-		'sketch.js' : '568a02317811bb374d421bc0'
+		'sketch.js' : '568a18ecc81a89fb4f3d06af'
+		// 'sketch.js' : '568a02317811bb374d421bc0'
 	};
 
 	var latestID = latestIDs[fileName];
@@ -2589,7 +2590,7 @@ var Project = function(options) {
 		/**
 		 *  @property {Array} openTabNames 	Name of the openTabNames, as array of strings
 		 */
-		this.openTabNames = ['sketch.js', 'style.css'];
+		this.openTabNames = ['sketch.js'];
 
 		/**
 		 *  @property {String} _id 	a unique ID for our application, set by the database.
@@ -2718,14 +2719,17 @@ module.exports = {
 				self.$broadcast('prompt-general', {
 					msg : 'Project Name',
 					input: 'My sketch',
-					callback: gotName
+					callback: function(details){
+						gotName(details['gnrlinput']);
+					}
 				});
 			}, 10);
+		} else {
+			gotName(name)
 		}
 
 		// if new name prompt succeeds:
-		function gotName(details) {
-			name = details['gnrlinput'];
+		function gotName(name) {
 			console.log('new name: ' + name);
 
 			proj = new Project();

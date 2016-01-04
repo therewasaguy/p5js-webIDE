@@ -254,7 +254,6 @@ var appConfig = {
 
 
 		initProject: function() {
-
 			// if there is a recent project in local storage, load it.
 			var latestProj = JSON.parse( localStorage.getItem('latestProject') );
 			if (latestProj) {

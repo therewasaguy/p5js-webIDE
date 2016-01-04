@@ -22,14 +22,17 @@ module.exports = {
 				self.$broadcast('prompt-general', {
 					msg : 'Project Name',
 					input: 'My sketch',
-					callback: gotName
+					callback: function(details){
+						gotName(details['gnrlinput']);
+					}
 				});
 			}, 10);
+		} else {
+			gotName(name)
 		}
 
 		// if new name prompt succeeds:
-		function gotName(details) {
-			name = details['gnrlinput'];
+		function gotName(name) {
 			console.log('new name: ' + name);
 
 			proj = new Project();

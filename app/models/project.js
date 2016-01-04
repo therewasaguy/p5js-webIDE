@@ -28,7 +28,7 @@ var Project = function(options) {
 		/**
 		 *  @property {Array} openTabNames 	Name of the openTabNames, as array of strings
 		 */
-		this.openTabNames = ['sketch.js', 'style.css'];
+		this.openTabNames = ['sketch.js'];
 
 		/**
 		 *  @property {String} _id 	a unique ID for our application, set by the database.
