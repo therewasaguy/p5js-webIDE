@@ -43,7 +43,8 @@ module.exports = {
 			}
 
 			main.updateProjectInLocalStorage(oldProjID);
-			main.updateRecentProjects(res);
+			main.findRecentUserProjects(main.currentUser);
+			// main.updateRecentProjects(res);
 
 			// notify the user that it worked
 			main.$broadcast('toast-msg', res.name + ' Saved Successfully');
