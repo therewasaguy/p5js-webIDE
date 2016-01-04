@@ -4,6 +4,7 @@
  */
 
 var timeago = require('timeago');
+var ProjectLoader = require('./projloader');
 
 module.exports = {
 
@@ -112,6 +113,23 @@ module.exports = {
 		})
 		.success( function(res) {
 			callback(res);
+		});
+	},
+
+	loadExample: function(listItem, main) {
+		var pathToExample = listItem.path.replace('/public', '');
+		var name = listItem.name;
+		// get example contents
+		$.ajax({
+			// type: 'GET',
+			dataType: 'text',
+			url: pathToExample,
+			success: function(sketchContents) {
+				ProjectLoader.initExample(sketchContents, name, main);
+			},
+			error: function(e) {
+				console.log('fail');
+			}
 		});
 	},
 

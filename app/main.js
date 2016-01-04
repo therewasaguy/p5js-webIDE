@@ -508,11 +508,21 @@ var appConfig = {
 		loadProjectByOurID: function(projID) {
 			var self = this;
 
-			this.closeProject();
-			AJAX.loadProject(projID, self);
+			// confirm before loading a new project
+			if (self.currentProject && self.currentProject.unsaved() ) {
+				this.$broadcast('prompt-general', {
+					msg : 'Unsaved changes. Are you sure?',
+					callback: okToLoad
+				});
+			} else {
+				okToLoad();
+			}
 
-			// change url
-			return;
+			// if ok to load
+			function okToLoad() {
+				self.closeProject();
+				AJAX.loadProject(projID, self);
+			}
 		},
 
 		saveAs: function() {
@@ -713,50 +723,22 @@ var appConfig = {
 
 		loadExample: function(listItem) {
 			var self = this;
-			var pathToExample = listItem.path.replace('/public', '');
 
-			var name = listItem.name;
+			// confirm before loading a new project
+			if (self.currentProject && self.currentProject.unsaved() ) {
+				this.$broadcast('prompt-general', {
+					msg : 'Unsaved changes. Are you sure?',
+					callback: okToLoad
+				});
+			} else {
+				okToLoad();
+			}
 
-			// get example contents
-			$.ajax({
-				// type: 'GET',
-				dataType: 'text',
-				url: pathToExample,
-				success: function(sketchContents) {
-
-					// make examples full screen ~ they look cool!
-					var createCanvasLines = sketchContents.match(/createCanvas\((.*?)\)/gmi);
-					if (createCanvasLines.length === 1) {
-						sketchContents = sketchContents.replace(createCanvasLines[0], 'createCanvas(windowWidth, windowHeight)');
-					}
-
-					if (typeof (sketchContents) == 'undefined') {
-						self.$broadcast('Error loading sketch ' + name);
-					} else {
-
-						// create a new project with default files
-						// except for a custom sketch and name
-
-						var sketchFile = new pFile('sketch.js', sketchContents);
-
-						var projectOptions = {
-							'name': name,
-							'openFileName': 'sketch.js',
-							'openTabNames': ['sketch.js'],
-							'fileObjects': [new pFile('p5.js'), new pFile('p5.dom.js'), new pFile('p5.sound.js'), sketchFile, new pFile('index.html'), new pFile('style.css')]
-						}
-
-						var newProj = new Project(projectOptions);
-						self.closeProject();
-
-						self.openProject(newProj);
-					}
-
-				},
-				error: function(e) {
-					console.log('fail');
-				}
-			});
+			// if ok to load
+			function okToLoad() {
+				self.closeProject();
+				AJAX.loadExample(listItem, self);
+			}
 		},
 
 		openShareDialog: function() {
