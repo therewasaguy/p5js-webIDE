@@ -21,18 +21,7 @@ module.exports = Vue.extend({
 	computed: {
 		projectID: function() {
 			return this.$root.currentProject._id;
-		},
-
-		inputFields: function() {
-			var res = {};
-			var inputs = document.getElementsByClassName('dialog-input');
-
-			for (var i = 0; i < inputs.length; i++) {
-				res[inputs[i].id] = inputs[i].value;
-			}
-			return res;
 		}
-
 	},
 
 	ready: function() {
@@ -46,6 +35,8 @@ module.exports = Vue.extend({
 		this.$on('open-share-dialog', this.openShareDialog);
 		this.$on('prompt-rename', this.promptRename);
 		this.$on('prompt-save-as', this.promptSaveAs);
+		this.$on('prompt-general', this.generalPrompt);
+
 
 		this.container = document.getElementById('dialog-container');
 		this.container.classList.add('hidden');
@@ -58,6 +49,7 @@ module.exports = Vue.extend({
 		this.viewSave = document.getElementById('save-as-view');
 		this.viewShare = document.getElementById('share-view');
 		this.viewSketchbook = document.getElementById('sketchbook-view');
+		this.viewGeneral = document.getElementById('general-view');
 
 		this._defaultCallback = function(val) {
 			console.log(val);
@@ -105,6 +97,7 @@ module.exports = Vue.extend({
 
 			this.viewSave.classList.add('hidden');
 			this.viewSketchbook.classList.add('hidden');
+			this.viewGeneral.classList.add('hidden');
 			this.viewShare.classList.remove('hidden');
 
 			this.show();
@@ -123,6 +116,7 @@ module.exports = Vue.extend({
 			var saveAsTitle = document.getElementById('save-as-title');
 			saveAsTitle.innerHTML = msg;
 
+			this.viewGeneral.classList.add('hidden');
 			this.viewSave.classList.remove('hidden');
 			this.viewShare.classList.add('hidden');
 			this.viewSketchbook.classList.add('hidden');
@@ -136,6 +130,7 @@ module.exports = Vue.extend({
 			var saveAsTitle = document.getElementById('save-as-title');
 			saveAsTitle.innerHTML = 'Rename Project';
 
+			this.viewGeneral.classList.add('hidden');
 			this.viewSave.classList.remove('hidden');
 			this.viewShare.classList.add('hidden');
 			this.viewSketchbook.classList.add('hidden');
@@ -147,19 +142,66 @@ module.exports = Vue.extend({
 			console.log('open sketchbook');
 			this.show();
 
+			this.viewGeneral.classList.add('hidden');
 			this.viewSave.classList.add('hidden');
 			this.viewShare.classList.add('hidden');
 			this.viewSketchbook.classList.remove('hidden');
 		},
 
+		/**
+		 *  Post a general message
+		 *  @param  {Object} obj 	obj.msg
+		 *                        obj.input (placeholder)
+		 *                        obj.callback
+		 */
+		generalPrompt: function(obj) {
+			var msg = obj.msg;
+			var inputField = obj.input || null;
+			this.show();
+
+			var gnrlInput = document.getElementById('gnrlinput');
+			if (inputField) {
+				gnrlInput.style.display = 'block';
+				gnrlInput.placeholder = inputField;
+			} else {
+				gnrlInput.style.display = 'none';
+			}
+
+			var gnrlMsg = document.getElementById('general-title');
+			gnrlMsg.innerHTML = msg;
+			this.callback = obj.callback;
+			this.viewGeneral.classList.remove('hidden');
+			this.viewSave.classList.add('hidden');
+			this.viewShare.classList.add('hidden');
+			this.viewSketchbook.classList.add('hidden');
+
+		},
+
+		/**
+		 *  Return an object with key-value pairs
+		 *  where keys are input ID's
+		 *  of the 'dialog-input' class
+		 *  and vals are their values.
+		 *  
+		 *  @return {Object}
+		 */
+		calcInputs: function() {
+			var res = {};
+			var inputs = document.getElementsByClassName('dialog-input');
+			for (var i = 0; i < inputs.length; i++) {
+				res[inputs[i].id] = inputs[i].value;
+			}
+			return res;
+		},
+
 		accept: function() {
-			console.log('accept');
-			this.callback(this.inputFields);
+			var inputFields = this.calcInputs();
+
+			this.callback(inputFields);
 			this.close();
 		},
 
 		cancel: function() {
-			console.log('cancel');
 			this.close();
 		}
 	}

@@ -657,7 +657,21 @@ var appConfig = {
 		},
 
 		newProject: function(title, sketchContents) {
-			this.modeFunction('newProject', title, sketchContents);
+			var self = this;
+
+			var callback = function() {
+				self.modeFunction('newProject', title, sketchContents);
+			};
+
+			// if contents are unsaved, prompt: are you sure?
+			if (this.currentProject && this.currentProject.unsaved() ) {
+				this.$broadcast('prompt-general', {
+					msg : 'Unsaved changes. Are you sure?',
+					callback: callback
+				});
+			} else {
+				callback();
+			}
 		},
 
 		downloadProject: function() {

@@ -307,18 +307,7 @@ module.exports = Vue.extend({
 	computed: {
 		projectID: function() {
 			return this.$root.currentProject._id;
-		},
-
-		inputFields: function() {
-			var res = {};
-			var inputs = document.getElementsByClassName('dialog-input');
-
-			for (var i = 0; i < inputs.length; i++) {
-				res[inputs[i].id] = inputs[i].value;
-			}
-			return res;
 		}
-
 	},
 
 	ready: function() {
@@ -332,6 +321,8 @@ module.exports = Vue.extend({
 		this.$on('open-share-dialog', this.openShareDialog);
 		this.$on('prompt-rename', this.promptRename);
 		this.$on('prompt-save-as', this.promptSaveAs);
+		this.$on('prompt-general', this.generalPrompt);
+
 
 		this.container = document.getElementById('dialog-container');
 		this.container.classList.add('hidden');
@@ -344,6 +335,7 @@ module.exports = Vue.extend({
 		this.viewSave = document.getElementById('save-as-view');
 		this.viewShare = document.getElementById('share-view');
 		this.viewSketchbook = document.getElementById('sketchbook-view');
+		this.viewGeneral = document.getElementById('general-view');
 
 		this._defaultCallback = function(val) {
 			console.log(val);
@@ -391,6 +383,7 @@ module.exports = Vue.extend({
 
 			this.viewSave.classList.add('hidden');
 			this.viewSketchbook.classList.add('hidden');
+			this.viewGeneral.classList.add('hidden');
 			this.viewShare.classList.remove('hidden');
 
 			this.show();
@@ -409,6 +402,7 @@ module.exports = Vue.extend({
 			var saveAsTitle = document.getElementById('save-as-title');
 			saveAsTitle.innerHTML = msg;
 
+			this.viewGeneral.classList.add('hidden');
 			this.viewSave.classList.remove('hidden');
 			this.viewShare.classList.add('hidden');
 			this.viewSketchbook.classList.add('hidden');
@@ -422,6 +416,7 @@ module.exports = Vue.extend({
 			var saveAsTitle = document.getElementById('save-as-title');
 			saveAsTitle.innerHTML = 'Rename Project';
 
+			this.viewGeneral.classList.add('hidden');
 			this.viewSave.classList.remove('hidden');
 			this.viewShare.classList.add('hidden');
 			this.viewSketchbook.classList.add('hidden');
@@ -433,26 +428,73 @@ module.exports = Vue.extend({
 			console.log('open sketchbook');
 			this.show();
 
+			this.viewGeneral.classList.add('hidden');
 			this.viewSave.classList.add('hidden');
 			this.viewShare.classList.add('hidden');
 			this.viewSketchbook.classList.remove('hidden');
 		},
 
+		/**
+		 *  Post a general message
+		 *  @param  {Object} obj 	obj.msg
+		 *                        obj.input (placeholder)
+		 *                        obj.callback
+		 */
+		generalPrompt: function(obj) {
+			var msg = obj.msg;
+			var inputField = obj.input || null;
+			this.show();
+
+			var gnrlInput = document.getElementById('gnrlinput');
+			if (inputField) {
+				gnrlInput.style.display = 'block';
+				gnrlInput.placeholder = inputField;
+			} else {
+				gnrlInput.style.display = 'none';
+			}
+
+			var gnrlMsg = document.getElementById('general-title');
+			gnrlMsg.innerHTML = msg;
+			this.callback = obj.callback;
+			this.viewGeneral.classList.remove('hidden');
+			this.viewSave.classList.add('hidden');
+			this.viewShare.classList.add('hidden');
+			this.viewSketchbook.classList.add('hidden');
+
+		},
+
+		/**
+		 *  Return an object with key-value pairs
+		 *  where keys are input ID's
+		 *  of the 'dialog-input' class
+		 *  and vals are their values.
+		 *  
+		 *  @return {Object}
+		 */
+		calcInputs: function() {
+			var res = {};
+			var inputs = document.getElementsByClassName('dialog-input');
+			for (var i = 0; i < inputs.length; i++) {
+				res[inputs[i].id] = inputs[i].value;
+			}
+			return res;
+		},
+
 		accept: function() {
-			console.log('accept');
-			this.callback(this.inputFields);
+			var inputFields = this.calcInputs();
+
+			this.callback(inputFields);
 			this.close();
 		},
 
 		cancel: function() {
-			console.log('cancel');
 			this.close();
 		}
 	}
 
 });
 },{"../sketchbook/index":29,"./template.html":5,"vue":102}],5:[function(require,module,exports){
-module.exports = '\n<!-- share dialog -->\n<div id="dialog-container">\n	<div class="dialog">\n\n		<div id="share-view" class="dview">\n			<!-- if saved, show this ..-->\n			<div id="dialog-share" class="dialog-hidden">\n				<p class="dialog-title">Copy a link to share...</p>\n\n	<!-- 				<p id="dialog-content">\n				</p> -->\n				<div>\n					<label>embed code</label>\n					<input type="text" readonly="true" value="{{embedCode}}" onclick="select()">\n				</div>\n\n				<div>\n					<label>share link</label>\n					<input type="text" readonly="true" value="{{permalink}}" onclick="select()">\n				</div>\n				<!--TO DO: add copy button\n					<input type="image" src="/images/open-iconic-master/svg/clipboard.svg" alt="Submit">\n				-->\n			</div>\n\n			<!-- if unsaved, show this -->\n			<div id="dialog-unsaved">\n				<p class="dialog-title">Unsaved Project</p>\n				<p id="dialog-content">\n					Please save your project before sharing.\n				</p>\n			</div>\n		</div>\n\n		<div id="save-as-view" class="dview">\n			<p id="save-as-title" class="dialog-title"></p>\n			<div>\n				<label>Project Name: </label>\n				<input type="text" id="newName" class="dialog-input" value="{{projectName}}">\n			</div>\n\n<!--\n 			<div>\n				<label>Tags (comma separated): </label>\n				<input type="text" id="tags" class="dialog-input" value="{{currentProject.tags}}">\n			</div>\n\n			<div>\n				<label>Public </label>\n				<input type="checkbox" id="public" class="dialog-input" checked="{{currentProject.public}}">\n			</div>\n-->\n		</div>\n\n		<div id="sketchbook-view" class="dview">\n			<sketchbook></sketchbook>\n		</div>\n\n		<div id="dialog-button-container">\n			<button id="dialog-left" class="dialog-button" v-on:click="accept">OK</button>\n			<button id="dialog-right" class="dialog-button" v-on:click="cancel">Cancel</button>\n		</div>\n\n	</div>\n</div>';
+module.exports = '\n<!-- share dialog -->\n<div id="dialog-container">\n	<div class="dialog">\n\n		<div id="share-view" class="dview">\n			<!-- if saved, show this ..-->\n			<div id="dialog-share" class="dialog-hidden">\n				<p class="dialog-title">Copy a link to share...</p>\n\n	<!-- 				<p id="dialog-content">\n				</p> -->\n				<div>\n					<label>embed code</label>\n					<input type="text" readonly="true" value="{{embedCode}}" onclick="select()">\n				</div>\n\n				<div>\n					<label>share link</label>\n					<input type="text" readonly="true" value="{{permalink}}" onclick="select()">\n				</div>\n				<!--TO DO: add copy button\n					<input type="image" src="/images/open-iconic-master/svg/clipboard.svg" alt="Submit">\n				-->\n			</div>\n\n			<!-- if unsaved, show this -->\n			<div id="dialog-unsaved">\n				<p class="dialog-title">Unsaved Project</p>\n				<p id="dialog-content">\n					Please save your project before sharing.\n				</p>\n			</div>\n		</div>\n\n		<div id="save-as-view" class="dview">\n			<p id="save-as-title" class="dialog-title"></p>\n			<div>\n				<label>Project Name: </label>\n				<input type="text" id="newName" class="dialog-input" value="{{projectName}}">\n			</div>\n\n<!--\n 			<div>\n				<label>Tags (comma separated): </label>\n				<input type="text" id="tags" class="dialog-input" value="{{currentProject.tags}}">\n			</div>\n\n			<div>\n				<label>Public </label>\n				<input type="checkbox" id="public" class="dialog-input" checked="{{currentProject.public}}">\n			</div>\n-->\n		</div>\n\n		<!-- general prompt with an optional input field -->\n		<div id="general-view" class="dview">\n			<p id="general-title" class="dialog-title"></p>\n			<input id="gnrlinput" type="text" class="dialog-input">\n		</div>\n\n		<div id="sketchbook-view" class="dview">\n			<sketchbook></sketchbook>\n		</div>\n\n		<div id="dialog-button-container">\n			<button id="dialog-left" class="dialog-button" v-on:click="accept">OK</button>\n			<button id="dialog-right" class="dialog-button" v-on:click="cancel">Cancel</button>\n		</div>\n\n	</div>\n</div>';
 },{}],6:[function(require,module,exports){
 
 
@@ -1978,7 +2020,21 @@ var appConfig = {
 		},
 
 		newProject: function(title, sketchContents) {
-			this.modeFunction('newProject', title, sketchContents);
+			var self = this;
+
+			var callback = function() {
+				self.modeFunction('newProject', title, sketchContents);
+			};
+
+			// if contents are unsaved, prompt: are you sure?
+			if (this.currentProject && this.currentProject.unsaved() ) {
+				this.$broadcast('prompt-general', {
+					msg : 'Unsaved changes. Are you sure?',
+					callback: callback
+				});
+			} else {
+				callback();
+			}
 		},
 
 		downloadProject: function() {
@@ -2584,32 +2640,50 @@ module.exports = {
 	 *  @param  {String} title 
 	 */
 	newProject: function(title) {
+		var self = this;
 		var proj;
+		var name = title;
 
-		var name = title ? title : prompt('Project Name', 'Cool Sketch');
-		proj = new Project();
-		proj.name = name;
-		console.log(proj.fileObjects);
-		// close existing project
-		this.closeProject();
-
-		// load current file
-		this.currentFile = proj.findFile(proj.openFileName);
-
-		// this.$broadcast('open-file', this.currentFile);
-
-		// set up tabs
-		for (var i = 0; i < proj.openTabNames.length; i++) {
-			var fileName = proj.openTabNames[i];
-			// if (fileName === currentFile.name) return; // dont duplicate tabs
-
-			var fileObj = proj.findFile(fileName);
-			this.$broadcast('add-tab', fileObj, this.tabs);
+		// prompt for project name
+		if (!name) {
+			setTimeout(function() {
+				self.$broadcast('prompt-general', {
+					msg : 'Project Name',
+					input: 'My sketch',
+					callback: gotName
+				});
+			}, 10);
 		}
 
-		// set current project
-		this.currentProject = proj;
-		this.updateProjectInLocalStorage();
+		// if new name prompt succeeds:
+		function gotName(details) {
+			name = details['gnrlinput'];
+			console.log('new name: ' + name);
+
+			proj = new Project();
+			proj.name = name;
+
+			// close existing project
+			self.closeProject();
+
+			// load current file
+			self.currentFile = proj.findFile(proj.openFileName);
+
+			// this.$broadcast('open-file', this.currentFile);
+
+			// set up tabs
+			for (var i = 0; i < proj.openTabNames.length; i++) {
+				var fileName = proj.openTabNames[i];
+				// if (fileName === currentFile.name) return; // dont duplicate tabs
+
+				var fileObj = proj.findFile(fileName);
+				self.$broadcast('add-tab', fileObj, self.tabs);
+			}
+
+			// set current project
+			self.currentProject = proj;
+			self.updateProjectInLocalStorage();
+		}
 	},
 
 	// called when user hits 'save to cloud'

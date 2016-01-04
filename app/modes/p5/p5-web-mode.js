@@ -11,32 +11,50 @@ module.exports = {
 	 *  @param  {String} title 
 	 */
 	newProject: function(title) {
+		var self = this;
 		var proj;
+		var name = title;
 
-		var name = title ? title : prompt('Project Name', 'Cool Sketch');
-		proj = new Project();
-		proj.name = name;
-		console.log(proj.fileObjects);
-		// close existing project
-		this.closeProject();
-
-		// load current file
-		this.currentFile = proj.findFile(proj.openFileName);
-
-		// this.$broadcast('open-file', this.currentFile);
-
-		// set up tabs
-		for (var i = 0; i < proj.openTabNames.length; i++) {
-			var fileName = proj.openTabNames[i];
-			// if (fileName === currentFile.name) return; // dont duplicate tabs
-
-			var fileObj = proj.findFile(fileName);
-			this.$broadcast('add-tab', fileObj, this.tabs);
+		// prompt for project name
+		if (!name) {
+			setTimeout(function() {
+				self.$broadcast('prompt-general', {
+					msg : 'Project Name',
+					input: 'My sketch',
+					callback: gotName
+				});
+			}, 10);
 		}
 
-		// set current project
-		this.currentProject = proj;
-		this.updateProjectInLocalStorage();
+		// if new name prompt succeeds:
+		function gotName(details) {
+			name = details['gnrlinput'];
+			console.log('new name: ' + name);
+
+			proj = new Project();
+			proj.name = name;
+
+			// close existing project
+			self.closeProject();
+
+			// load current file
+			self.currentFile = proj.findFile(proj.openFileName);
+
+			// this.$broadcast('open-file', this.currentFile);
+
+			// set up tabs
+			for (var i = 0; i < proj.openTabNames.length; i++) {
+				var fileName = proj.openTabNames[i];
+				// if (fileName === currentFile.name) return; // dont duplicate tabs
+
+				var fileObj = proj.findFile(fileName);
+				self.$broadcast('add-tab', fileObj, self.tabs);
+			}
+
+			// set current project
+			self.currentProject = proj;
+			self.updateProjectInLocalStorage();
+		}
 	},
 
 	// called when user hits 'save to cloud'
