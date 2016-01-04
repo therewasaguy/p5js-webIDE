@@ -13,7 +13,6 @@ var User = require('./models/user');
 require('./keybindings');
 
 var AJAX = require('./ajax');
-console.log(AJAX);
 
 var modes = {
   p5web: require('./modes/p5/p5-web-mode')
@@ -620,11 +619,8 @@ var appConfig = {
 			var self = this;
 			var fileObjects = [];
 			var filesToGet = []; // array of file IDs w/o content
-			console.log('parse new project');
 
 			for (var i = 0; i < data.pFiles.length; i++) {
-				console.log(data.pFiles[i]);
-
 				// TO DO: if we already have the file id locally,
 				// dont load it
 

@@ -106,13 +106,19 @@ module.exports = {
 	 *  @param  {Function} callback 
 	 */
 	getFiles: function(filesToGet, callback) {
+		console.log('getting files with ajax');
 		$.ajax({
 			url: '/api/files',
 			data: {ids: filesToGet},
 			type: 'GET',
 		})
 		.success( function(res) {
+			console.log('got file');
+			console.log(res);
 			callback(res);
+		})
+		.error( function(err) {
+			console.log('error getting files ' + filesToGet[0]);
 		});
 	},
 

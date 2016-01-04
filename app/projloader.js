@@ -1,10 +1,11 @@
-var pFile = require('./models/pfile');
-var Project = require('./models/project');
+
 
 module.exports = {
 
 	// init example with reference to main
 	initExample: function(sketchContents, name, main) {
+		var pFile = require('./models/pfile');
+		var Project = require('./models/project');
 
 		// make examples full screen ~ they look cool!
 		var createCanvasLines = sketchContents.match(/createCanvas\((.*?)\)/gmi);

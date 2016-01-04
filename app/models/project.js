@@ -1,7 +1,7 @@
-var pFile = require('./pFile');
-
 // either load default file, or load new file;
 var Project = function(options) {
+
+	var pFile = require('./pfile');
 
 	// if no options are provided, set default files
 	if (!options) {
