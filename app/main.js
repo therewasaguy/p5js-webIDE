@@ -521,7 +521,7 @@ var appConfig = {
 		saveToCloud: function(flag) {
 			console.log('save to cloud', flag);
 
-			this.$broadcast('toast-msg', 'Welcome back, ' + username, true);
+			this.$broadcast('toast-msg', 'Saving...', true);
 
 			// var projectData = JSON.parse(localStorage.latestProject);
 			var projectData = this.currentProject;

@@ -6,7 +6,7 @@
         <a v-on:click="$root.newProject()">New</a>
       </li>
 
-      <li class="dropdown-menu" v-on:mouseenter="openOpenDropdown" v-on:mouseleave:="closeOpenDropdown"><a>Open</a>
+      <li class="dropdown-menu" v-on:mouseenter="openOpenDropdown" v-on:mouseleave:="closeOpenDropdown"><a v-on:click="openSketchbook">Open</a>
 
         <div class="dropdown-content {{openDropdownClass}}" v-on:mouseleave=" closeOpenDropdown">
           <!-- v-on="mouseenter: prevDef, mouseleave: clearDef" -->
@@ -40,7 +40,7 @@
         </div>
       </li>
 
-      <li class="dropdown-menu" v-on:mouseenter="openSaveDropdown" v-on:mouseleave="closeSaveDropdown"><a >Save</a>
+      <li class="dropdown-menu" v-on:mouseenter="openSaveDropdown" v-on:mouseleave="closeSaveDropdown"><a v-on:click="$root.saveToCloud()">Save</a>
         <span class="dropdown-content {{saveDropdownClass}}" v-on:mouseleave=" closeSaveDropdown">
 
           <!-- if user owns project... -->
