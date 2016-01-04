@@ -102,15 +102,13 @@ module.exports = {
 	 *  @param  {Function} callback 
 	 */
 	getFiles: function(filesToGet, callback) {
-		console.log('getting files with ajax');
+
 		$.ajax({
 			url: '/api/files',
 			data: {ids: filesToGet},
 			type: 'GET',
 		})
 		.success( function(res) {
-			console.log('got file');
-			console.log(res);
 			callback(res);
 		})
 		.error( function(err) {
@@ -189,7 +187,7 @@ module.exports = {
 							pFiles_ids: proj.pFiles ? proj.pFiles.map(function(pf) {return pf._id}) : []
 						});
 					}
-					console.log(projects[10].timestamp);
+
 					// update localStorage
 					window.localStorage.removeItem('recentProjects');
 					window.localStorage.setItem('recentProjects', JSON.stringify(projects));
