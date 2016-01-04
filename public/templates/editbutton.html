@@ -17,9 +17,8 @@
 <script>
 	function __editCode() {
 		var pathname = window.location.pathname.split('/');
-		var username = pathname[2];
-		var projectID = pathname[3];
+		var projectID = pathname[2];
 
-		window.open('http://' + window.location.host + '/' + username + '/' + projectID); 
+		window.open(window.location.protocol + '//' + window.location.host + '/editor#?sketch=' + projectID )
 	}
 </script>
