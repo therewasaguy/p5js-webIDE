@@ -344,7 +344,7 @@ module.exports = db = {
 
 					// if file belongs to projects other than this one, save a new one
 					var proj_ids = doc.project_ids;
-					if (proj_ids.length > 1 && doc.project_ids.indexOf(projectID > -1)) {
+					if (proj_ids.length >= 1 && doc.project_ids.indexOf(projectID > -1)) {
 						saveNewFile();
 					}
 					// otherwise, update with contents & add project ID (is that necessary?)

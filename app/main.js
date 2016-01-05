@@ -62,7 +62,6 @@ var appConfig = {
 
 			// redundant, but helps watch computed userOwnsProject property
 			currentUserID: null,
-			currentProjectOwnerID: null,
 
 			recentProjects: [],
 			examples: [],
@@ -105,6 +104,10 @@ var appConfig = {
 
 		theme: function() {
 			return this.settings.editorTheme;
+		},
+
+		currentProjectOwnerID: function() {
+			return this.currentProject && this.currentProject.owner_id;
 		},
 
 		// redundant, but helps watch computed userOwnsProject property
@@ -540,7 +543,18 @@ var appConfig = {
 				var newName = vars.newName;
 				self.currentProject.oldName = self.projectName;
 				self.projectName = newName;
-				self.saveToCloud('saveAs');
+
+				// overwrite existing file
+				if (vars.overwriteID) {
+					console.log('overwrite existing project');
+					self.currentProject._id = vars.overwriteID;
+					self.saveToCloud();
+				}
+				// or, save a new file
+				else {
+					console.log('save as new project');
+					self.saveToCloud('saveAs');
+				}
 			};
 
 			// prompt dialog for new name, then saveToCloud
