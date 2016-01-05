@@ -62,7 +62,7 @@ var appConfig = {
 
 			// redundant, but helps watch computed userOwnsProject property
 			currentUserID: null,
-			currentProjectOwnerID: null,
+			// currentProjectOwnerID: null,
 
 			recentProjects: [],
 			examples: [],
@@ -105,6 +105,10 @@ var appConfig = {
 
 		theme: function() {
 			return this.settings.editorTheme;
+		},
+
+		currentProjectOwnerID: function() {
+			return this.currentProject && this.currentProject.owner_id;
 		},
 
 		// redundant, but helps watch computed userOwnsProject property
