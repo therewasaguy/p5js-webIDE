@@ -6,7 +6,18 @@
 var timeago = require('timeago');
 var ProjectLoader = require('./projloader');
 
-module.exports = {
+var AJAX = module.exports = {
+
+	// track how many files need to load.
+	// When it hits zero, do something!
+	filesToLoad: 0,
+
+	// ref to main app
+	main: undefined,
+
+	init: function(main) {
+		this.main = main;
+	},
 
 	saveProject: function(postData, main) {
 
@@ -25,6 +36,7 @@ module.exports = {
 			main.currentProject.owner_username = res.owner_username;
 			main.currentProject.forkedFrom = res.forkedFrom;
 			main.currentProject.pFiles = res.pFiles;
+			main.currentProject.originalName = res.name;
 
 			// update file ID's
 			for (var i = 0; i < res.pFiles.length; i++) {
@@ -103,6 +115,7 @@ module.exports = {
 	 *  @param  {Function} callback 
 	 */
 	getFiles: function(filesToGet, callback) {
+		AJAX.filesToLoad += filesToGet.length;
 
 		$.ajax({
 			url: '/api/files',
@@ -110,11 +123,24 @@ module.exports = {
 			type: 'GET',
 		})
 		.success( function(res) {
+			res.forEach(function(r) {AJAX.fileDidLoad();});
 			callback(res);
 		})
 		.error( function(err) {
 			console.log('error getting files ' + filesToGet[0]);
 		});
+	},
+
+	fileDidLoad: function() {
+		var main = this.main;
+
+		this.filesToLoad--;
+		if (this.filesToLoad === 0) {
+			console.log('finished loading files');
+			setTimeout(function() {
+				main.updateProjectInLocalStorage();
+			}, 10);
+		}
 	},
 
 	loadExample: function(listItem, main) {

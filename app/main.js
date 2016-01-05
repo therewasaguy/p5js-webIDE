@@ -179,8 +179,9 @@ var appConfig = {
 
 	ready: function() {
 
-		// init keybindings
+		// init keybindings and ajax
 		Keybindings(this);
+		AJAX.init(this);
 
 		// might use this to re-open the window
 		window.name = 'p5webide';
@@ -205,12 +206,8 @@ var appConfig = {
 		this.$on('done-loading', function() {
 			this.shouldLoadExistingProject = false;
 
-			// this is a hack but if project loads but no edits are made, 
-			// we need to make sure that localstorage doesnt get blank files
-			var self = this;
-			setTimeout(function() {
-				self.updateProjectInLocalStorage();
-			}, 2000);
+			// however, files might not have finished loading
+			console.log('Ready! Still loading ' + AJAX.filesToLoad + ' files behind the scenes');
 		});
 
 		this.updatePageHash();
@@ -506,7 +503,10 @@ var appConfig = {
 			// in case loading bar was visible, hide it:
 			self.shouldLoadExistingProject = false;
 
-			self.updateProjectInLocalStorage();
+			// console.log('done loading');
+			// setTimeout(function() {
+			// 	self.updateProjectInLocalStorage();
+			// }, 1000);
 		},
 
 		// load project by our ID, not by the gistID
@@ -646,7 +646,7 @@ var appConfig = {
 				filesWeGot.forEach(function(dbFile) {
 					var newFile = new pFile(dbFile.name, dbFile.contents, dbFile._id);
 					fileObjects.push(newFile);
-				})
+				});
 
 				data.files = undefined;  // clear
 				data.fileObjects = fileObjects;
@@ -654,6 +654,7 @@ var appConfig = {
 				// once all files have loaded, open sketch...
 				var proj = new Project(data);
 				self.openProject(proj);
+				console.log('got files');
 			}
 		},
 
@@ -762,7 +763,7 @@ var appConfig = {
 		 */
 		updateProjectInLocalStorage: function(oldID) {
 			var self = this;
-
+			console.log(self.currentProject.fileObjects[0].contents.length);
 			// not sure why but this has been necessary to avoid empty 'content' for files
 			setTimeout( function() {
 				localStorage.latestProject = JSON.stringify(self.currentProject);

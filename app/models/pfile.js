@@ -28,7 +28,7 @@ var pFile = function(name, contents, _id) {
 	this.name = name || 'untitled';
 
 	// TO DO: if files have no id but one of these names, load default
-	var defaultFiles = ['index.html', 'p5.js', 'p5.sound.js', 'p5.dom.js', 'sketch.js', 'style.css'];
+	var defaultFiles = ['sketch.js', 'style.css', 'index.html', 'p5.js', 'p5.sound.js', 'p5.dom.js'];
 
 	if (defaultFiles.indexOf(name) > -1 && (!this.contents || this.contents == 'default')) {
 		this.setDefaultContents(name);
@@ -49,7 +49,7 @@ pFile.prototype.setDefaultContents = function(fileName) {
 		'style.css' : '568a18e8c81a89fb4f3d06ab',
 		'p5.dom.js' : '568a022f7811bb374d421bbd',
 		'p5.js' : '568a02317811bb374d421bc1',
-		'sketch.js' : '568a18ecc81a89fb4f3d06af'
+		'sketch.js' : '568c2bab4b1e570300c16592' // 568a18ecc81a89fb4f3d06af
 		// 'sketch.js' : '568a02317811bb374d421bc0'
 	};
 
@@ -97,27 +97,6 @@ pFile.prototype.setDefaultContents = function(fileName) {
 		return;
 	}
 
-	// old
-	// var contents = $.ajax({
-	// 	// type: 'GET',
-	// 	dataType: 'text',
-	// 	url: '/sketch/template/' + fileName,
-	// 	success: function(filedata) {
-	// 		self.contents = String(contents.responseText);
-	// 		self.originalContents = self.contents;
-
-	// 		if (self.currentFile) {
-	// 			var e = new Event('loaded-file');
-	// 			e.file = self;
-	// 			document.dispatchEvent(e);
-	// 		}
-	// 	},
-	// 	error: function(e) {
-	// 		console.log('error ');
-	// 		console.log(e);
-	// 	}
-	// });
-
 };
 
 
@@ -143,6 +122,3 @@ pFile.prototype.commitContents = function() {
 
 
 module.exports = pFile;
-// {
-// 	'createFile' : createFile
-// };
