@@ -40,7 +40,7 @@
         </div>
       </li>
 
-      <li class="dropdown-menu" v-on:mouseenter="openSaveDropdown" v-on:mouseleave="closeSaveDropdown"><a v-on:click="$root.saveToCloud()">Save</a>
+      <li class="dropdown-menu" v-on:mouseenter="openSaveDropdown" v-on:mouseleave="closeSaveDropdown"><a v-on:click="defaultSave">Save</a>
         <span class="dropdown-content {{saveDropdownClass}}" v-on:mouseleave=" closeSaveDropdown">
 
           <!-- if user owns project... -->
@@ -50,8 +50,8 @@
           <!-- if user does not own project... -->
           <span v-if="!userOwnsProject">
 
-            <a v-if="loggedIn" v-on:click="$root.saveToCloud(currentUser._id)">Save as {{currentUser.username}}</a>
-            <a v-if="!loggedIn" v-on:click="$root.saveToCloud('anon')">Save as Anonymous User (not logged in)</a>
+            <a v-if="loggedIn" v-on:click="$root.saveAs(currentUser._id)">Save As {{currentUser.username}}</a>
+            <a v-if="!loggedIn" v-on:click="$root.saveAs()">Save As Anonymous User (not logged in)</a>
 
           </span>
 

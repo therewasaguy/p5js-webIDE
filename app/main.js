@@ -204,7 +204,14 @@ var appConfig = {
 		});
 		this.$on('done-loading', function() {
 			this.shouldLoadExistingProject = false;
-		})
+
+			// this is a hack but if project loads but no edits are made, 
+			// we need to make sure that localstorage doesnt get blank files
+			var self = this;
+			setTimeout(function() {
+				self.updateProjectInLocalStorage();
+			}, 2000);
+		});
 
 		this.updatePageHash();
 

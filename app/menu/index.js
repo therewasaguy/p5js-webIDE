@@ -150,6 +150,18 @@ module.exports = Vue.extend({
 		// clearDef: function() {
 		// 	console.log('clear def');
 		// 	inSub = false;
+		},
+
+		/**
+		 *  This is what happens when user hits default
+		 *  'save' button rather than a menu option.
+		 */
+		defaultSave: function() {
+			if (this.userOwnsProject) {
+				this.$root.saveToCloud();
+			} else {
+				this.$root.saveAs();
+			}
 		}
 
 	}
