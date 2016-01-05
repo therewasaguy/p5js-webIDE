@@ -45,7 +45,6 @@ pFile.prototype.setDefaultContents = function(fileName) {
 	var latestIDs = {
 		'p5.sound.js' : '568a02317811bb374d421bbe',
 		'index.html' : '568a02317811bb374d421bbf',
-		// 'style.css' : '568a022f7811bb374d421bbc',
 		'style.css' : '568a18e8c81a89fb4f3d06ab',
 		'p5.dom.js' : '568a022f7811bb374d421bbd',
 		'p5.js' : '568a02317811bb374d421bc1',

@@ -14,7 +14,8 @@ module.exports = Vue.extend({
 			embedCode: '',
 			mode: '', // 'save' 'rename' 'general' 'sketchbook'
 			callback: function() {},
-			sketchbookview: false
+			sketchbookview: false,
+			overwriteID: null
 		}
 	},
 
@@ -33,6 +34,9 @@ module.exports = Vue.extend({
 					for (var i = 0; i < this.$root.recentProjects.length; i++) {
 						var proj = this.$root.recentProjects[i];
 						if (this.projnameinput === proj.name) {
+
+							// set overwriteID
+							this.overwriteID = proj.id || proj._id;
 							return 'Save will overwrite existing project ' + proj.name;
 						}
 					}
@@ -41,12 +45,16 @@ module.exports = Vue.extend({
 					return 'Please give your project a name!';
 				}
 			}
+
+			// set overwriteID
+			this.overwriteID = null;
 			return '';
 		}
 	},
 
 	ready: function() {
 		var self = this;
+		window._dialog = this;
 
 		this.$on('open-sketchbook', function() {
 			console.log('got the message');
@@ -87,6 +95,9 @@ module.exports = Vue.extend({
 
 		// should be renamed "open"
 		show: function() {
+			// clear overwriteID
+			this.overwriteID = null
+
 			this.container.classList.remove('hidden');
 			this.mainContainer.classList.add('blurred');
 			this.$broadcast('dialog-open');
@@ -214,7 +225,7 @@ module.exports = Vue.extend({
 		 *  @return {Object}
 		 */
 		calcInputs: function() {
-			var res = {};
+			var res = {'overwriteID' : this.overwriteID};
 			var inputs = document.getElementsByClassName('dialog-input');
 			for (var i = 0; i < inputs.length; i++) {
 				res[inputs[i].id] = inputs[i].value;
