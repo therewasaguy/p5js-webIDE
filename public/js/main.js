@@ -2209,9 +2209,7 @@ var appConfig = {
 			setTimeout( function() {
 				localStorage.latestProject = JSON.stringify(self.currentProject);
 
-				if (oldID || window.location.hash == '') {
-					self.updatePageHash(oldID);
-				}
+				self.updatePageHash(oldID);
 			}, 1);
 
 		},
@@ -2222,7 +2220,6 @@ var appConfig = {
 		 */
 		updatePageHash: function(oldProjID) {
 			var self = this;
-			console.log('update page hash');
 			if (!self.currentProject || self.currentProject._id == undefined) {
 				window.location.hash = '';
 				return;
