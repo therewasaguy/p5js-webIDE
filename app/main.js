@@ -198,6 +198,14 @@ var appConfig = {
 		this.$on('updateCurrentProject', this.updateCurrentProject);
 		this.$on('open-sketchbook', this.openSketchbook);
 		this.$on('close-dialog', this.closeDialog);
+
+		this.$on('loading', function() {
+			this.shouldLoadExistingProject = true;
+		});
+		this.$on('done-loading', function() {
+			this.shouldLoadExistingProject = false;
+		})
+
 		this.updatePageHash();
 
 	},

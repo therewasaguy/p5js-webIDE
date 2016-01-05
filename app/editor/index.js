@@ -72,6 +72,7 @@ module.exports = Vue.extend({
 		// load and run the code that loaded is the file is the open file in the project
 		document.addEventListener('loaded-file', function(e) {
 			self.openFile(e.file);
+			self.$dispatch('done-loading');
 		});
 
 		// resize editor and editor-container

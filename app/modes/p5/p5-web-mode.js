@@ -23,6 +23,7 @@ module.exports = {
 					msg : 'Project Name',
 					input: 'My sketch',
 					callback: function(details){
+						self.$emit('loading');
 						gotName(details['gnrlinput']);
 					}
 				});
