@@ -98,6 +98,9 @@ module.exports = Vue.extend({
 			// clear overwriteID
 			this.overwriteID = null
 
+			// clear callback
+			this.callback = this._defaultCallback;
+
 			this.container.classList.remove('hidden');
 			this.mainContainer.classList.add('blurred');
 			this.$broadcast('dialog-open');
@@ -106,14 +109,19 @@ module.exports = Vue.extend({
 		close: function() {
 			this.mode = '';
 
+			// clear callback
+			this.callback = this._defaultCallback;
+
 			this.container.classList.add('hidden');
 			this.mainContainer.classList.remove('blurred');
 			this.$broadcast('dialog-close');
 		},
 
 		openShareDialog: function() {
-			var currentProj = this.$root.currentProject;
+			this.show();
 			this.mode = 'share';
+
+			var currentProj = this.$root.currentProject;
 
 			// update relevant data fields for template.html
 			this.projectID = localStorage.projectID;
@@ -135,11 +143,10 @@ module.exports = Vue.extend({
 			this.viewSketchbook.classList.add('hidden');
 			this.viewGeneral.classList.add('hidden');
 			this.viewShare.classList.remove('hidden');
-
-			this.show();
 		},
 
 		promptSaveAs: function(callback) {
+			this.show();
 			this.callback = callback;
 			this.mode = 'save';
 
@@ -157,11 +164,11 @@ module.exports = Vue.extend({
 			this.viewSave.classList.remove('hidden');
 			this.viewShare.classList.add('hidden');
 			this.viewSketchbook.classList.add('hidden');
-
-			this.show();
 		},
 
 		promptRename: function(callback) {
+			this.show();
+
 			this.mode = 'rename';
 			this.callback = callback;
 
@@ -172,8 +179,6 @@ module.exports = Vue.extend({
 			this.viewSave.classList.remove('hidden');
 			this.viewShare.classList.add('hidden');
 			this.viewSketchbook.classList.add('hidden');
-
-			this.show();
 		},
 
 		openSketchbook: function() {
