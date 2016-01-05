@@ -19,6 +19,12 @@
 					<label>share link</label>
 					<input type="text" readonly="true" value="{{permalink}}" onclick="select()">
 				</div>
+
+				<div>
+					<label>edit link</label>
+					<input type="text" readonly="true" value="{{editlink}}" onclick="select()">
+				</div>
+
 				<!--TO DO: add copy button
 					<input type="image" src="/images/open-iconic-master/svg/clipboard.svg" alt="Submit">
 				-->
@@ -37,9 +43,8 @@
 			<p id="save-as-title" class="dialog-title"></p>
 			<div>
 				<label>Project Name: </label>
-				<input type="text" id="newName" class="dialog-input" value="{{projectName}}">
+				<input type="text" id="newName" class="dialog-input" v-model="projnameinput" value="{{projectName}}">
 			</div>
-
 <!--
  			<div>
 				<label>Tags (comma separated): </label>
@@ -61,6 +66,10 @@
 
 		<div id="sketchbook-view" class="dview">
 			<sketchbook></sketchbook>
+		</div>
+
+		<div>
+			<p class="dialog-warning" id="dialog-warning">{{warning}}</p>
 		</div>
 
 		<div id="dialog-button-container">

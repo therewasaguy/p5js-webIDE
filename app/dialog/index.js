@@ -7,8 +7,12 @@ module.exports = Vue.extend({
 	data: function() {
 		return {
 			projectID: '',
+			// projectName: '',
+			projnameinput: '',
 			permalink: '',
+			editlink: '',
 			embedCode: '',
+			mode: '', // 'save' 'rename' 'general' 'sketchbook'
 			callback: function() {},
 			sketchbookview: false
 		}
@@ -21,6 +25,23 @@ module.exports = Vue.extend({
 	computed: {
 		projectID: function() {
 			return this.$root.currentProject._id;
+		},
+		warning: function() {
+			// 'save' and 'rename' warnings:
+			if (['save', 'rename'].indexOf(this.mode) > -1) {
+				if (this.$root.recentProjects) {
+					for (var i = 0; i < this.$root.recentProjects.length; i++) {
+						var proj = this.$root.recentProjects[i];
+						if (this.projnameinput === proj.name) {
+							return 'Save will overwrite existing project ' + proj.name;
+						}
+					}
+				}
+				if (this.projnameinput == '') {
+					return 'Please give your project a name!';
+				}
+			}
+			return '';
 		}
 	},
 
@@ -36,7 +57,7 @@ module.exports = Vue.extend({
 		this.$on('prompt-rename', this.promptRename);
 		this.$on('prompt-save-as', this.promptSaveAs);
 		this.$on('prompt-general', this.generalPrompt);
-
+		// this.$on('close-the-dialog'. this.close);
 
 		this.container = document.getElementById('dialog-container');
 		this.container.classList.add('hidden');
@@ -72,6 +93,8 @@ module.exports = Vue.extend({
 		},
 
 		close: function() {
+			this.mode = '';
+
 			this.container.classList.add('hidden');
 			this.mainContainer.classList.remove('blurred');
 			this.$broadcast('dialog-close');
@@ -79,11 +102,13 @@ module.exports = Vue.extend({
 
 		openShareDialog: function() {
 			var currentProj = this.$root.currentProject;
+			this.mode = 'share';
 
 			// update relevant data fields for template.html
 			this.projectID = localStorage.projectID;
 			this.permalink = window.location.origin  + '/view/' + this.projectID;
 			this.embedCode = '<iframe src="' + this.permalink + '"></iframe>';
+			this.editlink = window.location.href;
 
 			if ( currentProj.unsaved() ) {
 				this.dialogShare.classList.add('hidden');
@@ -105,6 +130,7 @@ module.exports = Vue.extend({
 
 		promptSaveAs: function(callback) {
 			this.callback = callback;
+			this.mode = 'save';
 
 			var msg = 'Saving';
 			if (!this.$root.currentUser.username) {
@@ -125,6 +151,7 @@ module.exports = Vue.extend({
 		},
 
 		promptRename: function(callback) {
+			this.mode = 'rename';
 			this.callback = callback;
 
 			var saveAsTitle = document.getElementById('save-as-title');
@@ -139,7 +166,7 @@ module.exports = Vue.extend({
 		},
 
 		openSketchbook: function() {
-			console.log('open sketchbook');
+			this.mode = 'sketchbook';
 			this.show();
 
 			this.viewGeneral.classList.add('hidden');
@@ -157,6 +184,7 @@ module.exports = Vue.extend({
 		generalPrompt: function(obj) {
 			var msg = obj.msg;
 			var inputField = obj.input || null;
+			this.mode = 'general';
 			this.show();
 
 			var gnrlInput = document.getElementById('gnrlinput');

@@ -197,6 +197,7 @@ var appConfig = {
 
 		this.$on('updateCurrentProject', this.updateCurrentProject);
 		this.$on('open-sketchbook', this.openSketchbook);
+		this.$on('close-dialog', this.closeDialog);
 		this.updatePageHash();
 
 	},
@@ -822,6 +823,11 @@ var appConfig = {
 
 		openSketchbook: function() {
 			this.$broadcast('open-sketchbook');
+		},
+
+		closeDialog: function() {
+			console.log('got a close');
+			this.$broadcast('close-the-dialog');
 		}
 
 		// set project ID in localStorage (no longer necessary ?)

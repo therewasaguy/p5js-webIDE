@@ -5,6 +5,7 @@ var bodyParser = require('body-parser')
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
+var compression = require('compression');
 
 var favicon = require('serve-favicon');
 
@@ -18,6 +19,7 @@ var passport = require('passport');
 var GithubStrategy = require('passport-github').Strategy;
 
 var app = express();
+app.use(compression())
 
 // set up db
 app.db = require('./app-server/dbcontroller.js'); // load our routes and pass in our app and fully configured passport
@@ -45,13 +47,15 @@ app.use(bodyParser.urlencoded({			// to support URL-encoded bodies
 	extended: true
 }));
 
-// view engine setup
+app.enable('view cache');
+
+// // view engine setup
 app.set('views', __dirname + '/public/views')
 app.set('view engine', 'jade');
 app.set('view options', { basedir: process.env.__dirname})
 
 // public static
-app.use(express.static('public'));
+app.use(express.static('public', { maxAge: 86400000*2 }));
 app.use(favicon(__dirname + '/public/images/favicon.ico'));
 
 // routes 
