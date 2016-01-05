@@ -19,6 +19,7 @@ var Project = function(options) {
 		 *  @type {String}
 		 */
 		this.name = 'new project';
+		this.originalName = 'new project';
 
 		/**
 		 *  @property {String} openFileName name of the file that is open
@@ -50,6 +51,7 @@ var Project = function(options) {
 	else {
 		this.fileObjects = options.fileObjects || options.files;
 		this.name = options.name;
+		this.originalName = options.originalName || options.name;
 		this.openFileName = options.openFileName || options.openFile;
 		this.openTabNames = options.openTabNames || options.openTabs;
 		this.dateModified = options.dateModified;
@@ -90,7 +92,7 @@ var Project = function(options) {
 	this.unsaved = function() {
 		var currentUserID = localStorage.user ? JSON.parse(localStorage.user)._id : -1;
 
-		if (this.owner_id !== currentUserID) {
+		if (this.owner_id !== currentUserID || this.name !== this.originalName) {
 			return true;
 		}
 

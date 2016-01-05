@@ -432,6 +432,9 @@ var appConfig = {
 
 			var callback = function(vars) {
 				var newName = vars.newName;
+
+				// store originalName aka oldName
+				self.currentProject.originalName = self.projectName;
 				self.projectName = newName;
 
 				// update project name in local storage
@@ -524,7 +527,11 @@ var appConfig = {
 			var self = this;
 
 			var callback = function(vars) {
+				// if sameName, 'overwrite'
+				console.log(vars);
+
 				var newName = vars.newName;
+				self.currentProject.oldName = self.projectName;
 				self.projectName = newName;
 				self.saveToCloud('saveAs');
 			};
@@ -573,6 +580,7 @@ var appConfig = {
 			var postData = {
 				_id: projectData._id,
 				name: projectData.name,
+				originalName: projectData.originalName,
 				openFileName: projectData.openFileName,
 				openTabNames: projectData.openTabNames,
 				owner_id: projectData.owner_id,
