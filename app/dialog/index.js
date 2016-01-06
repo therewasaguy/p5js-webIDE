@@ -65,7 +65,7 @@ module.exports = Vue.extend({
 		this.$on('prompt-rename', this.promptRename);
 		this.$on('prompt-save-as', this.promptSaveAs);
 		this.$on('prompt-general', this.generalPrompt);
-		// this.$on('close-the-dialog'. this.close);
+		this.$on('close-the-dialog', this.close);
 
 		this.container = document.getElementById('dialog-container');
 		this.container.classList.add('hidden');

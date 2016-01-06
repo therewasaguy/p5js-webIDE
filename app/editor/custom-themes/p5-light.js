@@ -1,6 +1,8 @@
 ace.define("ace/theme/p5-light",["require","exports","module","ace/lib/dom"], function(acequire, exports, module) {
 
-var varGold = '#6C4D13';
+// var varGold = '#6C4D13';
+var varGold ='rgba(66, 108, 19, 0.76)';
+
 // var blueish = '#2d7BB6';
 var greenish = '#15cc35';
 var blueish = '#4a90e2';
@@ -10,9 +12,12 @@ var pinkishKeyword = '#f10046';
 // var turqoisish = '#346E7D';
 var turqoisish = '#346E7D'; //#4a90e2';
 var greyish = '#b1b1b1';
-var selectionColor = 'rgba(21,204,54,0.1)';
+// var selectionColor = 'rgba(21,204,54,0.1)';
+var selectionColor ='rgba(21,159,204,0.15);';
 var offWhite = '#B5B5B5';
 var selectedLine = 'rgba(207,207,207,0.20);';
+// var stringColor = '#787';
+var stringColor = 'rgba(16, 140, 147, 0.5);';
 
 exports.isDark = false;
 exports.cssClass = "p5-light";
@@ -101,7 +106,7 @@ color: " + varGold +";\
 color: "+blueish+"\
 }\
 .p5-light .ace_string {\
-color: "+offWhite+";\
+color: "+stringColor+";\
 }\
 .p5-light .ace_comment {\
 color: "+greyish+"\
