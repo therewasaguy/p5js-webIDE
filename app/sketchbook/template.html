@@ -1,0 +1,59 @@
+<div class="sketchbook-container">
+	<h1>Sketchbook</h1>
+
+	<!-- list container -->
+	<div id="projects">
+		<input id="project-search-term" class="search" placeholder="Search"
+		v-model="fkey" />
+
+		<div class="table-wrapper">
+		<div class="table-scroll">
+			<table>
+				<thead>
+					<tr>
+
+						<th v-for="key in columns"
+								@click="sortBy(key)">
+							<span class="th-content" 
+										:class="{active: sortKey == key.slug}">
+								<span class="text">{{key.displayName}}</span>
+								<span class="arrow"
+										:class="sortOrders[key.slug] > 0 ? 'asc' : 'dsc'">
+								</span>
+							</span>
+						</th>
+
+					</tr>
+
+				</thead>
+					<tbody class="list">
+						<tr v-for="
+							entry in projectList
+							| filterBy fkey
+							| orderBy sortKey sortOrders[sortKey]"
+							data-projectid="{{entry.id}}"
+							@click="clickedOnProject(entry.id)">
+							<td class="proj-name">
+								<span class="text">
+									{{entry.name}}
+								</span>
+							</td>
+							<td class="timeago" title="{{entry.dateModified}}" data-projectid="{{entry.id}}"> 
+								{{entry.dateModified}}
+							</td>
+							<td class="timestamp-mod" style="display:none;">{{entry.timestampMod}}</td>
+
+							<td class="timeago" title="{{entry.dateCreated}}" data-projectid="{{entry.id}}"> 
+								{{entry.dateCreated}}
+							</td>
+							<td class="entry.timestamp-created" style="display:none;">{{entry.timestampCreated}}</td>
+						</tr>
+
+					</tbody>
+				</div>
+			</table>
+		</div>
+		</div>
+	</div>	<!-- end list container 
+
+</div>

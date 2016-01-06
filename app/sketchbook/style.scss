@@ -1,0 +1,93 @@
+.sketchbook-container{
+	color: #333;
+
+	.table-container {
+		max-height:150px;
+		overflow:scroll;
+	}
+
+	.table-wrapper {
+		position:relative;
+		margin-bottom: 20px;
+
+		table {
+			width:100%;
+			background-color: #fff;
+			border-collapse: collapse;
+		}
+
+		table thead th .th-content{
+			position:absolute;
+			top:-20px;
+			z-index:2;
+			height:20px;
+			width:35%;
+			cursor: pointer;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-user-select: none;
+			color:#B4B4B4;
+
+			&.active {
+				color: #777;
+				.arrow {
+					opacity: 1;
+				}
+			}
+
+		}
+
+		table tbody tr .text {
+			max-width: 100px;
+			display: block;
+			overflow: scroll;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-user-select: none;
+		}
+
+		table tbody tr {
+			cursor: pointer;
+			border-bottom: .1em ridge;
+
+			&:nth-child(even) {
+				background:#F4F4F4;
+			}
+			&:nth-child(odd) {
+				background:#FDFDFD;
+			}
+			&:hover {
+				// background-color:#ED225D;
+				background-color:rgba(45, 123, 182, 0.34);
+			}
+			&:active {
+				background-color:#ED225D;
+			}
+		}
+
+		table tbody td {
+			padding: 0;
+		}
+
+	}
+
+	.table-scroll {
+		height:150px;
+		overflow:auto;  
+		margin-top:20px;
+		 border: 2px solid #42b983;
+		 border-radius: 3px;
+	}
+
+
+	.list  {
+		max-height:150px;
+		overflow:scroll;
+
+		li {
+			text-decoration:none;
+			list-style: none;
+		}
+	}
+
+}
