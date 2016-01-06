@@ -156,7 +156,7 @@ module.exports = db = {
 
 					// find multiple pfiles
 					PFile.find({'_id': { $in: fileIDs} }, function(err, docs) {
-						if (err) throw err;
+						if (err) console.log('ERROR: '); console.log(err); return;
 						proj.files = docs;
 						ProjectBuilder.build(data, proj, res);
 					});
@@ -340,7 +340,7 @@ module.exports = db = {
 			// if file has id but content was changed
 			else {
 				PFile.findOne({'_id' : fileData._id}, function(err, doc) {
-					if (err) throw err; //handle error
+					if (err) console.log('ERROR'); console.log(err); return; //handle error
 
 					// if file belongs to projects other than this one, save a new one
 					var proj_ids = doc.project_ids;
@@ -376,7 +376,7 @@ module.exports = db = {
 				console.log('save doc file ' + doc.name);
 				if (doc.name == undefined) saveNext();
 				doc.save(function(err, saved) {
-					if (err) throw err; //handle error
+					if (err) console.log('ERROR'); console.log(err); return; //handle error
 					fileObj._id = saved._id;
 					result.push(fileObj);
 					saveNext();
