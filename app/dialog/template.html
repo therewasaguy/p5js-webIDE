@@ -11,17 +11,23 @@
 	<!-- 				<p id="dialog-content">
 				</p> -->
 				<div>
-					<label>embed code</label>
+					<div class="label-container">
+						<label>embed code</label>
+					</div>
 					<input type="text" readonly="true" value="{{embedCode}}" onclick="select()">
 				</div>
 
 				<div>
-					<label>share link</label>
+					<div class="label-container">
+						<label>share link</label>
+					</div>
 					<input type="text" readonly="true" value="{{permalink}}" onclick="select()">
 				</div>
 
 				<div>
-					<label>edit link</label>
+					<div class="label-container">
+						<label>edit link</label>
+					</div>
 					<input type="text" readonly="true" value="{{editlink}}" onclick="select()">
 				</div>
 
@@ -42,7 +48,9 @@
 		<div id="save-as-view" class="dview">
 			<p id="save-as-title" class="dialog-title"></p>
 			<div>
-				<label>Project Name: </label>
+				<div class="label-container">
+					<label>Project Name: </label>
+				</div>
 				<input type="text" id="newName" class="dialog-input" v-model="projnameinput" value="{{projectName}}">
 			</div>
 <!--

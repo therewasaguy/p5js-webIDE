@@ -10,11 +10,6 @@
 	*.hidden {
 		display:none;
 	}
-
-	div {
-		display: block;
-		margin-bottom: 10px;
-	}
 }
 
 #dialog-container.hidden {
@@ -27,28 +22,47 @@
 
 .dialog
 {
-  position: relative;
-  margin: auto;
-  top: 50px;
-  left: 0px;
-  right: 0px;
-  bottom: 0px;
-  max-width: 300px;
-  max-height: 75%;
-
-	/*position: relative;*/
-	// width: 50%;
+	position: relative;
+	margin: auto;
+	top: 50px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	max-width: 42%;
+	max-height: 75%;
 	text-align: left;
-	/*line-height: 25px;*/
 	background-color: #F4F4F4;
 	border: 1px solid #CBDBE7;
-	padding: 20px;
-	padding-top: 2px;
+	padding: 20px 30px;
 	font-size: 14px;
 	-webkit-border-radius: 30px;
 	-moz-border-radius: 30px;
 	border-radius: 1px;
 	box-shadow: 2px 2px 20px #C8C8C8;
+
+	div {
+		display: block;
+		margin-bottom: 10px;
+	}
+
+	input {
+		width: 300px;
+		margin-left:10px;
+		margin-bottom: 10px;
+		padding: 5px;
+		line-height: 20px;
+		font-size: large;
+	}
+
+	.label-container {
+		width:120px;
+		display:inline-block;
+	}
+
+	.dialog-warning {
+		color: #ed225d;
+		font-style: italic;
+	}
 }
 
 p.dialog-title{
