@@ -44,12 +44,11 @@ pFile.prototype.setDefaultContents = function(fileName) {
 	// ids of latest default content files:
 	var latestIDs = {
 		'p5.sound.js' : '568a02317811bb374d421bbe',
-		'index.html' : '568a02317811bb374d421bbf',
-		'style.css' : '568a18e8c81a89fb4f3d06ab',
+		'index.html' : '568ca5719bad3e030043ae45', //<-- no libraries by default
+		'style.css' : '568ca5719bad3e030043ae44', // <-- css marign-right
 		'p5.dom.js' : '568a022f7811bb374d421bbd',
 		'p5.js' : '568a02317811bb374d421bc1',
-		'sketch.js' : '568c2bab4b1e570300c16592' // 568a18ecc81a89fb4f3d06af
-		// 'sketch.js' : '568a02317811bb374d421bc0'
+		'sketch.js' : '568c2bab4b1e570300c16592'
 	};
 
 	var latestID = latestIDs[fileName];
