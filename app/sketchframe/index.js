@@ -15,7 +15,6 @@ this.hasAttribute(b+"allowfullscreen")},set:function(a){var c=b+"AllowFullscreen
 /*
 	 to do:
 	 	- throw error when index.html links to an invalid file
-	 	- figure out how to deal with hosted / cdn code
 	 	- why wont script tags from html run?
 	 	- clean up this code!
  */
@@ -24,6 +23,15 @@ var Vue = require('vue');
 
 module.exports = Vue.extend({
 	template: require('./template.html'),
+
+	data: function() {
+		return {
+			// to avoid autoplay
+			// if user has pressed the run button once,
+			// then this is true
+			canRun: false
+		}
+	},
 
 	computed: {
 		// hide sketch pane if not running in frame
@@ -44,6 +52,10 @@ module.exports = Vue.extend({
 		self.sketchFrame = document.getElementById('sketchFrame');
 
 		self.initSketchFrame();
+
+		self.$on('initial-run', function() {
+			self.canRun = true;
+		});
 
 		// do something when full screen
 		document.addEventListener('fullscreenchange', function(e) {
@@ -67,9 +79,9 @@ module.exports = Vue.extend({
 			 *  Load all of the code and inject it into the iframe
 			 */
 			sketchFrame.onload = function() {
-
-				// only run in iframe if settings say to run in iframe
-				if (!self.$root.settings.runInFrame) return;
+				// only run in iframe if run has been pressed
+				// & settings say to run in iframe
+				if (!self.$root.settings.runInFrame || !self.canRun) return;
 
 				var indexHTMLFileObj;
 

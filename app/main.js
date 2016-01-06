@@ -137,8 +137,19 @@ var appConfig = {
 		// #?sketch=567fa42b489845b161b3c11a (preferred)
 		var theHash = window.location.hash.split('#')[1];
 		if (theHash && theHash.indexOf('sketch') > -1) {
-			projectID = getQueryVariable('sketch', theHash.split('?')[1]);
-			username = getQueryVariable('user', theHash.split('?')[1]);
+			var cleanHash = theHash.split('?')[1];
+			projectID = getQueryVariable('sketch', cleanHash);
+			username = getQueryVariable('user', cleanHash);
+
+			// detect "&autoplay=true"
+			if (getQueryVariable('autoplay', cleanHash)) {
+
+				setTimeout(function() {
+					// override user settings to force runInFrame
+					self.settings.runInFrame = true;
+					self.run();
+				}, 10);
+			}
 		}
 
 		// compare with localStorageID
@@ -272,9 +283,10 @@ var appConfig = {
 		},
 
 		run: function() {
+			// set sketchframe to can run
+			this.$broadcast('initial-run');
 			this.modeFunction('run');
 		},
-
 
 		initProject: function() {
 			// if there is a recent project in local storage, load it.
