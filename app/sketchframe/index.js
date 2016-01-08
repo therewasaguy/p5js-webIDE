@@ -123,7 +123,7 @@ module.exports = Vue.extend({
 				var ideCode = '';
 
 				// create a new p5 otherwise p5 wont be instantiated
-				ideCode += '\n try { new p5();} catch(e){console.log("no p5");} ';
+				ideCode += '\n try { new p5();} catch(e){throw e;} ';
 
 				var elem = injectJS(ideCode);
 				frameBody.appendChild(elem);
