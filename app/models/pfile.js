@@ -46,8 +46,8 @@ pFile.prototype.setDefaultContents = function(fileName) {
 		'p5.sound.js' : '568a02317811bb374d421bbe',
 		'index.html' : '568ca5719bad3e030043ae45', //<-- no libraries by default
 		'style.css' : '568ca5719bad3e030043ae44', // <-- css marign-right
-		'p5.dom.js' : '568a022f7811bb374d421bbd',
-		'p5.js' : '568a02317811bb374d421bc1',
+		'p5.dom.js' : '568f651d52187803006890b1', /*! p5.dom.js v0.2.7 January 4, 2016 */
+		'p5.js' : '568f650352187803006890b0', // /*! p5.js v0.4.21 January 04, 2016 */
 		'sketch.js' : '568c2bab4b1e570300c16592'
 	};
 
