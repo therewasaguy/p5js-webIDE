@@ -10,14 +10,14 @@ Website (demo): http://p5ide.herokuapp.com/
 
 ### Run it:
 - fork the repo
+- Run a local MongoDB and set the address / database name in ``app-server/settings.js`` or in a .env file
+- Register an application with GitHub and set the GHSECRET and GHCLIENT variables in ``app-server/settings.js`` or in a .env file (this is required in order to login with GitHub)
 - In the console:
   - ``git clone <your fork>``
   - Install all dependencies: ``npm install``
   - Install gulp globally: ``sudo npm install --global gulp``
   - Run ``gulp`` to compile all of the modules from /app into /public
   - Run the server: ``node server.js``
-- Run a local MongoDB and set the address / database name in ``app-server/settings.js`` or in a .env file
-- Register an application with GitHub and set the GHSECRET and GHCLIENT variables in ``app-server/settings.js`` or in a .env file (this is required in order to login with GitHub)
 
 ### Development is taking place on the dev branch. 
 
