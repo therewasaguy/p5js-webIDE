@@ -13,6 +13,7 @@ var User = require('./models/user');
 var AJAX = require('./ajax');
 
 var Keybindings = require('./keybindings');
+var Split = require('split.js');
 
 var modes = {
   p5web: require('./modes/p5/p5-web-mode')
@@ -225,6 +226,21 @@ var appConfig = {
 		});
 
 		this.updatePageHash();
+
+		// split editor and sketch containers for resizing in-page
+		Split(['#editor-container', '#sketchframe-container'], {
+			gutterSize: 8,
+			sizes: [50, 50],
+			minSize: 5,
+			cursor: 'col-resize'
+		});
+
+		//when user closes tab, check if sketch is unsaved, if yes, create an alert
+		window.onbeforeunload = function(){
+			if (self.currentProject && self.currentProject.unsaved() ) {
+				return 'Your project is unsaved. Are you sure you want to close this tab?';
+			}
+		}
 
 	},
 
@@ -742,11 +758,15 @@ var appConfig = {
 		hideEditor: function() {
 			this.editorHidden = true;
 			this.settings.showEditor = false;
+			var gutter = document.getElementsByClassName('gutter-horizontal')[0];
+			gutter.style.display = 'none';
 		},
 
 		showEditor: function() {
 			this.editorHidden = false;
 			this.settings.showEditor = true;
+			var gutter = document.getElementsByClassName('gutter-horizontal')[0];
+			gutter.style.display = 'block';
 		},
 
 		updateCurrentProject: function() {
@@ -875,6 +895,10 @@ var appConfig = {
 		closeDialog: function() {
 			console.log('got a close');
 			this.$broadcast('close-the-dialog');
+		},
+
+		checkSplitPane: function() {
+			this.$emit('check-split-pane');
 		}
 
 		// set project ID in localStorage (no longer necessary ?)

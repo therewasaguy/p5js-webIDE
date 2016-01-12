@@ -63,6 +63,17 @@
       <li>
         <a  v-on:click="openShareDialog">Share</a>
       </li>
+
+      <!-- login / profile -->
+      <li v-if="!loggedIn" v-on:click="$root.authenticate()">
+        <a>Log in</a>
+      </li>
+      <li v-if="loggedIn" class="dropdown-menu" v-on:mouseenter="openUserDropdown" v-on:mouseleave="closeUserDropdown"><a> Hello <b>{{currentUser.username}}</b> !</a>
+        <span class="dropdown-content {{userDropdownClass}}" v-on:mouseleave="closeUserDropdown">
+          <span><a v-on:click="$root.logOut()">Log Out</a></span>
+        </span>
+      </li>
+
     </ul>
     <hr>
   </div>
@@ -72,30 +83,22 @@
     <span id="toast-msg" class="hidden">{{toastMsg}}</span>
   </div>
 
-  <div class="top-nav-right">
+<!--   <div class="top-nav-right">
     <ul>
-<!--       <li>
-        <a>Gallery</a>
-      </li>
- -->
-      <!-- login / profile -->
-      <li v-if="!loggedIn" v-on:click="$root.authenticate()">
+ -->      <!-- login / profile -->
+
+<!--       <li v-if="!loggedIn" v-on:click="$root.authenticate()">
         <a>Log in</a>
       </li>
-
-<!--       <li v-if="loggedIn" v-on="click: $root.authenticate()">
-        <a> Hello <b>{{currentUser.username}}</b> !</a>
-      </li>
- -->
       <li v-if="loggedIn" class="dropdown-menu" v-on:mouseenter="openUserDropdown" v-on:mouseleave="closeUserDropdown"><a> Hello <b>{{currentUser.username}}</b> !</a>
         <span class="dropdown-content {{userDropdownClass}}" v-on:mouseleave="closeUserDropdown">
           <span><a v-on:click="$root.logOut()">Log Out</a></span>
         </span>
-      </li>
+      </li> -->
 
 
-    </ul>
+<!--     </ul>
     <hr>
-  </div>
+  </div> -->
 
 </nav>

@@ -63,25 +63,36 @@ module.exports = Vue.extend({
 		},
 
 		className: function() {
-			var container = this.container || $('#sidebar-container');
+			try {
+				var container = this.container || $('#sidebar-container');
 
-			// if (this.$root.editorHidden || !this.$root.settings.showSidebar) {
-			if (!this.$root.settings.showEditor || !this.$root.settings.showSidebar) {
-				this.sidebarWidth = container.width();
-				container.css({
-					width: 10
-				});
-				ace.resize();
+				// if (this.$root.editorHidden || !this.$root.settings.showSidebar) {
+				if (!this.$root.settings.showEditor) {
+					container.css({
+						width: 0,
+						padding: 0
+					});
+				} else if (!this.$root.settings.showSidebar) {
+					this.sidebarWidth = container.width();
+					container.css({
+						width: 10,
+						paddingLeft: 5
+					});
+					ace.resize();
+					return '';
+				}
+				else {
+					container.css({
+						width: 160 //this.sidebarWidth
+					});
+					ace.resize();
+					return 'expanded'
+				}
+			} catch(e) {
+				console.log(e);
 				return '';
 			}
-			else {
-				container.css({
-					width: 160 //this.sidebarWidth
-				});
-				console.log(this.sidebarWidth);
-				ace.resize();
-				return 'expanded'
-			}
+
 		},
 
 		sidebarIconClass: function() {

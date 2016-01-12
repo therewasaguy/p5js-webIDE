@@ -76,7 +76,7 @@ module.exports = Vue.extend({
 		});
 
 		// resize editor and editor-container
-		$( "#editor" ).resizable({alsoResize: '#editor-container'});
+		// $( "#editor" ).resizable({alsoResize: '#editor-container'});
 
 		// to do: initialize differently
 		// this.openFile();

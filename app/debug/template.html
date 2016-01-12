@@ -1,10 +1,11 @@
-<div id="debugContainer">
+<div id="debugContainer" class="{{runInFrame}}">
 	<div id="debug" class="{{className}}">
 		<div id="debugheader">
-			<span class="resizehandle handle-up {{className}}" v-on:click="openConsole()">&#x25B2;</span>
-			<span class="resizehandle handle-down {{className}}" v-on:click="closeConsole()">&#x25BC;</span>
-			<span id="consolename"> >_  console</span>
-			<span id="cleardebug">X</span>
+			<div class="resizehandle" v-on:click="toggleConsole()">
+				<span id="consolename"> >_  console</span>
+				<span id="resizeIcon" class="oi iconic-sm" data-glyph="{{caret}}" title="show/hide" aria-hidden="true" style=""></span>
+				<span id="cleardebug">X</span>
+			</div>
 		</div>
 		<div id="debugText" class="{{className}}">
 	</div>

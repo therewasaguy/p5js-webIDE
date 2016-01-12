@@ -19,9 +19,10 @@
     //visibility: hidden;
     position: relative;
     // position:absolute;
-    width: 14px;  
+    width: 10px;  
     margin-top: 65px;
-    padding-right:5px;
+    // padding-right:5px;
+    padding: 5px 0px;
     //margin-bottom: 30px;
     flex: 1;
     overflow:hidden;
@@ -181,7 +182,7 @@
 
 #sidebarButton {
   background: #1a1a1a url('/images/sidebar-handle.svg') no-repeat center;
-  width: 14px;
+  width: 10px;
   height: 100px;
   float: left;
   overflow: hidden;
