@@ -226,6 +226,14 @@ var appConfig = {
 
 		this.updatePageHash();
 
+		window.Split = require('split.js');
+
+		Split(['#editor-container', '#sketchframe-container'], {
+			gutterSize: 8,
+			sizes: [50, 50],
+			minSize: 5,
+			cursor: 'col-resize'
+		});
 	},
 
 	methods: {
@@ -742,11 +750,15 @@ var appConfig = {
 		hideEditor: function() {
 			this.editorHidden = true;
 			this.settings.showEditor = false;
+			var gutter = document.getElementsByClassName('gutter-horizontal')[0];
+			gutter.style.display = 'none';
 		},
 
 		showEditor: function() {
 			this.editorHidden = false;
 			this.settings.showEditor = true;
+			var gutter = document.getElementsByClassName('gutter-horizontal')[0];
+			gutter.style.display = 'block';
 		},
 
 		updateCurrentProject: function() {
@@ -875,6 +887,10 @@ var appConfig = {
 		closeDialog: function() {
 			console.log('got a close');
 			this.$broadcast('close-the-dialog');
+		},
+
+		checkSplitPane: function() {
+			this.$emit('check-split-pane');
 		}
 
 		// set project ID in localStorage (no longer necessary ?)

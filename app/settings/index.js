@@ -8,14 +8,36 @@ module.exports = Vue.extend({
 
 	// two-way data binding
 	props: ['settings'],
+	data: function() {
+		return {
+			gutter: undefined,
+			editorWidth: '50%',
+			frameWidth: '50%',
+			editorContainer: undefined,
+			frameContainer: undefined
+		}
+	},
 
 	ready: function() {
+		var self = this;
+		self.gutter = document.getElementsByClassName('gutter-horizontal')[0];
+
+		// wait for vue components to register...
+		setTimeout(function() {
+			self.gutter = document.getElementsByClassName('gutter-horizontal')[0];
+			self.editorContainer = document.getElementById('editor-container');
+			self.frameContainer = document.getElementById('sketchframe-container');
+			self.checkSplitPane();
+		}, 100);
+
+		this.$on('check-split-pane', this.checkSplitPane);
 	},
 
 	watch: {
 		// TO DO do this instead:
 		// https://github.com/vuejs/vue/issues/844#issuecomment-120104363
 		'settings.runInFrame' : function() {
+			this.checkSplitPane();
 			this.emitSettingsChanged();
 		},
 		'settings.showSidebar' : function() {
@@ -96,6 +118,31 @@ module.exports = Vue.extend({
 		},
 		themeChanged: function() {
 			var theme = this.editorTheme;
+		},
+		checkSplitPane: function() {
+			console.log('check split pane');
+
+			if (this.settings.runInFrame) {
+				// set editor and frame container width and show Split.js to resize
+				if (this.gutter) {
+					this.gutter.style.display = 'block';
+					if (this.editorWidth) {
+						console.log('editor width: ' + this.editorWidth);
+						this.editorContainer.style.width = this.editorWidth;
+						this.frameContainer.style.width = this.frameWidth;
+					}
+				}
+			} else {
+				// hide split.js resize and save editor and frame container width for later
+				if (this.gutter) {
+					this.gutter.style.display = 'none';
+					this.editorWidth = this.editorContainer.style.width;
+					this.frameWidth = this.frameContainer.style.width;
+					this.editorContainer.style.width = '100%';
+					this.frameContainer.style.width = '0px';
+				}
+				console.log('run in frame, no');
+			}
 		}
 
 	}

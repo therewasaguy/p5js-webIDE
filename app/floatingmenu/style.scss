@@ -28,7 +28,7 @@ $light-theme-background: #f4f4f4;
 #floating-menu {
   z-index:1;
   top: 50px;
-  left: 7.5%;
+  left: 3.5%;
   border-radius: 2px;
   padding:10px;
 
@@ -45,7 +45,8 @@ $light-theme-background: #f4f4f4;
   }
 
   &.collapsed {
-    width:50%;
+    // width:50%;
+    width:500px;
     height:$height;
     position:absolute;
     margin:0px auto;

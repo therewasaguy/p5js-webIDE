@@ -6,7 +6,6 @@ var Mousetrap = require('br-mousetrap');
 
 module.exports = function(app) {
 
-	console.log(app);
 	Mousetrap.bind(['command+s', 'ctrl+s'], function(e) {
 		console.log('save!');
 
