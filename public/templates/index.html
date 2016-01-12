@@ -24,25 +24,32 @@
 		</div>
 
 		<div id="main-container" class="{{isLoading}}">
-			<sketchframe v-ref:sketchframe id="sketchframe-container"></sketchframe>
-
 			<div id="body-row-container">
 
-				<sidebar :files="files"></sidebar>
-				<div id="editor-container" class="{{editorContainerClass}}">
-					<tabs :tabs="tabs" v-ref:tabs id="tab-container"></tabs>
-					<editor v-ref:editor id="main">
-					</editor>
+				<div class="main-contain-left">
+					<sidebar :files="files"></sidebar>
 				</div>
 
+					<div id="editor-container" class="{{editorContainerClass}}">
+						<tabs :tabs="tabs" v-ref:tabs id="tab-container"></tabs>
+						<editor v-ref:editor id="main">
+						</editor>
+
+						<div id="footer-row-container" style="display:flex; flex-direction:row;">
+							<debug v-ref:debug></debug>
+						</div>
+
+					</div>
+
+					<!-- <div id="editor-split"></div> -->
+					<div id="sketchframe-container">
+						<sketchframe v-ref:sketchframe ></sketchframe>
+					</div>
 				<div style="clear:both;"></div>
 			</div>
 
 			<settings :settings="settings" v-show="showSettings"></settings>
 
-			<div id="footer-row-container" style="display:flex; flex-direction:row;">
-				<debug v-ref:debug></debug>
-			</div>
 		</div>
 
 		<script src="/js/main.js"></script>

@@ -117,7 +117,7 @@ button{
   height: 100%;
   width: 100%;
   // margin-top: 75px; /** add this to sidebar and editor instead **/
-  padding:5px;
+  // padding:5px;
 }
 
 textarea:focus, input:focus{
@@ -156,4 +156,35 @@ a {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+iframe {
+  border: none;
+}
+
+
+/** split pane */
+#editor-split {
+  background: black;
+  height: 100%;
+  width: 2px;
+  cursor: col-resize;
+}
+
+/** split library */
+.gutter {
+  background-color: rgba(204, 204, 204, 0.2);
+
+  background-repeat: no-repeat;
+  background-position: 50%;
+}
+
+.gutter.gutter-horizontal {
+  background-image: url('/images/grips/vertical.png');
+  cursor: ew-resize;
+}
+
+.gutter.gutter-vertical {
+  background-image: url('/images/grips/horizontal.png');
+  cursor: ns-resize;
 }

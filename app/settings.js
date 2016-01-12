@@ -6,7 +6,7 @@ var defaults = {
   showSidebar: false,
   showEditor: true,
   wordWrap: false,
-  runInFrame: false, // determines whether to run in iframe, or in newWindow
+  runInFrame: true, // determines whether to run in iframe, or in newWindow
   editorTheme: 'light-theme',
   fullCanvas: false, // automatically make canvas full width/height of screen
 };

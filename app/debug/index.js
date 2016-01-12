@@ -7,10 +7,25 @@ var Vue = require('vue');
 module.exports = Vue.extend({
 	template: require('./template.html'),
 
+	data : function() {
+		return {
+			'caret' : 'caret-top'
+		}
+	},
+
 	computed: {
 		// hide console if not running in frame or if editor is hidden
 		className: function() {
-			return this.$root.editorHidden || !this.$root.settings.runInFrame ? 'console-hidden' : 'console-visible';
+			if (this.$root.editorHidden || !this.$root.settings.runInFrame ) {
+				this.caret = 'caret-top';
+				return 'console-hidden';
+			} else {
+				this.caret = 'caret-bottom';
+				return 'console-visible';
+			}
+		},
+		runInFrame: function() {
+			return this.$root.settings.runInFrame ? '' : 'hidden';
 		}
 	},
 
@@ -79,13 +94,16 @@ module.exports = Vue.extend({
 			// to do: reset size
 		},
 
-		closeConsole: function() {
-			this.$root.editorHidden = true;
+		toggleConsole: function() {
+			this.$root.editorHidden = !this.$root.editorHidden;
 		},
+		// closeConsole: function() {
+		// 	this.$root.editorHidden = true;
+		// },
 
-		openConsole: function() {
-			this.$root.editorHidden = false;
-		}
+		// openConsole: function() {
+		// 	this.$root.editorHidden = false;
+		// }
 
 	}
 

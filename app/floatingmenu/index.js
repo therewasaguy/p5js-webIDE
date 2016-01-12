@@ -11,7 +11,8 @@ module.exports = Vue.extend({
 	},
 
 	ready: function() {
-		$('#floating-menu').draggable({ cancel: ".prevent-drag"} );
+		// this would make it draggable
+		// $('#floating-menu').draggable({ cancel: ".prevent-drag"} );
 	},
 
 	methods: {
