@@ -226,6 +226,13 @@ var appConfig = {
 
 		this.updatePageHash();
 
+		//when user closes tab, check if sketch is unsaved, if yes, create an alert
+		window.onbeforeunload = function(){
+			if (self.currentProject && self.currentProject.unsaved() ) {
+				return 'Your project is unsaved. Are you sure you want to close this tab?';
+			}
+		}
+
 	},
 
 	methods: {
