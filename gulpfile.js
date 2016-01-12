@@ -23,7 +23,7 @@ gulp.task('browserify', function() {
 
   gulpMerge(
 
-    gulp.src('./app/libs/jquery.min.js', './app/libs/jquery-ui.min.js'], { read: true })
+    gulp.src(['./app/libs/jquery.min.js', './app/libs/jquery-ui.min.js'], { read: true })
     .pipe(uglify()),
 
     gulp.src('./app/main.js', { read: false })

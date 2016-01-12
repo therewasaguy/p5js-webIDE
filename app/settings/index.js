@@ -19,6 +19,9 @@ module.exports = Vue.extend({
 	},
 
 	ready: function() {
+	},
+
+	attached: function() {
 		var self = this;
 		self.gutter = document.getElementsByClassName('gutter-horizontal')[0];
 
@@ -128,7 +131,7 @@ module.exports = Vue.extend({
 					this.gutter.style.display = 'block';
 					if (this.editorWidth) {
 						console.log('editor width: ' + this.editorWidth);
-						this.editorContainer.style.width = this.editorWidth;
+						this.editorContainer.style.width = (this.editorWidth == '1px') ? '50%' : this.editorWidth;
 						this.frameContainer.style.width = this.frameWidth;
 					}
 				}
@@ -136,6 +139,7 @@ module.exports = Vue.extend({
 				// hide split.js resize and save editor and frame container width for later
 				if (this.gutter) {
 					this.gutter.style.display = 'none';
+					console.log('width: ' + this.editorContainer.style.width);
 					this.editorWidth = this.editorContainer.style.width;
 					this.frameWidth = this.frameContainer.style.width;
 					this.editorContainer.style.width = '100%';
