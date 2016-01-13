@@ -1,6 +1,6 @@
 <nav class="{{$root.theme}}">
 
-  <div class="top-nav-left">
+  <div class="top-nav-left nopointer">
     <ul>
       <li>
         <a v-on:click="$root.newProject()">New</a>
@@ -78,12 +78,12 @@
     <hr>
   </div>
 
-  <div class="top-nav-center">
+  <div class="top-nav-center nopointer">
     <!-- display a message -->
-    <span id="toast-msg" class="hidden">{{toastMsg}}</span>
+    <span id="toast-msg" class="hidden nopointer">{{toastMsg}}</span>
   </div>
 
-<!--   <div class="top-nav-right">
+<!--   <div class="top-nav-right nopointer">
     <ul>
  -->      <!-- login / profile -->
 

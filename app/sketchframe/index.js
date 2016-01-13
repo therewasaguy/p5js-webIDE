@@ -70,7 +70,10 @@ module.exports = Vue.extend({
 	},
 
 	methods: {
-
+		// focus the iframe on mouseover
+		focus: function() {
+			this.sketchFrame.focus();
+		},
 		initSketchFrame: function() {
 			var self = this;
 			var sketchFrame = this.sketchFrame;
@@ -131,6 +134,7 @@ module.exports = Vue.extend({
 				// set to running --> refresh
 				self.$root.running = true;
 
+				self.focus();
 				return;
 			}
 		}

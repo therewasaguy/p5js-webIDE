@@ -22,6 +22,10 @@ $light-theme-background: #f4f4f4;
     top: 0px;
   position:absolute;
   z-index:2000000;
+  pointer-events:none;
+  & * {
+    pointer-events: all;
+  }
   // background-color:black;
 }
 
@@ -140,6 +144,14 @@ nav {
     left: 50%;
     // height: 100%;
     // width: 50%;
+  }
+
+  .nopointer {
+    pointer-events: none !important;
+
+    & * {
+      pointer-events: all;
+    }
   }
 
   hr {

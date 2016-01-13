@@ -2,7 +2,9 @@
 <html>
   <head>
     <script>
-		!function(){function e(e){var o=JSON.parse(e.data),n=o.msg;switch(n){case"pause":window.noLoop();break;case"stop":window.background(175),window.remove()}}function o(e){var o=document.createEvent("Event");o.initEvent(e.type,!0,!1);for(var n in e)n[0]==n[0].toLowerCase()&&-1==["__proto__","srcElement","target","toElement"].indexOf(n)&&(o[n]=e[n]);document.dispatchEvent(o)}var n=window.console;window.console={},["log","warn","error"].forEach(function(e){window.console[e]=function(o){var t=null;arguments[2]&&arguments[0].indexOf("%c")>-1&&(t=arguments[1]);var r={msg:o,style:t,type:e};parent.postMessage(JSON.stringify(r),window.location.origin),n[e].apply(n,arguments)}}),window.onerror=function(e,o,n,t,r){var a={num:n,msg:e,type:"error"};return parent.postMessage(JSON.stringify(a),window.location.origin),!1},parent.addEventListener("message",e,!1);for(var t=["keyup","keydown","keypress","mouseup","mousedown","mousemove","click","mouseenter","mouseleave","mouseover","mouseout","touchstart","touchend","touchcancel","touchleave","touchmove"],r=0;r<t.length;r++){var a=t[r];parent.document.body.addEventListener(a,o)}}();
+    // from debug-console.js
+		!function(){function n(n){var o=JSON.parse(n.data),e=o.msg;switch(e){case"pause":window.noLoop();break;case"stop":try{window.remove()}catch(n){}}}var o=window.console;window.console={},["log","warn","error"].forEach(function(n){window.console[n]=function(e){var r=null;arguments[2]&&arguments[0].indexOf("%c")>-1&&(r=arguments[1]);var a={msg:e,style:r,type:n};parent.postMessage(JSON.stringify(a),window.location.origin),o[n].apply(o,arguments)}}),window.onerror=function(n,o,e,r,a){var t={num:e,msg:n,type:"error"};return parent.postMessage(JSON.stringify(t),window.location.origin),!1},parent.addEventListener("message",n,!1)}();
+
     </script>
 
   </head>

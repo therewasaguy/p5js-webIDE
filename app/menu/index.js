@@ -78,12 +78,12 @@ module.exports = Vue.extend({
 			var toastSpan = this.toastSpan;
 
 			// remove 'hidden' class to show the message
-			toastSpan.className = '';
+			toastSpan.classList.remove('hidden');
 
 			// fade out
 			if (!noFade) {
 				setTimeout(function() {
-					toastSpan.className = 'hidden';
+					toastSpan.classList.add('hidden');
 				}, 500);
 			}
 
