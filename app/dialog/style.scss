@@ -63,6 +63,11 @@
 		color: #ed225d;
 		font-style: italic;
 	}
+
+	h5 {
+		color: #777;
+		font-weight: 300;
+	}
 }
 
 p.dialog-title{
@@ -102,4 +107,13 @@ p.dialog-title{
 	-ms-filter: blur(2px);
 	filter: blur(2px);
 	pointer-events:none;
+}
+
+.wep5 {
+	color: #ED225D;
+
+	sup {
+		font-size: xx-small;
+		color: #ED225D;
+	}
 }

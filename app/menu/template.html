@@ -64,6 +64,10 @@
         <a  v-on:click="openShareDialog">Share</a>
       </li>
 
+      <li>
+        <a v-on:click="openAboutDialog">?</a>
+      </li>
+
       <!-- login / profile -->
       <li v-if="!loggedIn" v-on:click="$root.authenticate()">
         <a>Log in</a>

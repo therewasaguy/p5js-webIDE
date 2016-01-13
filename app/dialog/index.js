@@ -62,6 +62,7 @@ module.exports = Vue.extend({
 		});
 
 		this.$on('open-share-dialog', this.openShareDialog);
+		this.$on('open-about-dialog', this.generalPrompt);
 		this.$on('prompt-rename', this.promptRename);
 		this.$on('prompt-save-as', this.promptSaveAs);
 		this.$on('prompt-general', this.generalPrompt);

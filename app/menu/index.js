@@ -115,6 +115,10 @@ module.exports = Vue.extend({
 			this.$root.openShareDialog();
 		},
 
+		openAboutDialog: function(e) {
+			this.$root.openAboutDialog();
+		},
+
 		openOpenDropdown: function(e) {
 			this.openDropdownClass = '';
 			$('span.timeago').timeago();

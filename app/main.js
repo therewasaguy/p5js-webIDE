@@ -797,7 +797,21 @@ var appConfig = {
 		openShareDialog: function() {
 			this.$broadcast('open-share-dialog');
 		},
+		openAboutDialog: function() {
+			function ok() {
+				console.log('dialog closed');
+			}
 
+			var opts = {
+				msg : '<h1 class="wep5">we.p5<sup>*alpha</sup></h1>' +
+					'<h5>A Web Editor designed for the <a href="http://p5js.org" target="_blank">p5.js</a> community.</h5>'+
+					'<p>This is an open source project currently under heavy development.</p>'+
+					'<p>The source code is on <a href="https://github.com/therewasaguy/p5js-webIDE" target="_blank">Github</a>' +
+					'<p>If you find any issues, please join the existing discussion or start a new thread <a href="https://github.com/therewasaguy/p5js-webIDE/issues" target="_blank">here</a>',
+				callback: ok
+			}
+			this.$broadcast('open-about-dialog', opts);
+		},
 		/**
 		 *  Stringify the current project data and
 		 *  save it in local storage. This is useful
