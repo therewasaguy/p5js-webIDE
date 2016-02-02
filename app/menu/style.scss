@@ -142,8 +142,6 @@ nav {
   .top-nav-center {
     position: absolute;
     left: 50%;
-    // height: 100%;
-    // width: 50%;
   }
 
   .nopointer {
@@ -198,12 +196,11 @@ nav {
   }
 
   .has-submenu > div ul {
-    // position:relative;
-    // top:-25px;
-    // left:120px;
-    position:absolute;
+    position:relative;
+    display:none;
     top:0px;
     left:0px;
+
     .dark-theme & {
       background-color:$dark-theme-background;
     }
@@ -225,7 +222,6 @@ nav {
   }
 
   .has-submenu > div ul li:hover {
-    // background:#fff;
     .dark-theme & {
       background: $dark-theme-hover;
       color: $dark-theme-color;
@@ -239,8 +235,6 @@ nav {
   .has-submenu > div ul li span {
     display:inline;
     padding:0px;
-    // float:none;
-    // width:500px
   }
 
   .has-submenu ul a
@@ -253,14 +247,28 @@ nav {
     // display:block;
   }
 
-  .has-submenu:hover > div
-  {
-    display:block !important;
+  .has-submenu:hover > div > ul {
+    display:inline-block !important;
   }
 
-  .has-submenu:hover > div ul
-  {
-    display:block !important;
+  .has-submenu:hover {
+    .light-theme & {
+      background-color: $dark-theme-background;
+      a {
+        color:$dark-theme-color;
+      }
+    }
+    .dark-theme & {
+      a {
+        color:$light-theme-color;
+      }
+      background-color: $light-theme-background;
+    }
+  }
+
+  /** otherwise first submenu gets lost behind second */
+  #submenu1 {
+    z-index:10;
   }
 
   // hide dropdown content by default
@@ -272,6 +280,14 @@ nav {
   li:hover * {
     display: block;
     text-align:left;
+  }
+
+  .inline {
+    display:inline-block;
+
+    & * {
+      display:inline-block !important;
+    }
   }
 
 }

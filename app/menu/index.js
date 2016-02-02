@@ -44,9 +44,7 @@ module.exports = Vue.extend({
 
 	data: function() {
 		return {
-			toastMsg: '',
-			// saveDropdownClass: 'hidden'
-			saveDropdownClass: ''
+			toastMsg: ''
 		}
 	},
 

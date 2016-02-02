@@ -9,10 +9,12 @@
       <li class="dropdown-menu" v-on:mouseenter="openOpenDropdown"><a v-on:click="openSketchbook">Open</a>
 
         <div class="dropdown-content">
+
           <div class="has-submenu"><a>Examples</a>
             <div class="submenu-container">
-              <ul class="submenu" style="display:none;" >
-                  <li v-for="ex in $root.examples" class="filemenu" data-path="{{ex.path}}" v-on:click="loadExample(ex)">
+              <ul id="submenu1" class="submenu">
+<!-- class="filemenu" -->
+                  <li v-for="ex in $root.examples" data-path="{{ex.path}}" v-on:click="loadExample(ex)">
                     <span >{{ex.folder}} - {{ex.name}}</span>
                   </li>
               </ul>
@@ -21,7 +23,7 @@
 
           <div class="has-submenu"><a>Recent</a>
             <div class="submenu-container">
-              <ul class="submenu" style="display:none;">
+              <ul class="submenu">
                 <li v-for="proj in $root.recentProjects">
                   <span data-projectid="{{proj.id}}"  v-on:click="selectRecentProject">
                     <span data-projectid="{{proj.id}}">{{proj.name}}</span> &nbsp;
@@ -71,7 +73,7 @@
       <li v-if="!loggedIn" v-on:click="$root.authenticate()">
         <a>Log in</a>
       </li>
-      <li v-if="loggedIn" class="dropdown-menu"><a> Hello <b>{{currentUser.username}}</b> !</a>
+      <li v-if="loggedIn" class="dropdown-menu"><span class="inline"><a> Hello <b>{{currentUser.username}}</b> !</a></span>
         <span class="dropdown-content">
           <span><a v-on:click="$root.logOut()">Log Out</a></span>
         </span>
