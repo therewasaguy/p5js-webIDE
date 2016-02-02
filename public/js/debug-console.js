@@ -43,41 +43,33 @@
         window.noLoop();
         break;
       case 'stop':
-        // remove sketch if one window p5 still exists
-        try {
-          window.remove();
-        } catch(e) {
-
-        }
+        window.background(175);
+        window.remove();
         break;
     }
   }
 
 
   // catch key and mouse events, inspired by http://stackoverflow.com/a/16914658/2994108
-  // instead, focus iframe when mouse is over it
+  var eventsToCatch = ['keyup', 'keydown', 'keypress',
+  'mouseup', 'mousedown', 'mousemove', 'click', 'mouseenter', 'mouseleave', 'mouseover', 'mouseout',
+  'touchstart', 'touchend', 'touchcancel', 'touchleave', 'touchmove'];
 
-  // Jan 12 2016: this may no longer be necessary because the code window is not obscuring the sketch
+  for (var i = 0; i < eventsToCatch.length; i++) {
+    var evt = eventsToCatch[i];
+    parent.document.body.addEventListener(evt, catchEvent);
+  }
 
-  // var eventsToCatch = ['keyup', 'keydown', 'keypress',
-  // 'mouseup', 'mousedown', 'mousemove', 'click', 'mouseenter', 'mouseleave', 'mouseover', 'mouseout',
-  // 'touchstart', 'touchend', 'touchcancel', 'touchleave', 'touchmove'];
-
-  // for (var i = 0; i < eventsToCatch.length; i++) {
-  //   var evt = eventsToCatch[i];
-  //   parent.document.body.addEventListener(evt, catchEvent);
-  // }
-
-  // function catchEvent(e) {
-  //   var ev = document.createEvent('Event');
-  //   ev.initEvent(e.type, true, false);
-  //   for (var key in e) {
-  //       // we dont wanna clone target and we are not able to access "private members" of the cloned event.
-  //       if (key[0] == key[0].toLowerCase() && ['__proto__', 'srcElement', 'target', 'toElement'].indexOf(key) == -1) {
-  //           ev[key] = e[key];
-  //       }
-  //   }
-  //   document.dispatchEvent(ev);
-  // }
+  function catchEvent(e) {
+    var ev = document.createEvent('Event');
+    ev.initEvent(e.type, true, false);
+    for (var key in e) {
+        // we dont wanna clone target and we are not able to access "private members" of the cloned event.
+        if (key[0] == key[0].toLowerCase() && ['__proto__', 'srcElement', 'target', 'toElement'].indexOf(key) == -1) {
+            ev[key] = e[key];
+        }
+    }
+    document.dispatchEvent(ev);
+  }
 
 })();

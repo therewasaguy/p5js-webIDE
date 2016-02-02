@@ -404,7 +404,6 @@ var appConfig = {
 
 			// prompt 
 			var callback = function(vars) {
-				console.log(vars);
 				var title = vars.gnrlinput;
 
 				var dotSplit = title.split(".");
@@ -412,6 +411,7 @@ var appConfig = {
 
 				if (!title) return false;
 
+				// TO DO: replace alert with a new dialog, or a warning in the existing dialog
 				if (self.fileTypes.indexOf(re.exec(title)[1]) < 0 || (dotSplit.length > 2)){
 					window.alert("unsupported/improper file type selected.\nAutomaticallly adding a .js extension");
 					title = dotSplit[0] + '.js';
@@ -887,33 +887,6 @@ var appConfig = {
 				this.newWindowOpen = window.open(window.location.protocol + '//' + window.location.host + '/preview'); 
 				return;
 			}, 10);
-		},
-
-		// not currently used, was related to openInNewWindow
-		openSavedProjectInNewWindow: function() {
-			/*** open saved project: ***/
-
-			// this only works if a project is saved
-			var pathname = window.location.pathname.split('/');
-			var username = pathname[1];
-			var projectID = pathname[2];
-
-			if (!username || !projectID) {
-				alert('please save project before opening in a new window')
-				return false;
-			}
-
-			// TO DO: open without fetching code from server
-
-			// TO DO: refresh if a window is already open (is this possible?)
-
-			// this opens saved project
-			if (this.newWindowOpen) {
-				// the open tab will know to refresh
-				this.newWindowOpen.postMessage('newcode', window.localStorage.fileObjects);
-			} else {
-				this.newWindowOpen = window.open('http://' + window.location.host + '/view/' + username + '/' + projectID); 
-			}
 		},
 
 		openSketchbook: function() {
