@@ -105,6 +105,8 @@ module.exports = Vue.extend({
 			this.container.classList.remove('hidden');
 			this.mainContainer.classList.add('blurred');
 			this.$broadcast('dialog-open');
+
+			this.addKeyListeners();
 		},
 
 		close: function() {
@@ -116,6 +118,8 @@ module.exports = Vue.extend({
 			this.container.classList.add('hidden');
 			this.mainContainer.classList.remove('blurred');
 			this.$broadcast('dialog-close');
+
+			this.removeKeyListeners();
 		},
 
 		openShareDialog: function() {
@@ -248,6 +252,41 @@ module.exports = Vue.extend({
 
 		cancel: function() {
 			this.close();
+		},
+
+		/**
+		 *  Accept or Close dialog on Enter or Escape
+		 *
+		 *  @method  addKeyListeners
+		 */
+		addKeyListeners: function() {
+			var self = this;
+
+			self.listener = function(e){
+				var key = e.which || e.keyCode;
+				switch(key) {
+					case 13: // enter
+						self.accept();
+						break;
+					case 27: // escape
+						self.close();
+						break;
+					default:
+						break;
+				}
+			};
+
+			document.addEventListener('keyup', self.listener);
+		},
+
+		/**
+		 *  Remove listeners for Enter and Escape keypress
+		 *
+		 *  @method  removeKeyListeners
+		 */
+		removeKeyListeners: function() {
+			document.removeEventListener('keyup', self.listener);
+			self.listener = undefined;
 		}
 	}
 
