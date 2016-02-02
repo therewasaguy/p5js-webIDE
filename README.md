@@ -23,4 +23,4 @@ Website (demo): http://p5ide.herokuapp.com/
 
 
 ## Contributors
-Initiated by Jason Sigal for Google Summer of Code 2015, with mentorship from Daniel Shiffman and contributions from Boram Kim, Sam Lavigne, Gene Kogan, Leslie Lin, Pamela Liou, Eozin Che, Sepand Ansari, Jerel Johnson, Lauren McCarthy and many others in the p5/Processing community. Check out the [Web IDE Brainstorm on Hackpad](https://p5jscon.hackpad.com/Web-IDE-Brainstorm-d74TxVTnU4H) and feel free to join in on this open source project.
+Initiated by Jason Sigal for Google Summer of Code 2015, with mentorship from Daniel Shiffman and contributions from Craig Pickard, Boram Kim, Sam Lavigne, Gene Kogan, Leslie Lin, Pamela Liou, Eozin Che, Sepand Ansari, Jerel Johnson, Lauren McCarthy and many others in the p5/Processing community. Check out the [Web IDE Brainstorm on Hackpad](https://p5jscon.hackpad.com/Web-IDE-Brainstorm-d74TxVTnU4H) and feel free to join in on this open source project.
