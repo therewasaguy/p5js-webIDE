@@ -6,9 +6,9 @@
         <a v-on:click="$root.newProject()">New</a>
       </li>
 
-      <li class="dropdown-menu" v-on:mouseenter="openOpenDropdown" v-on:mouseleave:="closeOpenDropdown"><a v-on:click="openSketchbook">Open</a>
+      <li class="dropdown-menu" v-on:mouseenter="openOpenDropdown"><a v-on:click="openSketchbook">Open</a>
 
-        <div class="dropdown-content {{openDropdownClass}}" v-on:mouseleave=" closeOpenDropdown">
+        <div class="dropdown-content">
           <!-- v-on="mouseenter: prevDef, mouseleave: clearDef" -->
           <div class="has-submenu"><a>Examples</a>
             <div class="submenu-container">
@@ -40,8 +40,8 @@
         </div>
       </li>
 
-      <li class="dropdown-menu" v-on:mouseenter="openSaveDropdown" v-on:mouseleave="closeSaveDropdown"><a v-on:click="defaultSave">Save</a>
-        <span class="dropdown-content {{saveDropdownClass}}" v-on:mouseleave=" closeSaveDropdown">
+      <li class="dropdown-menu"><a v-on:click="defaultSave">Save</a>
+        <span class="dropdown-content">
 
           <!-- if user owns project... -->
           <span v-if="userOwnsProject" ><a v-on:click="$root.saveToCloud()">Save</a></span>
@@ -72,8 +72,8 @@
       <li v-if="!loggedIn" v-on:click="$root.authenticate()">
         <a>Log in</a>
       </li>
-      <li v-if="loggedIn" class="dropdown-menu" v-on:mouseenter="openUserDropdown" v-on:mouseleave="closeUserDropdown"><a> Hello <b>{{currentUser.username}}</b> !</a>
-        <span class="dropdown-content {{userDropdownClass}}" v-on:mouseleave="closeUserDropdown">
+      <li v-if="loggedIn" class="dropdown-menu"><a> Hello <b>{{currentUser.username}}</b> !</a>
+        <span class="dropdown-content">
           <span><a v-on:click="$root.logOut()">Log Out</a></span>
         </span>
       </li>
@@ -86,23 +86,5 @@
     <!-- display a message -->
     <span id="toast-msg" class="hidden nopointer">{{toastMsg}}</span>
   </div>
-
-<!--   <div class="top-nav-right nopointer">
-    <ul>
- -->      <!-- login / profile -->
-
-<!--       <li v-if="!loggedIn" v-on:click="$root.authenticate()">
-        <a>Log in</a>
-      </li>
-      <li v-if="loggedIn" class="dropdown-menu" v-on:mouseenter="openUserDropdown" v-on:mouseleave="closeUserDropdown"><a> Hello <b>{{currentUser.username}}</b> !</a>
-        <span class="dropdown-content {{userDropdownClass}}" v-on:mouseleave="closeUserDropdown">
-          <span><a v-on:click="$root.logOut()">Log Out</a></span>
-        </span>
-      </li> -->
-
-
-<!--     </ul>
-    <hr>
-  </div> -->
 
 </nav>

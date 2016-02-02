@@ -45,9 +45,8 @@ module.exports = Vue.extend({
 	data: function() {
 		return {
 			toastMsg: '',
-			openDropdownClass: 'hidden',
-			userDropdownClass: 'hidden',
-			saveDropdownClass: 'hidden'
+			// saveDropdownClass: 'hidden'
+			saveDropdownClass: ''
 		}
 	},
 
@@ -120,40 +119,8 @@ module.exports = Vue.extend({
 		},
 
 		openOpenDropdown: function(e) {
-			this.openDropdownClass = '';
 			$('span.timeago').timeago();
 			$('abbr.timeago').timeago();
-		},
-
-		closeOpenDropdown: function(e) {
-			if (inSub) return;
-			this.openDropdownClass = 'hidden';
-		},
-
-		openSaveDropdown: function(e) {
-			this.saveDropdownClass = '';
-		},
-
-		closeSaveDropdown: function(e) {
-			this.saveDropdownClass = 'hidden'
-		},
-
-		openUserDropdown: function(e) {
-			this.userDropdownClass = '';
-		},
-
-		closeUserDropdown: function(e) {
-			this.userDropdownClass = 'hidden'
-		// },
-
-		// prevDef: function(e) {
-		// 	inSub = true;
-		// 	console.log('prev def');
-		// },
-
-		// clearDef: function() {
-		// 	console.log('clear def');
-		// 	inSub = false;
 		},
 
 		/**

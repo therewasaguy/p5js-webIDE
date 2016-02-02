@@ -263,4 +263,15 @@ nav {
     display:block !important;
   }
 
+  // hide dropdown content by default
+  .dropdown-content * {
+    display: none;
+  }
+
+  // open dropdown menus
+  li:hover * {
+    display: block;
+    text-align:left;
+  }
+
 }
