@@ -1,4 +1,8 @@
-
+/**
+ *  Dialog / Modal window
+ *  
+ *  @type {[type]}
+ */
 var Vue = require('vue');
 
 module.exports = Vue.extend({
@@ -82,7 +86,7 @@ module.exports = Vue.extend({
 		this.viewGeneral = document.getElementById('general-view');
 
 		this._defaultCallback = function(val) {
-			console.log(val);
+			// console.log(val);
 		};
 
 		this.callback = this._defaultCallback;
@@ -91,11 +95,6 @@ module.exports = Vue.extend({
 	methods: {
 
 		open: function() {
-			// this.show();
-		},
-
-		// should be renamed "open"
-		show: function() {
 			// clear overwriteID
 			this.overwriteID = null
 
@@ -123,7 +122,7 @@ module.exports = Vue.extend({
 		},
 
 		openShareDialog: function() {
-			this.show();
+			this.open();
 			this.mode = 'share';
 
 			var currentProj = this.$root.currentProject;
@@ -151,7 +150,7 @@ module.exports = Vue.extend({
 		},
 
 		promptSaveAs: function(callback) {
-			this.show();
+			this.open();
 			this.callback = callback;
 			this.mode = 'save';
 
@@ -172,7 +171,7 @@ module.exports = Vue.extend({
 		},
 
 		promptRename: function(callback) {
-			this.show();
+			this.open();
 
 			this.mode = 'rename';
 			this.callback = callback;
@@ -188,7 +187,7 @@ module.exports = Vue.extend({
 
 		openSketchbook: function() {
 			this.mode = 'sketchbook';
-			this.show();
+			this.open();
 
 			this.viewGeneral.classList.add('hidden');
 			this.viewSave.classList.add('hidden');
@@ -206,9 +205,11 @@ module.exports = Vue.extend({
 			var msg = obj.msg;
 			var inputField = obj.input || null;
 			this.mode = 'general';
-			this.show();
+			this.open();
 
 			var gnrlInput = document.getElementById('gnrlinput');
+			gnrlInput.value = '';
+
 			if (inputField) {
 				gnrlInput.style.display = 'block';
 				gnrlInput.placeholder = inputField;
@@ -223,7 +224,6 @@ module.exports = Vue.extend({
 			this.viewSave.classList.add('hidden');
 			this.viewShare.classList.add('hidden');
 			this.viewSketchbook.classList.add('hidden');
-
 		},
 
 		/**

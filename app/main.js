@@ -398,24 +398,38 @@ var appConfig = {
 			this.modeFunction('sortRecentProjects', projects);
 		},
 
-		// HANDLE FILES
+		// create a new tab
 		newFile: function() {
-			var title = prompt('Choose a file name and type: \nSupported types: ' + this.fileTypes.toString()).replace(/ /g,'');
-			var dotSplit = title.split(".");
-			var re = /(?:\.([^.]+))?$/;
+			var self = this;
 
-			if (!title) return false;
+			// prompt 
+			var callback = function(vars) {
+				console.log(vars);
+				var title = vars.gnrlinput;
 
-			if (this.fileTypes.indexOf(re.exec(title)[1]) < 0 || (dotSplit.length > 2)){
-				window.alert("unsupported/improper file type selected.\nAutomaticallly adding a .js extension");
-				title = dotSplit[0] + '.js';
-			}
+				var dotSplit = title.split(".");
+				var re = /(?:\.([^.]+))?$/;
 
-			var filename = title;
+				if (!title) return false;
 
-			var f = new pFile(filename);
-			this.currentProject.addFile(f);
-			this.openFile(f.name);
+				if (self.fileTypes.indexOf(re.exec(title)[1]) < 0 || (dotSplit.length > 2)){
+					window.alert("unsupported/improper file type selected.\nAutomaticallly adding a .js extension");
+					title = dotSplit[0] + '.js';
+				}
+
+				var filename = title;
+
+				var f = new pFile(filename);
+				self.currentProject.addFile(f);
+				self.openFile(f.name);
+			};
+
+			// prompt dialog for new name, then update name
+			self.$broadcast('prompt-general', {
+				msg: 'Choose a file name and type: \n</p><h5>Supported types: ' + this.fileTypes.toString().replace(/ /g,', ') + '</h5>',
+				input: 'my_file.js',
+				callback: callback
+			});
 
 		},
 
