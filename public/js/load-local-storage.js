@@ -105,7 +105,7 @@
 				if (fileName.indexOf('//') > -1) {
 					var n = document.createElement('script');
 					n.src = fileName;
-					n.async = true;
+					n.async = false;
 					n.onload = function() {
 						console.log('script loaded');
 					}

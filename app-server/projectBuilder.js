@@ -56,15 +56,15 @@ module.exports = {
 					if (data.jsFiles.filter(function(f) {
 						if (f.name == src) {
 							indexOfMatch = data.jsFiles.indexOf(f);
+							// remove src and change content of script tag
+							jquery(sTag).removeAttr('src');
+							jquery(sTag).text(data.jsFiles[indexOfMatch].contents);
 							return true;
 						} else {
 							return false;
 						}
 					})) {
 
-						// remove src and change content of script tag
-						jquery(sTag).removeAttr('src');
-						jquery(sTag).text(data.jsFiles[indexOfMatch].contents);
 					}
 				}
 

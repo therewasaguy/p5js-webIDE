@@ -2,3 +2,8 @@ node_modules
 _notes
 .DS_Store
 .env
+run.sh
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

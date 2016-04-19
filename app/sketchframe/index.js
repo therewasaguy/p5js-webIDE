@@ -126,7 +126,8 @@ module.exports = Vue.extend({
 				var ideCode = '';
 
 				// create a new p5 otherwise p5 wont be instantiated
-				ideCode += '\n try { new p5();} catch(e){throw e;} ';
+				// ** update 4/19/2016, this is no longer necessary **
+				// ideCode += '\n try { new p5();} catch(e){} ';
 
 				var elem = injectJS(ideCode);
 				frameBody.appendChild(elem);
@@ -193,7 +194,7 @@ function parseIndexHTML(fileDict) {
 			if (fileName.indexOf('//') > -1) {
 				var n = document.createElement('script');
 				n.src = fileName;
-				n.async = true;
+				n.async = false;
 				n.onload = function() {
 					console.log('script loaded');
 				}
