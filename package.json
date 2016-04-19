@@ -1,6 +1,6 @@
 {
-  "name": "p5js-webEdit",
-  "version": "0.0.0",
+  "name": "we-p5",
+  "version": "0.0.1",
   "description": "",
   "main": "server.js",
   "scripts": {
