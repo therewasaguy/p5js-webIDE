@@ -12,7 +12,7 @@ var Project = function(options) {
 		/**
 		 *  @property {Array} fileObjects Array of pFile objects
 		 */
-		this.fileObjects = [ new pFile('p5.js'), sketchFile, new pFile('index.html'), new pFile('p5.sound.js'), new pFile('p5.dom.js'), new pFile('style.css')];
+		this.fileObjects = [ sketchFile, new pFile('index.html'), new pFile('style.css')];
 
 		/**
 		 *  [name description]
