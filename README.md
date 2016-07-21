@@ -1,8 +1,8 @@
 # p5.js web ide
 
-This is a work-in-progress prototype for a Web IDE designed specifically for the [p5.js](http://p5js.org) community.
+### This repo is not in active development. Check out the new iteration of the project [here](https://github.com/catarak/p5.js-web-editor).
 
-This project adapts the [p5.js Desktop IDE](https://github.com/processing/p5.js-editor) (originally by Sam Lavigne, GSOC '14) for the web, with inspiration from [Gene Kogan's p5 Sandbox](https://github.com/genekogan/p5js-sandbox) and many other projects. The goal is to make it easy to create, browse, share, and remix creative code sketches directly from the browser. Create an account and start sketching!
+This was a prototype for a Web IDE designed specifically for the [p5.js](http://p5js.org) community. It adapts the [p5.js Desktop IDE](https://github.com/processing/p5.js-editor) (originally by Sam Lavigne, GSOC '14) for the web, with inspiration from [Gene Kogan's p5 Sandbox](https://github.com/genekogan/p5js-sandbox) and many other projects. The goal is to make it easy to create, browse, share, and remix creative code sketches directly from the browser. Create an account and start sketching!
 
 Github Repo: https://github.com/therewasaguy/p5js-webIDE
 
